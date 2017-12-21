@@ -3,7 +3,7 @@ import java.util.List;
 public class TokenMatcher {
 
     private List<Token> tokens;
-    private Boolean any;
+    private boolean any = true;
     private Integer index;
 
     public boolean matches(Token token, List<Token> examinedTokens){
@@ -11,14 +11,14 @@ public class TokenMatcher {
     }
 
     public TokenMatcher(List<Token> tokens){
+        if (tokens == null) throw new RuntimeException("Tokens may not be null");
+        this.any = false;
         this.tokens = tokens;
     }
 
-    public TokenMatcher(Boolean any){
-        this.any = any;
-    }
-
     public TokenMatcher (Integer index){
+        if (index == null) throw new RuntimeException("Index may not be null");
+        this.any = false;
         this.index = index;
     }
 }
