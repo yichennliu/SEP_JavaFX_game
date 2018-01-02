@@ -1,8 +1,7 @@
+import java.util.Map;
+
 public class Level {
     private Feld[][] map;
-    private int gems;
-    private int ticks;
-    private int x;
-    private int y;
-    private int z;
+    private Map<Property,Integer> properties;
+
 }
