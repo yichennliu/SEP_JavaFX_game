@@ -1,3 +1,8 @@
+package model;
+
+import model.enums.Direction;
+import model.enums.Situation;
+
 import java.util.List;
 
 public class Rule {

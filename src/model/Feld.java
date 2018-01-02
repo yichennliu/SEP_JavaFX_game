@@ -1,3 +1,8 @@
+package model;
+
+import model.enums.Property;
+import model.enums.Token;
+
 import java.util.HashMap;
 import java.util.Map;
 

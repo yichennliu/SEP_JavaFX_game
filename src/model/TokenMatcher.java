@@ -1,3 +1,7 @@
+package model;
+
+import model.enums.Token;
+
 import java.util.List;
 
 public class TokenMatcher {

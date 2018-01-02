@@ -1,3 +1,8 @@
+package main;
+
+import model.*;
+import model.enums.Property;
+import model.enums.Token;
 import org.json.*;
 import java.io.*;
 import java.util.*;

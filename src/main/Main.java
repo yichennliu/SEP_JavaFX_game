@@ -1,6 +1,8 @@
+package main;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import model.Level;
 
 public class Main extends Application {
 

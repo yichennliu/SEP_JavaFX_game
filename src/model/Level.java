@@ -1,3 +1,7 @@
+package model;
+
+import model.enums.Property;
+
 import java.util.*;
 
 public class Level {
