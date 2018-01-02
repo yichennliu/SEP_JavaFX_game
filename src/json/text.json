@@ -1,0 +1,25 @@
+{
+  "gems":[8,12,16],
+  "height":16,
+  "name":"Ein Text",
+  "ticks":[1200,450,225],
+  "width":29,
+  "map":[
+    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "me", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "gem", "gem", "gem", "gem", "gem", "mud", "stone", "stone", "stone", "stone", "stone", "mud", {"token":"xling", "values":{"direction":1}}, "mud", "mud", "mud", {"token":"xling", "values":{"direction":1}}, "mud", {"token":"swapling", "values":{"direction":1}}, {"token":"swapling", "values":{"direction":1}}, {"token":"swapling", "values":{"direction":1}}, {"token":"swapling", "values":{"direction":1}}, {"token":"swapling", "values":{"direction":1}}, "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "gem", "mud", "mud", "mud", "stone", "mud", "mud", "mud", "mud", "mud", "mud", {"token":"xling", "values":{"direction":1}}, "mud", {"token":"xling", "values":{"direction":1}}, "mud", "mud", "mud", "mud", {"token":"swapling", "values":{"direction":2}}, "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "gem", "mud", "mud", "mud", "stone", "stone", "stone", "stone", "mud", "mud", "mud", "mud", {"token":"xling", "values":{"direction":1}}, "mud", "mud", "mud", "mud", "mud", {"token":"swapling", "values":{"direction":2}}, "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "gem", "mud", "mud", "mud", "stone", "mud", "mud", "mud", "mud", "mud", "mud", {"token":"xling", "values":{"direction":1}}, "mud", {"token":"xling", "values":{"direction":1}}, "mud", "mud", "mud", "mud", {"token":"swapling", "values":{"direction":2}}, "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "gem", "mud", "mud", "mud", "stone", "stone", "stone", "stone", "stone", "mud", {"token":"xling", "values":{"direction":1}}, "mud", "mud", "mud", {"token":"xling", "values":{"direction":1}}, "mud", "mud", "mud", {"token":"swapling", "values":{"direction":2}}, "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "exit", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"]
+    ]
+}

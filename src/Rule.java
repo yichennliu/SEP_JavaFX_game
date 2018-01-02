@@ -9,10 +9,10 @@ public class Rule {
     private Integer sparsity;
 
     public void execute(){
-
+        // TODO: implement
     }
 
-    public Rule(Situation situation, Direction direction, List<RuleElement> original, List<RuleElement> result, Integer sparcity){
+    public Rule(Situation situation, Direction direction, List<RuleElement> original, List<RuleElement> result, Integer sparsity){
         this.situation = situation;
         this.direction = direction;
         this.original = original;

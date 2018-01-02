@@ -16,7 +16,7 @@ public class TokenMatcher {
         this.tokens = tokens;
     }
 
-    public TokenMatcher (Integer index){
+    public TokenMatcher(Integer index){
         if (index == null) throw new RuntimeException("Index may not be null");
         this.any = false;
         this.index = index;
