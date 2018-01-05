@@ -10,9 +10,7 @@ public class TokenMatcher {
     private boolean any = true;
     private Integer index;
 
-    public boolean matches(Token token, List<Token> examinedTokens){
-        return false;
-    }
+    public TokenMatcher() {/* any = true */}
 
     public TokenMatcher(List<Token> tokens){
         if (tokens == null) throw new RuntimeException("Tokens may not be null");
@@ -20,9 +18,13 @@ public class TokenMatcher {
         this.tokens = tokens;
     }
 
-    public TokenMatcher(Integer index){
-        if (index == null) throw new RuntimeException("Index may not be null");
+    public TokenMatcher(int index){
         this.any = false;
         this.index = index;
     }
+
+    public boolean matches(Token token, List<Token> examinedTokens){
+        return false; // TODO: implement
+    }
+
 }

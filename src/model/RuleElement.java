@@ -7,11 +7,15 @@ import java.util.Map;
 
 public class RuleElement {
 
-    private List<TokenMatcher> tokens;
+    private TokenMatcher token;
     private Map<Property,Integer> values;
 
-    public RuleElement(List<TokenMatcher> tokens, Map<Property,Integer> values){
-        this.tokens = tokens;
+    public RuleElement(TokenMatcher token, Map<Property,Integer> values){
+        this.token = token;
         this.values = values;
+    }
+
+    public boolean matches(Feld field) {
+        return false; // TODO: implement
     }
 }
