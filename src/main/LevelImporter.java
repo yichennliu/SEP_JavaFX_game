@@ -71,6 +71,7 @@ public class LevelImporter {
                     for (Iterator<String> i = jsonValues.keys(); i.hasNext();) {
                         String key = i.next();
                         int keyVal = jsonValues.getInt(key);
+                        // TODO: check if property is a level-wide property and handle it differently
                         values.put(Property.valueOf(key.toUpperCase()), keyVal);
                     }
                     feld = new Feld(token, values);
@@ -108,18 +109,94 @@ public class LevelImporter {
             // import direction
             Direction direction = Direction.valueOf(jsonRule.getString("direction").toUpperCase());
 
-            // import original rule elements
-            List<RuleElement> original = jsonRule.has("original")
-                    ? importRuleElements(jsonRule.getJSONArray("original"))
-                    : new ArrayList<>();
-
-            // import original rule elements
-            List<RuleElement> result = jsonRule.has("result")
-                    ? importRuleElements(jsonRule.getJSONArray("result"))
-                    : new ArrayList<>();
-
             // import sparsity
             Integer sparsity = jsonRule.has("sparsity") ? jsonRule.getInt("sparsity") : null;
+
+            // import original rule elements
+            List<RuleElementOriginal> original = new ArrayList<>();
+            if (jsonRule.has("original")) {
+                JSONArray jsonOriginal = jsonRule.getJSONArray("original");
+
+                for (int ruleElementNum = 0; ruleElementNum < jsonOriginal.length(); ruleElementNum++) {
+                    JSONObject jsonRuleElement = jsonOriginal.getJSONObject(ruleElementNum);
+
+                    Object jsonTokenMatcher = jsonRuleElement.get("token");
+                    TokenMatcher tokenMatcher = null;
+
+                    if ("*".equals(jsonTokenMatcher)) {
+                        // match any token
+                        tokenMatcher = new TokenMatcher();
+                    } else if (jsonTokenMatcher instanceof String) {
+                        // single token
+                        Token token = Token.valueOf(((String) jsonTokenMatcher).toUpperCase());
+                        tokenMatcher = new TokenMatcher(Arrays.asList(token));
+                    } else if (jsonTokenMatcher instanceof JSONArray) {
+                        // list of tokens
+                        JSONArray jsonTokenArray = (JSONArray) jsonTokenMatcher;
+                        List<Token> tokens = new ArrayList<>();
+                        for (int tokenNum = 0; tokenNum < jsonTokenArray.length(); tokenNum++) {
+                            Token token = Token.valueOf(jsonTokenArray.getString(tokenNum).toUpperCase());
+                            tokens.add(token);
+                        }
+                        tokenMatcher = new TokenMatcher(tokens);
+                    } else {
+                        throw new JSONException("Wrong format for token matcher " + tokenMatcher);
+                    }
+
+                    // import values
+                    Map<Property, Integer> values = new HashMap<>();
+                    if (jsonRuleElement.has("values")) {
+                        JSONObject jsonValues = jsonRuleElement.getJSONObject("values");
+                        for (Iterator<String> i = jsonValues.keys(); i.hasNext(); ) {
+                            String key = i.next();
+                            int keyVal = jsonValues.getInt(key);
+                            values.put(Property.valueOf(key.toUpperCase()), keyVal);
+                        }
+                    }
+
+                    original.add(new RuleElementOriginal(tokenMatcher, values));
+                }
+            }
+
+            // import result rule elements
+            List<RuleElementResult> result = new ArrayList<>();
+            if (jsonRule.has("result")) {
+                JSONArray jsonResult = jsonRule.getJSONArray("result");
+
+                for (int ruleElementNum = 0; ruleElementNum < jsonResult.length(); ruleElementNum++) {
+                    JSONObject jsonRuleElement = jsonResult.getJSONObject(ruleElementNum);
+
+                    Object jsonTokenReplacer = jsonRuleElement.get("token");
+                    TokenReplacer tokenReplacer = null;
+
+                    if (jsonTokenReplacer instanceof Integer) {
+                        // index number (as integer)
+                        tokenReplacer = new TokenReplacer((Integer) jsonTokenReplacer);
+                    } else if (jsonTokenReplacer instanceof String && ((String) jsonTokenReplacer).matches("-?\\d+")) {
+                        // index number (as string)
+                        tokenReplacer = new TokenReplacer(Integer.parseInt((String) jsonTokenReplacer));
+                    } else if (jsonTokenReplacer instanceof String) {
+                        // single token
+                        Token token = Token.valueOf(((String) jsonTokenReplacer).toUpperCase());
+                        tokenReplacer = new TokenReplacer(token);
+                    } else {
+                        throw new JSONException("Wrong format for token replacer " + tokenReplacer);
+                    }
+
+                    // import values
+                    Map<Property, Integer> values = new HashMap<>();
+                    if (jsonRuleElement.has("values")) {
+                        JSONObject jsonValues = jsonRuleElement.getJSONObject("values");
+                        for (Iterator<String> i = jsonValues.keys(); i.hasNext(); ) {
+                            String key = i.next();
+                            int keyVal = jsonValues.getInt(key);
+                            values.put(Property.valueOf(key.toUpperCase()), keyVal);
+                        }
+                    }
+
+                    result.add(new RuleElementResult(tokenReplacer, values));
+                }
+            }
 
             levelRules.add(new Rule(situation, direction, original, result, sparsity));
         }
@@ -127,63 +204,4 @@ public class LevelImporter {
         return levelRules;
     }
 
-    /**
-     * @param originalOrResult List of (original or result) rule elements in json format
-     * @return List of rule elements in proper format
-     */
-    private static List<RuleElement> importRuleElements(JSONArray originalOrResult) {
-        List<RuleElement> ruleElements = new ArrayList<>();
-
-        for (int ruleElementNum = 0; ruleElementNum < originalOrResult.length(); ruleElementNum++) {
-            JSONObject jsonRuleElement = originalOrResult.getJSONObject(ruleElementNum);
-
-            // import token matchers
-            // FIXME: Should there be different TokenMatchers for original and result?
-
-            Object jsonTokenMatcher = jsonRuleElement.get("token");
-            TokenMatcher tokenMatcher = null;
-
-            if ("*".equals(jsonTokenMatcher)) {
-                // match any token
-                tokenMatcher = new TokenMatcher();
-            } else if (jsonTokenMatcher instanceof String && ((String) jsonTokenMatcher).matches("-?\\d+")) {
-                // index number (as string)
-                tokenMatcher = new TokenMatcher(Integer.parseInt((String) jsonTokenMatcher));
-            } else if (jsonTokenMatcher instanceof String) {
-                // single token
-                Token token = Token.valueOf(((String) jsonTokenMatcher).toUpperCase());
-                tokenMatcher = new TokenMatcher(Arrays.asList(token));
-            } else if (jsonTokenMatcher instanceof JSONArray) {
-                // list of tokens
-                JSONArray jsonTokenArray = (JSONArray) jsonTokenMatcher;
-                List<Token> tokens = new ArrayList<>();
-                for (int tokenNum = 0; tokenNum < jsonTokenArray.length(); tokenNum++) {
-                    Token token = Token.valueOf(jsonTokenArray.getString(tokenNum).toUpperCase());
-                    tokens.add(token);
-                }
-                tokenMatcher = new TokenMatcher(tokens);
-            } else if (jsonTokenMatcher instanceof Integer) {
-                // index number (as integer)
-                tokenMatcher = new TokenMatcher((Integer) jsonTokenMatcher);
-            } else {
-                throw new JSONException("Wrong format for token matcher "+tokenMatcher.toString());
-            }
-
-
-            // import values
-            Map<Property, Integer> values = new HashMap<>();
-            if (jsonRuleElement.has("values")) {
-                JSONObject jsonValues = jsonRuleElement.getJSONObject("values");
-                for (Iterator<String> i = jsonValues.keys(); i.hasNext(); ) {
-                    String key = i.next();
-                    int keyVal = jsonValues.getInt(key);
-                    values.put(Property.valueOf(key.toUpperCase()), keyVal);
-                }
-            }
-
-            ruleElements.add(new RuleElement(tokenMatcher, values));
-        }
-
-        return ruleElements;
-    }
 }

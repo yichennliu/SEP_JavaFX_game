@@ -2,15 +2,13 @@ package model;
 
 import model.enums.Property;
 
-import java.util.List;
 import java.util.Map;
 
-public class RuleElement {
-
+public class RuleElementOriginal {
     private TokenMatcher token;
     private Map<Property,Integer> values;
 
-    public RuleElement(TokenMatcher token, Map<Property,Integer> values){
+    public RuleElementOriginal(TokenMatcher token, Map<Property,Integer> values){
         this.token = token;
         this.values = values;
     }

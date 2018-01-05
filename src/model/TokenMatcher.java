@@ -5,26 +5,30 @@ import model.enums.Token;
 import java.util.List;
 
 public class TokenMatcher {
-
     private List<Token> tokens;
-    private boolean any = true;
-    private Integer index;
 
-    public TokenMatcher() {/* any = true */}
+    /**
+     * Match any token
+     */
+    public TokenMatcher() {}
 
+    /**
+     * Match one of the given tokens
+     *
+     * @param tokens non-null, non-epty
+     */
     public TokenMatcher(List<Token> tokens){
-        if (tokens == null) throw new RuntimeException("Tokens may not be null");
-        this.any = false;
+        if (tokens == null || tokens.isEmpty())
+            throw new RuntimeException("Tokens may not be null or empty");
         this.tokens = tokens;
     }
 
-    public TokenMatcher(int index){
-        this.any = false;
-        this.index = index;
-    }
-
-    public boolean matches(Token token, List<Token> examinedTokens){
-        return false; // TODO: implement
+    public boolean matches(Token token) {
+        if (this.tokens == null) {
+            return true;
+        } else {
+            return this.tokens.contains(token);
+        }
     }
 
 }
