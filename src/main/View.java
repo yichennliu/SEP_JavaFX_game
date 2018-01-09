@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import model.Level;
 
@@ -15,9 +16,11 @@ public class View {
     private Scene scene;
     private Level level;
     private int maxSize = 1000;
+    private Stage stage;
 
     public View(Level level, Stage stage){
         this.level = level;
+        this.stage = stage;
         root = new Group();
         scene = new Scene(this.root);
         double height = this.level.getMap().length;
@@ -40,7 +43,6 @@ public class View {
         int mapHeight = level.getMap().length;
         double canvasWidth = canvas.getWidth();
         double canvasHeight = canvas.getHeight();
-
         double fieldLength = canvasWidth / mapWidth;
         double fieldHeight = canvasHeight / mapHeight;
 
@@ -55,4 +57,47 @@ public class View {
             }
         }
     }
+
+    public Stage getStage() {
+        return this.stage;
+    }
+
+    public Canvas getCanvas() {
+        return this.canvas;
+    }
+
+    //Test1
+    public void moveMeBy(int dx, int dy){
+
+        if (dx == 0 && dy == 0) {
+            return;
+        }
+
+        Circle me= new Circle();
+
+        double cx = me.getBoundsInLocal().getWidth()/2;
+        double cy = me.getBoundsInLocal().getHeight()/2;
+        double x = cx + me.getLayoutX() + dx;
+        double y = cy + me.getLayoutY() + dy;
+
+        moveMeTo(x, y);
+    }
+
+    //Test2
+    public void moveMeTo(double x, double y){
+
+        int width= 600;
+        int height= 400;
+
+        Circle me = new Circle();
+
+        double cx = me.getBoundsInLocal().getWidth()/2;
+        double cy = me.getBoundsInLocal().getHeight()/2;
+
+        if (x - cx >= 0 && x + cx <= width && y - cy >= 0 && y + cy <= height) {
+            me.relocate(x - cx, y - cy);
+        }
+
+    }
+
 }
