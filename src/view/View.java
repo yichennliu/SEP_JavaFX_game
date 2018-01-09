@@ -66,38 +66,5 @@ public class View {
         return this.canvas;
     }
 
-    //Test1
-    public void moveMeBy(int dx, int dy){
-
-        if (dx == 0 && dy == 0) {
-            return;
-        }
-
-        Circle me= new Circle();
-
-        double cx = me.getBoundsInLocal().getWidth()/2;
-        double cy = me.getBoundsInLocal().getHeight()/2;
-        double x = cx + me.getLayoutX() + dx;
-        double y = cy + me.getLayoutY() + dy;
-
-        moveMeTo(x, y);
-    }
-
-    //Test2
-    public void moveMeTo(double x, double y){
-
-        int width= 600;
-        int height= 400;
-
-        Circle me = new Circle();
-
-        double cx = me.getBoundsInLocal().getWidth()/2;
-        double cy = me.getBoundsInLocal().getHeight()/2;
-
-        if (x - cx >= 0 && x + cx <= width && y - cy >= 0 && y + cy <= height) {
-            me.relocate(x - cx, y - cy);
-        }
-
-    }
 
 }

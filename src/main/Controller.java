@@ -6,6 +6,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import model.Feld;
+import view.View;
 
 public class Controller {
     private View view;
@@ -20,21 +21,21 @@ public class Controller {
         canvas.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent event) {
 
-                if(event.getCode()== KeyCode.UP){
+                if(event.getCode().equals(KeyCode.UP)){
                     if (event.isShiftDown())
                     System.out.println("Direction NORTH");
                 }
 
-                if(event.getCode()==KeyCode.DOWN){
+                if(event.getCode().equals(KeyCode.DOWN)){
                     System.out.println("Direction SOUTH");
 
                 }
 
-                if(event.getCode()==KeyCode.LEFT) {
+                if(event.getCode().equals(KeyCode.LEFT)) {
                     System.out.println("Direction WEST");
                 }
 
-                if(event.getCode()==KeyCode.RIGHT){
+                if(event.getCode().equals(KeyCode.RIGHT)){
                     System.out.println("Direction EAST");
                 }
             }
