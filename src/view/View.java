@@ -36,16 +36,15 @@ public class View {
     }
 
     public void drawMap(){
-        int mapWidth = level.getMap()[0].length;
-        int mapHeight = level.getMap().length;
+
         double canvasWidth = canvas.getWidth();
         double canvasHeight = canvas.getHeight();
 
-        double fieldLength = canvasWidth / mapWidth;
-        double fieldHeight = canvasHeight / mapHeight;
+        double fieldLength = 20;
+        double fieldHeight = 20;
 
-        for(int rowNum = 0; rowNum < mapHeight; rowNum++){
-            for (int colNum = 0; colNum < mapWidth; colNum++){
+        for(int rowNum = 0; rowNum < level.getMap().length; rowNum++){
+            for (int colNum = 0; colNum < level.getMap()[0].length; colNum++){
                 double xPos = colNum*fieldLength;
                 double yPos = rowNum*fieldHeight;
                 this.gc.strokeRect(xPos, yPos, fieldLength, fieldHeight);
