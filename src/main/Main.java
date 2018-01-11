@@ -3,6 +3,7 @@ package main;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import model.Level;
+import view.View;
 
 public class Main extends Application {
 
