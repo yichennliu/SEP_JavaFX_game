@@ -65,13 +65,11 @@ public class Level {
 
 
     public static void setNeighbours(Feld[][] map) {
-
         int width = map[0].length;
         int height = map.length;
 
         for(int row = 0; row < height;  row++){
             for (int column = 0; column < width; column++){
-                System.out.println("row: " + row + " column: " + column);
                 Feld feld = map[row][column];
                 if (column>0) feld.setNeighbour(Feld.Neighbour.LEFT, map[row][column-1]); // LEFT
                 if (column>0 && row>0) feld.setNeighbour(Feld.Neighbour.LEFTTOP, map[row-1][column-1]); // LEFTTOP
