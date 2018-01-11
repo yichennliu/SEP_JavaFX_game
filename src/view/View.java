@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import model.Level;
 
@@ -15,9 +16,11 @@ public class View {
     private Scene scene;
     private Level level;
     private int maxSize = 1000;
+    private Stage stage;
 
     public View(Level level, Stage stage){
         this.level = level;
+        this.stage = stage;
         root = new Group();
         scene = new Scene(this.root);
         double height = this.level.getMap().length;
@@ -36,15 +39,15 @@ public class View {
     }
 
     public void drawMap(){
-
+        int mapWidth = level.getMap()[0].length;
+        int mapHeight = level.getMap().length;
         double canvasWidth = canvas.getWidth();
         double canvasHeight = canvas.getHeight();
+        double fieldLength = canvasWidth / mapWidth;
+        double fieldHeight = canvasHeight / mapHeight;
 
-        double fieldLength = 20;
-        double fieldHeight = 20;
-
-        for(int rowNum = 0; rowNum < level.getMap().length; rowNum++){
-            for (int colNum = 0; colNum < level.getMap()[0].length; colNum++){
+        for(int rowNum = 0; rowNum < mapHeight; rowNum++){
+            for (int colNum = 0; colNum < mapWidth; colNum++){
                 double xPos = colNum*fieldLength;
                 double yPos = rowNum*fieldHeight;
                 this.gc.strokeRect(xPos, yPos, fieldLength, fieldHeight);
@@ -54,4 +57,14 @@ public class View {
             }
         }
     }
+
+    public Stage getStage() {
+        return this.stage;
+    }
+
+    public Canvas getCanvas() {
+        return this.canvas;
+    }
+
+
 }
