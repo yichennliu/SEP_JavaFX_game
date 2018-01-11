@@ -19,11 +19,24 @@ public class Feld {
         this.properties = properties;
     }
 
+    public String toString() {
+        return this.token.name();
+    }
+
     public Token getToken(){
         return this.token;
     }
 
-    public String toString() {
-        return this.token.name();
+    /** returns null or value associated to property */
+    public Integer getPropertyValue(Property property){
+        return this.properties.get(property);
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
+    }
+
+    public void setPropertyValue(Property property, Integer value){
+        this.properties.put(property,value);
     }
 }
