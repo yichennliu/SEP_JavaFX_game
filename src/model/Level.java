@@ -1,5 +1,6 @@
 package model;
 
+import main.InputDirection;
 import model.enums.Property;
 
 import java.util.*;
@@ -18,6 +19,8 @@ public class Level {
     private Integer maxslime;
     /** globale properties */
     private Map<Property, Integer> properties;
+
+    private InputDirection inputDirection = null;
 
     public Level(String name, Feld[][] map, int[] gems, int[] ticks, List<Rule> pre, List<Rule> post, Integer maxslime) {
         this.name = name;
@@ -59,5 +62,13 @@ public class Level {
 
     public Map<Property, Integer> getProperties() {
         return properties;
+    }
+
+    public InputDirection getInputDirection() {
+        return inputDirection;
+    }
+
+    public void setInputDirection(InputDirection inputDirection) {
+        this.inputDirection = inputDirection;
     }
 }
