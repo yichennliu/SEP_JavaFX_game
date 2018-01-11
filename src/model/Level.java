@@ -30,7 +30,7 @@ public class Level {
         this.post = post;
         this.maxslime = maxslime;
         setNeighbours(this.map);
-        this.map[0][0].getNeighbour(Feld.Neighbour.RIGHT).setToken(Token.FIRE);
+
     }
 
     public String getName() {
@@ -71,13 +71,14 @@ public class Level {
 
         for(int row = 0; row < height;  row++){
             for (int column = 0; column < width; column++){
+                System.out.println("row: " + row + " column: " + column);
                 Feld feld = map[row][column];
                 if (column>0) feld.setNeighbour(Feld.Neighbour.LEFT, map[row][column-1]); // LEFT
                 if (column>0 && row>0) feld.setNeighbour(Feld.Neighbour.LEFTTOP, map[row-1][column-1]); // LEFTTOP
                 if (column>0 && row<height-1) feld.setNeighbour(Feld.Neighbour.LEFTBOTTOM, map[row+1][column-1]); // LEFTBOTTOM
                 if (column<width-1) feld.setNeighbour(Feld.Neighbour.RIGHT, map[row][column+1]); // RIGHT
                 if (column<width-1 && row>0) feld.setNeighbour(Feld.Neighbour.RIGHTTOP, map[row-1][column+1]); // RIGHTTOP
-                if (column<width-1 && row<height-1) feld.setNeighbour(Feld.Neighbour.RIGHTBOTTOM, map[row-1][column+1]); // RIGHTBOTTOM
+                if (column<width-1 && row<height-1) feld.setNeighbour(Feld.Neighbour.RIGHTBOTTOM, map[row+1][column+1]); // RIGHTBOTTOM
                 if (row>0) feld.setNeighbour(Feld.Neighbour.TOP, map[row-1][column]); // TOP
                 if (row<height-1) feld.setNeighbour(Feld.Neighbour.BOTTOM, map[row+1][column]); // BOTTOM
             }
