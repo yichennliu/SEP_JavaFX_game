@@ -29,8 +29,7 @@ public class Level {
         this.pre = pre;
         this.post = post;
         this.maxslime = maxslime;
-        setNeighbours(this.map);
-
+        setNeighbours();
     }
 
     public String getName() {
@@ -59,12 +58,27 @@ public class Level {
         return maxslime;
     }
 
-    public Map<Property, Integer> getProperties() {
-        return properties;
+    /** @return global value associated to property */
+    public Integer getPropertyValue(Property property){
+        return this.properties.get(property) == null
+                ? 0
+                : this.properties.get(property);
+    }
+
+    /**
+     * @param property Global property
+     * @param value
+     */
+    public void setPropertyValue(Property property, int value){
+        if (property.isGlobal()) {
+            this.properties.put(property, value);
+        } else {
+            throw new IllegalArgumentException("Property must be global");
+        }
     }
 
 
-    public static void setNeighbours(Feld[][] map) {
+    private void setNeighbours() {
         int width = map[0].length;
         int height = map.length;
 
@@ -79,6 +93,8 @@ public class Level {
                 if (column<width-1 && row<height-1) feld.setNeighbour(Feld.Neighbour.RIGHTBOTTOM, map[row+1][column+1]); // RIGHTBOTTOM
                 if (row>0) feld.setNeighbour(Feld.Neighbour.TOP, map[row-1][column]); // TOP
                 if (row<height-1) feld.setNeighbour(Feld.Neighbour.BOTTOM, map[row+1][column]); // BOTTOM
+                // also set back link to level
+                feld.setLevel(this);
             }
         }
     }
