@@ -8,14 +8,14 @@ public class TokenMatcher {
     private List<Token> tokens;
 
     /**
-     * Match any token
+            * Match any token
      */
     public TokenMatcher() {}
 
     /**
      * Match one of the given tokens
      *
-     * @param tokens non-null, non-epty
+     * @param tokens non-null, non-empty
      */
     public TokenMatcher(List<Token> tokens){
         if (tokens == null || tokens.isEmpty())

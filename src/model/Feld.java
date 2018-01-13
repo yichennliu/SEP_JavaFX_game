@@ -30,10 +30,6 @@ public class Feld {
         this.token = token;
     }
 
-    public Token getToken(){
-        return this.token;
-    }
-
     public void setNeighbour(Neighbour neighbour, Feld field){
         this.neighbours.put(neighbour,field);
     }
@@ -43,5 +39,18 @@ public class Feld {
 
     public String toString() {
         return this.token.name();
+    }
+
+    public Token getToken(){
+        return this.token;
+    }
+
+    /** returns null or value associated to property */
+    public Integer getPropertyValue(Property property){
+        return this.properties.get(property);
+    }
+
+    public void setPropertyValue(Property property, Integer value){
+        this.properties.put(property,value);
     }
 }
