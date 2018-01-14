@@ -48,9 +48,7 @@ public class View {
         this.stage = stage;
         this.stage.setWidth(windowWidth);
         this.stage.setHeight(windowHeight);
-
         this.stage.centerOnScreen();
-
 
         /* init Scene-Content */
        this.menuScene = new Menu(this.stage);
@@ -68,6 +66,7 @@ public class View {
             gameScene.zoom(e.getDeltaY(),1.5);
             update(Mode.GAME);
         });
+
         stage.show();
     }
 
@@ -124,6 +123,7 @@ public class View {
     }
 
     public Stage getStage(){
+
         return this.stage;
     }
 
