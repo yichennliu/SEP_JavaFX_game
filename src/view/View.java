@@ -142,13 +142,6 @@ public class View {
         }
     }
 
-    public Stage getStage(){
-
-        return this.stage;
-    }
-
-    public Game getGameScene(){
-        return this.gameScene;
-    }
+    public Stage getStage(){ return this.stage; }
 
 }
