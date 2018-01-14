@@ -2,6 +2,7 @@ package main;
 
 
 import model.Level;
+import model.enums.InputDirection;
 import view.View;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
