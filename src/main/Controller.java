@@ -1,12 +1,8 @@
 package main;
 
-import javafx.scene.Scene;
-import javafx.scene.input.KeyCombination;
-import model.Feld;
+
 import model.Level;
-import view.Game;
 import view.View;
-import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
