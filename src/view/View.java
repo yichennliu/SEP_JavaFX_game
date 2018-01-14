@@ -20,7 +20,7 @@ public class View {
     private Canvas editorCanvas;
 
     private GraphicsContext gameGC;
-    private GraphicsContext  editorGC;
+    private GraphicsContext editorGC;
 
     private Stage stage;
 
@@ -65,6 +65,26 @@ public class View {
         canvas.addEventHandler(ScrollEvent.SCROLL, e -> {
             gameScene.zoom(e.getDeltaY(),1.5);
             update(Mode.GAME);
+        });
+
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+
+            if(event.getCode().equals(KeyCode.UP)&& event.isShiftDown()|event.getCode().equals(KeyCode.DOWN)&&event.isShiftDown()
+                    |event.getCode().equals(KeyCode.LEFT)&&event.isShiftDown()|
+                    event.getCode().equals(KeyCode.RIGHT)&&event.isShiftDown()){
+
+                System.out.println("Feld graben");
+            }
+
+            if (event.getCode().equals(KeyCode.UP)) { System.out.println("Direction NORTH"); }
+
+            if (event.getCode().equals(KeyCode.DOWN)) { System.out.println("Direction SOUTH"); }
+
+            if (event.getCode().equals(KeyCode.LEFT)) { System.out.println("Direction WEST"); }
+
+            if (event.getCode().equals(KeyCode.RIGHT)) { System.out.println("Direction EAST"); }
+
+
         });
 
         stage.show();
@@ -125,6 +145,10 @@ public class View {
     public Stage getStage(){
 
         return this.stage;
+    }
+
+    public Game getGameScene(){
+        return this.gameScene;
     }
 
 }
