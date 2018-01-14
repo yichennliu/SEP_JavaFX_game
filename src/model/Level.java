@@ -29,15 +29,29 @@ public class Level {
         this.pre = pre;
         this.post = post;
         this.maxslime = maxslime;
-        setNeighbours(this.map);
-
+        setNeighbours();
     }
 
     public String getName() {
         return name;
     }
 
-    public Feld [][]getMap() { return map; }
+    /** @return Feld, or null */
+    public Feld getFeld(int row, int col) {
+        if (row >= 0 && row < this.getHeight() && col >= 0 && col < this.getWidth()) {
+            return this.map[row][col];
+        } else {
+            return null;
+        }
+    }
+
+    public int getWidth() {
+        return this.map[0].length;
+    }
+
+    public int getHeight() {
+        return this.map.length;
+    }
 
     public int[] getGems() {
         return gems;
@@ -59,28 +73,44 @@ public class Level {
         return maxslime;
     }
 
-    public Map<Property, Integer> getProperties() {
-        return properties;
+    /** @return global value associated to property */
+    public Integer getPropertyValue(Property property){
+        return this.properties.get(property) == null
+                ? 0
+                : this.properties.get(property);
+    }
+
+    /**
+     * @param property Global property
+     * @param value value
+     */
+    public void setPropertyValue(Property property, int value){
+        if (property.isGlobal()) {
+            this.properties.put(property, value);
+        } else {
+            throw new IllegalArgumentException("Property must be global");
+        }
     }
 
 
-    public static void setNeighbours(Feld[][] map) {
-
+    private void setNeighbours() {
         int width = map[0].length;
         int height = map.length;
 
-        for(int row = 0; row < height;  row++){
-            for (int column = 0; column < width; column++){
-                System.out.println("row: " + row + " column: " + column);
-                Feld feld = map[row][column];
-                if (column>0) feld.setNeighbour(Feld.Neighbour.LEFT, map[row][column-1]); // LEFT
-                if (column>0 && row>0) feld.setNeighbour(Feld.Neighbour.LEFTTOP, map[row-1][column-1]); // LEFTTOP
-                if (column>0 && row<height-1) feld.setNeighbour(Feld.Neighbour.LEFTBOTTOM, map[row+1][column-1]); // LEFTBOTTOM
-                if (column<width-1) feld.setNeighbour(Feld.Neighbour.RIGHT, map[row][column+1]); // RIGHT
-                if (column<width-1 && row>0) feld.setNeighbour(Feld.Neighbour.RIGHTTOP, map[row-1][column+1]); // RIGHTTOP
-                if (column<width-1 && row<height-1) feld.setNeighbour(Feld.Neighbour.RIGHTBOTTOM, map[row+1][column+1]); // RIGHTBOTTOM
-                if (row>0) feld.setNeighbour(Feld.Neighbour.TOP, map[row-1][column]); // TOP
-                if (row<height-1) feld.setNeighbour(Feld.Neighbour.BOTTOM, map[row+1][column]); // BOTTOM
+        for(int row = 0; row < this.getHeight();  row++){
+            for (int column = 0; column < this.getWidth(); column++){
+                Feld feld = getFeld(row, column);
+                feld.setNeighbour(Feld.Neighbour.LEFT,       getFeld(row, column-1));
+                feld.setNeighbour(Feld.Neighbour.LEFTTOP,    getFeld(row-1, column-1));
+                feld.setNeighbour(Feld.Neighbour.LEFTBOTTOM, getFeld(row+1, column-1));
+                feld.setNeighbour(Feld.Neighbour.RIGHT,      getFeld(row, column+1));
+                feld.setNeighbour(Feld.Neighbour.RIGHTTOP,   getFeld(row-1, column+1));
+                feld.setNeighbour(Feld.Neighbour.RIGHTBOTTOM,getFeld(row+1, column+1));
+                feld.setNeighbour(Feld.Neighbour.TOP,        getFeld(row-1, column));
+                feld.setNeighbour(Feld.Neighbour.BOTTOM,     getFeld(row+1, column));
+
+                // also set back link to level
+                feld.setLevel(this);
             }
         }
     }

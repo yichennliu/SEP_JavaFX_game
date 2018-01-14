@@ -62,7 +62,7 @@ public class LevelImporter {
                 Feld feld = null;
                 if (jsonFeld instanceof String) {
                     // only token
-                    feld = new Feld(Token.valueOf(((String) jsonFeld).toUpperCase()));
+                    feld = new Feld(Token.valueOf(((String) jsonFeld).toUpperCase()), colNum, rowNum);
                 } else {
                     // token + properties
                     Token token = Token.valueOf(((JSONObject) jsonFeld).getString("token").toUpperCase());
@@ -74,7 +74,7 @@ public class LevelImporter {
                         // TODO: check if property is a level-wide property and handle it differently
                         values.put(Property.valueOf(key.toUpperCase()), keyVal);
                     }
-                    feld = new Feld(token, values);
+                    feld = new Feld(token, values, colNum, rowNum);
                 }
                 map[rowNum][colNum] = feld;
             }

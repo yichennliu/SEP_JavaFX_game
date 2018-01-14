@@ -1,6 +1,6 @@
 package main;
 
 public enum InputDirection {
-    UP, RIGHT, DOWN, LEFT,
+    GOUP, GORIGHT, GODOWN, GOLEFT,
     DIGUP, DIGRIGHT, DIGDOWN, DIGLEFT
 }
