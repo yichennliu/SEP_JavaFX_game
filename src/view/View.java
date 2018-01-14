@@ -20,13 +20,13 @@ public class View {
     private Canvas editorCanvas;
 
     private GraphicsContext gameGC;
-    private GraphicsContext editorGC;
+    private GraphicsContext  editorGC;
 
     private Stage stage;
 
-    private Scene menu;
+    private Menu menuScene;
     private Scene levelEditor;
-    private Scene game;
+    private Game gameScene;
 
     private Level level;
     private int maxSize = 1000;
@@ -37,114 +37,94 @@ public class View {
 
     private double translateX;
     private double translateY;
-    private double scale = 1;
+    private double scale =1;
 
     private Affine transformation;
 
-    public enum Mode {EDITOR, GAME, MENU}
+    public enum Mode {EDITOR, GAME, MENU};
 
-    ;
-
-    public View(Level level, Stage stage) {
+    public View(Level level, Stage stage){
         this.level = level;
         this.stage = stage;
+        this.stage.setWidth(windowWidth);
+        this.stage.setHeight(windowHeight);
 
-        /*initialize root-Groups for different scenes */
-        Group menuRoot = new Group();
-        Group editorRoot = new Group();
-        Group gameRoot = new Group();
+        this.stage.centerOnScreen();
 
-        /* initialize Scenes (menu, game, leveleditor */
-        menu = new Scene(menuRoot);
-        levelEditor = new Scene(editorRoot);
-        game = new Scene(gameRoot);
 
-        gameCanvas = new Canvas(windowWidth, windowHeight);
-        gameGC = gameCanvas.getGraphicsContext2D();
+        /* init Scene-Content */
+       this.menuScene = new Menu(this.stage);
+       this.gameScene = new Game(this.stage);
 
-        transformation = new Affine();
+       stage.setScene(gameScene.getScene());
+       stage.setTitle("BoulderDash - "+this.level.getName());
 
-        gameCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-
-            if (e.getButton() == MouseButton.PRIMARY) {
-                transformation.prepend(new Translate(-10, 0));
-                System.out.println("PRIMARY!!!");
-            } else {
-                transformation.prepend(new Translate(10, 0));
-                System.out.println("Secondary!!!");
-            }
-            this.drawMap(this.gameCanvas, this.gameGC);
+       Canvas canvas = gameScene.getCanvas();
+       canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+           gameScene.translate(10,0);
+           update(Mode.GAME);
+       });
+        canvas.addEventHandler(ScrollEvent.SCROLL, e -> {
+            gameScene.zoom(e.getDeltaY(),1.5);
+            update(Mode.GAME);
         });
-
-        gameCanvas.addEventHandler(ScrollEvent.SCROLL, e -> {
-            double scale = 1.5;
-            if (e.getDeltaY() < 0) {
-                scale = 1 / scale;
-            }
-
-            transformation.append(new Scale(scale, scale));
-            this.drawMap(this.gameCanvas, this.gameGC);
-        });
-
-       /* add Scene-Content to scene-Roots */
-        gameRoot.getChildren().addAll(gameCanvas);
-        menuRoot.getChildren().addAll();
-        editorRoot.getChildren().addAll();
-
-        stage.setScene(this.game);
-        stage.setTitle("BoulderDash - " + this.level.getName());
         stage.show();
     }
 
-    private void showMenu() {
-        stage.setScene(this.menu);
+    private void showMenu(){
+        stage.setScene(this.menuScene.getScene());
     }
 
-    private void showEditor() {
+    private void showEditor(){
         stage.setScene(this.levelEditor);
     }
 
-    private void showGame() {
-        stage.setScene(this.game);
+    private void showGame(){
+        stage.setScene(this.gameScene.getScene());
     }
 
     public void update(Mode mode) {
         switch (mode) {
             case GAME:
-                showGame();
-                drawMap(gameCanvas, gameGC);
-                break;
+                    showGame();
+                    Canvas gameCanvas = gameScene.getCanvas();
+                    drawMap(gameCanvas,gameCanvas.getGraphicsContext2D());
+                    break;
             case EDITOR:
-                showEditor();
-                break;
+                    showEditor();
+                    break;
             case MENU:
-                showMenu();
-                ;
-                break;
+                    showMenu();;
+                    break;
         }
     }
 
-    private void drawMap(Canvas canvas, GraphicsContext gc) {
+    private void drawMap(Canvas canvas, GraphicsContext gc){
+        Affine actualTransformation = gc.getTransform();
         Affine defaultTransform = new Affine();
         gc.setTransform(defaultTransform);
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.setTransform(this.transformation);
+        gc.clearRect(0,0,canvas.getWidth(),canvas.getHeight());
+        gc.setTransform(actualTransformation);
 
         int mapWidth = level.getMap()[0].length;
         int mapHeight = level.getMap().length;
         double canvasWidth = canvas.getWidth();
         double canvasHeight = canvas.getHeight();
 
-        for (int rowNum = 0; rowNum < mapHeight; rowNum++) {
-            for (int colNum = 0; colNum < mapWidth; colNum++) {
-                double xPos = colNum * fieldSize;
-                double yPos = rowNum * fieldSize;
+        for(int rowNum = 0; rowNum < mapHeight; rowNum++){
+            for (int colNum = 0; colNum < mapWidth; colNum++){
+                double xPos = colNum* fieldSize;
+                double yPos = rowNum*fieldSize;
                 gc.strokeRect(xPos, yPos, fieldSize, fieldSize);
                 String text = level.getMap()[rowNum][colNum].toString();
                 // Erdreich verstecken, um Ausrichtungstest in text.json zu sehen
-                this.gameGC.fillText(text == "MUD" ? "" : text, xPos + fieldSize / 2 - 15, yPos + fieldSize / 2 + 5);
+                gc.fillText(text == "MUD" ? "" : text,xPos+fieldSize/2-15,yPos+fieldSize/2+5);
             }
         }
+    }
+
+    public Stage getStage(){
+        return this.stage;
     }
 
 }
