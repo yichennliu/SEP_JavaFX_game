@@ -20,7 +20,7 @@ public class View {
     private Canvas editorCanvas;
 
     private GraphicsContext gameGC;
-    private GraphicsContext  editorGC;
+    private GraphicsContext editorGC;
 
     private Stage stage;
 
@@ -41,16 +41,14 @@ public class View {
 
     private Affine transformation;
 
-    public enum Mode {EDITOR, GAME, MENU};
+    public enum Mode {EDITOR, GAME, MENU}
 
     public View(Level level, Stage stage){
         this.level = level;
         this.stage = stage;
         this.stage.setWidth(windowWidth);
         this.stage.setHeight(windowHeight);
-
         this.stage.centerOnScreen();
-
 
         /* init Scene-Content */
        this.menuScene = new Menu(this.stage);
@@ -68,6 +66,27 @@ public class View {
             gameScene.zoom(e.getDeltaY(),1.5);
             update(Mode.GAME);
         });
+
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+
+            if(event.getCode().equals(KeyCode.UP)&& event.isShiftDown()|event.getCode().equals(KeyCode.DOWN)&&event.isShiftDown()
+                    |event.getCode().equals(KeyCode.LEFT)&&event.isShiftDown()|
+                    event.getCode().equals(KeyCode.RIGHT)&&event.isShiftDown()){
+
+                System.out.println("Feld graben");
+            }
+
+            if (event.getCode().equals(KeyCode.UP)) { System.out.println("Direction NORTH"); }
+
+            if (event.getCode().equals(KeyCode.DOWN)) { System.out.println("Direction SOUTH"); }
+
+            if (event.getCode().equals(KeyCode.LEFT)) { System.out.println("Direction WEST"); }
+
+            if (event.getCode().equals(KeyCode.RIGHT)) { System.out.println("Direction EAST"); }
+
+
+        });
+
         stage.show();
     }
 
@@ -94,7 +113,7 @@ public class View {
                     showEditor();
                     break;
             case MENU:
-                    showMenu();;
+                    showMenu();
                     break;
         }
     }
@@ -106,8 +125,8 @@ public class View {
         gc.clearRect(0,0,canvas.getWidth(),canvas.getHeight());
         gc.setTransform(actualTransformation);
 
-        int mapWidth = level.getMap()[0].length;
-        int mapHeight = level.getMap().length;
+        int mapWidth = level.getWidth();
+        int mapHeight = level.getHeight();
         double canvasWidth = canvas.getWidth();
         double canvasHeight = canvas.getHeight();
 
@@ -116,15 +135,13 @@ public class View {
                 double xPos = colNum* fieldSize;
                 double yPos = rowNum*fieldSize;
                 gc.strokeRect(xPos, yPos, fieldSize, fieldSize);
-                String text = level.getMap()[rowNum][colNum].toString();
+                String text = level.getFeld(rowNum, colNum).toString();
                 // Erdreich verstecken, um Ausrichtungstest in text.json zu sehen
-                gc.fillText(text == "MUD" ? "" : text,xPos+fieldSize/2-15,yPos+fieldSize/2+5);
+                gc.fillText(text.equals("MUD") ? "" : text,xPos+fieldSize/2-15,yPos+fieldSize/2+5);
             }
         }
     }
 
-    public Stage getStage(){
-        return this.stage;
-    }
+    public Stage getStage(){ return this.stage; }
 
 }
