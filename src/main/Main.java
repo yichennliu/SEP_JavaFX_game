@@ -11,7 +11,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Level level = LevelImporter.importLevel("json/text.json") ;
         View view = new View(level,primaryStage);
-        Controller controller = new Controller(level,view);
         view.update(View.Mode.GAME);
     }
 

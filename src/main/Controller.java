@@ -18,13 +18,10 @@ public class Controller {
         this.level= level;
         Stage gamestage= this.view.getStage();
 
-
-
         //System.out.println(gamestage.getX());
         //???System.out.println does not work???(Works only in view class)
 
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            System.out.println(event.toString());
 
             if(event.getCode().equals(KeyCode.UP)&& event.isShiftDown()|event.getCode().equals(KeyCode.DOWN)&&event.isShiftDown()
                     |event.getCode().equals(KeyCode.LEFT)&&event.isShiftDown()|
