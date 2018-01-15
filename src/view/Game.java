@@ -31,7 +31,6 @@ public class Game {
         this.width = stage.getWidth();
         this.height = stage.getHeight();
 
-
         gameCanvas = new Canvas(width,height);
         gameGC = gameCanvas.getGraphicsContext2D();
 
