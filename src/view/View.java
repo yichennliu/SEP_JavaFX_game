@@ -1,16 +1,10 @@
 package view;
 
-import javafx.geometry.Point2D;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import model.Level;
 
@@ -57,6 +51,7 @@ public class View {
        this.gameScene = new Game(this.stage);
 
        stage.setScene(gameScene.getScene());
+       stage.setScene(menuScene.getSceneMenu());
        stage.setTitle("BoulderDash - "+this.level.getName());
 
        Canvas canvas = gameScene.getCanvas();
@@ -72,7 +67,7 @@ public class View {
     }
 
     private void showMenu(){
-        stage.setScene(this.menuScene.getScene());
+        stage.setScene(this.menuScene.getSceneMenu());
     }
 
     private void showEditor(){
