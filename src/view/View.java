@@ -1,16 +1,11 @@
 package view;
 
-import javafx.geometry.Point2D;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.transform.Affine;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import model.Level;
 
@@ -27,6 +22,7 @@ public class View {
     private Menu menuScene;
     private Scene levelEditor;
     private Game gameScene;
+    private ThemeEditorView themeEditorScene;
 
     private Level level;
     private int maxSize = 1000;
@@ -41,7 +37,7 @@ public class View {
 
     private Affine transformation;
 
-    public enum Mode {EDITOR, GAME, MENU};
+    public enum Mode {EDITOR, GAME, MENU, THEME};
 
     public View(Level level, Stage stage){
         this.level = level;
@@ -51,12 +47,16 @@ public class View {
 
         this.stage.centerOnScreen();
 
+        /*Test für ThemeEditor*/
+        ThemeEditor themeEditor = new ThemeEditor();
+        this.themeEditorScene = new ThemeEditorView(this.stage,themeEditor);
+        ThemeEditorController themeEditorController = new ThemeEditorController(this.themeEditorScene, themeEditor);
 
         /* init Scene-Content */
        this.menuScene = new Menu(this.stage);
        this.gameScene = new Game(this.stage);
 
-       stage.setScene(gameScene.getScene());
+       stage.setScene(themeEditorScene.getScene());
        stage.setTitle("BoulderDash - "+this.level.getName());
 
        Canvas canvas = gameScene.getCanvas();
@@ -83,6 +83,11 @@ public class View {
         stage.setScene(this.gameScene.getScene());
     }
 
+    private void showTheme() {
+        stage.setScene(this.themeEditorScene.getScene());
+    }
+
+
     public void update(Mode mode) {
         switch (mode) {
             case GAME:
@@ -96,8 +101,12 @@ public class View {
             case MENU:
                     showMenu();;
                     break;
+            case THEME:
+                    showTheme();
+                    break;
         }
     }
+
 
     private void drawMap(Canvas canvas, GraphicsContext gc){
         Affine actualTransformation = gc.getTransform();

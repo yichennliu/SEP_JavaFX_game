@@ -21,6 +21,7 @@ public class Game {
     private double width, height;
     private Group root;
     private Affine transformation = new Affine();
+    private Theme theme;
 
 
     public Game(Stage stage){
@@ -47,7 +48,7 @@ public class Game {
     }
 
     public void translate(double x, double y){
-        this.transformation.prepend(new Translate(x,y));
+        this.transformation.append(new Translate(x,y));
         this.gameGC.setTransform(this.transformation);
     }
 
