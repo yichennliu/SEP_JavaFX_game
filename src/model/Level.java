@@ -19,6 +19,7 @@ public class Level {
     private Integer maxslime;
     /** globale properties */
     private Map<Property, Integer> properties;
+    private static int time = 0;
 
 
     public Level(String name, Feld[][] map, int[] gems, int[] ticks, List<Rule> pre, List<Rule> post, Integer maxslime) {
@@ -63,6 +64,15 @@ public class Level {
         return properties;
     }
 
+    public int getTime() {
+        return time;
+    }
+    public void tick() {
+        //preRules();
+        //mainRules();
+        //postRules();
+        time++;
+    }
 
     public static void setNeighbours(Feld[][] map) {
 
