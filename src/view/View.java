@@ -67,27 +67,7 @@ public class View {
             update(Mode.GAME);
         });
 
-        stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-
-            if(event.getCode().equals(KeyCode.UP)&& event.isShiftDown()|event.getCode().equals(KeyCode.DOWN)&&event.isShiftDown()
-                    |event.getCode().equals(KeyCode.LEFT)&&event.isShiftDown()|
-                    event.getCode().equals(KeyCode.RIGHT)&&event.isShiftDown()){
-
-                System.out.println("Feld graben");
-            }
-
-            if (event.getCode().equals(KeyCode.UP)) { System.out.println("Direction NORTH"); }
-
-            if (event.getCode().equals(KeyCode.DOWN)) { System.out.println("Direction SOUTH"); }
-
-            if (event.getCode().equals(KeyCode.LEFT)) { System.out.println("Direction WEST"); }
-
-            if (event.getCode().equals(KeyCode.RIGHT)) { System.out.println("Direction EAST"); }
-
-
-        });
-
-        stage.show();
+       stage.show();
     }
 
     private void showMenu(){
