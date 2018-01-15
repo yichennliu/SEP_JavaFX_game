@@ -1,26 +1,29 @@
 package main;
 
-
-import model.Level;
-import model.enums.InputDirection;
-import view.View;
+import javafx.animation.KeyFrame;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-
+import javafx.util.Duration;
+import model.Feld;
+import model.Level;
+import model.enums.InputDirection;
+import view.View;
 
 public class Controller {
     private View view;
     private Level level;
+    private View.Mode currentMode;
 
-    public Controller(Level level, View view) {
-        this.view = view;
-        this.level= level;
+    public Controller(View view, Level level){
+        this.view=view;
+        this.level=level;
+        this.currentMode = View.Mode.GAME;
+
         Stage gamestage= this.view.getStage();
-
-        //System.out.println(gamestage.getX());
-        //???System.out.println does not work???(Works only in view class)
-
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
 
             if(event.getCode().equals(KeyCode.UP)&& event.isShiftDown()|event.getCode().equals(KeyCode.DOWN)&&event.isShiftDown()
@@ -45,7 +48,7 @@ public class Controller {
         gamestage.addEventHandler(KeyEvent.KEY_RELEASED, event->{
 
             if(event.getCode().equals(KeyCode.UP)) {
-               System.out.println("Released:"+InputDirection.GOUP.toString());
+                System.out.println("Released:"+ InputDirection.GOUP.toString());
 
             }
 
@@ -64,7 +67,13 @@ public class Controller {
 
         });
 
+        EventHandler<ActionEvent> loop = e -> {
+            this.level.tick();
+            this.view.update(currentMode);
+        };
 
+        KeyFrame frame = new KeyFrame(Duration.seconds(1/5),loop);
     }
+
 
 }
