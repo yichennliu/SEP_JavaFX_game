@@ -5,6 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.*;
 import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
 import model.Level;
@@ -44,7 +45,6 @@ public class View {
         this.stage = stage;
         this.stage.setWidth(windowWidth);
         this.stage.setHeight(windowHeight);
-
         this.stage.centerOnScreen();
 
         /*Test für ThemeEditor*/
@@ -72,7 +72,7 @@ public class View {
     }
 
     private void showMenu(){
-        stage.setScene(this.menuScene.getScene());
+        stage.setScene(this.menuScene.getSceneMenu());
     }
 
     private void showEditor(){
@@ -99,7 +99,7 @@ public class View {
                     showEditor();
                     break;
             case MENU:
-                    showMenu();;
+                    showMenu();
                     break;
             case THEME:
                     showTheme();
@@ -115,8 +115,8 @@ public class View {
         gc.clearRect(0,0,canvas.getWidth(),canvas.getHeight());
         gc.setTransform(actualTransformation);
 
-        int mapWidth = level.getMap()[0].length;
-        int mapHeight = level.getMap().length;
+        int mapWidth = level.getWidth();
+        int mapHeight = level.getHeight();
         double canvasWidth = canvas.getWidth();
         double canvasHeight = canvas.getHeight();
 
@@ -125,9 +125,9 @@ public class View {
                 double xPos = colNum* fieldSize;
                 double yPos = rowNum*fieldSize;
                 gc.strokeRect(xPos, yPos, fieldSize, fieldSize);
-                String text = level.getMap()[rowNum][colNum].toString();
+                String text = level.getFeld(rowNum, colNum).toString();
                 // Erdreich verstecken, um Ausrichtungstest in text.json zu sehen
-                gc.fillText(text == "MUD" ? "" : text,xPos+fieldSize/2-15,yPos+fieldSize/2+5);
+                gc.fillText(text.equals("MUD") ? "" : text,xPos+fieldSize/2-15,yPos+fieldSize/2+5);
             }
         }
     }
