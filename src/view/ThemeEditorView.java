@@ -11,7 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.Feld;
+import model.game.Feld;
 import model.enums.Token;
 import model.themeEditor.ThemeEditor;
 
@@ -30,9 +30,6 @@ private GraphicsContext themeGC;
 private Feld[][] testFeld;
 private TabPane tabs;
 private Map<Token,TabPane> typeTabs;
-
-private Map<Theme.FeldType,Image> typeImages;
-
 
 private GridPane tabContentAndCanvas;
 private Button addButton;
@@ -60,7 +57,6 @@ private ListView listView;
         this.tabs.setMaxWidth(width-10);
 
         initTabContent();
-        initTypeImages();
 
        /* create Tabs */
         for(Token t: Token.values()){
@@ -143,13 +139,6 @@ private ListView listView;
         themeGC = themeCanvas.getGraphicsContext2D();
         themeGC.fillRect(0,0,themeCanvas.getWidth(),themeCanvas.getHeight());
 
-    }
-
-    private void initTypeImages(){
-        typeImages = new HashMap<Theme.FeldType,Image>();
-        for(Theme.FeldType t: Theme.FeldType.values()){
-            typeImages.put(t,this.getTypeThumbnail(t));
-        }
     }
 
     public GraphicsContext getGraphicsContext(){

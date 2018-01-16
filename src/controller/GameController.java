@@ -8,7 +8,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import model.Level;
+import model.game.Level;
 import view.GameView;
 
 public class GameController {

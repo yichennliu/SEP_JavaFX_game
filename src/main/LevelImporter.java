@@ -1,8 +1,8 @@
 package main;
 
-import model.*;
 import model.enums.*;
 import model.enums.Property;
+import model.game.*;
 import org.json.*;
 import java.io.*;
 import java.util.*;

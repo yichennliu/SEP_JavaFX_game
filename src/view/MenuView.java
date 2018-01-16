@@ -1,62 +1,41 @@
 package view;
 
 import javafx.event.ActionEvent;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
-import main.LevelImporter;
-import model.Level;
 
 
-public class Menu {
+public class MenuView {
 
     private Scene sceneMenu,sceneHelp;
     private Button gameButton;
     private Button helpButton;
+    private Button themeEditorButton;
+
     private Stage stage;
     private static Group root;
     private int width;
     private int height;
 
-    public Menu(Stage stage){
+    public MenuView(Stage stage, Object model){
         this.stage= stage;
          root = new Group();
-       // VBox layoutMenu = new VBox(gameButton,helpButton);
-       // BorderPane borderMenu = new BorderPane(layoutMenu);
-        //borderMenu.setAlignment(layoutMenu, Pos.CENTER);
-     //   layoutMenu.setAlignment(Pos.CENTER);
-
-
+        VBox menu = new VBox();
         this.gameButton = new Button(" s t a r t  G A M E ");
+        this.themeEditorButton = new Button("s t a r t  T H E M E - E D I T O R");
 
         this.helpButton = new Button ("H E L P");
 
         this.sceneMenu = new Scene(root);
-        setGameButton();
-        setHelpButton();
-        root.getChildren().addAll(gameButton,helpButton);
-
+        menu.getChildren().addAll(gameButton,helpButton,themeEditorButton);
+        root.getChildren().add(menu);
+        if(!stage.isShowing()) stage.show();
     }
-
-    public void setGameButton() {
-        gameButton.setOnAction((ActionEvent event) -> {
-            Level level = LevelImporter.importLevel("json/text.json") ;
-            View view = new View(level,stage);
-            stage.centerOnScreen();
-            view.update(View.Mode.GAME);
-
-        });
-
-
-
-    }
-
 
 
     public void setHelpButton() {
@@ -73,14 +52,12 @@ public class Menu {
         });
     }
 
-
-
-
-
-
     public Button getGameButton(){
-
         return this.gameButton;
+    }
+
+    public Button getThemeEditorButton(){
+        return this.themeEditorButton;
     }
 
     public Scene getSceneMenu() {

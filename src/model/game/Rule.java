@@ -1,4 +1,4 @@
-package model;
+package model.game;
 
 import model.enums.Direction;
 import model.enums.Situation;

@@ -1,18 +1,9 @@
-package main;
+package controller;
 
-import javafx.animation.KeyFrame;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-import model.Feld;
-import model.Level;
-import model.enums.InputDirection;
+import main.LevelImporter;
+import model.game.Level;
+import model.themeEditor.ThemeEditor;
 import view.*;
-import controller.*;
 
 public class Controller {
     private View view;

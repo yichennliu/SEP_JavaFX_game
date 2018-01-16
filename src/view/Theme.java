@@ -1,11 +1,11 @@
 package view;
 import javafx.scene.image.Image;
 import model.enums.Token;
+import model.themeEditor.ThemeEditor;
+import model.themeEditor.HashMap2D;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Theme {
 

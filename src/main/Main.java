@@ -1,21 +1,17 @@
 package main;
 
+import controller.Controller;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import model.Level;
-import view.Menu;
 import view.View;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Level level = LevelImporter.importLevel("json/text.json") ;
-        View view = new View(level,primaryStage);
-        Controller controller = new Controller(view,level);
-        view.update(View.Mode.GAME);
-
-
+        View view = new View(primaryStage);
+        Controller controller = new Controller(view, null);
+        controller.startMenu();
     }
 
     public static void main(String[] args) {

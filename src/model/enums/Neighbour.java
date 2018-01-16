@@ -1,7 +1,5 @@
 package model.enums;
 
-import model.Feld;
-
 public enum Neighbour {
     LEFT(0,-1), LEFTTOP(-1,-1), LEFTBOTTOM(1,-1), RIGHT(0,1), RIGHTTOP(-1,1), RIGHTBOTTOM(1,1), TOP(-1,0), BOTTOM(1,0);
 
