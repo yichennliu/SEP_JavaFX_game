@@ -71,11 +71,19 @@ public class GameController {
 
         EventHandler<ActionEvent> loop = e -> {
 //            this.level.tick();
+            this.executePre();
+            this.executeMain();
+            this.executePost();
             this.gameView.update();
         };
 
         KeyFrame frame = new KeyFrame(Duration.seconds(1/5),loop);
     }
 
+    public void executePre(){}
+
+    public void executeMain(){}
+
+    public void executePost(){}
 }
 
