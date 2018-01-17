@@ -22,7 +22,7 @@ public class View {
     private double windowHeight = 600;
     private double fieldSize = 20;
 
-    public enum Mode {EDITOR, GAME, MENU, THEME};
+    public enum Mode {EDITOR, GAME, MENU, THEME,PRIMARY};
 
     public View(Stage stage){
         this.stage = stage;
@@ -50,10 +50,22 @@ public class View {
         stage.setScene(themeEditorView.getScene());
     }
 
+    private void showPrimary(){
+
+        PrimaryPage primaryPage= (PrimaryPage) currentScene;
+        stage.setScene(primaryPage.getScene());
+
+    }
+
 
     public void update(Mode mode, Object scene) {
         this.currentScene = scene;
         switch (mode) {
+            case PRIMARY:
+                showPrimary();
+
+                break;
+
             case GAME:
                     showGame();
 //                    Canvas gameCanvas = gameScene.getCanvas();

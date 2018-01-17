@@ -15,6 +15,15 @@ public class Controller {
 
     }
 
+
+    public void startPrimaryPage(){
+        this.currentMode = View.Mode.PRIMARY;
+        PrimaryPage primaryPage = new PrimaryPage(this.view.getStage());
+        new PrimaryController(primaryPage,this);
+        this.view.update(View.Mode.PRIMARY,primaryPage);
+
+    }
+
     public void startMenu(){
         this.currentMode = View.Mode.MENU;
 
