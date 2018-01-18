@@ -29,6 +29,7 @@ public class ThemeEditorController {
     private ThemeEditor themeEditor;
     private Controller menuController;
 
+
     public ThemeEditorController(ThemeEditorView view, ThemeEditor themeEditor, Controller menuController) {
         this.themeEditorView = view;
         this.themeEditor = themeEditor;
@@ -39,6 +40,7 @@ public class ThemeEditorController {
         initListViews();
         initTypeTabs();
         initSizeInput();
+        back();
     }
 
     private void updateListViewAndPreview(){
@@ -229,6 +231,14 @@ public class ThemeEditorController {
              }
          };
          return callback;
+    }
+
+    private void back(){
+        Button backButton = themeEditorView.getBackButton();
+        backButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+            this.menuController.startMenu();
+
+        });
     }
 }
 

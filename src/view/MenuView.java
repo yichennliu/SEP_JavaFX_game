@@ -19,8 +19,6 @@ public class MenuView {
 
     private Stage stage;
     private static Group root;
-    private int width;
-    private int height;
 
     public MenuView(Stage stage, Object model){
         this.stage= stage;

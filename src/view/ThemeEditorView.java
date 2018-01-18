@@ -31,10 +31,10 @@ private Feld[][] testFeld;
 private TabPane tabs;
 private Map<Token,TabPane> typeTabs;
 
-
 private GridPane tabContentAndCanvas;
 private Button addButton;
 private Button removeButton;
+private Button backButton;
 private ImageView preview;
 private Label label;
 private ListView listView;
@@ -102,6 +102,7 @@ private TextField sizeInput;
         this.sizeInput = new TextField();
         this.addButton = new Button("Bild hinzufügen");
         this.removeButton = new Button("Bild löschen");
+        this.backButton = new Button("zurück zu Menu");
         this.preview = new ImageView();
         this.listView = new ListView();
         this.label = new Label();
@@ -110,7 +111,7 @@ private TextField sizeInput;
         GridPane tabContent = new GridPane();
         HBox buttons = new HBox();
 
-        tabContent.setStyle("-fx-padding:2px");
+        tabContent.setStyle("-fx-padding:4px");
         this.listView.setPlaceholder(this.label);
         this.sizeInput.setMaxWidth(30.0);
 
@@ -120,7 +121,7 @@ private TextField sizeInput;
         this.preview.setFitHeight(80);
         this.removeButton.setDisable(true);
 
-        buttons.getChildren().addAll(this.addButton,this.removeButton, this.sizeInput);
+        buttons.getChildren().addAll(this.addButton,this.removeButton, this.sizeInput,this.backButton);
 
         tabContent.add(label,0,0);
         tabContent.add(listView,0,1);
@@ -166,6 +167,9 @@ private TextField sizeInput;
     public Button getRemoveButton(){
         return this.removeButton;
     }
+
+
+   public Button getBackButton(){ return this.backButton;}
 
     public ImageView getPreview(){
         return this.preview;
