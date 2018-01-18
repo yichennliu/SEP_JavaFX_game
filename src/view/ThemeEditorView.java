@@ -31,19 +31,20 @@ private Feld[][] testFeld;
 private TabPane tabs;
 private Map<Token,TabPane> typeTabs;
 
+
 private GridPane tabContentAndCanvas;
 private Button addButton;
 private Button removeButton;
 private ImageView preview;
 private Label label;
 private ListView listView;
+private TextField sizeInput;
 
 
     public ThemeEditorView(Stage stage, ThemeEditor themeEditor){
         root = new Group();
 
         this.testFeld = new Feld[5][6];
-        this.theme = new Theme();
         this.typeTabs = new HashMap<Token,TabPane>();
 
         this.scene = new Scene(this.root);
@@ -98,6 +99,7 @@ private ListView listView;
     }
 
     private void initTabContent(){
+        this.sizeInput = new TextField();
         this.addButton = new Button("Bild hinzufügen");
         this.removeButton = new Button("Bild löschen");
         this.preview = new ImageView();
@@ -110,14 +112,15 @@ private ListView listView;
 
         tabContent.setStyle("-fx-padding:2px");
         this.listView.setPlaceholder(this.label);
+        this.sizeInput.setMaxWidth(30.0);
 
-        this.listView.setPrefHeight(50);
+        this.listView.setPrefHeight(100);
 
         this.preview.setPreserveRatio(true);
-        this.preview.setFitHeight(50);
+        this.preview.setFitHeight(80);
         this.removeButton.setDisable(true);
 
-        buttons.getChildren().addAll(this.addButton,this.removeButton);
+        buttons.getChildren().addAll(this.addButton,this.removeButton, this.sizeInput);
 
         tabContent.add(label,0,0);
         tabContent.add(listView,0,1);
@@ -178,6 +181,10 @@ private ListView listView;
 
     public Label getLabel() {
         return this.label;
+    }
+
+    public TextField getSizeInput(){
+        return this.sizeInput;
     }
 
     public Map<Token,TabPane> getTypeTabs(){

@@ -12,7 +12,6 @@ public class Controller {
     public Controller(View view, Object menuModel) { // Todo: MenuModel
         this.view = view;
         this.currentMode = View.Mode.GAME;
-
     }
 
     public void startMenu(){
@@ -37,7 +36,7 @@ public class Controller {
     public void startGame(){
         this.currentMode = View.Mode.GAME;
 
-        Level level = LevelImporter.importLevel("json/text.json") ;
+        Level level = LevelImporter.importLevel("json/levels/text.json") ;
         if(level!=null){
             GameView gameView = new GameView(this.view.getStage(),level);
             new GameController(level,gameView,this);

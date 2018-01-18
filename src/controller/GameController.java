@@ -43,31 +43,32 @@ public class GameController {
             if (event.getCode().equals(KeyCode.DOWN))gameView.translate(0,10);
             if (event.getCode().equals(KeyCode.LEFT)) gameView.translate(-10,0);
             if (event.getCode().equals(KeyCode.RIGHT)) gameView.translate(10,0);
+            if (event.getCode().equals(KeyCode.SPACE)) gameView.rotate(5.0);
             this.gameView.update();
         });
 
 
-//        gamestage.addEventHandler(KeyEvent.KEY_RELEASED, event->{
-//
-//            if(event.getCode().equals(KeyCode.UP)) {
-//                System.out.println("Released:"+ InputDirection.GOUP.toString());
-//
-//            }
-//
-//            if(event.getCode().equals(KeyCode.DOWN)){
-//
-//                System.out.println("Released:"+InputDirection.GODOWN.toString());
-//            }
-//            if(event.getCode().equals(KeyCode.LEFT)){
-//
-//                System.out.println("Released:"+InputDirection.GOLEFT.toString());
-//            }
-//            if(event.getCode().equals(KeyCode.RIGHT)){
-//
-//                System.out.println("Released:"+InputDirection.GORIGHT.toString());
-//            }
-//
-//        });
+        /*gamestage.addEventHandler(KeyEvent.KEY_RELEASED, event->{
+
+            if(event.getCode().equals(KeyCode.UP)) {
+                System.out.println("Released:"+ InputDirection.GOUP.toString());
+
+            }
+
+            if(event.getCode().equals(KeyCode.DOWN)){
+
+                System.out.println("Released:"+InputDirection.GODOWN.toString());
+            }
+            if(event.getCode().equals(KeyCode.LEFT)){
+
+                System.out.println("Released:"+InputDirection.GOLEFT.toString());
+            }
+            if(event.getCode().equals(KeyCode.RIGHT)){
+
+                System.out.println("Released:"+InputDirection.GORIGHT.toString());
+            }
+
+        });*/
 
         EventHandler<ActionEvent> loop = e -> {
 //            this.level.tick();

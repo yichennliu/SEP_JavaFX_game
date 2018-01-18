@@ -1,13 +1,18 @@
 package controller;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.enums.Token;
 
 import javafx.scene.input.MouseEvent;
+import model.themeEditor.SpriteSheet;
 import view.Theme;
 import model.themeEditor.ThemeEditor;
 import view.ThemeEditorView;
@@ -16,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 
 public class ThemeEditorController {
 
@@ -29,9 +35,10 @@ public class ThemeEditorController {
         this.menuController = menuController;
 
         initAddButton();
-        initRemoveButtons();
+        initRemoveButton();
         initListViews();
         initTypeTabs();
+        initSizeInput();
     }
 
     private void updateListViewAndPreview(){
@@ -39,8 +46,8 @@ public class ThemeEditorController {
         Label label = this.themeEditorView.getLabel();
         Token t = this.themeEditorView.getActiveToken();
         Theme.FeldType f = this.themeEditorView.getActiveFeldType();
-        listView.setItems(this.themeEditor.getPathMap().get(t,f));
-        setPreviewImage(t,f);
+        listView.setItems(this.themeEditor.getSprites().get(t,f));
+        setPreviewImage(t,f,listView.getSelectionModel().getSelectedIndex());
         label.setText("No image avaible for: " + t.name() + " - " + f.name());
     }
 
@@ -66,16 +73,15 @@ public class ThemeEditorController {
         addButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
             Token t = this.themeEditorView.getActiveToken();
             Theme.FeldType f = this.themeEditorView.getActiveFeldType();
-            List<String> entries = themeEditor.getPathMap().get(t, f);
-            List<Image> imageList = themeEditor.getImageMap().get(t, f);
+            List<SpriteSheet> imageList = themeEditor.getSprites().get(t, f);
                 if(this.loadImage(t,f)){
                     ImageView imgV = themeEditorView.getPreview();
-                    imgV.setImage(imageList.get(imageList.size()-1));
+                    imgV.setImage(imageList.get(imageList.size()-1).getSprite(0));
                 }
             });
     }
 
-    private void initRemoveButtons(){
+    private void initRemoveButton(){
         Button removeButton = themeEditorView.getRemoveButton();
             removeButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
                 ListView listView = themeEditorView.getListView();
@@ -83,41 +89,93 @@ public class ThemeEditorController {
                     Token t = this.themeEditorView.getActiveToken();
                     Theme.FeldType f = this.themeEditorView.getActiveFeldType();
                     if(index!=-1){
-                        List<String> entries = themeEditor.getPathMap().get(t, f);
-                        List<Image> imageList = themeEditor.getImageMap().get(t, f);
-                        entries.remove(index);
-                        imageList.remove(index);
-                        if(entries.size()<1){
+                        List<SpriteSheet> sprites = themeEditor.getSprites().get(t, f);
+                        sprites.remove(index);
+                        if(sprites.size()<1){
                             removeButton.setDisable(true);
                             themeEditorView.getPreview().setImage(null);
                         }
                         else {
                             themeEditorView.getPreview().setImage(
-                                    imageList.get(listView.getSelectionModel().getSelectedIndex()));
+                                    sprites.get(listView.getSelectionModel().getSelectedIndex()).getSprite(0));
                         }
                     }
             });
     }
 
+    private void initSizeInput(){
+        TextField input = this.themeEditorView.getSizeInput();
+        input.setDisable(true);
+        input.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                int spriteSize;
+                try{
+                    spriteSize = Integer.parseInt(newValue);
+                    Token t = themeEditorView.getActiveToken();
+                    Theme.FeldType f = themeEditorView.getActiveFeldType();
+                    int index = themeEditorView.getListView().getSelectionModel().getSelectedIndex();
+                    try {
+                        themeEditor.getSprites().get(t,f).get(index).setSpriteSize(spriteSize);
+                        setPreviewImage(t,f,index);
+                        input.setStyle("-fx-text-fill:black");
+                    }
+                    catch(Exception e){
+                        input.setStyle("-fx-text-fill:red");
+                    }
+                }
+                catch(NumberFormatException e){
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+    }
+
     private void initListViews(){
         ListView listView = themeEditorView.getListView();
-        updateListViewAndPreview();
-        listView.addEventHandler(MouseEvent.MOUSE_PRESSED, e->{
-            int index = listView.getSelectionModel().getSelectedIndex();
-            Token t = this.themeEditorView.getActiveToken();
-            Theme.FeldType f = this.themeEditorView.getActiveFeldType();
-            setPreviewImage(t,f);
+        listView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                int index = newValue.intValue();
+                Token t = themeEditorView.getActiveToken();
+                Theme.FeldType f = themeEditorView.getActiveFeldType();
+                setPreviewImage(t,f,index);
+                updateSizeInput(t,f,index);
+            }
         });
+//        listView.setCellFactory(createCellFactory());
+        updateListViewAndPreview();
 
     }
 
-    private void setPreviewImage(Token t, Theme.FeldType f){
-        int index = themeEditorView.getListView().getSelectionModel().getSelectedIndex();
+    private void updateSizeInput(Token t, Theme.FeldType f, int index) {
+        SpriteSheet s;
+        TextField sizeInput = themeEditorView.getSizeInput();
+        if(index!=-1){
+            sizeInput.setDisable(false);
+            try {
+                s = this.themeEditor.getSprites().get(t, f).get(index);
+                if (s != null) {
+                    sizeInput.setText(Integer.toString(s.getSpriteSize()));
+                }
+            }
+            catch(Exception e){
+                sizeInput.setText(Integer.toString(-1));
+            }
+        }
+        else {
+            sizeInput.setText("");
+            sizeInput.setDisable(true);
+        }
+
+    }
+
+    private void setPreviewImage(Token t, Theme.FeldType f, int index){
         ImageView preview = themeEditorView.getPreview();
         if(index!=-1){
             Button removeButton = themeEditorView.getRemoveButton();
-            List<Image> imageList = themeEditor.getImageMap().get(t,f);
-            preview.setImage(imageList.get(index));
+            ObservableList<SpriteSheet> imageList = themeEditor.getSprites().get(t,f);
+            preview.setImage(imageList.get(index).getSprite(0));
             removeButton.setDisable(false);
         }
         else {
@@ -141,11 +199,36 @@ public class ThemeEditorController {
                 System.out.println(e.getMessage());
                 return false;
             }
-            this.themeEditor.getImageMap().get(t, f).add(image);
-            this.themeEditor.getPathMap().get(t, f).add(selectedFile.getPath());
+            SpriteSheet newSpriteSheet;
+            newSpriteSheet = new SpriteSheet(image,(int) image.getWidth());
+            newSpriteSheet.setPath(selectedFile.getPath());
+            this.themeEditor.getSprites().get(t,f).add(newSpriteSheet);
+
             return true;
         }
         return false;
     } // controller
+
+    private Callback<ListView<SpriteSheet>, ListCell<SpriteSheet>> createCellFactory (){
+         Callback callback = new Callback<ListView<SpriteSheet>, ListCell<SpriteSheet>>() {
+             @Override
+             public ListCell<SpriteSheet> call(ListView<SpriteSheet> param) {
+
+                 ListCell<SpriteSheet> cell = new ListCell<SpriteSheet>(){
+                     @Override
+                     protected void updateItem(SpriteSheet info, boolean bln){
+                         super.updateItem(info,bln);
+                         if( info !=null){
+                             setText(info.getPath());
+                         }
+                         else return;
+                     }
+
+                 };
+                 return cell;
+             }
+         };
+         return callback;
+    }
 }
 
