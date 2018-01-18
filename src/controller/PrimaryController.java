@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.scene.control.TextField;
 import view.PrimaryPage;
 
 /**
@@ -11,17 +12,20 @@ public class PrimaryController {
     private Object model;
     private Controller primaryController;
 
+
     public PrimaryController(PrimaryPage primaryPage, Controller menuController){
         this.primaryPage = primaryPage;
         this.model = model;
         this.primaryController = menuController;
 
 
-        PrimaryPage.getName().setOnAction(e -> {
-            this.primaryController.startMenu();
+
+        primaryPage.getName().setOnAction(e -> {
+            System.out.println(primaryPage.getPlayerName().getText());
+          //  this.primaryController.startMenu();
         });
 
-       PrimaryPage.getNoName().setOnAction(e -> {
+       primaryPage.getNoName().setOnAction(e -> {
             this.primaryController.startMenu();
         });
     }

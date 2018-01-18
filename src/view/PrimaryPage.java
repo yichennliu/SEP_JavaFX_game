@@ -3,6 +3,9 @@ package view;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -15,10 +18,10 @@ public class PrimaryPage {
     private Scene sceneWelcome;
     private Stage stage;
     private static Group root;
-    private static Button name;
-    private static Button noName;
-
-
+    private Button name;
+    private Button noName;
+    private String playerName;
+    private  static TextField playerNameInput;
 
 
     public PrimaryPage(Stage stage){
@@ -27,19 +30,27 @@ public class PrimaryPage {
         VBox menu = new VBox();
         this.name = new Button(" ok ");
         this.noName = new Button("continue wihout name ");
-
+        Label giveName = new Label("please give me your Name:");
+         playerNameInput = new TextField ();
 
         this.sceneWelcome = new Scene(root);
-        menu.getChildren().addAll(name,noName);
+        menu.getChildren().addAll(giveName,playerNameInput,name,noName);
         root.getChildren().add(menu);
         if(!stage.isShowing()) stage.show();
     }
 
-    public static Button getName() {
+
+
+
+    public TextField getPlayerName(){
+        return  playerNameInput;
+    }
+
+    public Button getName() {
         return name;
     }
 
-    public static Button getNoName() {
+    public Button getNoName() {
         return noName;
 
     }
