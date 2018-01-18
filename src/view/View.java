@@ -4,8 +4,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
+import model.enums.Neighbour;
+import model.enums.Token;
 import model.game.Feld;
 import model.game.Level;
+import view.Theme.FeldType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class View {
 
@@ -84,7 +90,7 @@ public class View {
     }
 
 
-    public static void drawMap(GraphicsContext gc, Feld[][] feld, double fieldSize){
+    public static void drawMap(GraphicsContext gc, Feld[][] feld, double fieldSize, Theme theme){
         Canvas canvas = gc.getCanvas();
         Affine actualTransformation = gc.getTransform();
         Affine defaultTransform = new Affine();
@@ -101,13 +107,36 @@ public class View {
             for (int colNum = 0; colNum < mapWidth; colNum++){
                 double xPos = colNum* fieldSize;
                 double yPos = rowNum*fieldSize;
-                gc.strokeRect(xPos, yPos, fieldSize, fieldSize);
-                String text = feld[rowNum][colNum].toString();
-                // Path verstecken, sonst ersten Buchstaben anzeigen
-                gc.fillText(text.equals("PATH") ? "" : text.charAt(0)+"",xPos+fieldSize/2-15,yPos+fieldSize/2+5);
+                if(theme == null) {
+                    gc.strokeRect(xPos, yPos, fieldSize, fieldSize);
+                    String text = feld[rowNum][colNum].toString();
+                    // Path verstecken, sonst ersten Buchstaben anzeigen
+                    gc.fillText(text.equals("PATH") ? "" : text.charAt(0)+"",xPos+fieldSize/2-15,yPos+fieldSize/2+5);
+                }
+                else drawFeld(xPos, yPos, gc, feld[rowNum][colNum], fieldSize, theme);
+
             }
         }
     }
+
+    private static void drawFeld(double x, double y, GraphicsContext gc, Feld feld, double fieldSize, Theme theme){
+        Token t = feld.getToken();
+//        FeldType = getFeldType();
+
+
+    }
+
+  /*  private static FeldType getFeldType(Feld feld){
+        Map<Neighbour,Feld> neighbours = new HashMap<Neighbour,Feld>();
+        for(Neighbour n: Neighbour.values() ){
+            neighbours.put(n,feld.getNeighbour(n));
+        }
+        if(neighbours.get(Neighbour.LEFT).getToken() == feld.getToken()){
+
+        }
+
+    }*/
+
 
     public Stage getStage(){
         return this.stage;

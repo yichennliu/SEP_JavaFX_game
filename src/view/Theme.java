@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Theme {
 
-    public enum FeldType {DEFAULT, ONECORNER, TWOCORNER, LOONEY,
+    public enum FeldType {ZEROEDGE, ONEEDGE, TWOEDGE, THREEEDGE, FOUREDGE,
                             STEP_SIDE,STEP_UP, STEP_DOWN, IDLE};
     private HashMap2D<Token,FeldType,List<SpriteSheet>> images = new HashMap2D();
     private String name;

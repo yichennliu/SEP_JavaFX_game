@@ -55,7 +55,7 @@ public class GameView {
     }
 
     public void update(){
-        View.drawMap(this.gameGC,level.getMap(),15.0);
+        View.drawMap(this.gameGC,level.getMap(),15.0, null);
     }
 
     public void translate(double x, double y){
