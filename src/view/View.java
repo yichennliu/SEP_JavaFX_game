@@ -103,8 +103,8 @@ public class View {
                 double yPos = rowNum*fieldSize;
                 gc.strokeRect(xPos, yPos, fieldSize, fieldSize);
                 String text = feld[rowNum][colNum].toString();
-                // Erdreich verstecken, um Ausrichtungstest in text.json zu sehen
-                gc.fillText(text.equals("MUD") ? "" : text,xPos+fieldSize/2-15,yPos+fieldSize/2+5);
+                // Path verstecken, sonst ersten Buchstaben anzeigen
+                gc.fillText(text.equals("PATH") ? "" : text.charAt(0)+"",xPos+fieldSize/2-15,yPos+fieldSize/2+5);
             }
         }
     }

@@ -12,8 +12,7 @@ public class Controller {
     public Controller(View view, Object menuModel) { // Todo: MenuModel
         this.view = view;
         this.currentMode = View.Mode.GAME;
-
-    }
+      }
 
 
     public void startPrimaryPage(){
@@ -47,15 +46,9 @@ public class Controller {
         this.currentMode = View.Mode.GAME;
 
         Level level = LevelImporter.importLevel("json/level/text.json") ;
-        if(level!=null){
-            GameView gameView = new GameView(this.view.getStage(),level);
-            new GameController(level,gameView,this);
-            this.view.update(View.Mode.GAME,gameView);
-        }
-        else {
-            System.out.println("Nope! Level == null");
-        }
-
+        GameView gameView = new GameView(this.view.getStage(),level);
+        new GameController(level,gameView,this);
+        this.view.update(View.Mode.GAME,gameView);
     }
 
 }

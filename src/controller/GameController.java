@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -28,6 +29,11 @@ public class GameController {
         gamestage.addEventHandler(ScrollEvent.SCROLL, e -> {
             this.gameView.zoom(e.getDeltaY(), 1.5);
             this.gameView.update();
+        });
+
+        gamestage.heightProperty().addListener((a,b,c) -> {
+            this.gameView.getCanvas().setHeight(c.doubleValue());
+            this.gameView.getCanvas().setWidth(gamestage.getWidth());
         });
 
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
@@ -65,20 +71,19 @@ public class GameController {
 
 
         EventHandler<ActionEvent> loop = e -> {
-//            this.level.tick();
-            this.executePre();
-            this.executeMain();
-            this.executePost();
+            /* Compute a tick */
+            //this.level.executePre();
+            this.level.executeMainRules();
+            //this.level.executePost();
             this.gameView.update();
+            //this.level.tick();
+            this.level.setInputDirection(null);
         };
 
-        KeyFrame frame = new KeyFrame(Duration.seconds(1/5),loop);
+        KeyFrame frame = new KeyFrame(Duration.seconds(1.0/5.0),loop);
+        Timeline tl = new Timeline(frame);
+        tl.setCycleCount(Timeline.INDEFINITE);
+        tl.play();
     }
-
-    public void executePre(){}
-
-    public void executeMain(){}
-
-    public void executePost(){}
 }
 
