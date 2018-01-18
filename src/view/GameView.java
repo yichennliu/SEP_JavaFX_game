@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
+import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
@@ -54,7 +55,7 @@ public class GameView {
     }
 
     public void update(){
-        View.drawMap(this.gameGC,level.getMap(),15.0);
+        View.drawMap(this.gameGC,level.getMap(),15.0, null);
     }
 
     public void translate(double x, double y){
@@ -71,5 +72,12 @@ public class GameView {
         this.gameGC.setTransform(this.transformation);
     }
 
+    public void rotate(double i) {
+        double fieldSize= 15.0;
+        double levelWidth  = this.level.getWidth();
+        double levelHeight = this.level.getHeight();
+        this.transformation.append(new Rotate(i,levelWidth*fieldSize/2,levelHeight*fieldSize/2))  ;
+        this.gameGC.setTransform(this.transformation);
+    }
 }
 
