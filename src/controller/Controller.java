@@ -46,7 +46,7 @@ public class Controller {
     public void startGame(){
         this.currentMode = View.Mode.GAME;
 
-        Level level = LevelImporter.importLevel("json/text.json") ;
+        Level level = LevelImporter.importLevel("json/level/text.json") ;
         if(level!=null){
             GameView gameView = new GameView(this.view.getStage(),level);
             new GameController(level,gameView,this);
