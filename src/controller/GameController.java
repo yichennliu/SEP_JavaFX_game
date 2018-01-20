@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -13,18 +14,21 @@ import model.enums.InputDirection;
 import model.game.Level;
 import view.GameView;
 
+import java.util.Optional;
+
 public class GameController {
 
     private Controller menuController;
     private GameView gameView;
     private Level level;
 
+
     public GameController(Level level, GameView gameView, Controller menuController){
         this.menuController = menuController;
         this.gameView = gameView;
         this.level = level;
 
-        Stage gamestage= this.gameView.getStage();
+        Stage gamestage = this.gameView.getStage();
 
         gamestage.addEventHandler(ScrollEvent.SCROLL, e -> {
             this.gameView.zoom(e.getDeltaY(), 1.5);
@@ -69,6 +73,38 @@ public class GameController {
             this.gameView.update();
         });
 
+        gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+
+            if(event.getCode().equals(KeyCode.ESCAPE)){
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Exiting the Game");
+                alert.setHeaderText("The Progress of the player might be lost, do you want to save the game?");
+
+                ButtonType yes_button = new ButtonType("Yes");
+                ButtonType no_button = new ButtonType("No");
+                ButtonType cancel_button = new ButtonType("Cancel");
+
+                alert.getButtonTypes().setAll(yes_button,no_button,cancel_button);
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == yes_button){
+                    //TODO:Save the game
+                    this.menuController.startPrimaryPage();
+                }
+
+                if(result.get() == no_button) {
+                    this.menuController.startPrimaryPage();
+                }
+
+                if(result.get() == cancel_button){
+                    alert.close();
+                }
+
+            }
+
+        });
+
 
         EventHandler<ActionEvent> loop = e -> {
             /* Compute a tick */
@@ -85,5 +121,7 @@ public class GameController {
         tl.setCycleCount(Timeline.INDEFINITE);
         tl.play();
     }
+
+
 }
 

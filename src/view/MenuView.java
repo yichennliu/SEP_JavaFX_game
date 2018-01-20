@@ -112,4 +112,8 @@ public class MenuView {
     public Scene getSceneMenu() {
         return this.sceneMenu;
     }
+
+
 }
+
+
