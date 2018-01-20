@@ -236,7 +236,7 @@ public class ThemeEditorController {
     private void back(){
         Button backButton = themeEditorView.getBackButton();
         backButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-            this.menuController.startMenu();
+            this.menuController.startPrimaryPage();
 
         });
     }

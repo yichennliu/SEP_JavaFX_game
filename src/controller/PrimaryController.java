@@ -13,6 +13,7 @@ public class PrimaryController {
     private Controller primaryController;
 
 
+
     public PrimaryController(PrimaryPage primaryPage, Controller menuController){
         this.primaryPage = primaryPage;
         this.model = model;
@@ -21,12 +22,12 @@ public class PrimaryController {
 
 
         primaryPage.getName().setOnAction(e -> {
-            System.out.println(primaryPage.getPlayerName().getText());
-          //  this.primaryController.startMenu();
+             String  playerNameInput=primaryPage.getPlayerName();
+           this.primaryController.startMenu(playerNameInput);
         });
 
        primaryPage.getNoName().setOnAction(e -> {
-            this.primaryController.startMenu();
+            this.primaryController.startMenu("   ");
         });
     }
 

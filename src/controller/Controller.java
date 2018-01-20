@@ -23,13 +23,12 @@ public class Controller {
 
     }
 
-    public void startMenu(){
+    public void startMenu(String playerName){
         this.currentMode = View.Mode.MENU;
-
-        MenuView menuView = new MenuView(this.view.getStage(),null);
+        MenuView menuView = new MenuView(this.view.getStage(),null,playerName);
         new MenuController(menuView,null,this);
-
         this.view.update(View.Mode.MENU,menuView);
+
     }
 
     public void startThemeEditor(){
@@ -44,7 +43,6 @@ public class Controller {
 
     public void startGame(){
         this.currentMode = View.Mode.GAME;
-
         Level level = LevelImporter.importLevel("json/level/text.json") ;
         GameView gameView = new GameView(this.view.getStage(),level);
         new GameController(level,gameView,this);
