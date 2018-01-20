@@ -20,7 +20,6 @@ public class PrimaryPage {
     private static Group root;
     private Button name;
     private Button noName;
-    private String playerName;
     private  static TextField playerNameInput;
 
 
@@ -37,13 +36,14 @@ public class PrimaryPage {
         menu.getChildren().addAll(giveName,playerNameInput,name,noName);
         root.getChildren().add(menu);
         if(!stage.isShowing()) stage.show();
+
     }
 
 
 
 
-    public TextField getPlayerName(){
-        return  playerNameInput;
+    public String getPlayerName(){
+        return  playerNameInput.getText();
     }
 
     public Button getName() {
