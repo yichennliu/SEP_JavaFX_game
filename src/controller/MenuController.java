@@ -3,6 +3,7 @@ package controller;
 import javafx.scene.control.ToggleGroup;
 import view.MenuView;
 
+
 public class MenuController {
 
     private MenuView menuView;
@@ -31,6 +32,8 @@ public class MenuController {
         menuView.getThemeEditorButton().setOnAction(e -> {
             this.menuController.startThemeEditor();
         });
-    }
 
+
+
+    }
 }
