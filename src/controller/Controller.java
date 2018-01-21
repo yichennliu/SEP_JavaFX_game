@@ -9,6 +9,11 @@ public class Controller {
     private View view;
     private View.Mode currentMode;
 
+    private PrimaryController primaryController;
+    private MenuController menuController;
+    private ThemeEditorController themeEditorController;
+    private GameController gameController;
+
     public Controller(View view, Object menuModel) { // Todo: MenuModel
         this.view = view;
         this.currentMode = View.Mode.GAME;
@@ -18,7 +23,13 @@ public class Controller {
     public void startPrimaryPage(){
         this.currentMode = View.Mode.PRIMARY;
         PrimaryPage primaryPage = new PrimaryPage(this.view.getStage());
-        new PrimaryController(primaryPage,this);
+
+        if (primaryController == null) {
+            primaryController = new PrimaryController(primaryPage,this);
+        } else {
+            primaryController.setPrimaryPage(primaryPage);
+        }
+
         this.view.update(View.Mode.PRIMARY,primaryPage);
 
     }
@@ -26,7 +37,13 @@ public class Controller {
     public void startMenu(String playerName){
         this.currentMode = View.Mode.MENU;
         MenuView menuView = new MenuView(this.view.getStage(),null,playerName);
-        new MenuController(menuView,null,this);
+
+        if (menuController == null) {
+            menuController = new MenuController(menuView,null,this);
+        } else {
+            menuController.setMenuView(menuView);
+        }
+
         this.view.update(View.Mode.MENU,menuView);
 
     }
@@ -36,17 +53,30 @@ public class Controller {
 
         ThemeEditor editor = new ThemeEditor();
         ThemeEditorView themeEditorView = new ThemeEditorView(this.view.getStage(),editor);
-        new ThemeEditorController(themeEditorView,editor,this);
+
+        if (themeEditorController == null) {
+            themeEditorController = new ThemeEditorController(themeEditorView,editor,this);
+        } else {
+            themeEditorController.setThemeEditorView(themeEditorView);
+        }
 
         this.view.update(View.Mode.THEME,themeEditorView);
     }
 
     public void startGame(){
         this.currentMode = View.Mode.GAME;
-        Level level = LevelImporter.importLevel("json/level/text.json") ;
-        GameView gameView = new GameView(this.view.getStage(),level);
-        new GameController(level,gameView,this);
-        this.view.update(View.Mode.GAME,gameView);
+        Level level = LevelImporter.importLevel("json/level/text.json");
+
+        if (gameController == null) {
+            GameView gameView = new GameView(this.view.getStage(),level);
+
+            gameController = new GameController(level,gameView,this);
+        } else {
+//            gameController.setGameView(gameView);
+        }
+
+        this.view.update(View.Mode.GAME, gameController.getGameView());
+        gameController.tick();
     }
 
 }

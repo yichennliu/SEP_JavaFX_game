@@ -14,6 +14,8 @@ import model.enums.InputDirection;
 import model.game.Level;
 import view.GameView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Optional;
 
 public class GameController {
@@ -22,12 +24,50 @@ public class GameController {
     private GameView gameView;
     private Level level;
 
+    private Timeline timeline;
+
 
     public GameController(Level level, GameView gameView, Controller menuController){
         this.menuController = menuController;
         this.gameView = gameView;
         this.level = level;
+        addGameViewComponents();
+        //tick();
+    }
 
+    public void tick() {
+        EventHandler<ActionEvent> loop = e -> {
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            System.out.println("tick " + sdf.format(cal.getTime()));
+
+            /* Compute a tick */
+            //this.level.executePre();
+            this.level.executeMainRules();
+            //this.level.executePost()
+            // ;
+            this.gameView.update();
+            //this.level.tick();
+            this.level.setInputDirection(null);
+        };
+
+        KeyFrame frame = new KeyFrame(Duration.seconds(1.0/5.0),loop);
+        this.timeline = new Timeline(frame);
+        this.timeline.setCycleCount(Timeline.INDEFINITE);
+        this.timeline.play();
+    }
+
+    public GameView getGameView() {
+        return gameView;
+    }
+
+    public void setGameView(GameView gameView) {
+        this.gameView = gameView;
+        addGameViewComponents();
+    }
+
+    // TODO: aufteilen
+    private void addGameViewComponents() {
         Stage gamestage = this.gameView.getStage();
 
         gamestage.addEventHandler(ScrollEvent.SCROLL, e -> {
@@ -75,7 +115,10 @@ public class GameController {
 
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
 
-            if(event.getCode().equals(KeyCode.ESCAPE)){
+            if(event.getCode().equals(KeyCode.ESCAPE)) {
+                if (timeline != null) {
+                    timeline.stop();
+                }
 
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Exiting the Game");
@@ -90,6 +133,7 @@ public class GameController {
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == yes_button){
                     //TODO:Save the game
+
                     this.menuController.startPrimaryPage();
                 }
 
@@ -105,23 +149,7 @@ public class GameController {
 
         });
 
-
-        EventHandler<ActionEvent> loop = e -> {
-            /* Compute a tick */
-            //this.level.executePre();
-            this.level.executeMainRules();
-            //this.level.executePost();
-            this.gameView.update();
-            //this.level.tick();
-            this.level.setInputDirection(null);
-        };
-
-        KeyFrame frame = new KeyFrame(Duration.seconds(1.0/5.0),loop);
-        Timeline tl = new Timeline(frame);
-        tl.setCycleCount(Timeline.INDEFINITE);
-        tl.play();
     }
-
 
 }
 

@@ -14,7 +14,6 @@ public class DummyTheme {
 
 private Theme theme;
 
-
     public static Theme getTheme(){
         HashMap2D<Token,Theme.FeldType,List<SpriteSheet>> images = new HashMap2D();
         images.put(Token.ME,Theme.FeldType.FOUREDGE, Arrays.asList(new SpriteSheet(new Image("images/_Me.png"),20)));

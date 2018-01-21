@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
 
 public class ThemeEditorController {
 
@@ -34,13 +33,7 @@ public class ThemeEditorController {
         this.themeEditorView = view;
         this.themeEditor = themeEditor;
         this.menuController = menuController;
-
-        initAddButton();
-        initRemoveButton();
-        initListViews();
-        initTypeTabs();
-        initSizeInput();
-        back();
+        addThemeEditorViewComponents();
     }
 
     private void updateListViewAndPreview(){
@@ -239,6 +232,20 @@ public class ThemeEditorController {
             this.menuController.startPrimaryPage();
 
         });
+    }
+
+    public void setThemeEditorView(ThemeEditorView themeEditorView) {
+        this.themeEditorView = themeEditorView;
+        addThemeEditorViewComponents();
+    }
+
+    private void addThemeEditorViewComponents() {
+        initAddButton();
+        initRemoveButton();
+        initListViews();
+        initTypeTabs();
+        initSizeInput();
+        back();
     }
 }
 

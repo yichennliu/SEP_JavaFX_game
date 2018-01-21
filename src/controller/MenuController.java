@@ -1,15 +1,7 @@
 package controller;
 
-import com.apple.laf.AquaButtonBorder.Toggle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import view.MenuView;
-
-import static com.sun.javafx.tools.resource.DeployResource.Type.icon;
-
 
 public class MenuController {
 
@@ -23,7 +15,15 @@ public class MenuController {
         this.menuView = menuView;
         this.model = model;
         this.menuController = menuController;
+        addMenuViewComponents();
+    }
 
+    public void setMenuView(MenuView menuView) {
+        this.menuView = menuView;
+        addMenuViewComponents();
+    }
+
+    private void addMenuViewComponents() {
         menuView.getGameButton().setOnAction(e -> {
             this.menuController.startGame();
         });
@@ -31,8 +31,6 @@ public class MenuController {
         menuView.getThemeEditorButton().setOnAction(e -> {
             this.menuController.startThemeEditor();
         });
-
-
-
     }
+
 }

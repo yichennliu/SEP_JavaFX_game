@@ -46,7 +46,7 @@ public class View {
 //        stage.setScene(this.levelEditor);
 //    }
 
-    private void showGame(){
+    public void showGame(){
         GameView gameView = (GameView) currentScene;
         stage.setScene(gameView.getScene());
     }
@@ -92,6 +92,7 @@ public class View {
 
     public static void drawMap(GraphicsContext gc, Feld[][] feld, double fieldSize, Theme theme){
         Canvas canvas = gc.getCanvas();
+
         Affine actualTransformation = gc.getTransform();
         Affine defaultTransform = new Affine();
         gc.setTransform(defaultTransform);
