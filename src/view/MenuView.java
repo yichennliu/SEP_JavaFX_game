@@ -1,20 +1,13 @@
 package view;
 
-import com.apple.laf.AquaButtonBorder;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
-
-import static com.sun.javafx.tools.resource.DeployResource.Type.icon;
 
 
 public class MenuView {
