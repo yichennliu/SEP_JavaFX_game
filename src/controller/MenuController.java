@@ -16,7 +16,15 @@ public class MenuController {
         this.menuView = menuView;
         this.model = model;
         this.menuController = menuController;
+        addMenuViewComponents();
+    }
 
+    public void setMenuView(MenuView menuView) {
+        this.menuView = menuView;
+        addMenuViewComponents();
+    }
+
+    private void addMenuViewComponents() {
         menuView.getGameButton().setOnAction(e -> {
             this.menuController.startGame();
         });
