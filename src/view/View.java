@@ -4,14 +4,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
-import model.enums.Neighbour;
 import model.enums.Token;
 import model.game.Feld;
 import model.game.Level;
-import view.Theme.FeldType;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class View {
 

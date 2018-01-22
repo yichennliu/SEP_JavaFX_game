@@ -108,12 +108,13 @@ public class GameController {
 
         EventHandler<ActionEvent> loop = e -> {
             /* Compute a tick */
+            this.level.resetProperties();
             //this.level.executePre();
             this.level.executeMainRules();
             //this.level.executePost();
-            this.gameView.update();
-            //this.level.tick();
             this.level.setInputDirection(null);
+            this.gameView.update();
+            this.level.tick();
         };
 
         KeyFrame frame = new KeyFrame(Duration.seconds(1.0/5.0),loop);

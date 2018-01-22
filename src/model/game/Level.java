@@ -187,14 +187,14 @@ public class Level {
         for (int row = 0; row < this.getHeight(); row++) {
             for (int col = 0; col < this.getWidth(); col++) {
                 Feld current = this.getFeld(row, col);
-                Feld top = current.getNeighbour(Neighbour.TOP);
-                Feld rightTop = current.getNeighbour(Neighbour.RIGHTTOP);
-                Feld right = current.getNeighbour(Neighbour.RIGHT);
-                Feld rightBottom = current.getNeighbour(Neighbour.RIGHTBOTTOM);
-                Feld bottom = current.getNeighbour(Neighbour.BOTTOM);
-                Feld leftBottom = current.getNeighbour(Neighbour.LEFTBOTTOM);
-                Feld left = current.getNeighbour(Neighbour.LEFT);
-                Feld leftTop = current.getNeighbour(Neighbour.LEFTTOP);
+                Feld top = current.getNeighbour(FieldDirection.TOP);
+                Feld rightTop = current.getNeighbour(FieldDirection.RIGHTTOP);
+                Feld right = current.getNeighbour(FieldDirection.RIGHT);
+                Feld rightBottom = current.getNeighbour(FieldDirection.RIGHTBOTTOM);
+                Feld bottom = current.getNeighbour(FieldDirection.BOTTOM);
+                Feld leftBottom = current.getNeighbour(FieldDirection.LEFTBOTTOM);
+                Feld left = current.getNeighbour(FieldDirection.LEFT);
+                Feld leftTop = current.getNeighbour(FieldDirection.LEFTTOP);
 
                 /* Spielerbewegung */
                 if (current.isToken(Token.ME)) {
@@ -205,9 +205,12 @@ public class Level {
                     else if (this.getInputDirection().isDigOnly()) {
                         Feld toDig = current.getNeighbour(this.getInputDirection());
                         if (toDig != null && toDig.isToken(Token.MUD)) toDig.bufferSetToken(Token.PATH);
+                        if (toDig != null && toDig.isToken(Token.GEM) && !toDig.hasProperty(Property.FALLING)) {
+                            toDig.bufferSetToken(Token.PATH);
+                            current.bufferIncreasePropertyValue(Property.GEMS, 1);
+                        }
                     }
 
-                    // TODO: Fallende Gegenstände nicht aufsammeln/verschieben?
                     // bewegen + graben
                     else if (this.getInputDirection().isGo()) {
                         Feld next = current.getNeighbour(this.getInputDirection());
@@ -276,96 +279,75 @@ public class Level {
                     }
                 }
 
-                // TODO: Immer Anihilation bei Kontakt mit Token.ME
                 /* Gegnerbewegungen */
                 if (current.isToken(Token.SWAPLING, Token.XLING, Token.BLOCKLING)) {
-                    int direction = current.getPropertyValue(Property.DIRECTION);
-                    if (direction != 1 && direction != 2 && direction != 3 && direction != 4) {
-                        // wenn keine Richtung vorgegeben: zufällige Richtung setzen
-                        direction = ThreadLocalRandom.current().nextInt(1, 4 + 1);
-                    }
-                    for (int d = 1; d <= 4; d++) {
-                        if (direction == d) {
-                            Feld forward =
-                                d == 1 ? right :
-                                d == 2 ? bottom :
-                                d == 3 ? left :
-                                d == 4 ? top : null;
-                            Feld rightSide =
-                                d == 1 ? bottom :
-                                d == 2 ? left :
-                                d == 3 ? top :
-                                d == 4 ? right : null;
-                            Feld leftSide =
-                                d == 1 ? top :
-                                d == 2 ? right :
-                                d == 3 ? bottom :
-                                d == 4 ? left : null;
-                            Feld backwards =
-                                d == 1 ? left :
-                                d == 2 ? top :
-                                d == 3 ? right :
-                                d == 4 ? bottom : null;
+                    // Derzeitige Ausrichtung des Gegeners, ohne Ausrichtung keine Bewegung
+                    int curDirInt = current.getPropertyValue(Property.DIRECTION);
+                    if (curDirInt == 1 || curDirInt == 2 || curDirInt == 3 || curDirInt == 4) {
+                        FieldDirection curDirection = FieldDirection.getFromDirection(curDirInt);
 
-                            if (current.isToken(Token.SWAPLING)) {
-                                if (forward != null && forward.isToken(Token.PATH)) {
-                                    // move forward
-                                    current.bufferMoveEnemyTo(forward, d, Feld.Move.FORWARD);
+                        // Felder aus Sicht des Gegners
+                        Feld forward        = current.getNeighbourRelative(curDirection, FieldDirection.TOP);
+                        Feld rightSide      = current.getNeighbourRelative(curDirection, FieldDirection.RIGHT);
+                        Feld leftSide       = current.getNeighbourRelative(curDirection, FieldDirection.LEFT);
+                        Feld backwards      = current.getNeighbourRelative(curDirection, FieldDirection.BOTTOM);
+                        Feld backwardsRight = current.getNeighbourRelative(curDirection, FieldDirection.RIGHTBOTTOM);
+                        Feld backwardsLeft  = current.getNeighbourRelative(curDirection, FieldDirection.LEFTBOTTOM);
 
-                                } else if (forward != null && forward.isToken(Token.ME)) {
-                                    current.bufferBam(true);
-                                } else {
-                                    // umkehren
-                                    current.bufferMoveEnemyTo(backwards, d, Feld.Move.BACKWARD);
-                                }
-                            } else if (current.isToken(Token.XLING)) {
-                                // wenn Wand (= nicht PATH) rechts
-                                if (rightSide == null || !rightSide.isToken(Token.PATH)) {
-                                    // wenn voraus frei
-                                    if (forward != null && forward.isToken(Token.PATH)) {
-                                        // geradeaus gehen
-                                        current.bufferMoveEnemyTo(forward, d, Feld.Move.FORWARD);
-                                    // sonst wenn links frei
-                                    } else if (leftSide != null && forward.isToken(Token.PATH)) {
-                                        // nach links gehen
-                                        current.bufferMoveEnemyTo(leftSide, d, Feld.Move.TOLEFT);
-                                    // sonst wenn hinten frei
-                                    } else if (backwards != null && backwards.isToken(Token.PATH)) {
-                                        // umkehren
-                                        current.bufferMoveEnemyTo(backwards, d, Feld.Move.BACKWARD);
-                                    } else {
-                                        // eingeschlossen
-                                    }
-                                // sonst wenn rechts frei
-                                } else {
-                                    // nach rechts gehen
-                                    current.bufferMoveEnemyTo(rightSide, d, Feld.Move.TORIGHT);
-                                    // TODO: Drehbewegungen vermeiden
-                                }
-                            } else if (current.isToken(Token.BLOCKLING)) {
-                                // wenn Wand (= nicht PATH) links
-                                if (leftSide == null || !leftSide.isToken(Token.PATH)) {
-                                    // wenn voraus frei
-                                    if (forward != null && forward.isToken(Token.PATH)) {
-                                        // geradeaus gehen
-                                        current.bufferMoveEnemyTo(forward, d, Feld.Move.FORWARD);
-                                    // sonst wenn rechts frei
-                                    } else if (rightSide != null && forward.isToken(Token.PATH)) {
-                                        // nach rechts gehen
-                                        current.bufferMoveEnemyTo(rightSide, d, Feld.Move.TORIGHT);
-                                    // sonst wenn hinten frei
-                                    } else if (backwards != null && backwards.isToken(Token.PATH)) {
-                                        // umkehren
-                                        current.bufferMoveEnemyTo(backwards, d, Feld.Move.BACKWARD);
-                                    } else {
-                                        // eingeschlossen
-                                    }
-                                // sonst wenn links frei
-                                } else {
-                                    // nach links gehen
-                                    current.bufferMoveEnemyTo(leftSide, d, Feld.Move.TOLEFT);
-                                    // TODO: Drehbewegungen vermeiden
-                                }
+                        // horizontale / vertikale Bewegungen für Swapling
+                        if (current.isToken(Token.SWAPLING)) {
+                            if (forward != null && forward.isToken(Token.PATH, Token.ME)) {
+                                // move forward
+                                current.bufferMoveEnemyTo(FieldDirection.TOP);
+                            } else if (backwards != null && backwards.isToken(Token.PATH, Token.ME)) {
+                                // umkehren
+                                current.bufferMoveEnemyTo(FieldDirection.BOTTOM);
+                            } else {
+                                // eingeklemmt
+                            }
+                        // Rechte-Hand-Regel für Xling
+                        } else if (current.isToken(Token.XLING)) {
+                            // Rechts frei und hinten rechts nicht frei
+                            if (rightSide != null && rightSide.isToken(Token.PATH, Token.ME) &&
+                                    (backwardsRight == null || !backwardsRight.isToken(Token.PATH, Token.ME))) {
+                                // nach rechts gehen
+                                current.bufferMoveEnemyTo(FieldDirection.RIGHT);
+                            // Sonst wenn voraus frei
+                            } else if (forward != null && forward.isToken(Token.PATH, Token.ME)) {
+                                // geradeaus gehen
+                                current.bufferMoveEnemyTo(FieldDirection.TOP);
+                            // sonst wenn links frei
+                            } else if (leftSide != null && leftSide.isToken(Token.PATH, Token.ME)) {
+                                // nach links gehen
+                                current.bufferMoveEnemyTo(FieldDirection.LEFT);
+                            // sonst wenn hinten frei
+                            } else if (backwards != null && backwards.isToken(Token.PATH, Token.ME)) {
+                                // umkehren
+                                current.bufferMoveEnemyTo(FieldDirection.BOTTOM);
+                            } else {
+                                // eingeschlossen
+                            }
+                        // Linke-Hand-Regel für Blockling
+                        } else if (current.isToken(Token.BLOCKLING)) {
+                            // Links frei und hinten links nicht frei
+                            if (leftSide != null && leftSide.isToken(Token.PATH, Token.ME) &&
+                                    (backwardsLeft == null || !backwardsLeft.isToken(Token.PATH, Token.ME))) {
+                                // nach links gehen
+                                current.bufferMoveEnemyTo(FieldDirection.LEFT);
+                            // Sonst wenn voraus frei
+                            } else if (forward != null && forward.isToken(Token.PATH, Token.ME)) {
+                                // geradeaus gehen
+                                current.bufferMoveEnemyTo(FieldDirection.TOP);
+                            // sonst wenn rechts frei
+                            } else if (rightSide != null && rightSide.isToken(Token.PATH, Token.ME)) {
+                                // nach rechts gehen
+                                current.bufferMoveEnemyTo(FieldDirection.RIGHT);
+                            // sonst wenn hinten frei
+                            } else if (backwards != null && backwards.isToken(Token.PATH, Token.ME)) {
+                                // umkehren
+                                current.bufferMoveEnemyTo(FieldDirection.BOTTOM);
+                            } else {
+                                // eingeschlossen
                             }
                         }
                     }
@@ -412,4 +394,46 @@ public class Level {
         this.applyBufferedChanges();
     }
 
+    /**
+     * reset / set properties where necessary
+     */
+    public void resetProperties() {
+        for (Feld[] row : this.getMap()) {
+            for (Feld field : row) {
+                field.resetProperty(Property.MOVED);
+                field.resetProperty(Property.FALLING);
+                field.resetProperty(Property.BAM);
+                field.resetProperty(Property.BAMRICH);
+
+                // LOOSE
+                if (field.isToken(Token.STONE, Token.GEM)) {
+                    field.setProperty(Property.LOOSE);
+                } else {
+                    field.resetProperty(Property.LOOSE);
+                }
+
+                // SLIPPERY
+                if (field.isToken(Token.STONE, Token.GEM, Token.BRICKS)) {
+                    field.setProperty(Property.SLIPPERY);
+                } else {
+                    field.resetProperty(Property.SLIPPERY);
+                }
+
+                // PUSHABLE
+                if (field.isToken(Token.STONE)) {
+                    field.setProperty(Property.PUSHABLE);
+                } else {
+                    field.resetProperty(Property.PUSHABLE);
+                }
+            }
+        }
+    }
+
+    /**
+     * increase ticks
+     */
+    public void tick() {
+        Integer ticks = this.getPropertyValue(Property.TICKS);
+        this.setPropertyValue(Property.TICKS, ticks == null ? 1 : ticks+1);
+    }
 }
