@@ -14,9 +14,6 @@ import javafx.util.Pair;
 
 import java.io.File;
 
-import static com.sun.javafx.tools.resource.DeployResource.Type.icon;
-
-
 public class MenuView {
 
     private Scene sceneMenu,sceneHelp;
