@@ -5,14 +5,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
-import model.enums.Neighbour;
 import model.enums.Token;
 import model.game.Feld;
 import model.game.Level;
-import view.Theme.FeldType;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class View {
 
@@ -47,14 +42,14 @@ public class View {
 //        stage.setScene(this.levelEditor);
 //    }
 
-    private void showGame(){
+    public void showGame(){
         GameView gameView = (GameView) currentScene;
         stage.setScene(gameView.getScene());
     }
 
     private void showTheme() {
         ThemeEditorView themeEditorView = (ThemeEditorView) currentScene;
-        stage.setScene(themeEditorView.getScene());
+        stage.setScene(themeEditorView.getSceneThemeView());
     }
 
     private void showPrimary(){
@@ -93,6 +88,7 @@ public class View {
 
     public static void drawMap(GraphicsContext gc, Feld[][] feld, double fieldSize, Theme theme){
         Canvas canvas = gc.getCanvas();
+
         Affine actualTransformation = gc.getTransform();
         Affine defaultTransform = new Affine();
         gc.setTransform(defaultTransform);
@@ -113,7 +109,8 @@ public class View {
                     gc.strokeRect(xPos, yPos, fieldSize, fieldSize);
                     String text = feld[rowNum][colNum].toString();
                     // Path verstecken, sonst ersten Buchstaben anzeigen
-                    gc.fillText(text.equals("PATH") ? "" : text.charAt(0)+"",xPos+fieldSize/2-15,yPos+fieldSize/2+5);
+                    gc.fillText(text.equals("PATH") ? "" : (text.equals("ME") ? "ME" : text.charAt(0)+""),
+                            xPos+fieldSize/2-7,yPos+fieldSize/2+5);
                 }
                 else drawFeld(xPos, yPos, gc, feld[rowNum][colNum], fieldSize, theme);
 

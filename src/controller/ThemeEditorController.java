@@ -23,7 +23,6 @@ import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
 
 public class ThemeEditorController {
 
@@ -36,14 +35,7 @@ public class ThemeEditorController {
         this.themeEditorView = view;
         this.themeEditor = themeEditor;
         this.menuController = menuController;
-
-        initAddButton();
-        initRemoveButton();
-        initListViews();
-        initTypeTabs();
-        initSizeInput();
-        initSaveButton();
-        back();
+        addThemeEditorViewComponents();
     }
 
     private void updateListViewAndPreview(){
@@ -227,9 +219,24 @@ public class ThemeEditorController {
     private void back(){
         Button backButton = themeEditorView.getBackButton();
         backButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-            this.menuController.startMenu();
+            this.menuController.startPrimaryPage();
 
         });
+    }
+
+    public void setThemeEditorView(ThemeEditorView themeEditorView) {
+        this.themeEditorView = themeEditorView;
+        addThemeEditorViewComponents();
+    }
+
+    private void addThemeEditorViewComponents() {
+        initAddButton();
+        initRemoveButton();
+        initListViews();
+        initTypeTabs();
+        initSizeInput();
+        initSaveButton();
+        back();
     }
 }
 

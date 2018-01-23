@@ -66,12 +66,12 @@ public class Feld {
         return false;
     }
 
-    public Feld getNeighbour(Neighbour nb) {
+    public Feld getNeighbour(FieldDirection nb) {
         return this.getLevel().getFeld(this.getRow()+nb.getRowOffset(), this.getColumn()+nb.getColumnOffset());
     }
 
     public Feld getNeighbour(InputDirection input) {
-        return this.getNeighbour(input.getNeighbour());
+        return this.getNeighbour(input.getFieldDirection());
     }
 
     /**
@@ -79,7 +79,7 @@ public class Feld {
      */
     public Collection<Feld> getNeighbours() {
         Collection<Feld> neighbours = new ArrayList<>();
-        for (Neighbour nb : Neighbour.values()) {
+        for (FieldDirection nb : FieldDirection.values()) {
             Feld neighbour = this.getLevel().getFeld(this.getRow()+nb.getRowOffset(),
                     this.getColumn()+nb.getColumnOffset());
             if (neighbour != null) neighbours.add(neighbour);
@@ -92,8 +92,8 @@ public class Feld {
      */
     public Collection<Feld> getNeighboursDirect() {
         Collection<Feld> neighbours = new ArrayList<>();
-        for (Neighbour nb : Neighbour.values()) {
-            if (nb == Neighbour.TOP || nb == Neighbour.RIGHT || nb == Neighbour.BOTTOM || nb == Neighbour.LEFT) {
+        for (FieldDirection nb : FieldDirection.values()) {
+            if (nb == FieldDirection.TOP || nb == FieldDirection.RIGHT || nb == FieldDirection.BOTTOM || nb == FieldDirection.LEFT) {
                 Feld neighbour = this.getLevel().getFeld(this.getRow() + nb.getRowOffset(),
                         this.getColumn() + nb.getColumnOffset());
                 if (neighbour != null) neighbours.add(neighbour);
@@ -162,18 +162,41 @@ public class Feld {
     }
 
     /**
+     * Make a 3*3 explosion
+     *
+     * @param rich true to generate GEMs, otherwise EXPLOSIONs
+     * @return true if ME was killed, false otherwise
+     */
+    public boolean bam(boolean rich) {
+        Collection<Feld> fields = this.getNeighbours();
+        fields.add(this);
+        boolean killed = false;
+        for (Feld f : fields) {
+            if (f.getToken() != Token.EXIT && f.getToken() != Token.WALL) {
+                if (f.isToken(Token.ME)) killed = true;
+                f.setToken(rich ? Token.GEM : Token.EXPLOSION);
+            }
+        }
+        return killed;
+    }
+
+    /**
      * Buffer a 3*3 explosion
      *
      * @param rich true to generate GEMs, otherwise EXPLOSIONs
+     * @return true if ME was killed, false otherwise
      */
-    public void bufferBam(boolean rich) {
+    public boolean bufferBam(boolean rich) {
         Collection<Feld> fields = this.getNeighbours();
         fields.add(this);
+        boolean killed = false;
         for (Feld f : fields) {
             if (f.getToken() != Token.EXIT && f.getToken() != Token.WALL) {
+                if (f.isToken(Token.ME)) killed = true;
                 f.bufferSetToken(rich ? Token.GEM : Token.EXPLOSION);
             }
         }
+        return killed;
     }
 
     /**
@@ -198,6 +221,21 @@ public class Feld {
     }
 
     /**
+     * make a movement:
+     * Move to goal, set both to MOVED, replace current Token with PATH
+     *
+     * @param goal not null
+     */
+    public void moveTo(Feld goal) {
+        // Objekt am Ziel einsetzen
+        goal.setToken(this.getToken());
+        goal.setProperty(Property.MOVED);
+        // Platz freimachen
+        this.setToken(Token.PATH);
+        this.setProperty(Property.MOVED);
+    }
+
+    /**
      * Buffer a movement:
      * Move to goal, set both to MOVED, replace current Token with PATH
      *
@@ -212,19 +250,63 @@ public class Feld {
         this.bufferSetProperty(Property.MOVED);
     }
 
-    public enum Move {FORWARD, TORIGHT, BACKWARD, TOLEFT}
-    /** buffer an enemy move */
-    public void bufferMoveEnemyTo(Feld goal, int currentDirection, Move to) {
-        if (to == null || currentDirection < 1 || currentDirection > 4)
-            throw new IllegalArgumentException("'direction' must be between 1 and 4, 'to' must not be null");
-        int newDirection = 0;
-        if (to == Move.FORWARD)       newDirection = currentDirection;
-        else if (to == Move.TORIGHT)  newDirection = currentDirection == 4 ? 1 : currentDirection+1;
-        else if (to == Move.BACKWARD) newDirection = currentDirection <= 2 ? currentDirection+2 : currentDirection-2;
-        else if (to == Move.TOLEFT)   newDirection = currentDirection == 1 ? 4 : currentDirection-1;
+    /**
+     * execute an enemy move relative to its direction, check for ME collision
+     */
+    public void moveEnemyTo(FieldDirection to) {
+        FieldDirection curDirection = FieldDirection.getFromDirection(this.getPropertyValue(Property.DIRECTION));
+        if (curDirection.getDirection() == null || to.getDirection() == null)
+            throw new IllegalArgumentException("'currentDir' and 'to' must not be diagonal");
 
-        this.bufferMoveTo(goal);
-        goal.bufferSetPropertyValue(Property.DIRECTION, newDirection);
-        this.bufferSetPropertyValue(Property.DIRECTION, 0);
+        FieldDirection nbGoal = FieldDirection.getRotated(curDirection, to);
+        Feld goal = this.getNeighbour(nbGoal);
+
+        if (goal.isToken(Token.ME)) {
+            // explode
+            goal.setProperty(this.isToken(Token.BLOCKLING) ? Property.BAM : Property.BAMRICH);
+        } else {
+            this.moveTo(goal);
+            goal.setPropertyValue(Property.DIRECTION, nbGoal.getDirection());
+            this.setPropertyValue(Property.DIRECTION, 0);
+        }
+    }
+
+    /**
+     * buffer an enemy move relative to its direction, check for ME collision
+     */
+    public void bufferMoveEnemyTo(FieldDirection to) {
+        FieldDirection curDirection = FieldDirection.getFromDirection(this.getPropertyValue(Property.DIRECTION));
+        if (curDirection.getDirection() == null || to.getDirection() == null)
+            throw new IllegalArgumentException("'currentDir' and 'to' must not be diagonal");
+
+        FieldDirection nbGoal = FieldDirection.getRotated(curDirection, to);
+        Feld goal = this.getNeighbour(nbGoal);
+
+        if (goal.isToken(Token.ME)) {
+            // explode
+            goal.bufferSetProperty(this.isToken(Token.BLOCKLING) ? Property.BAM : Property.BAMRICH);
+        } else {
+            this.bufferMoveTo(goal);
+            goal.bufferSetPropertyValue(Property.DIRECTION, nbGoal.getDirection());
+            this.bufferSetPropertyValue(Property.DIRECTION, 0);
+        }
+    }
+
+    /**
+     * Get neighbour field relative to an original direction
+     * E.g. original RIGHT, relative RIGHT -> BOTTOM
+     */
+    public Feld getNeighbourRelative(FieldDirection original, FieldDirection relative) {
+        return this.getNeighbour(FieldDirection.getRotated(original, relative));
+    }
+
+    /**
+     *
+     */
+    public boolean isFree(boolean allowME) {
+        if (allowME)
+            return this.isToken(Token.ME) || (this.isToken(Token.PATH) && !this.hasProperty(Property.MOVED));
+        else
+            return this.isToken(Token.PATH) && !this.hasProperty(Property.MOVED);
     }
 }

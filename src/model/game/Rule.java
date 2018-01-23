@@ -22,7 +22,8 @@ public class Rule {
         this.sparsity = sparsity;
     }
 
-    public void execute(){
+    public void
+    execute(){
         // TODO: implement
     }
 }
