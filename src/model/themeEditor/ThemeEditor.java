@@ -37,12 +37,9 @@ public class ThemeEditor {
     public Theme makeTheme(){
         HashMap2D<Token, Theme.FeldType, List<SpriteSheet>> themeSprites = new HashMap2D();
         for(Token t:Token.values()){
-            ArrayList spriteList = new ArrayList();
             for(Theme.FeldType f: Theme.FeldType.values()){
-                for(Iterator<SpriteSheet> it = sprites.get(t,f).iterator() ; it.hasNext();){
-                    spriteList.add(it.next());
-                }
-                themeSprites.put(t,f,spriteList);
+                List<SpriteSheet> variations = sprites.get(t,f);
+                themeSprites.put(t,f,variations);
             }
         }
         return new Theme(themeSprites,"themeName");

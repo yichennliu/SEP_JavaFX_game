@@ -35,6 +35,7 @@ private GridPane tabContentAndCanvas;
 private Button addButton;
 private Button removeButton;
 private Button backButton;
+private Button saveButton;
 private ImageView preview;
 private Label label;
 private ListView listView;
@@ -45,7 +46,6 @@ private TextField sizeInput;
         root = new Group();
 
         this.testFeld = new Feld[5][6];
-        this.typeTabs = new HashMap<Token,TabPane>();
 
         this.scene = new Scene(this.root);
         this.stage = stage;
@@ -53,7 +53,8 @@ private TextField sizeInput;
         double width = stage.getWidth();
         double height = stage.getHeight();
 
-        this.tabs = new TabPane();
+        this.tabs = new TabPane(); // Token-Tabs
+        this.typeTabs = new HashMap<Token,TabPane>(); //Feldtype-Tabs
         this.tabs.setStyle("-fx-font-size: 11;");
         this.tabs.setMaxWidth(width-10);
 
@@ -68,14 +69,19 @@ private TextField sizeInput;
 
             // create Tabs for every feldtype
             for(Theme.FeldType feldType: Theme.FeldType.values()){
-                Tab typeTab = new Tab();
-                typeTab.setClosable(false);
-                typeTab.setText(feldType.name());
-                typeTabPane.getTabs().add(typeTab);
+                if(t.isMovable() == feldType.isMovable()){
+                    Tab typeTab = new Tab();
+                    typeTab.setUserData(feldType); // associate FeldType with Tab
+                    typeTab.setClosable(false);
+                    typeTab.setText(feldType.name());
+                    typeTabPane.getTabs().add(typeTab);
+                }
             }
             tabContent.getChildren().add(typeTabPane);
+
             this.typeTabs.put(t,typeTabPane);
             Tab tab = new Tab();
+            tab.setUserData(t); // associate Token with Tab
             tab.setText(t.name());
             tab.setContent(tabContent);
             tab.setClosable(false);
@@ -86,16 +92,12 @@ private TextField sizeInput;
         initCanvas();
 
         VBox rootBox = new VBox();
+        saveButton = new Button("Speichern");
         rootBox.getChildren().add(this.tabs);
         rootBox.getChildren().add(this.tabContentAndCanvas);
+        rootBox.getChildren().add(this.saveButton);
 
         root.getChildren().addAll(rootBox);
-    }
-
-    private Image getTypeThumbnail(Theme.FeldType feldType){
-       String fileName = feldType.name().toLowerCase();
-        return new Image("view/type_thumbnails/"+fileName+".png");
-
     }
 
     private void initTabContent(){
@@ -150,14 +152,14 @@ private TextField sizeInput;
     }
 
     public Token getActiveToken(){
-        int index = this.tabs.getSelectionModel().getSelectedIndex();
-        return Token.values()[index];
+        return (Token) this.tabs.getSelectionModel().getSelectedItem().getUserData();
+
     }
 
     public Theme.FeldType getActiveFeldType(){
         Token activeToken = getActiveToken();
-        int index = this.typeTabs.get(activeToken).getSelectionModel().getSelectedIndex();
-      return Theme.FeldType.values()[index];
+        System.out.println(this.typeTabs.get(activeToken).getSelectionModel().getSelectedItem().getUserData());
+        return (Theme.FeldType) this.typeTabs.get(activeToken).getSelectionModel().getSelectedItem().getUserData();
     }
 
     public Button getAddButton(){
@@ -197,5 +199,9 @@ private TextField sizeInput;
 
     public TabPane getTabs(){
         return this.tabs;
+    }
+
+    public Button getSaveButton() {
+        return saveButton;
     }
 }
