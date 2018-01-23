@@ -15,6 +15,7 @@ import model.game.Feld;
 import model.enums.Token;
 import model.themeEditor.ThemeEditor;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ private ThemeEditor themeEditor;
 private Theme theme;
 private Group root;
 private Stage stage;
-private Scene scene;
+private Scene sceneThemeView;
 private Canvas themeCanvas;
 private GraphicsContext themeGC;
 private Feld[][] testFeld;
@@ -39,7 +40,7 @@ private ImageView preview;
 private Label label;
 private ListView listView;
 private TextField sizeInput;
-
+private String stylesheet;
 
     public ThemeEditorView(Stage stage, ThemeEditor themeEditor){
         root = new Group();
@@ -47,7 +48,9 @@ private TextField sizeInput;
         this.testFeld = new Feld[5][6];
         this.typeTabs = new HashMap<Token,TabPane>();
 
-        this.scene = new Scene(this.root);
+        this.sceneThemeView = new Scene(this.root);
+        stylesheet= PrimaryPage.fileTolStylesheetString(new File("/Users/aidabakhtiari/Desktop/YAMAI_HAUPTPROJEKT/src/view/style.css"));
+        sceneThemeView.getStylesheets().add(stylesheet);
         this.stage = stage;
         this.themeEditor = themeEditor;
         double width = stage.getWidth();
@@ -84,6 +87,8 @@ private TextField sizeInput;
         }
 
         initCanvas();
+
+
 
         VBox rootBox = new VBox();
         rootBox.getChildren().add(this.tabs);
@@ -179,8 +184,8 @@ private TextField sizeInput;
         return this.listView;
     }
 
-    public Scene getScene(){
-        return this.scene;
+    public Scene getSceneThemeView(){
+        return this.sceneThemeView;
     }
 
     public Label getLabel() {

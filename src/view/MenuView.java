@@ -9,10 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
+
+import java.io.File;
 
 import static com.sun.javafx.tools.resource.DeployResource.Type.icon;
 
@@ -30,19 +33,21 @@ public class MenuView {
     private  RadioButton level3;
     private ToggleGroup group;
     private static Group root;
+    private String  stylesheet;
 
 
     public MenuView(Stage stage, Object model, String playerName){
         this.stage= stage;
          root = new Group();
-        VBox menu = new VBox();
+        VBox menu = new VBox(10);
+
         this.gameButton = new Button(" s t a r t  G A M E ");
         this.themeEditorButton = new Button("s t a r t  T H E M E - E D I T O R");
         this.helpButton = new Button ("H E L P");
         this.showName= new Label("W I L L K O M M E N " + playerName);
-        level1 = new RadioButton("");
-        level2 = new RadioButton("");
-        level3 = new RadioButton("");
+        level1 = new RadioButton("kasdhkasjdh");
+        level2 = new RadioButton("asjdlaskdj");
+        level3 = new RadioButton("asödlkaösldk");
         group = new ToggleGroup();
         level1.setToggleGroup(group);
         level2.setToggleGroup(group);
@@ -51,11 +56,13 @@ public class MenuView {
         level1.setUserData("Home");
         level2.setUserData("Calendar");
         level3.setUserData("Contacts");
-
+        HBox menuHbox = new HBox(10,level1,level2,level3);
         this.sceneMenu = new Scene(root);
-        menu.getChildren().addAll(showName,gameButton,level1,level2,level3,helpButton,themeEditorButton);
+        menu.getChildren().addAll(showName,gameButton,menuHbox,helpButton,themeEditorButton);
         root.getChildren().add(menu);
         if(!stage.isShowing()) stage.show();
+        stylesheet= PrimaryPage.fileTolStylesheetString(new File("/Users/aidabakhtiari/Desktop/YAMAI_HAUPTPROJEKT/src/view/style.css"));
+        sceneMenu.getStylesheets().add(stylesheet);
 
 
  /*
