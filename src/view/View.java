@@ -2,11 +2,17 @@ package view;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.Font;
 import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
+import model.enums.FieldDirection;
 import model.enums.Token;
 import model.game.Feld;
 import model.game.Level;
+import view.Theme.FeldType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class View {
 
@@ -48,7 +54,7 @@ public class View {
 
     private void showTheme() {
         ThemeEditorView themeEditorView = (ThemeEditorView) currentScene;
-        stage.setScene(themeEditorView.getScene());
+        stage.setScene(themeEditorView.getSceneThemeView());
     }
 
     private void showPrimary(){
@@ -93,6 +99,7 @@ public class View {
         gc.setTransform(defaultTransform);
         gc.clearRect(0,0,canvas.getWidth(),canvas.getHeight());
         gc.setTransform(actualTransformation);
+        gc.setFont(new Font(2));
 
         double canvasWidth = canvas.getWidth();
         double canvasHeight = canvas.getHeight();
@@ -117,23 +124,73 @@ public class View {
     }
 
     private static void drawFeld(double x, double y, GraphicsContext gc, Feld feld, double fieldSize, Theme theme){
+        Map<FieldDirection,Feld> neighbours = getEdgeNeighbours(feld,true);
         Token t = feld.getToken();
-//        FeldType = getFeldType();
+        FeldType f = getFeldType(feld,neighbours);
+        Theme.Position p = getFeldPosition(feld,f,neighbours);
+        gc.strokeRect(x,y,fieldSize,fieldSize);
+        gc.fillText("Token "+t.name(),x+1,y+4);
+        gc.fillText("Type " +f.name() ,x+1,y+6);
+        gc.fillText( "Pos " + p.name(),x+1,y+8);
+        gc.fillText("count " + neighbours.size(),x+1,y+10);
+        }
 
-
+    private static Theme.FeldType getFeldType(Feld feld, Map<FieldDirection,Feld> neighbours){
+        int neighbourCount = neighbours.size();
+        switch(neighbourCount){
+            case 0: return FeldType.ZEROEDGE;
+            case 1: return FeldType.ONEEDGE;
+            case 2:
+                if(neighbours.get(FieldDirection.LEFT)!=null && neighbours.get(FieldDirection.RIGHT)!=null ||
+                        neighbours.get(FieldDirection.TOP)!=null && neighbours.get(FieldDirection.BOTTOM)!=null){
+                    return FeldType.TWOEDGE;
+                }
+                else return FeldType.TWOEDGE_CORNER;
+            case 3: return FeldType.THREEEDGE;
+            default: return FeldType.FOUREDGE;
+        }
     }
 
-  /*  private static FeldType getFeldType(Feld feld){
-        Map<Neighbour,Feld> neighbours = new HashMap<Neighbour,Feld>();
-        for(Neighbour n: Neighbour.values() ){
-            neighbours.put(n,feld.getNeighbour(n));
+    private static Map<FieldDirection,Feld> getEdgeNeighbours(Feld feld, boolean sameToken) {
+        Map<FieldDirection, Feld> neighbours = new HashMap<FieldDirection, Feld>();
+        Token token = feld.getToken();
+        for (FieldDirection n : FieldDirection.values()) { // nur die direkten Nachbarn (ohne schräg oben/unten, etc.)
+            if (n != FieldDirection.LEFTBOTTOM && n != FieldDirection.LEFTTOP && n != FieldDirection.RIGHTBOTTOM && n != FieldDirection.RIGHTTOP) {
+                Feld neighbour = feld.getNeighbour(n);
+                if (sameToken && (neighbour != null && neighbour.getToken() != token)) continue;
+                if(neighbour!=null) neighbours.put(n, neighbour);
+            }
         }
-        if(neighbours.get(Neighbour.LEFT).getToken() == feld.getToken()){
+        return neighbours;
+    }
 
+    private static Theme.Position getFeldPosition (Feld feld, FeldType type, Map<FieldDirection,Feld> neighbours) {
+        if (type == FeldType.FOUREDGE || type == FeldType.TWOEDGE || type == FeldType.ZEROEDGE)
+            return Theme.Position.DEFAULT;
+        switch (type) {
+            case ONEEDGE:
+                if (neighbours.containsKey(FieldDirection.LEFT)) return Theme.Position.RIGHT;
+                if (neighbours.containsKey(FieldDirection.RIGHT)) return Theme.Position.LEFT;
+                if (neighbours.containsKey(FieldDirection.BOTTOM)) return Theme.Position.TOP;
+                if (neighbours.containsKey(FieldDirection.TOP)) return Theme.Position.BOTTOM;
+            case TWOEDGE_CORNER:
+                if (neighbours.containsKey(FieldDirection.TOP) && neighbours.containsKey(FieldDirection.RIGHT))
+                    return Theme.Position.BOTTOMLEFT;
+                if (neighbours.containsKey(FieldDirection.TOP) && neighbours.containsKey(FieldDirection.LEFT))
+                    return Theme.Position.BOTTOMRIGHT;
+                if (neighbours.containsKey(FieldDirection.BOTTOM) && neighbours.containsKey(FieldDirection.LEFT))
+                    return Theme.Position.TOPRIGHT;
+                if (neighbours.containsKey(FieldDirection.BOTTOM) && neighbours.containsKey(FieldDirection.RIGHT))
+                    return Theme.Position.TOPLEFT;
+            case THREEEDGE:
+                if (!neighbours.containsKey(FieldDirection.TOP)) return Theme.Position.TOP;
+                if (!neighbours.containsKey(FieldDirection.BOTTOM)) return Theme.Position.BOTTOM;
+                if (!neighbours.containsKey(FieldDirection.RIGHT)) return Theme.Position.RIGHT;
+                if (!neighbours.containsKey(FieldDirection.LEFT)) return Theme.Position.LEFT;
         }
+        return null;
 
-    }*/
-
+    }
 
     public Stage getStage(){
         return this.stage;

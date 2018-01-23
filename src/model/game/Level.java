@@ -183,7 +183,7 @@ public class Level {
         this.propertiesToChange.clear();
     }
 
-    public void executeMainRules() {
+    public boolean executeMainRules() {
         /* Explosionen aus vorigem Tick löschen */
         for (Feld[] row : this.getMap()) {
             for (Feld current : row) {
@@ -392,16 +392,17 @@ public class Level {
 
                 /* Explosionen ausführen */
                 if (current.hasProperty(Property.BAM)) {
-                    current.bam(false);
+                     return current.bam(false);
                 }
                 if (current.hasProperty(Property.BAMRICH)) {
-                    current.bam(true);
+                    return current.bam(true);
                 }
             }
         }
 
         // apply buffer
         this.applyBufferedChanges();
+        return false;
     }
 
     /**

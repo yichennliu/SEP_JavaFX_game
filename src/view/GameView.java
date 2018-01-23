@@ -11,27 +11,33 @@ import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import model.game.Level;
 
+import java.io.File;
+
 public class GameView {
 
     private GraphicsContext gameGC;
     private Canvas gameCanvas;
-    private Scene scene;
+    private Scene sceneGame;
     private Stage stage;
     private double width, height;
     private Group root;
     private Affine transformation = new Affine();
     private Theme theme;
     private Level level;
+    private String stylesheet;
+
 
 
     public GameView(Stage stage, Level level){
         root = new Group();
-        this.scene = new Scene(this.root);
+
+        this.sceneGame = new Scene(this.root);
         this.stage = stage;
         this.width = stage.getWidth();
         this.height = stage.getHeight();
         this.level = level;
-
+        stylesheet= PrimaryPage.fileTolStylesheetString(new File("src/view/style.css"));
+        sceneGame.getStylesheets().add(stylesheet);
         gameCanvas = new Canvas(width,height);
         gameGC = gameCanvas.getGraphicsContext2D();
 
@@ -46,7 +52,7 @@ public class GameView {
     }
 
     public Scene getScene(){
-        return this.scene;
+        return this.sceneGame;
     }
 
     public Stage getStage() {
@@ -54,7 +60,7 @@ public class GameView {
     }
 
     public void update(){
-        View.drawMap(this.gameGC,level.getMap(),15.0, null);
+        View.drawMap(this.gameGC,level.getMap(),15.0, new Theme(null,null));
     }
 
     public void translate(double x, double y){

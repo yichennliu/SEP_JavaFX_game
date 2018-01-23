@@ -10,8 +10,21 @@ import java.util.List;
 
 public class Theme {
 
-    public enum FeldType {ZEROEDGE, ONEEDGE, TWOEDGE, THREEEDGE, FOUREDGE,
-                            STEP_SIDE,STEP_UP, STEP_DOWN, IDLE};
+    public enum FeldType {
+        ZEROEDGE(false), ONEEDGE(false), TWOEDGE(false), TWOEDGE_CORNER(false), THREEEDGE(false), FOUREDGE(false), // for "static" fields
+        STEP_SIDE(true),STEP_UP(true), STEP_DOWN(true), IDLE(true); // for "moving" fields
+
+        private boolean movable;
+        FeldType(boolean movable){
+            this.movable = movable;
+        }
+        public boolean isMovable(){
+            return this.movable;
+        }
+    }
+
+    public enum Position {TOP, BOTTOM, LEFT, RIGHT, TOPRIGHT,TOPLEFT,BOTTOMRIGHT, BOTTOMLEFT, DEFAULT};
+
     private HashMap2D<Token,FeldType,List<SpriteSheet>> images = new HashMap2D();
     private String name;
 

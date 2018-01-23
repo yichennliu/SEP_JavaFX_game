@@ -13,12 +13,14 @@ import model.enums.Token;
 
 import javafx.scene.input.MouseEvent;
 import model.themeEditor.SpriteSheet;
+import model.themeEditor.ThemeIO;
 import view.Theme;
 import model.themeEditor.ThemeEditor;
 import view.ThemeEditorView;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +48,15 @@ public class ThemeEditorController {
         label.setText("No image avaible for: " + t.name() + " - " + f.name());
     }
 
+    private void initSaveButton(){
+        Button saveButton = this.themeEditorView.getSaveButton();
+
+        saveButton.setOnAction(e -> {
+            System.out.println("saveTheme gestartet");
+            ThemeIO.exportTheme(this.themeEditor.makeTheme());
+        });
+    }
+
     private void initTypeTabs(){
 
         Map<Token,TabPane>  typeTabs = this.themeEditorView.getTypeTabs();
@@ -56,7 +67,7 @@ public class ThemeEditorController {
         for(Token t : Token.values()){
 
                 TabPane typePane = typeTabs.get(t);
-                typePane.getSelectionModel().selectedIndexProperty().addListener((a,b,c) -> {
+                typePane.getSelectionModel().selectedItemProperty().addListener((a,b,c) -> {
                    updateListViewAndPreview();
                 });
 
@@ -71,7 +82,7 @@ public class ThemeEditorController {
             List<SpriteSheet> imageList = themeEditor.getSprites().get(t, f);
                 if(this.loadImage(t,f)){
                     ImageView imgV = themeEditorView.getPreview();
-                    imgV.setImage(imageList.get(imageList.size()-1).getSprite(0));
+                    imgV.setImage(imageList.get(imageList.size()-1).getSprite(Theme.Position.DEFAULT,0));
                 }
             });
     }
@@ -92,7 +103,7 @@ public class ThemeEditorController {
                         }
                         else {
                             themeEditorView.getPreview().setImage(
-                                    sprites.get(listView.getSelectionModel().getSelectedIndex()).getSprite(0));
+                                    sprites.get(listView.getSelectionModel().getSelectedIndex()).getSprite(Theme.Position.DEFAULT,0));
                         }
                     }
             });
@@ -128,15 +139,12 @@ public class ThemeEditorController {
 
     private void initListViews(){
         ListView listView = themeEditorView.getListView();
-        listView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                int index = newValue.intValue();
+        listView.getSelectionModel().selectedIndexProperty().addListener((a,b,c) ->{
+                int index = c.intValue();
                 Token t = themeEditorView.getActiveToken();
                 Theme.FeldType f = themeEditorView.getActiveFeldType();
                 setPreviewImage(t,f,index);
                 updateSizeInput(t,f,index);
-            }
         });
 //        listView.setCellFactory(createCellFactory());
         updateListViewAndPreview();
@@ -170,7 +178,9 @@ public class ThemeEditorController {
         if(index!=-1){
             Button removeButton = themeEditorView.getRemoveButton();
             ObservableList<SpriteSheet> imageList = themeEditor.getSprites().get(t,f);
-            preview.setImage(imageList.get(index).getSprite(0));
+            preview.setImage(new Image("view/loading.gif"));
+            Image img =imageList.get(index).getSprite(Theme.Position.DEFAULT,0);
+            preview.setImage(img);
             removeButton.setDisable(false);
         }
         else {
@@ -195,7 +205,9 @@ public class ThemeEditorController {
                 return false;
             }
             SpriteSheet newSpriteSheet;
-            newSpriteSheet = new SpriteSheet(image,(int) image.getWidth());
+            int spriteSize = BigInteger.valueOf((int) image.getWidth()).gcd(BigInteger.valueOf((int) image.getHeight())).intValue();
+            System.out.println(spriteSize);
+            newSpriteSheet = new SpriteSheet(image,f,spriteSize);
             newSpriteSheet.setPath(selectedFile.getPath());
             this.themeEditor.getSprites().get(t,f).add(newSpriteSheet);
 
@@ -203,28 +215,6 @@ public class ThemeEditorController {
         }
         return false;
     } // controller
-
-    private Callback<ListView<SpriteSheet>, ListCell<SpriteSheet>> createCellFactory (){
-         Callback callback = new Callback<ListView<SpriteSheet>, ListCell<SpriteSheet>>() {
-             @Override
-             public ListCell<SpriteSheet> call(ListView<SpriteSheet> param) {
-
-                 ListCell<SpriteSheet> cell = new ListCell<SpriteSheet>(){
-                     @Override
-                     protected void updateItem(SpriteSheet info, boolean bln){
-                         super.updateItem(info,bln);
-                         if( info !=null){
-                             setText(info.getPath());
-                         }
-                         else return;
-                     }
-
-                 };
-                 return cell;
-             }
-         };
-         return callback;
-    }
 
     private void back(){
         Button backButton = themeEditorView.getBackButton();
@@ -245,6 +235,7 @@ public class ThemeEditorController {
         initListViews();
         initTypeTabs();
         initSizeInput();
+        initSaveButton();
         back();
     }
 }
