@@ -11,6 +11,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.enums.InputDirection;
+import model.enums.Property;
 import model.game.Level;
 import view.GameView;
 
@@ -37,9 +38,7 @@ public class GameController {
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
-            Calendar cal = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-            System.out.println("tick " + sdf.format(cal.getTime()));
+            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
 
             /* Compute a tick */
             this.level.resetProperties();

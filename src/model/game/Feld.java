@@ -162,18 +162,41 @@ public class Feld {
     }
 
     /**
+     * Make a 3*3 explosion
+     *
+     * @param rich true to generate GEMs, otherwise EXPLOSIONs
+     * @return true if ME was killed, false otherwise
+     */
+    public boolean bam(boolean rich) {
+        Collection<Feld> fields = this.getNeighbours();
+        fields.add(this);
+        boolean killed = false;
+        for (Feld f : fields) {
+            if (f.getToken() != Token.EXIT && f.getToken() != Token.WALL) {
+                if (f.isToken(Token.ME)) killed = true;
+                f.setToken(rich ? Token.GEM : Token.EXPLOSION);
+            }
+        }
+        return killed;
+    }
+
+    /**
      * Buffer a 3*3 explosion
      *
      * @param rich true to generate GEMs, otherwise EXPLOSIONs
+     * @return true if ME was killed, false otherwise
      */
-    public void bufferBam(boolean rich) {
+    public boolean bufferBam(boolean rich) {
         Collection<Feld> fields = this.getNeighbours();
         fields.add(this);
+        boolean killed = false;
         for (Feld f : fields) {
             if (f.getToken() != Token.EXIT && f.getToken() != Token.WALL) {
+                if (f.isToken(Token.ME)) killed = true;
                 f.bufferSetToken(rich ? Token.GEM : Token.EXPLOSION);
             }
         }
+        return killed;
     }
 
     /**
@@ -198,6 +221,21 @@ public class Feld {
     }
 
     /**
+     * make a movement:
+     * Move to goal, set both to MOVED, replace current Token with PATH
+     *
+     * @param goal not null
+     */
+    public void moveTo(Feld goal) {
+        // Objekt am Ziel einsetzen
+        goal.setToken(this.getToken());
+        goal.setProperty(Property.MOVED);
+        // Platz freimachen
+        this.setToken(Token.PATH);
+        this.setProperty(Property.MOVED);
+    }
+
+    /**
      * Buffer a movement:
      * Move to goal, set both to MOVED, replace current Token with PATH
      *
@@ -213,6 +251,27 @@ public class Feld {
     }
 
     /**
+     * execute an enemy move relative to its direction, check for ME collision
+     */
+    public void moveEnemyTo(FieldDirection to) {
+        FieldDirection curDirection = FieldDirection.getFromDirection(this.getPropertyValue(Property.DIRECTION));
+        if (curDirection.getDirection() == null || to.getDirection() == null)
+            throw new IllegalArgumentException("'currentDir' and 'to' must not be diagonal");
+
+        FieldDirection nbGoal = FieldDirection.getRotated(curDirection, to);
+        Feld goal = this.getNeighbour(nbGoal);
+
+        if (goal.isToken(Token.ME)) {
+            // explode
+            goal.setProperty(this.isToken(Token.BLOCKLING) ? Property.BAM : Property.BAMRICH);
+        } else {
+            this.moveTo(goal);
+            goal.setPropertyValue(Property.DIRECTION, nbGoal.getDirection());
+            this.setPropertyValue(Property.DIRECTION, 0);
+        }
+    }
+
+    /**
      * buffer an enemy move relative to its direction, check for ME collision
      */
     public void bufferMoveEnemyTo(FieldDirection to) {
@@ -225,7 +284,7 @@ public class Feld {
 
         if (goal.isToken(Token.ME)) {
             // explode
-            this.bufferBam(!this.isToken(Token.BLOCKLING));
+            goal.bufferSetProperty(this.isToken(Token.BLOCKLING) ? Property.BAM : Property.BAMRICH);
         } else {
             this.bufferMoveTo(goal);
             goal.bufferSetPropertyValue(Property.DIRECTION, nbGoal.getDirection());
@@ -239,5 +298,15 @@ public class Feld {
      */
     public Feld getNeighbourRelative(FieldDirection original, FieldDirection relative) {
         return this.getNeighbour(FieldDirection.getRotated(original, relative));
+    }
+
+    /**
+     *
+     */
+    public boolean isFree(boolean allowME) {
+        if (allowME)
+            return this.isToken(Token.ME) || (this.isToken(Token.PATH) && !this.hasProperty(Property.MOVED));
+        else
+            return this.isToken(Token.PATH) && !this.hasProperty(Property.MOVED);
     }
 }
