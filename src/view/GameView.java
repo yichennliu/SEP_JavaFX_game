@@ -36,7 +36,7 @@ public class GameView {
         this.width = stage.getWidth();
         this.height = stage.getHeight();
         this.level = level;
-        stylesheet= PrimaryPage.fileTolStylesheetString(new File("/Users/aidabakhtiari/Desktop/YAMAI_HAUPTPROJEKT/src/view/style.css"));
+        stylesheet= PrimaryPage.fileTolStylesheetString(new File("src/view/style.css"));
         sceneGame.getStylesheets().add(stylesheet);
         gameCanvas = new Canvas(width,height);
         gameGC = gameCanvas.getGraphicsContext2D();

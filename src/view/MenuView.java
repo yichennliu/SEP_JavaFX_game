@@ -4,8 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -13,6 +11,8 @@ import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
 import java.io.File;
+
+
 
 public class MenuView {
 
@@ -55,7 +55,7 @@ public class MenuView {
         menu.getChildren().addAll(showName,gameButton,menuHbox,helpButton,themeEditorButton);
         root.getChildren().add(menu);
         if(!stage.isShowing()) stage.show();
-        stylesheet= PrimaryPage.fileTolStylesheetString(new File("/Users/aidabakhtiari/Desktop/YAMAI_HAUPTPROJEKT/src/view/style.css"));
+        stylesheet= PrimaryPage.fileTolStylesheetString(new File("src/view/style.css"));
         sceneMenu.getStylesheets().add(stylesheet);
 
 

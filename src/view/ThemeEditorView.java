@@ -49,7 +49,7 @@ private String stylesheet;
         this.typeTabs = new HashMap<Token,TabPane>();
 
         this.sceneThemeView = new Scene(this.root);
-        stylesheet= PrimaryPage.fileTolStylesheetString(new File("/Users/aidabakhtiari/Desktop/YAMAI_HAUPTPROJEKT/src/view/style.css"));
+        stylesheet= PrimaryPage.fileTolStylesheetString(new File("src/view/style.css"));
         sceneThemeView.getStylesheets().add(stylesheet);
         this.stage = stage;
         this.themeEditor = themeEditor;
