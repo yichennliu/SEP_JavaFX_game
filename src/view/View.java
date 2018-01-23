@@ -5,9 +5,14 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
+import model.enums.FieldDirection;
 import model.enums.Token;
 import model.game.Feld;
 import model.game.Level;
+import view.Theme.FeldType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class View {
 
@@ -119,7 +124,7 @@ public class View {
     }
 
     private static void drawFeld(double x, double y, GraphicsContext gc, Feld feld, double fieldSize, Theme theme){
-        Map<Neighbour,Feld> neighbours = getEdgeNeighbours(feld,true);
+        Map<FieldDirection,Feld> neighbours = getEdgeNeighbours(feld,true);
         Token t = feld.getToken();
         FeldType f = getFeldType(feld,neighbours);
         Theme.Position p = getFeldPosition(feld,f,neighbours);
@@ -130,14 +135,14 @@ public class View {
         gc.fillText("count " + neighbours.size(),x+1,y+10);
         }
 
-    private static FeldType getFeldType(Feld feld,Map<Neighbour,Feld> neighbours){
+    private static Theme.FeldType getFeldType(Feld feld, Map<FieldDirection,Feld> neighbours){
         int neighbourCount = neighbours.size();
         switch(neighbourCount){
             case 0: return FeldType.ZEROEDGE;
             case 1: return FeldType.ONEEDGE;
             case 2:
-                if(neighbours.get(Neighbour.LEFT)!=null && neighbours.get(Neighbour.RIGHT)!=null ||
-                        neighbours.get(Neighbour.TOP)!=null && neighbours.get(Neighbour.BOTTOM)!=null){
+                if(neighbours.get(FieldDirection.LEFT)!=null && neighbours.get(FieldDirection.RIGHT)!=null ||
+                        neighbours.get(FieldDirection.TOP)!=null && neighbours.get(FieldDirection.BOTTOM)!=null){
                     return FeldType.TWOEDGE;
                 }
                 else return FeldType.TWOEDGE_CORNER;
@@ -146,11 +151,11 @@ public class View {
         }
     }
 
-    private static Map<Neighbour,Feld> getEdgeNeighbours(Feld feld, boolean sameToken) {
-        Map<Neighbour, Feld> neighbours = new HashMap<Neighbour, Feld>();
+    private static Map<FieldDirection,Feld> getEdgeNeighbours(Feld feld, boolean sameToken) {
+        Map<FieldDirection, Feld> neighbours = new HashMap<FieldDirection, Feld>();
         Token token = feld.getToken();
-        for (Neighbour n : Neighbour.values()) { // nur die direkten Nachbarn (ohne schräg oben/unten, etc.)
-            if (n != Neighbour.LEFTBOTTOM && n != Neighbour.LEFTTOP && n != Neighbour.RIGHTBOTTOM && n != Neighbour.RIGHTTOP) {
+        for (FieldDirection n : FieldDirection.values()) { // nur die direkten Nachbarn (ohne schräg oben/unten, etc.)
+            if (n != FieldDirection.LEFTBOTTOM && n != FieldDirection.LEFTTOP && n != FieldDirection.RIGHTBOTTOM && n != FieldDirection.RIGHTTOP) {
                 Feld neighbour = feld.getNeighbour(n);
                 if (sameToken && (neighbour != null && neighbour.getToken() != token)) continue;
                 if(neighbour!=null) neighbours.put(n, neighbour);
@@ -159,29 +164,29 @@ public class View {
         return neighbours;
     }
 
-    private static Theme.Position getFeldPosition (Feld feld, FeldType type, Map<Neighbour,Feld> neighbours) {
+    private static Theme.Position getFeldPosition (Feld feld, FeldType type, Map<FieldDirection,Feld> neighbours) {
         if (type == FeldType.FOUREDGE || type == FeldType.TWOEDGE || type == FeldType.ZEROEDGE)
             return Theme.Position.DEFAULT;
         switch (type) {
             case ONEEDGE:
-                if (neighbours.containsKey(Neighbour.LEFT)) return Theme.Position.RIGHT;
-                if (neighbours.containsKey(Neighbour.RIGHT)) return Theme.Position.LEFT;
-                if (neighbours.containsKey(Neighbour.BOTTOM)) return Theme.Position.TOP;
-                if (neighbours.containsKey(Neighbour.TOP)) return Theme.Position.BOTTOM;
+                if (neighbours.containsKey(FieldDirection.LEFT)) return Theme.Position.RIGHT;
+                if (neighbours.containsKey(FieldDirection.RIGHT)) return Theme.Position.LEFT;
+                if (neighbours.containsKey(FieldDirection.BOTTOM)) return Theme.Position.TOP;
+                if (neighbours.containsKey(FieldDirection.TOP)) return Theme.Position.BOTTOM;
             case TWOEDGE_CORNER:
-                if (neighbours.containsKey(Neighbour.TOP) && neighbours.containsKey(Neighbour.RIGHT))
+                if (neighbours.containsKey(FieldDirection.TOP) && neighbours.containsKey(FieldDirection.RIGHT))
                     return Theme.Position.BOTTOMLEFT;
-                if (neighbours.containsKey(Neighbour.TOP) && neighbours.containsKey(Neighbour.LEFT))
+                if (neighbours.containsKey(FieldDirection.TOP) && neighbours.containsKey(FieldDirection.LEFT))
                     return Theme.Position.BOTTOMRIGHT;
-                if (neighbours.containsKey(Neighbour.BOTTOM) && neighbours.containsKey(Neighbour.LEFT))
+                if (neighbours.containsKey(FieldDirection.BOTTOM) && neighbours.containsKey(FieldDirection.LEFT))
                     return Theme.Position.TOPRIGHT;
-                if (neighbours.containsKey(Neighbour.BOTTOM) && neighbours.containsKey(Neighbour.RIGHT))
+                if (neighbours.containsKey(FieldDirection.BOTTOM) && neighbours.containsKey(FieldDirection.RIGHT))
                     return Theme.Position.TOPLEFT;
             case THREEEDGE:
-                if (!neighbours.containsKey(Neighbour.TOP)) return Theme.Position.TOP;
-                if (!neighbours.containsKey(Neighbour.BOTTOM)) return Theme.Position.BOTTOM;
-                if (!neighbours.containsKey(Neighbour.RIGHT)) return Theme.Position.RIGHT;
-                if (!neighbours.containsKey(Neighbour.LEFT)) return Theme.Position.LEFT;
+                if (!neighbours.containsKey(FieldDirection.TOP)) return Theme.Position.TOP;
+                if (!neighbours.containsKey(FieldDirection.BOTTOM)) return Theme.Position.BOTTOM;
+                if (!neighbours.containsKey(FieldDirection.RIGHT)) return Theme.Position.RIGHT;
+                if (!neighbours.containsKey(FieldDirection.LEFT)) return Theme.Position.LEFT;
         }
         return null;
 
