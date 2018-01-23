@@ -42,7 +42,7 @@ public class PrimaryPage {
         VBox menuVbox = new VBox(10);
 
          playerNameInput = new TextField ();
-         stylesheet= fileTolStylesheetString(new File("/Users/aidabakhtiari/Desktop/YAMAI_HAUPTPROJEKT/src/view/style.css"));
+         stylesheet= fileTolStylesheetString(new File("src/view/style.css"));
 
 
         this.sceneWelcome = new Scene(root);
