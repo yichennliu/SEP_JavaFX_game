@@ -1,22 +1,18 @@
 package model.enums;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public enum InputDirection {
-    GOUP(true, Neighbour.TOP), GORIGHT(true, Neighbour.RIGHT),
-    GODOWN(true, Neighbour.BOTTOM), GOLEFT(true, Neighbour.LEFT),
+    GOUP(true, FieldDirection.TOP), GORIGHT(true, FieldDirection.RIGHT),
+    GODOWN(true, FieldDirection.BOTTOM), GOLEFT(true, FieldDirection.LEFT),
 
-    DIGUP(false, Neighbour.TOP), DIGRIGHT(false, Neighbour.RIGHT),
-    DIGDOWN(false, Neighbour.BOTTOM), DIGLEFT(false, Neighbour.LEFT);
+    DIGUP(false, FieldDirection.TOP), DIGRIGHT(false, FieldDirection.RIGHT),
+    DIGDOWN(false, FieldDirection.BOTTOM), DIGLEFT(false, FieldDirection.LEFT);
 
     private final boolean go;
-    private final Neighbour neighbour;
+    private final FieldDirection fieldDirection;
 
-    InputDirection(boolean go, Neighbour neighbour) {
+    InputDirection(boolean go, FieldDirection fieldDirection) {
         this.go = go;
-        this.neighbour = neighbour;
+        this.fieldDirection = fieldDirection;
     }
 
     public boolean isGo() {
@@ -27,7 +23,7 @@ public enum InputDirection {
         return !this.go;
     }
 
-    public Neighbour getNeighbour() {
-        return neighbour;
+    public FieldDirection getFieldDirection() {
+        return fieldDirection;
     }
 }

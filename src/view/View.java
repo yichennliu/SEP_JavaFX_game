@@ -41,7 +41,7 @@ public class View {
 //        stage.setScene(this.levelEditor);
 //    }
 
-    private void showGame(){
+    public void showGame(){
         GameView gameView = (GameView) currentScene;
         stage.setScene(gameView.getScene());
     }
@@ -87,6 +87,7 @@ public class View {
 
     public static void drawMap(GraphicsContext gc, Feld[][] feld, double fieldSize, Theme theme){
         Canvas canvas = gc.getCanvas();
+
         Affine actualTransformation = gc.getTransform();
         Affine defaultTransform = new Affine();
         gc.setTransform(defaultTransform);
@@ -106,7 +107,8 @@ public class View {
                     gc.strokeRect(xPos, yPos, fieldSize, fieldSize);
                     String text = feld[rowNum][colNum].toString();
                     // Path verstecken, sonst ersten Buchstaben anzeigen
-                    gc.fillText(text.equals("PATH") ? "" : text.charAt(0)+"",xPos+fieldSize/2-15,yPos+fieldSize/2+5);
+                    gc.fillText(text.equals("PATH") ? "" : (text.equals("ME") ? "ME" : text.charAt(0)+""),
+                            xPos+fieldSize/2-7,yPos+fieldSize/2+5);
                 }
                 else drawFeld(xPos, yPos, gc, feld[rowNum][colNum], fieldSize, theme);
 
