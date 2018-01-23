@@ -3,6 +3,7 @@ package view;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -46,6 +47,7 @@ public class MenuView {
         level3.setUserData("Contacts");
 
         this.sceneMenu = new Scene(root);
+
         menu.getChildren().addAll(showName,gameButton,level1,level2,level3,helpButton,themeEditorButton);
         root.getChildren().add(menu);
         if(!stage.isShowing()) stage.show();

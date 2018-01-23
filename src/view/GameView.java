@@ -26,7 +26,6 @@ public class GameView {
 
     public GameView(Stage stage, Level level){
         root = new Group();
-
         this.scene = new Scene(this.root);
         this.stage = stage;
         this.width = stage.getWidth();
