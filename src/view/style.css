@@ -1,5 +1,12 @@
 .button {
            -fx-font: 16px "Serif";
            -fx-padding: 10;
-           -fx-background-color: #CCFF99;
+           -fx-background-color: black;
+           -fx-font-color: white;
        }
+#boulderdash{
+-fx-font: 24px "Serif";
+           -fx-padding: 10;
+           -fx-background-color: #CFFFFF;
+}
+

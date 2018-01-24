@@ -27,6 +27,11 @@ public class View {
 
     private double windowWidth = 800;
     private double windowHeight = 600;
+    private double menuWidth= 300;
+    private double menuHeight= 370;
+
+
+
     private double fieldSize = 20;
 
     public enum Mode {EDITOR, GAME, MENU, THEME,PRIMARY};
@@ -195,5 +200,23 @@ public class View {
     public Stage getStage(){
         return this.stage;
     }
+
+    public double getWindowWidth(){
+        return windowWidth;
+    }
+    public double getwindowHeight(){
+        return windowHeight;}
+
+  public double getMenuStartWidth(){
+        double menuStartwidth;
+      menuStartwidth=windowWidth/2-(menuWidth/3);
+        return menuStartwidth;
+  }
+
+  public double getMenuStartheight(){
+      double menuStartheight;
+      menuStartheight= windowHeight/2-menuHeight/2;
+      return menuStartheight;
+  }
 
 }

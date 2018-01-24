@@ -1,16 +1,14 @@
 package view;
 
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.net.MalformedURLException;
 
@@ -25,31 +23,39 @@ public class PrimaryPage {
     private static Group root;
     private Button name;
     private Button noName;
-    private  TextField playerNameInput;
+    private TextField playerNameInput;
+    private Label giveName;
+    private Label boulderdash;
     private String stylesheet;
+    private double menuWidth;
 
 
-
-    public PrimaryPage(Stage stage){
+    public PrimaryPage(Stage stage,double menuStartWidth, double menuStartHeight){
+        stylesheet= fileTolStylesheetString(new File("src/view/style.css"));
         this.stage= stage;
-        root = new Group();
-
+        this.root = new Group();
+       // root.setLayoutX(menuStartWidth);
+      //  root.setLayoutY(menuStartHeight);
         this.name = new Button(" ok ");
         this.noName = new Button("continue wihout name ");
-        Label giveName = new Label("please give me your Name:");
+        this.boulderdash = new Label("B O U L D E R D A S H - W I T C H ");
+        this.boulderdash.setId("boulderdash");
+        this.giveName = new Label("Enter your Name:");
+        this.playerNameInput = new TextField ();
+
         HBox menuHbox = new HBox(10, name, noName);
+        VBox menuVbox = new VBox(boulderdash,giveName,playerNameInput,menuHbox);
+        HBox menuGanz= new HBox(menuVbox);
+        menuGanz.setAlignment(Pos.BOTTOM_LEFT);
+        menuVbox.setAlignment(Pos.BOTTOM_LEFT);
 
-        VBox menuVbox = new VBox(10);
 
-         playerNameInput = new TextField ();
-         stylesheet= fileTolStylesheetString(new File("src/view/style.css"));
 
 
         this.sceneWelcome = new Scene(root);
         sceneWelcome.getStylesheets().add(stylesheet);
-
-        menuVbox.getChildren().addAll(giveName,playerNameInput,menuHbox);
-        root.getChildren().add(menuVbox);
+       // menuGanz.getChildren().addAll(menuVbox,menuHbox);
+        root.getChildren().add(menuGanz);
         if(!stage.isShowing()) stage.show();
 
 

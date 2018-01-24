@@ -43,10 +43,7 @@ public class MenuView {
         level2 = new RadioButton("asjdlaskdj");
         level3 = new RadioButton("asödlkaösldk");
         group = new ToggleGroup();
-        level1.setToggleGroup(group);
-        level2.setToggleGroup(group);
-        level3.setToggleGroup(group);
-        level1.setSelected(true);
+
         level1.setUserData("Home");
         level2.setUserData("Calendar");
         level3.setUserData("Contacts");
