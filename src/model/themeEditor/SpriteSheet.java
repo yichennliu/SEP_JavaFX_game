@@ -1,59 +1,56 @@
 package model.themeEditor;
 
-import javafx.geometry.Pos;
 import javafx.scene.image.*;
 import view.Theme;
 
-import java.util.HashMap;
-import java.util.Map;
-import model.themeEditor.ImageProcessor;
-import view.Theme.Position;
+import java.util.*;
 
-import javax.imageio.ImageWriter;
+import view.Theme.Position;
 
 public class SpriteSheet {
 
     private Theme.FeldType f;
     private String path; // optional;
     private int spriteSize;
-    private int imageWidth;
-    private int imageHeight;
-    private Map<Position, Image> positions;
-    private Map<Position, PixelReader> pixelReaders;
+    private Image defaultSheet;
+    private Map<Position, List<Image>> positions; // List als Liste der Frames;
 
     public SpriteSheet(Image defaultSheet, Theme.FeldType f, int spriteSize) {
         this.spriteSize = spriteSize;
-        this.imageHeight = (int) defaultSheet.getHeight();
-        this.imageWidth = (int) defaultSheet.getWidth();
+        this.defaultSheet = defaultSheet;
         this.f = f;
-
         initImages(defaultSheet);
-
     }
 
     private void initImages(Image defaultSheet){
-        positions = new HashMap<Position, Image>();
-        pixelReaders = new HashMap<Position,PixelReader>();
-        positions.put(Position.DEFAULT,defaultSheet);
-        pixelReaders.put(Position.DEFAULT,defaultSheet.getPixelReader());
+        positions = new HashMap<>();
+        positions.put(Position.DEFAULT, spriteSheetToImageList(defaultSheet,this.spriteSize));
         calcPositions();
     }
 
-    /* calculates SpriteSheets for all positions of this feldType (TWOEDGE_CORNER, THREEEDGE
-     */
+    private List<Image> spriteSheetToImageList(Image spriteSheet,int spriteSize){
+        int count = getNumberOfSprites(spriteSheet,spriteSize);
+        List<Image> list = new ArrayList<Image>();
+        for(int i = 0; i< count; i++){
+            list.add(getSprite(i,spriteSheet,spriteSize));
+        }
+        return list;
+    }
+
+    /* calculates SpriteSheets for all positions of this feldType (TWOEDGE_CORNER, THREEEDGE */
+
     private void calcPositions(){
         /* für alle Feldtypes, die nicht bewegbar sind */
         if(!f.isMovable() && f!= Theme.FeldType.ZEROEDGE && f!=Theme.FeldType.FOUREDGE){
             /*ONEEDGE AND THREEDGE */
             if(f == Theme.FeldType.ONEEDGE || f == Theme.FeldType.THREEEDGE){
-                System.out.println("calcing positions for " + f.name());
                 Position[] positions = new Position[]{Position.TOP, Position.RIGHT, Position.BOTTOM, Position.LEFT};
 
                 for(Position p: positions){
                     if (p==Position.TOP) this.positions.put(p,this.positions.get(Position.DEFAULT));
-                    if (p==Position.RIGHT) this.positions.put(p,getEachSpriteRotate(90));
-                    if (p==Position.BOTTOM) this.positions.put(p,getEachSpriteRotate(180));
-                    if (p==Position.LEFT) this.positions.put(p,getEachSpriteRotate(270));
+                    if (p==Position.RIGHT) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,90),spriteSize));
+                    if (p==Position.BOTTOM) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,180),spriteSize));
+                    if (p==Position.LEFT) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,270),spriteSize));
                 }
             }
             /*TWOEDGE*/
@@ -61,7 +58,7 @@ public class SpriteSheet {
                 Position[] positions = new Position[]{Position.TOP, Position.LEFT};
                 for(Position p: positions){
                     if(p==Position.TOP) this.positions.put(p,this.positions.get(Position.DEFAULT));
-                    if (p==Position.LEFT) this.positions.put(p,getEachSpriteRotate(90));
+                    if (p==Position.LEFT) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,90),spriteSize));
                 }
             }
             /*TWOEDGE_CORNER*/
@@ -70,9 +67,9 @@ public class SpriteSheet {
 
                 for(Position p: positions){
                     if(p==Position.TOPLEFT) this.positions.put(p,this.positions.get(Position.DEFAULT));
-                    if (p==Position.TOPRIGHT) this.positions.put(p,getEachSpriteRotate(90));
-                    if (p==Position.BOTTOMRIGHT) this.positions.put(p,getEachSpriteRotate(180));
-                    if (p==Position.BOTTOMLEFT) this.positions.put(p,getEachSpriteRotate(270));
+                    if (p==Position.TOPRIGHT) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,90),spriteSize));
+                    if (p==Position.BOTTOMRIGHT) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,180),spriteSize));
+                    if (p==Position.BOTTOMLEFT) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,270),spriteSize));
                 }
             }
         }
@@ -83,33 +80,36 @@ public class SpriteSheet {
                 Position[] positions = new Position[]{Position.RIGHT, Position.LEFT};
                 for(Position p: positions){
                     if(p==Position.RIGHT) this.positions.put(p,this.positions.get(Position.DEFAULT));
-                    if (p==Position.LEFT) this.positions.put(p,getEachSpriteMirrored(true));
+                    if (p==Position.LEFT) this.positions.put(p,spriteSheetToImageList(getEachSpriteMirrored(defaultSheet,spriteSize,true),spriteSize));
                 }
+            }
+            if(f==Theme.FeldType.IDLE){
+
             }
         }
     }
 
     public void setSpriteSize(int spriteSize) throws Exception {
-        Image defaultImage = positions.get(Position.DEFAULT);
-        if(spriteSize > (int) defaultImage.getHeight() || spriteSize > (int) defaultImage.getWidth() ||
-                defaultImage.getWidth() % spriteSize !=0.0 || defaultImage.getHeight() % spriteSize!=0.0)
+        if(spriteSize > (int) defaultSheet.getHeight() || spriteSize > (int) defaultSheet.getWidth() ||
+                defaultSheet.getWidth() % spriteSize !=0.0 || defaultSheet.getHeight() % spriteSize!=0.0)
             throw new Exception("Sprite -size does not fit to height and/or width of Spritesheet");
 
         this.spriteSize = spriteSize;
         calcPositions();
     }
 
-    public int getNumberOfSprites(){
-        return (this.imageWidth * this.imageHeight / (int) Math.pow(this.spriteSize,2));
+    public int getNumberOfSprites(Image spriteSheet,int spriteSize){
+        return ( (int) (spriteSheet.getWidth() * spriteSheet.getHeight()) / (int) Math.pow(spriteSize,2));
     }
 
-    private Image getEachSpriteRotate(int angle){
-        WritableImage result = new WritableImage(this.imageWidth, this.imageHeight);
+    // returns the default spriteSheet with rotated sprites
+    private Image getEachSpriteRotate(Image spriteSheet,int spriteSize,int angle){
+        WritableImage result = new WritableImage((int) spriteSheet.getWidth(), (int) spriteSheet.getHeight());
         PixelWriter iw = result.getPixelWriter();
-        for(int i=0; i<this.getNumberOfSprites(); i++){
+        for(int i=0; i<getNumberOfSprites(spriteSheet,spriteSize); i++){
 
-            Image sourceSprite = ImageProcessor.getRotatedBy(angle,this.getSprite(Position.DEFAULT,i).getPixelReader(),spriteSize,spriteSize);
-            int colCount = this.imageWidth / this.spriteSize;
+            Image sourceSprite = ImageProcessor.getRotatedBy(angle,getSprite(i,spriteSheet,spriteSize));
+            int colCount = ((int) spriteSheet.getWidth()) / spriteSize;
             int posY = (i / colCount) * spriteSize;
             int posX = (i % colCount) * spriteSize;
             iw.setPixels(posX,posY,spriteSize,spriteSize,sourceSprite.getPixelReader(),0,0);
@@ -117,12 +117,13 @@ public class SpriteSheet {
         return result;
     }
 
-    private Image getEachSpriteMirrored(boolean vertical){
-        WritableImage result = new WritableImage(this.imageWidth, this.imageHeight);
+    //returns a SpriteSheet with mirrored sprites
+    private Image getEachSpriteMirrored(Image spriteSheet,int spriteSize, boolean vertical){
+        WritableImage result = new WritableImage((int) spriteSheet.getWidth(), (int) spriteSheet.getHeight());
         PixelWriter iw = result.getPixelWriter();
-        for(int i=0; i<this.getNumberOfSprites(); i++){
-            Image sourceSprite = ImageProcessor.getMirrored(vertical,this.getSprite(Position.DEFAULT,i).getPixelReader(),spriteSize,spriteSize);
-            int colCount = this.imageWidth / this.spriteSize;
+        for(int i=0; i<getNumberOfSprites(spriteSheet,spriteSize); i++){
+            Image sourceSprite = ImageProcessor.getMirrored(vertical,getSprite(i,spriteSheet,spriteSize));
+            int colCount = ((int) spriteSheet.getWidth()) / spriteSize;
             int posY = (i / colCount) * spriteSize;
             int posX = (i % colCount) * spriteSize;
             iw.setPixels(posX,posY,spriteSize,spriteSize,sourceSprite.getPixelReader(),0,0);
@@ -142,40 +143,42 @@ public class SpriteSheet {
         return this.spriteSize;
     }
 
-    /* returns Spritesheet for position or null if position not available or index to small or to high*/
-    public Image getSprite(Position position, int index){
-        if(index < 0 || index > (getNumberOfSprites()) || !positions.containsKey(position)){
-            System.out.println("Sprite not found or index to high: i:" + index + " position: " + position.name());
+    public Image getSprite(int index, Image spriteSheet, int spriteSize){
+        int spriteCount = (int) spriteSheet.getWidth() * (int) spriteSheet.getHeight() / (int) Math.pow(spriteSize,2);
+        if(index < 0 || index > spriteCount){
             return null;
         }
 
-        int colCount = this.imageWidth / this.spriteSize;
+        int colCount = (int) spriteSheet.getWidth() / spriteSize;
         int row = index / colCount;
         int col = index % colCount;
         int posY = row * spriteSize;
         int posX = col * spriteSize;
 
-        WritableImage image = new WritableImage(this.spriteSize, this.spriteSize);
+        WritableImage image = new WritableImage(spriteSize, spriteSize);
         PixelWriter pixelWriter = image.getPixelWriter();
-
-        boolean posAvailable = positions.containsKey(position);
-
-        Image img = positions.get(position);
-        PixelReader reader = pixelReaders.get(position);
-
+        PixelReader reader = spriteSheet.getPixelReader();
 
         try {
             pixelWriter.setPixels(0,0,spriteSize,spriteSize,reader,posX, posY);
         }
         catch(Exception e ){
-            System.out.println(e.getMessage());
+            System.out.println("Error: " + e.getMessage());
             return null;
         }
         return image;
     }
 
-    public Image getSpriteSheet(Position position){
-        if(!positions.containsKey(position)) return null;
-        return positions.get(position);
+
+    /* returns Spritesheet for position or null if position not available or index to small or to high*/
+    public Image getSprite(Position position, int index) {
+        List<Image> list = this.positions.get(position);
+        if (list!=null) return list.get(index);
+        return null;
+
+    }
+
+    public Image getDefaultSheet(){
+        return this.defaultSheet;
     }
 }

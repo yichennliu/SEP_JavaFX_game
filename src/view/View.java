@@ -2,6 +2,8 @@ package view;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
@@ -9,6 +11,7 @@ import model.enums.FieldDirection;
 import model.enums.Token;
 import model.game.Feld;
 import model.game.Level;
+import model.themeEditor.SpriteSheet;
 import view.Theme.FeldType;
 
 import java.util.HashMap;
@@ -103,8 +106,8 @@ public class View {
         Affine defaultTransform = new Affine();
         gc.setTransform(defaultTransform);
         gc.clearRect(0,0,canvas.getWidth(),canvas.getHeight());
+        gc.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
         gc.setTransform(actualTransformation);
-        gc.setFont(new Font(2));
 
         double canvasWidth = canvas.getWidth();
         double canvasHeight = canvas.getHeight();
@@ -115,32 +118,50 @@ public class View {
             for (int colNum = 0; colNum < mapWidth; colNum++){
                 double xPos = colNum* fieldSize;
                 double yPos = rowNum*fieldSize;
-                if(theme == null) {
-                    gc.strokeRect(xPos, yPos, fieldSize, fieldSize);
+                if(theme == null || !drawFeld(xPos, yPos, gc, feld[rowNum][colNum], fieldSize, theme)) {
                     String text = feld[rowNum][colNum].toString();
                     // Path verstecken, sonst ersten Buchstaben anzeigen
+                    gc.setFill(Color.WHITE);
                     gc.fillText(text.equals("PATH") ? "" : (text.equals("ME") ? "ME" : text.charAt(0)+""),
                             xPos+fieldSize/2-7,yPos+fieldSize/2+5);
+                    gc.setFill(Color.BLACK);
                 }
-                else drawFeld(xPos, yPos, gc, feld[rowNum][colNum], fieldSize, theme);
-
             }
         }
     }
 
-    private static void drawFeld(double x, double y, GraphicsContext gc, Feld feld, double fieldSize, Theme theme){
+    private static boolean drawFeld(double x, double y, GraphicsContext gc, Feld feld, double fieldSize, Theme theme){
         Map<FieldDirection,Feld> neighbours = getEdgeNeighbours(feld,true);
         Token t = feld.getToken();
         FeldType f = getFeldType(feld,neighbours);
         Theme.Position p = getFeldPosition(feld,f,neighbours);
-        gc.strokeRect(x,y,fieldSize,fieldSize);
-        gc.fillText("Token "+t.name(),x+1,y+4);
-        gc.fillText("Type " +f.name() ,x+1,y+6);
-        gc.fillText( "Pos " + p.name(),x+1,y+8);
-        gc.fillText("count " + neighbours.size(),x+1,y+10);
+        Image sprite;
+        SpriteSheet s = theme.getSpriteSheet(t,f,0);
+
+        if(s==null){
+            s = (f.isMovable())? theme.getSpriteSheet(t,FeldType.IDLE,0) : theme.getSpriteSheet(t,FeldType.FOUREDGE,0);
+            if (s==null) {
+                return false;
+            }
+            sprite = s.getSprite(p,0);
+            if(sprite == null){
+                sprite = s.getSprite(Theme.Position.DEFAULT,0);
+            }
+
         }
+        else {
+            sprite = s.getSprite(p,0);
+            if (sprite== null) sprite = s.getSprite(Theme.Position.DEFAULT,0);
+        }
+        gc.drawImage(sprite,x,y,fieldSize,fieldSize);
+        return true;
+    }
 
     private static Theme.FeldType getFeldType(Feld feld, Map<FieldDirection,Feld> neighbours){
+        if(feld.getToken().isMovable()){
+            // TODO: für die animation richtiges token bekommen ..
+            return FeldType.IDLE;
+        }
         int neighbourCount = neighbours.size();
         switch(neighbourCount){
             case 0: return FeldType.ZEROEDGE;
@@ -170,7 +191,7 @@ public class View {
     }
 
     private static Theme.Position getFeldPosition (Feld feld, FeldType type, Map<FieldDirection,Feld> neighbours) {
-        if (type == FeldType.FOUREDGE || type == FeldType.TWOEDGE || type == FeldType.ZEROEDGE)
+        if (type == FeldType.FOUREDGE || type == FeldType.TWOEDGE || type == FeldType.ZEROEDGE || type == FeldType.IDLE)
             return Theme.Position.DEFAULT;
         switch (type) {
             case ONEEDGE:

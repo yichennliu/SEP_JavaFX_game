@@ -9,10 +9,13 @@ import javafx.scene.paint.Color;
 public class ImageProcessor {
 
     /*rotates Image by 90, 180 or 270 degrees, specified by angle*/
-    public static Image getRotatedBy(int angle, PixelReader reader, int width, int height)    {
+    public static Image getRotatedBy(int angle, Image img)    {
         if(angle!=90 && angle!=180 && angle!= 270) {
             return null;
         }
+        int width = (int) img.getWidth();
+        int height = (int) img.getHeight();
+        PixelReader reader = img.getPixelReader();
 
         WritableImage resultImg;
         PixelWriter pw;
@@ -58,7 +61,11 @@ public class ImageProcessor {
     }
 
     /* mirrors Image vertical or horizontal*/
-    public static Image getMirrored(boolean vertical,PixelReader reader, int width, int height) {
+    public static Image getMirrored(boolean vertical,Image img) {
+        int width = (int) img.getWidth();
+        int height = (int) img.getHeight();
+        PixelReader reader = img.getPixelReader();
+
         WritableImage resultImg = new WritableImage(width, height);
         PixelWriter pw = resultImg.getPixelWriter();
         if (vertical) {

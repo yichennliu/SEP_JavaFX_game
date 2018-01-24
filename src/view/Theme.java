@@ -43,15 +43,6 @@ public class Theme {
         return name;
     }
 
-    public void addSpriteSheetForToken(Token token, FeldType feldType, SpriteSheet spriteSheet){
-        List<SpriteSheet> variationImages = this.images.get(token,feldType);
-        if(variationImages == null){
-            variationImages = new ArrayList<SpriteSheet>();
-            this.images.put(token,feldType,variationImages);
-        }
-        variationImages.add(spriteSheet);
-    }
-
     public HashMap2D<Token,FeldType,List<SpriteSheet>> getImages(){
         return this.images;
     }

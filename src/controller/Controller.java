@@ -69,10 +69,7 @@ public class Controller {
 
         if (gameController == null) {
             GameView gameView = new GameView(this.view.getStage(),level);
-
             gameController = new GameController(level,gameView,this);
-        } else {
-//            gameController.setGameView(gameView);
         }
 
         this.view.update(View.Mode.GAME, gameController.getGameView());

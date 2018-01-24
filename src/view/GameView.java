@@ -44,6 +44,7 @@ public class GameView {
         root.getChildren().addAll(gameCanvas);
         stage.setTitle("BoulderDash - " + this.level.getName());
         this.update();
+        this.theme = new DummyTheme().getTheme();
         if(!stage.isShowing()) stage.show();
     }
 
@@ -60,7 +61,7 @@ public class GameView {
     }
 
     public void update(){
-        View.drawMap(this.gameGC,level.getMap(),15.0, new Theme(null,null));
+        View.drawMap(this.gameGC,level.getMap(),15.0, this.theme);
     }
 
     public void translate(double x, double y){

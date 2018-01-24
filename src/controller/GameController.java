@@ -14,9 +14,6 @@ import model.enums.InputDirection;
 import model.enums.Property;
 import model.game.Level;
 import view.GameView;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Optional;
 
 public class GameController {
@@ -24,7 +21,6 @@ public class GameController {
     private Controller menuController;
     private GameView gameView;
     private Level level;
-
     private Timeline timeline;
 
 
@@ -32,8 +28,16 @@ public class GameController {
         this.menuController = menuController;
         this.gameView = gameView;
         this.level = level;
+        addAlertEvent();
+        addDirectionEvents();
         addGameViewComponents();
-        //tick();
+
+
+
+
+
+
+
     }
 
     public void tick() {
@@ -60,6 +64,7 @@ public class GameController {
         this.timeline.play();
     }
 
+
     public GameView getGameView() {
         return gameView;
     }
@@ -67,57 +72,12 @@ public class GameController {
     public void setGameView(GameView gameView) {
         this.gameView = gameView;
         addGameViewComponents();
+
     }
 
-    // TODO: aufteilen
-    private void addGameViewComponents() {
+    private void addAlertEvent(){
         Stage gamestage = this.gameView.getStage();
-
-        gamestage.addEventHandler(ScrollEvent.SCROLL, e -> {
-            this.gameView.zoom(e.getDeltaY(), 1.5);
-            this.gameView.update();
-        });
-
-        gamestage.heightProperty().addListener((a,b,c) -> {
-            this.gameView.getCanvas().setHeight(c.doubleValue());
-            this.gameView.getCanvas().setWidth(gamestage.getWidth());
-        });
-
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-
-            if (event.getCode().equals(KeyCode.UP)) {
-                if(event.isShiftDown()){
-                    this.level.setInputDirection(InputDirection.DIGUP);
-                }
-
-                this.level.setInputDirection(InputDirection.GOUP);
-            }
-
-            if (event.getCode().equals(KeyCode.DOWN)){
-                if(event.isShiftDown()){
-                    this.level.setInputDirection(InputDirection.DIGDOWN);
-                }
-                this.level.setInputDirection(InputDirection.GODOWN);
-            }
-
-            if (event.getCode().equals(KeyCode.LEFT)) {
-                if(event.isShiftDown()){
-                    this.level.setInputDirection(InputDirection.DIGLEFT);
-                }
-                this.level.setInputDirection(InputDirection.GOLEFT);
-            }
-            if (event.getCode().equals(KeyCode.RIGHT)) {
-                if(event.isShiftDown()){
-                    this.level.setInputDirection(InputDirection.DIGRIGHT);
-                }
-                this.level.setInputDirection(InputDirection.GORIGHT);
-            }
-
-            this.gameView.update();
-        });
-
-        gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-
             if(event.getCode().equals(KeyCode.ESCAPE)) {
                 if (timeline != null) {
                     timeline.stop();
@@ -150,6 +110,58 @@ public class GameController {
 
             }
 
+        });
+
+    }
+
+    private void addDirectionEvents() {
+        Stage gamestage = this.gameView.getStage();
+        gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+
+            if (event.getCode().equals(KeyCode.UP)) {
+                if (event.isShiftDown()) {
+                    this.level.setInputDirection(InputDirection.DIGUP);
+                }
+
+                this.level.setInputDirection(InputDirection.GOUP);
+            }
+
+            if (event.getCode().equals(KeyCode.DOWN)) {
+                if (event.isShiftDown()) {
+                    this.level.setInputDirection(InputDirection.DIGDOWN);
+                }
+                this.level.setInputDirection(InputDirection.GODOWN);
+            }
+
+            if (event.getCode().equals(KeyCode.LEFT)) {
+                if (event.isShiftDown()) {
+                    this.level.setInputDirection(InputDirection.DIGLEFT);
+                }
+                this.level.setInputDirection(InputDirection.GOLEFT);
+            }
+            if (event.getCode().equals(KeyCode.RIGHT)) {
+                if (event.isShiftDown()) {
+                    this.level.setInputDirection(InputDirection.DIGRIGHT);
+                }
+                this.level.setInputDirection(InputDirection.GORIGHT);
+            }
+
+            this.gameView.update();
+
+        });
+    }
+
+    private void addGameViewComponents() {
+        Stage gamestage = this.gameView.getStage();
+
+        gamestage.addEventHandler(ScrollEvent.SCROLL, e -> {
+            this.gameView.zoom(e.getDeltaY(), 1.5);
+            this.gameView.update();
+        });
+
+        gamestage.heightProperty().addListener((a,b,c) -> {
+            this.gameView.getCanvas().setHeight(c.doubleValue());
+            this.gameView.getCanvas().setWidth(gamestage.getWidth());
         });
 
     }

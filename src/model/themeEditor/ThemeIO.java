@@ -95,7 +95,7 @@ public class ThemeIO {
         }
 
         try {
-            ImageIO.write(SwingFXUtils.fromFXImage(s.getSpriteSheet(Position.DEFAULT), null), "png",new File(pathString+fileNameString));
+            ImageIO.write(SwingFXUtils.fromFXImage(s.getDefaultSheet(), null), "png",new File(pathString+fileNameString));
         }
         catch (Exception e) {
             e.printStackTrace();
