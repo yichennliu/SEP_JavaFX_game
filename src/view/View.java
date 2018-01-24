@@ -30,8 +30,8 @@ public class View {
 
     private double windowWidth = 800;
     private double windowHeight = 600;
-    private double menuWidth= 300;
-    private double menuHeight= 370;
+    private double menuWidth= 500;
+    private double menuHeight= 400;
 
 
 
@@ -230,7 +230,7 @@ public class View {
 
   public double getMenuStartWidth(){
         double menuStartwidth;
-      menuStartwidth=windowWidth/2-(menuWidth/3);
+      menuStartwidth=(windowWidth/2)-menuWidth/2;
         return menuStartwidth;
   }
 

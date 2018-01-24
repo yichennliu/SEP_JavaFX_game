@@ -6,9 +6,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import model.game.Medaille;
+
 import java.io.File;
 import java.net.MalformedURLException;
 
@@ -34,28 +37,38 @@ public class PrimaryPage {
         stylesheet= fileTolStylesheetString(new File("src/view/style.css"));
         this.stage= stage;
         this.root = new Group();
-       // root.setLayoutX(menuStartWidth);
-      //  root.setLayoutY(menuStartHeight);
+
+
+
+
         this.name = new Button(" ok ");
         this.noName = new Button("continue wihout name ");
-        this.boulderdash = new Label("B O U L D E R D A S H - W I T C H ");
+        this.boulderdash = new Label("B O U L D E R D A S H ");
         this.boulderdash.setId("boulderdash");
+
         this.giveName = new Label("Enter your Name:");
         this.playerNameInput = new TextField ();
 
         HBox menuHbox = new HBox(10, name, noName);
+        menuHbox.setId("hbox");
         VBox menuVbox = new VBox(boulderdash,giveName,playerNameInput,menuHbox);
         HBox menuGanz= new HBox(menuVbox);
-        menuGanz.setAlignment(Pos.BOTTOM_LEFT);
-        menuVbox.setAlignment(Pos.BOTTOM_LEFT);
+        BorderPane test= new  BorderPane(menuGanz);
+        test.setPrefSize(500,400);
+        test.setLayoutX(menuStartWidth);
+        test.setLayoutY(menuStartHeight);
+        test.setCenter(menuGanz);
+        test.setId("root");
+        menuGanz.setAlignment(Pos.CENTER);
+       // menuVbox.setAlignment(Pos.BOTTOM_LEFT);
 
 
 
 
         this.sceneWelcome = new Scene(root);
         sceneWelcome.getStylesheets().add(stylesheet);
-       // menuGanz.getChildren().addAll(menuVbox,menuHbox);
-        root.getChildren().add(menuGanz);
+        //menuGanz.getChildren().addAll(menuVbox,menuHbox);
+        root.getChildren().addAll(test);
         if(!stage.isShowing()) stage.show();
 
 
