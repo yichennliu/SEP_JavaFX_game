@@ -24,9 +24,9 @@ public class MenuView {
     private Button themeEditorButton;
     private Label showName;
     private Stage stage;
-    private  Button level1;
-    private  Button level2;
-    private  Button level3;
+    private  ToggleButton level1;
+    private  ToggleButton level2;
+    private  ToggleButton level3;
     private ToggleGroup group;
     private static Group root;
     private String  stylesheet;
@@ -43,10 +43,16 @@ public class MenuView {
         this.showName = new Label("W I L L K O M M E N " + playerName);
         Image levelImage1 = new Image(getClass().getResourceAsStream("level1.png"));
         Image levelImage2 = new Image(getClass().getResourceAsStream("level2.gif"));
-        level1 = new Button("WALD", new ImageView(levelImage1));
-        level2 = new Button("xy",new ImageView(levelImage2));
-        level3 = new Button("asödlkaösldk");
+
+        gameButton.getTypeSelector();
+
+        level1 = new  ToggleButton("level : WALD", new ImageView(levelImage1));
+        level2 = new  ToggleButton(" : ",new ImageView(levelImage2));
+        level3 = new  ToggleButton("asöösldk");
         group = new ToggleGroup();
+        level1.setToggleGroup(group);
+        level2.setToggleGroup(group);
+        level3.setToggleGroup(group);
 
         level1.setUserData("Home");
         level2.setUserData("Calendar");

@@ -33,52 +33,47 @@ public class PrimaryPage {
     private double menuWidth;
 
 
-    public PrimaryPage(Stage stage,double menuStartWidth, double menuStartHeight){
-        stylesheet= fileTolStylesheetString(new File("src/view/style.css"));
-        this.stage= stage;
+    public PrimaryPage(Stage stage) {
+        stylesheet = fileTolStylesheetString(new File("src/view/style.css"));
+        this.stage = stage;
         this.root = new Group();
-
-
-
-
         this.name = new Button(" ok ");
         this.noName = new Button("continue wihout name ");
         this.boulderdash = new Label("B O U L D E R D A S H ");
         this.boulderdash.setId("boulderdash");
 
         this.giveName = new Label("Enter your Name:");
-        this.playerNameInput = new TextField ();
+        this.playerNameInput = new TextField();
 
         HBox menuHbox = new HBox(10, name, noName);
         menuHbox.setId("hbox");
-        VBox menuVbox = new VBox(boulderdash,giveName,playerNameInput,menuHbox);
-        HBox menuGanz= new HBox(menuVbox);
-        BorderPane test= new  BorderPane(menuGanz);
-        test.setPrefSize(500,400);
-        test.setLayoutX(menuStartWidth);
-        test.setLayoutY(menuStartHeight);
+        VBox menuVbox = new VBox(10, boulderdash, giveName, playerNameInput, menuHbox);
+        HBox menuGanz = new HBox(menuVbox);
+        BorderPane test = new BorderPane(menuGanz);
+        test.setPrefSize(stage.getWidth(), stage.getHeight());
         test.setCenter(menuGanz);
+        //falls man ie buttons gleich gross machen will
+        name.setMinWidth(250);
+        //  name.setMaxWidth(Double.MAX_VALUE);
+        //  noName.setMaxWidth(Double.MAX_VALUE);
         test.setId("root");
         menuGanz.setAlignment(Pos.CENTER);
-       // menuVbox.setAlignment(Pos.BOTTOM_LEFT);
+        menuVbox.setAlignment(Pos.CENTER);
 
-
+     //   menuVbox.getStyleClass().add("Superklasse");
 
 
         this.sceneWelcome = new Scene(root);
         sceneWelcome.getStylesheets().add(stylesheet);
         //menuGanz.getChildren().addAll(menuVbox,menuHbox);
         root.getChildren().addAll(test);
-        if(!stage.isShowing()) stage.show();
+        if (!stage.isShowing()) stage.show();
 
 
     }
 
 
-
-
-
-    public static String fileTolStylesheetString(File stylesheet){
+    public static String fileTolStylesheetString(File stylesheet) {
         try {
             return stylesheet.toURI().toURL().toString();
 
@@ -90,8 +85,8 @@ public class PrimaryPage {
 
     }
 
-    public String getPlayerName(){
-        return  playerNameInput.getText();
+    public String getPlayerName() {
+        return playerNameInput.getText();
     }
 
     public Button getName() {

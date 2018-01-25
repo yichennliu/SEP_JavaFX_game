@@ -30,8 +30,7 @@ public class View {
 
     private double windowWidth = 800;
     private double windowHeight = 600;
-    private double menuWidth= 500;
-    private double menuHeight= 400;
+
 
 
 
@@ -222,22 +221,6 @@ public class View {
         return this.stage;
     }
 
-    public double getWindowWidth(){
-        return windowWidth;
-    }
-    public double getwindowHeight(){
-        return windowHeight;}
 
-  public double getMenuStartWidth(){
-        double menuStartwidth;
-      menuStartwidth=(windowWidth/2)-menuWidth/2;
-        return menuStartwidth;
-  }
-
-  public double getMenuStartheight(){
-      double menuStartheight;
-      menuStartheight= windowHeight/2-menuHeight/2;
-      return menuStartheight;
-  }
 
 }

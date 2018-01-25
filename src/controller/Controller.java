@@ -22,7 +22,7 @@ public class Controller {
 
     public void startPrimaryPage(){
         this.currentMode = View.Mode.PRIMARY;
-        PrimaryPage primaryPage = new PrimaryPage(this.view.getStage(),this.view.getMenuStartWidth(),this.view.getMenuStartheight());
+        PrimaryPage primaryPage = new PrimaryPage(this.view.getStage());
 
         if (primaryController == null) {
             primaryController = new PrimaryController(primaryPage,this);
