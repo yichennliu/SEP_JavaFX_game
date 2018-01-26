@@ -1,7 +1,10 @@
 package controller;
 
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import view.MenuView;
+
+import java.util.List;
 
 
 public class MenuController {
@@ -12,11 +15,13 @@ public class MenuController {
     private ToggleGroup group;
 
 
+
     public MenuController(MenuView menuView, Object model, Controller menuController){
         this.menuView = menuView;
         this.model = model;
         this.menuController = menuController;
         addMenuViewComponents();
+        chooseLevel();
     }
 
     public void setMenuView(MenuView menuView) {
@@ -31,7 +36,27 @@ public class MenuController {
 
         menuView.getThemeEditorButton().setOnAction(e -> {
             this.menuController.startThemeEditor();
-        });
+        });}
+
+     private void chooseLevel(){
+
+
+         List <ToggleButton> levelButtons = menuView.getLevelButtons();
+            ToggleButton level ;
+
+         for(int i=0; i<levelButtons.size();i++){
+                level= levelButtons.get(i);
+
+             final String path= (String) level.getUserData();
+
+                 level.setOnAction(e -> {
+                 this.menuController.startLevel(path);
+             });
+
+         }
+
+
+
 
 
 

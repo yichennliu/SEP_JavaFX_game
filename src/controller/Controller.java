@@ -65,7 +65,7 @@ public class Controller {
 
     public void startGame(){
         this.currentMode = View.Mode.GAME;
-        Level level = LevelImporter.importLevel("json/level/bewegung.json");
+        Level level = LevelImporter.importLevel("json/level/text.json");
 
         if (gameController == null) {
             GameView gameView = new GameView(this.view.getStage(),level);
@@ -75,5 +75,29 @@ public class Controller {
         this.view.update(View.Mode.GAME, gameController.getGameView());
         gameController.tick();
     }
+
+
+    public void startLevel(String levelPath){
+        this.currentMode = View.Mode.GAME;
+        Level level = LevelImporter.importLevel("src/json/level/"+levelPath);
+
+        if (gameController == null) {
+            GameView gameView = new GameView(this.view.getStage(),level);
+            gameController = new GameController(level,gameView,this);
+        }
+
+        this.view.update(View.Mode.GAME, gameController.getGameView());
+        gameController.tick();
+
+
+
+
+    }
+
+
+
+
+
+
 
 }

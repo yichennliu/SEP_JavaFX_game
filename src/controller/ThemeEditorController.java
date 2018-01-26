@@ -219,10 +219,13 @@ public class ThemeEditorController {
     private void back(){
         Button backButton = themeEditorView.getBackButton();
         backButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-            this.menuController.startPrimaryPage();
+            this.menuController.startMenu(null);
 
         });
     }
+
+
+
 
     public void setThemeEditorView(ThemeEditorView themeEditorView) {
         this.themeEditorView = themeEditorView;

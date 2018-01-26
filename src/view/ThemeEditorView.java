@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -49,7 +48,7 @@ private String stylesheet;
         this.testFeld = new Feld[5][6];
 
         this.sceneThemeView = new Scene(this.root);
-        stylesheet= PrimaryPage.fileTolStylesheetString(new File("src/view/style.css"));
+        stylesheet= PrimaryPage.fileToStylesheetString(new File("src/view/style.css"));
         sceneThemeView.getStylesheets().add(stylesheet);
         this.stage = stage;
         this.themeEditor = themeEditor;

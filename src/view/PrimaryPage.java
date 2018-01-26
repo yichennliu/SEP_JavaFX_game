@@ -6,11 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import model.game.Medaille;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -34,7 +31,7 @@ public class PrimaryPage {
 
 
     public PrimaryPage(Stage stage) {
-        stylesheet = fileTolStylesheetString(new File("src/view/style.css"));
+        stylesheet = fileToStylesheetString(new File("src/view/style.css"));
         this.stage = stage;
         this.root = new Group();
         this.name = new Button(" ok ");
@@ -73,7 +70,7 @@ public class PrimaryPage {
     }
 
 
-    public static String fileTolStylesheetString(File stylesheet) {
+    public static String fileToStylesheetString(File stylesheet) {
         try {
             return stylesheet.toURI().toURL().toString();
 
