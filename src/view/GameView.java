@@ -29,6 +29,9 @@ public class GameView {
     private String stylesheet;
 
 
+    public GraphicsContext getGameGC() {
+        return gameGC;
+    }
 
     public GameView(Stage stage, Level level){
         root = new Group();
@@ -38,7 +41,7 @@ public class GameView {
         this.width = stage.getWidth();
         this.height = stage.getHeight();
         this.level = level;
-        stylesheet= PrimaryPage.fileTolStylesheetString(new File("src/view/style.css"));
+        stylesheet= PrimaryPage.fileToStylesheetString(new File("src/view/style.css"));
         sceneGame.getStylesheets().add(stylesheet);
         gameCanvas = new Canvas(width,height);
         gameGC = gameCanvas.getGraphicsContext2D();

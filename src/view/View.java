@@ -30,6 +30,10 @@ public class View {
 
     private double windowWidth = 800;
     private double windowHeight = 600;
+
+
+
+
     private double fieldSize = 20;
 
     public enum Mode {EDITOR, GAME, MENU, THEME,PRIMARY};
@@ -211,5 +215,7 @@ public class View {
     public Stage getStage(){
         return this.stage;
     }
+
+
 
 }
