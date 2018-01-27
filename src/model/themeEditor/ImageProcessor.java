@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 
 public class ImageProcessor {
 
-    /*rotates Image by 90, 180 or 270 degrees, specified by angle*/
+    /*rotates Image by 90, 180 or 270 degrees, specified by angle TODO: Enums*/
     public static Image getRotatedBy(int angle, Image img)    {
         if(angle!=90 && angle!=180 && angle!= 270) {
             return null;

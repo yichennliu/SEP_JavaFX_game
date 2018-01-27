@@ -1,150 +1,128 @@
 package model.themeEditor;
 
-import javafx.scene.image.*;
-import view.Theme;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import model.themeEditor.ImageProcessor;
 
-import java.util.*;
-
-import view.Theme.Position;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SpriteSheet {
 
-    private Theme.FeldType f;
-    private String path; // optional;
-    private int spriteSize;
-    private Image defaultSheet;
-    private Map<Position, List<Image>> positions; // List als Liste der Frames;
+    private Image spriteSheet;
+    private List<Image> sprites;
+    int spriteSize, count;
 
-    public SpriteSheet(Image defaultSheet, Theme.FeldType f, int spriteSize) {
+    public SpriteSheet(Image spriteSheet, int spriteSize, int count) throws IllegalArgumentException{
+        if(count> getMaxCount((int) spriteSheet.getWidth(), (int) spriteSheet.getHeight(), spriteSize) ||
+                sizeIsIllegal(spriteSize, spriteSheet)) {
+            throw new IllegalArgumentException("count too high or spritesize illegal");
+        }
         this.spriteSize = spriteSize;
-        this.defaultSheet = defaultSheet;
-        this.f = f;
-        initImages(defaultSheet);
+        this.count = count;
+        this.sprites = spriteSheetToImageList(spriteSheet,this.spriteSize,this.count);
+        this.spriteSheet = spriteSheet;
     }
 
-    private void initImages(Image defaultSheet){
-        positions = new HashMap<>();
-        positions.put(Position.DEFAULT, spriteSheetToImageList(defaultSheet,this.spriteSize));
-        calcPositions();
+    /* refreshes SpriteSheet with all currently saved instance variables. Does nothing when illegal variables saved */
+    private void refresh(){
+        try {
+            this.sprites = spriteSheetToImageList(this.spriteSheet,this.spriteSize,this.count);
+        }
+        catch(Exception e){
+
+        }
     }
 
-    private List<Image> spriteSheetToImageList(Image spriteSheet,int spriteSize){
-        int count = getNumberOfSprites(spriteSheet,spriteSize);
+    /* tries to set spriteSize and to recalculate spriteList; throws IllegalArgumentException when spriteSize does not fit
+    if currently saved count does not fit anymore maxCount of spriteSheet and the thumbnails spriteSize is taken */
+    public void setSpriteSize(int spriteSize) throws IllegalArgumentException{
+        if (sizeIsIllegal(spriteSize,this.spriteSheet)){
+            throw new IllegalArgumentException("Illegal SpriteSize");
+        }
+        else {
+            this.spriteSize = spriteSize;
+            int maxCount =getMaxCount((int) spriteSheet.getWidth(), (int) spriteSheet.getHeight(), spriteSize);
+            if(this.count > maxCount) this.count = maxCount;
+            refresh(); // refreshes sprites (in List)
+        }
+    }
+
+    /* returns currently set spritecount */
+    public int getCount(){
+        return this.count;
+    }
+
+    /*sets count to provided value. Throws Exception with illegal argument*/
+    public void setCount(int count) throws IllegalArgumentException{
+        if(count<1 || count > getMaxCount((int) spriteSheet.getWidth(), (int) spriteSheet.getHeight(), spriteSize)){
+            throw new IllegalArgumentException("Too high or to low");
+        }
+        this.count = count;
+        refresh();
+    }
+
+    /* return Sprite at given (frame)-index; null if index too high or too low*/
+    public Image getSprite(int index){
+        if(index>=0 && index<sprites.size()) return sprites.get(index);
+        return null;
+    }
+
+    public int getSpriteSize() {
+        return spriteSize;
+    }
+
+    /* returns whole spriteSheet */
+    public Image getSpriteSheet(){
+        return  this.spriteSheet;
+    }
+
+    /* checks if given spriteSize could be applied to given spritesheet*/
+    public static boolean sizeIsIllegal(int spriteSize, Image spriteSheet){
+        int height = (int) spriteSheet.getHeight();
+        int width = (int) spriteSheet.getWidth();
+        if(height % spriteSize!=0 || width % spriteSize!=0) return true;
+        return false;
+    }
+
+    /* returns a copy of the Image where each sprite is mirrored (vertical/horizontal) returns null if illegal spriteSize provided*/
+    public static Image getEachSpriteMirrored(Image spriteSheet,int spriteSize, boolean vertical){
+        if(sizeIsIllegal(spriteSize,spriteSheet)) return null;
+        WritableImage result = new WritableImage((int) spriteSheet.getWidth(), (int) spriteSheet.getHeight());
+        PixelWriter iw = result.getPixelWriter();
+        int maxCount = getMaxCount((int) spriteSheet.getWidth(), (int) spriteSheet.getHeight(),spriteSize);
+        List<Image> sprites = spriteSheetToImageList(spriteSheet,spriteSize,maxCount);
+
+        for(int i = 0; i< maxCount; i++){
+            Image sourceSprite = ImageProcessor.getMirrored(vertical,sprites.get(i));
+            int colCount = ((int) spriteSheet.getWidth()) / spriteSize;
+            int posY = (i / colCount) * spriteSize;
+            int posX = (i % colCount) * spriteSize;
+            iw.setPixels(posX,posY,spriteSize,spriteSize,sourceSprite.getPixelReader(),0,0);
+        }
+        return result;
+
+    }
+
+    /* returns max count of sprites on spriteSheet with given spriteSize */
+    private static int getMaxCount(int width, int height, int spriteSize){
+        return width * height / (int) Math.pow(spriteSize,2);
+    }
+
+    /* returns a List of frames by extracting them from one spriteSheet. Assumes that every argument is right (!) */
+    private static List<Image> spriteSheetToImageList(Image spriteSheet,int spriteSize, int count){
         List<Image> list = new ArrayList<Image>();
         for(int i = 0; i< count; i++){
-            list.add(getSprite(i,spriteSheet,spriteSize));
+            list.add(extractSprite(i,spriteSheet,spriteSize));
         }
         return list;
     }
 
-    /* calculates SpriteSheets for all positions of this feldType (TWOEDGE_CORNER, THREEEDGE */
-
-    private void calcPositions(){
-        /* für alle Feldtypes, die nicht bewegbar sind */
-        if(!f.isMovable() && f!= Theme.FeldType.ZEROEDGE && f!=Theme.FeldType.FOUREDGE){
-            /*ONEEDGE AND THREEDGE */
-            if(f == Theme.FeldType.ONEEDGE || f == Theme.FeldType.THREEEDGE){
-                Position[] positions = new Position[]{Position.TOP, Position.RIGHT, Position.BOTTOM, Position.LEFT};
-
-                for(Position p: positions){
-                    if (p==Position.TOP) this.positions.put(p,this.positions.get(Position.DEFAULT));
-                    if (p==Position.RIGHT) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,90),spriteSize));
-                    if (p==Position.BOTTOM) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,180),spriteSize));
-                    if (p==Position.LEFT) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,270),spriteSize));
-                }
-            }
-            /*TWOEDGE*/
-            if(f==Theme.FeldType.TWOEDGE){
-                Position[] positions = new Position[]{Position.TOP, Position.LEFT};
-                for(Position p: positions){
-                    if(p==Position.TOP) this.positions.put(p,this.positions.get(Position.DEFAULT));
-                    if (p==Position.LEFT) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,90),spriteSize));
-                }
-            }
-            /*TWOEDGE_CORNER*/
-            if(f==Theme.FeldType.TWOEDGE_CORNER) {
-                Position[] positions = new Position[]{Position.TOPLEFT, Position.TOPRIGHT, Position.BOTTOMRIGHT, Position.BOTTOMLEFT};
-
-                for(Position p: positions){
-                    if(p==Position.TOPLEFT) this.positions.put(p,this.positions.get(Position.DEFAULT));
-                    if (p==Position.TOPRIGHT) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,90),spriteSize));
-                    if (p==Position.BOTTOMRIGHT) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,180),spriteSize));
-                    if (p==Position.BOTTOMLEFT) this.positions.put(p,spriteSheetToImageList(getEachSpriteRotate(defaultSheet, spriteSize,270),spriteSize));
-                }
-            }
-        }
-        /* für alle bewegbaren Feldtpyes */
-        else {
-            /* für Step-Side*/
-            if(f==Theme.FeldType.STEP_SIDE){
-                Position[] positions = new Position[]{Position.RIGHT, Position.LEFT};
-                for(Position p: positions){
-                    if(p==Position.RIGHT) this.positions.put(p,this.positions.get(Position.DEFAULT));
-                    if (p==Position.LEFT) this.positions.put(p,spriteSheetToImageList(getEachSpriteMirrored(defaultSheet,spriteSize,true),spriteSize));
-                }
-            }
-            if(f==Theme.FeldType.IDLE){
-
-            }
-        }
-    }
-
-    public void setSpriteSize(int spriteSize) throws Exception {
-        if(spriteSize > (int) defaultSheet.getHeight() || spriteSize > (int) defaultSheet.getWidth() ||
-                defaultSheet.getWidth() % spriteSize !=0.0 || defaultSheet.getHeight() % spriteSize!=0.0)
-            throw new Exception("Sprite -size does not fit to height and/or width of Spritesheet");
-
-        this.spriteSize = spriteSize;
-        calcPositions();
-    }
-
-    public int getNumberOfSprites(Image spriteSheet,int spriteSize){
-        return ( (int) (spriteSheet.getWidth() * spriteSheet.getHeight()) / (int) Math.pow(spriteSize,2));
-    }
-
-    // returns the default spriteSheet with rotated sprites
-    private Image getEachSpriteRotate(Image spriteSheet,int spriteSize,int angle){
-        WritableImage result = new WritableImage((int) spriteSheet.getWidth(), (int) spriteSheet.getHeight());
-        PixelWriter iw = result.getPixelWriter();
-        for(int i=0; i<getNumberOfSprites(spriteSheet,spriteSize); i++){
-
-            Image sourceSprite = ImageProcessor.getRotatedBy(angle,getSprite(i,spriteSheet,spriteSize));
-            int colCount = ((int) spriteSheet.getWidth()) / spriteSize;
-            int posY = (i / colCount) * spriteSize;
-            int posX = (i % colCount) * spriteSize;
-            iw.setPixels(posX,posY,spriteSize,spriteSize,sourceSprite.getPixelReader(),0,0);
-        }
-        return result;
-    }
-
-    //returns a SpriteSheet with mirrored sprites
-    private Image getEachSpriteMirrored(Image spriteSheet,int spriteSize, boolean vertical){
-        WritableImage result = new WritableImage((int) spriteSheet.getWidth(), (int) spriteSheet.getHeight());
-        PixelWriter iw = result.getPixelWriter();
-        for(int i=0; i<getNumberOfSprites(spriteSheet,spriteSize); i++){
-            Image sourceSprite = ImageProcessor.getMirrored(vertical,getSprite(i,spriteSheet,spriteSize));
-            int colCount = ((int) spriteSheet.getWidth()) / spriteSize;
-            int posY = (i / colCount) * spriteSize;
-            int posX = (i % colCount) * spriteSize;
-            iw.setPixels(posX,posY,spriteSize,spriteSize,sourceSprite.getPixelReader(),0,0);
-        }
-        return result;
-    }
-
-    public String getPath(){
-        return this.path;
-    }
-
-    public void setPath(String path){
-        this.path = path;
-    }
-
-    public int getSpriteSize(){
-        return this.spriteSize;
-    }
-
-    public Image getSprite(int index, Image spriteSheet, int spriteSize){
-        int spriteCount = (int) spriteSheet.getWidth() * (int) spriteSheet.getHeight() / (int) Math.pow(spriteSize,2);
+    /* extracts Sprites from SpriteSheet with given spritesize and index, returns null when index too high or too low */
+    private static Image extractSprite(int index, Image spriteSheet, int spriteSize){
+        int spriteCount = getMaxCount((int) spriteSheet.getWidth(), (int) spriteSheet.getHeight(), spriteSize);
         if(index < 0 || index > spriteCount){
             return null;
         }
@@ -170,15 +148,4 @@ public class SpriteSheet {
     }
 
 
-    /* returns Spritesheet for position or null if position not available or index to small or to high*/
-    public Image getSprite(Position position, int index) {
-        List<Image> list = this.positions.get(position);
-        if (list!=null) return list.get(index);
-        return null;
-
-    }
-
-    public Image getDefaultSheet(){
-        return this.defaultSheet;
-    }
 }

@@ -2,7 +2,6 @@ package controller;
 
 import main.LevelImporter;
 import model.game.Level;
-import model.themeEditor.ThemeEditor;
 import view.*;
 
 public class Controller {
@@ -51,14 +50,10 @@ public class Controller {
     public void startThemeEditor(){
         this.currentMode = View.Mode.THEME;
 
-        ThemeEditor editor = new ThemeEditor();
-        ThemeEditorView themeEditorView = new ThemeEditorView(this.view.getStage(),editor);
+        ThemeEditorView themeEditorView = new ThemeEditorView(this.view.getStage());
 
-        if (themeEditorController == null) {
-            themeEditorController = new ThemeEditorController(themeEditorView,editor,this);
-        } else {
-            themeEditorController.setThemeEditorView(themeEditorView);
-        }
+            themeEditorController = new ThemeEditorController(themeEditorView,this);
+
 
         this.view.update(View.Mode.THEME,themeEditorView);
     }

@@ -10,6 +10,8 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import model.game.Level;
+import model.themeEditor.Theme;
+import model.themeEditor.ThemeIO;
 
 import java.io.File;
 
@@ -44,7 +46,7 @@ public class GameView {
         root.getChildren().addAll(gameCanvas);
         stage.setTitle("BoulderDash - " + this.level.getName());
         this.update();
-        this.theme = new DummyTheme().getTheme();
+        this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
         if(!stage.isShowing()) stage.show();
     }
 

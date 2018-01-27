@@ -60,16 +60,16 @@ public class MenuView {
 
 
  /*
-        ImageView imageView = new ImageView("spritetokens_nongif.png");
-        final Image image = new Image(getClass().getResourceAsStream(group.getSelectedToggle().getUserData().toString() +
+        ImageView imageView = thumbnails ImageView("spritetokens_nongif.png");
+        final Image image = thumbnails Image(getClass().getResourceAsStream(group.getSelectedToggle().getUserData().toString() +
                 ".png"));
         imageView.setImage(image);
 
-      group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+      group.selectedToggleProperty().addListener(thumbnails ChangeListener<Toggle>() {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
                 if (group.getSelectedToggle()!=null){
-                    final Image image = new Image(getClass().getResourceAsStream(group.getSelectedToggle().getUserData().toString() +
+                    final Image image = thumbnails Image(getClass().getResourceAsStream(group.getSelectedToggle().getUserData().toString() +
                             ".jpg"));
 
 
