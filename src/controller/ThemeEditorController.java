@@ -1,245 +1,303 @@
 package controller;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
-import javafx.scene.control.*;
+import javafx.scene.Cursor;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
+
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
+
 import model.enums.Token;
 
-import javafx.scene.input.MouseEvent;
-import model.themeEditor.SpriteSheet;
 import model.themeEditor.ThemeIO;
-import view.Theme;
-import model.themeEditor.ThemeEditor;
+import model.themeEditor.SpriteSheet;
+import view.Cell;
+import model.themeEditor.Theme;
 import view.ThemeEditorView;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigInteger;
-import java.util.List;
-import java.util.Map;
+
 
 public class ThemeEditorController {
 
     private ThemeEditorView themeEditorView;
-    private ThemeEditor themeEditor;
     private Controller menuController;
+    private Theme theme;
+    private File initialDirImage = new File("src/");
 
-
-    public ThemeEditorController(ThemeEditorView view, ThemeEditor themeEditor, Controller menuController) {
+    public ThemeEditorController(ThemeEditorView view, Controller menuController) {
         this.themeEditorView = view;
-        this.themeEditor = themeEditor;
+        this.theme = new Theme("testTheme");
         this.menuController = menuController;
-        addThemeEditorViewComponents();
+        preparePreviewGridPane();
+        preparePreview();
+        prepareTreeView();
+        initFrameButtons();
+        initFrameCountAndSizeFields();
+        prepareIOButtons();
     }
 
-    private void updateListViewAndPreview(){
-        ListView listView = themeEditorView.getListView();
-        Label label = this.themeEditorView.getLabel();
-        Token t = this.themeEditorView.getActiveToken();
-        Theme.FeldType f = this.themeEditorView.getActiveFeldType();
-        listView.setItems(this.themeEditor.getSprites().get(t,f));
-        setPreviewImage(t,f,listView.getSelectionModel().getSelectedIndex());
-        label.setText("No image avaible for: " + t.name() + " - " + f.name());
+    private void preparePreviewGridPane(){
+       ToggleGroup positionButtonGroup = this.themeEditorView.getPositionButtonGroup();
+       ImageView preview = this.themeEditorView.getPreview();
+       GridPane previewGridPane = this.themeEditorView.getPreviewGridPane();
+
+        positionButtonGroup.selectedToggleProperty().addListener(((a,b,c) -> {
+            if (c!=null){
+                Cell cell = this.themeEditorView.getSelectedItemProperty().get().getValue();
+                Theme.Position p = (Theme.Position) this.themeEditorView.getPositionButtonGroup().getSelectedToggle().getUserData();
+
+                preview.setCursor(Cursor.HAND);
+                preview.setDisable(false);
+                previewGridPane.setDisable(false);
+                reloadTextFields();
+                setPreviewImage(cell.getToken(),cell.getFeldType(),p,0);
+            }
+            else {
+                preview.setCursor(Cursor.DEFAULT);
+                previewGridPane.setDisable(true);
+                preview.setImage(new Image("model/themeEditor/thumbnails/defaultPreview.png"));
+            }
+        }));
     }
 
-    private void initSaveButton(){
-        Button saveButton = this.themeEditorView.getSaveButton();
+    private void reloadTextFields(){
+        System.out.println("reload Textfield!");
+        Token t = getActiveToken();
+        Theme.Position p = getActivePosition();
+        Theme.FeldType f = getActiveFeldType();
 
-        saveButton.setOnAction(e -> {
-            System.out.println("saveTheme gestartet");
-            ThemeIO.exportTheme(this.themeEditor.makeTheme());
-        });
-    }
-
-    private void initTypeTabs(){
-
-        Map<Token,TabPane>  typeTabs = this.themeEditorView.getTypeTabs();
-        TabPane tokenPane = this.themeEditorView.getTabs();
-        tokenPane.getSelectionModel().selectedIndexProperty().addListener((a,b,c) -> {
-            updateListViewAndPreview();
-        });
-        for(Token t : Token.values()){
-
-                TabPane typePane = typeTabs.get(t);
-                typePane.getSelectionModel().selectedItemProperty().addListener((a,b,c) -> {
-                   updateListViewAndPreview();
-                });
-
+        if (t!=null && p != null && f != null){
+            SpriteSheet sheet = this.theme.getSpriteSheet(t,f,p);
+            if(sheet!=null){
+                this.themeEditorView.getSpriteSize().setText(Integer.toString(sheet.getSpriteSize()));
+                this.themeEditorView.getFrameCount().setText(Integer.toString(sheet.getCount()));
+            }
         }
     }
 
-    private void initAddButton() {
-        Button addButton = themeEditorView.getAddButton();
-        addButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-            Token t = this.themeEditorView.getActiveToken();
-            Theme.FeldType f = this.themeEditorView.getActiveFeldType();
-            List<SpriteSheet> imageList = themeEditor.getSprites().get(t, f);
-                if(this.loadImage(t,f)){
-                    ImageView imgV = themeEditorView.getPreview();
-                    imgV.setImage(imageList.get(imageList.size()-1).getSprite(Theme.Position.DEFAULT,0));
-                }
-            });
-    }
-
-    private void initRemoveButton(){
-        Button removeButton = themeEditorView.getRemoveButton();
-            removeButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-                ListView listView = themeEditorView.getListView();
-                    int index = listView.getSelectionModel().getSelectedIndex();
-                    Token t = this.themeEditorView.getActiveToken();
-                    Theme.FeldType f = this.themeEditorView.getActiveFeldType();
-                    if(index!=-1){
-                        List<SpriteSheet> sprites = themeEditor.getSprites().get(t, f);
-                        sprites.remove(index);
-                        if(sprites.size()<1){
-                            removeButton.setDisable(true);
-                            themeEditorView.getPreview().setImage(null);
-                        }
-                        else {
-                            themeEditorView.getPreview().setImage(
-                                    sprites.get(listView.getSelectionModel().getSelectedIndex()).getSprite(Theme.Position.DEFAULT,0));
-                        }
-                    }
-            });
-    }
-
-    private void initSizeInput(){
-        TextField input = this.themeEditorView.getSizeInput();
-        input.setDisable(true);
-        input.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                int spriteSize;
-                try{
-                    spriteSize = Integer.parseInt(newValue);
-                    Token t = themeEditorView.getActiveToken();
-                    Theme.FeldType f = themeEditorView.getActiveFeldType();
-                    int index = themeEditorView.getListView().getSelectionModel().getSelectedIndex();
-                    try {
-                        themeEditor.getSprites().get(t,f).get(index).setSpriteSize(spriteSize);
-                        setPreviewImage(t,f,index);
-                        input.setStyle("-fx-text-fill:black");
-                    }
-                    catch(Exception e){
-                        input.setStyle("-fx-text-fill:red");
-                    }
-                }
-                catch(NumberFormatException e){
-                    System.out.println(e.getMessage());
-                }
-            }
-        });
-    }
-
-    private void initListViews(){
-        ListView listView = themeEditorView.getListView();
-        listView.getSelectionModel().selectedIndexProperty().addListener((a,b,c) ->{
-                int index = c.intValue();
-                Token t = themeEditorView.getActiveToken();
-                Theme.FeldType f = themeEditorView.getActiveFeldType();
-                setPreviewImage(t,f,index);
-                updateSizeInput(t,f,index);
-        });
-//        listView.setCellFactory(createCellFactory());
-        updateListViewAndPreview();
-
-    }
-
-    private void updateSizeInput(Token t, Theme.FeldType f, int index) {
-        SpriteSheet s;
-        TextField sizeInput = themeEditorView.getSizeInput();
-        if(index!=-1){
-            sizeInput.setDisable(false);
+    private void preparePreview(){
+        themeEditorView.getPreview().addEventHandler(MouseEvent.MOUSE_CLICKED, e-> {
+            Cell cell = this.themeEditorView.getSelectedItemProperty().get().getValue();
+            Theme.Position p = (Theme.Position) this.themeEditorView.getPositionButtonGroup().getSelectedToggle().getUserData();
+            Image img = loadImage();
+            SpriteSheet sheet;
+            int spriteSize = BigInteger.valueOf((int) img.getWidth()).gcd(BigInteger.valueOf((int) img.getHeight())).intValue();
+            int count = (int) (img.getWidth() *img.getHeight()) / (int) Math.pow(spriteSize,2);
             try {
-                s = this.themeEditor.getSprites().get(t, f).get(index);
-                if (s != null) {
-                    sizeInput.setText(Integer.toString(s.getSpriteSize()));
+                sheet = new SpriteSheet(img,spriteSize,count);
+                theme.putSpriteSheet(cell.getToken(),cell.getFeldType(),p,sheet);
+                setPreviewImage(cell.getToken(),cell.getFeldType(),p,0);
+            }
+            catch(IllegalArgumentException exception){
+                System.out.println("Fehler beim Erstellen des SpriteSheets");
+            }
+
+        });
+
+        themeEditorView.getPreview().imageProperty().addListener((a,b,c) -> {
+            if(c!=null){
+                System.out.println("bild geändert");
+                reloadTextFields();
+            }
+        });
+    }
+
+    private void prepareTreeView(){
+        this.themeEditorView.getSelectedItemProperty().addListener((a,b,c) -> {
+            if(c!= null && c!=b){
+               Cell cell = c.getValue();
+
+                if(cell.hasFeldType()){
+                    reloadPositionPaneRoot(cell.getToken(),cell.getFeldType());
+                }
+                else {
+                    ToggleGroup positionButtonGroup = this.themeEditorView.getPositionButtonGroup();
+                    VBox positionButtons = this.themeEditorView.getPositionButtons();
+
+                    positionButtonGroup.getToggles().clear();
+                    positionButtons.getChildren().clear();
                 }
             }
-            catch(Exception e){
-                sizeInput.setText(Integer.toString(-1));
+
+        });
+    }
+
+    private void initFrameButtons(){
+        Button nextFButton = this.themeEditorView.getNextFrame();
+        Button previousFButton = this.themeEditorView.getPreviousFrame();
+
+        nextFButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            incrementFrameNumberField(true);
+        });
+
+        previousFButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e-> {
+                incrementFrameNumberField(false);
+        });
+
+    }
+
+    private void reloadPositionPaneRoot(Token t, Theme.FeldType f){
+        ToggleGroup positionButtonGroup = this.themeEditorView.getPositionButtonGroup();
+        VBox positionButtons = this.themeEditorView.getPositionButtons();
+
+        positionButtonGroup.getToggles().clear();
+        positionButtons.getChildren().clear();
+        this.themeEditorView.getFrameNumberField().setText(Integer.toString(0));
+
+        for(Theme.Position p: f.getAllowedPositions()){
+            ToggleButton toggleButton = new ToggleButton(p.name());
+            if (!f.isMovable())
+                toggleButton.setGraphic(new ImageView("model/themeEditor/thumbnails/position_thumbnails/"+f.name()+"/"+p.name()+".png"));
+                toggleButton.setPrefHeight(8);
+                toggleButton.setUserData(p);
+
+                positionButtons.getChildren().add(toggleButton);
+                positionButtonGroup.getToggles().add(toggleButton);
+        }
+    }
+
+    private void initFrameCountAndSizeFields(){
+        TextField counter = this.themeEditorView.getFrameCount();
+        TextField sizeField = this.themeEditorView.getSpriteSize();
+
+        counter.textProperty().addListener((a,b,c) -> {
+            Token t = getActiveToken();
+            Theme.FeldType f = getActiveFeldType();
+            Theme.Position p = getActivePosition();
+            if(t!=null && f!=null && p!=null){
+                try {
+                    int count = Integer.parseInt(c);
+                    this.theme.getSpriteSheet(t,f,p).setCount(count);
+                    setPreviewImage(t,f,p,0);
+                    this.themeEditorView.getFrameNumberField().setText(Integer.toString(0));
+                    counter.setStyle("-fx-text-fill: black");
+                }
+                catch(Exception e){
+                    System.out.println(e.getMessage());
+                    counter.setStyle("-fx-text-fill: red");
+                }
+            }
+        });
+
+        sizeField.textProperty().addListener((a,b,c) -> {
+            Token t = getActiveToken();
+            Theme.FeldType f = getActiveFeldType();
+            Theme.Position p = getActivePosition();
+            if(t!=null && f!=null && p!=null){
+                try {
+                    int size = Integer.parseInt(c);
+                    this.theme.getSpriteSheet(t,f,p).setSpriteSize(size);
+                    setPreviewImage(t,f,p,0);
+                    this.themeEditorView.getFrameNumberField().setText(Integer.toString(0));
+                    sizeField.setStyle("-fx-text-fill: black");
+                }
+                catch(Exception e){
+                    System.out.println(e.getMessage());
+                    sizeField.setStyle("-fx-text-fill: red");
+                }
+            }
+        });
+    }
+
+    private void incrementFrameNumberField(boolean increment) {
+        TextField frameNumberField = this.themeEditorView.getFrameNumberField();
+        int frame;
+        int addition = (increment) ? 1 : -1;
+        Token t = getActiveToken();
+        Theme.FeldType f = getActiveFeldType();
+        Theme.Position p = getActivePosition();
+        SpriteSheet s = this.theme.getSpriteSheet(t,f,p);
+        if(p==null || f == null || p == null || s == null) return;
+        System.out.println("zurück!");
+        int count = this.theme.getSpriteSheet(t,f,p).getCount();
+        try {
+            frame=Integer.parseInt(frameNumberField.getText());
+            int newFrameCount = frame+addition;
+            if(newFrameCount<count && newFrameCount>=0) {
+                Image newFrame = this.theme.getSpriteSheet(t,f,p).getSprite(newFrameCount);
+                this.themeEditorView.getPreview().setImage(newFrame);
+                frameNumberField.setText(Integer.toString(newFrameCount));
             }
         }
-        else {
-            sizeInput.setText("");
-            sizeInput.setDisable(true);
-        }
-
-    }
-
-    private void setPreviewImage(Token t, Theme.FeldType f, int index){
-        ImageView preview = themeEditorView.getPreview();
-        if(index!=-1){
-            Button removeButton = themeEditorView.getRemoveButton();
-            ObservableList<SpriteSheet> imageList = themeEditor.getSprites().get(t,f);
-            preview.setImage(new Image("view/loading.gif"));
-            Image img =imageList.get(index).getSprite(Theme.Position.DEFAULT,0);
-            preview.setImage(img);
-            removeButton.setDisable(false);
-        }
-        else {
-            preview.setImage(null);
+        catch(NumberFormatException exception){
+            System.out.println("Keine Zahl als Frame!!!");
         }
     }
 
-    private boolean loadImage(Token t, Theme.FeldType f) {
+    private void setPreviewImage(Token t, Theme.FeldType f, Theme.Position p, int frame){
+        Image img;
+        SpriteSheet sheet = theme.getSpriteSheet(t,f,p);
+        ImageView preview = this.themeEditorView.getPreview();
+        if(sheet!=null){
+            img = sheet.getSprite(frame);
+            if(img!=null){
+                preview.setImage(img);
+                return;
+            }
+        }
+        preview.setImage(new Image("model/themeEditor/thumbnails/defaultPreview.png"));
+    }
+
+    private Token getActiveToken(){
+        Cell cell = this.themeEditorView.getSelectedItemProperty().get().getValue();
+        return cell.getToken();
+    }
+
+    private Theme.FeldType getActiveFeldType(){
+        Cell cell = this.themeEditorView.getSelectedItemProperty().get().getValue();
+        return cell.getFeldType();
+    }
+
+    private Theme.Position getActivePosition() {
+        try {
+            return (Theme.Position) this.themeEditorView.getPositionButtonGroup().getSelectedToggle().getUserData();
+        }
+        catch(Exception e){
+            return null;
+        }
+    }
+
+    private Image loadImage() {
         Stage imageOpenStage = new Stage();
         imageOpenStage.centerOnScreen();
         Image image;
         FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(initialDirImage);
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
         File selectedFile = fileChooser.showOpenDialog(imageOpenStage);
         if (selectedFile != null) {
-
+                initialDirImage = selectedFile.getParentFile();
             try {
                 image = new Image(new FileInputStream(selectedFile.getPath()));
-             } catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
-                return false;
+                return null;
             }
-            SpriteSheet newSpriteSheet;
-            int spriteSize = BigInteger.valueOf((int) image.getWidth()).gcd(BigInteger.valueOf((int) image.getHeight())).intValue();
-            System.out.println(spriteSize);
-            newSpriteSheet = new SpriteSheet(image,f,spriteSize);
-            newSpriteSheet.setPath(selectedFile.getPath());
-            this.themeEditor.getSprites().get(t,f).add(newSpriteSheet);
-
-            return true;
+        return image;
         }
-        return false;
+        return null;
     } // controller
 
-    private void back(){
-        Button backButton = themeEditorView.getBackButton();
-        backButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-            this.menuController.startMenu(null);
-
+    private void prepareIOButtons(){
+        this.themeEditorView.getExportButton().setOnAction( e -> {
+            ThemeIO.exportTheme(this.theme);
         });
-    }
 
-
-
-
-    public void setThemeEditorView(ThemeEditorView themeEditorView) {
-        this.themeEditorView = themeEditorView;
-        addThemeEditorViewComponents();
-    }
-
-    private void addThemeEditorViewComponents() {
-        initAddButton();
-        initRemoveButton();
-        initListViews();
-        initTypeTabs();
-        initSizeInput();
-        initSaveButton();
-        back();
+        this.themeEditorView.getImportButton().setOnAction(e -> {
+            Theme theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+            this.theme = theme;
+        });
     }
 }
 

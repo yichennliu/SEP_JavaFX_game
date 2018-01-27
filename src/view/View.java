@@ -4,7 +4,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
 import model.enums.FieldDirection;
@@ -12,7 +11,8 @@ import model.enums.Token;
 import model.game.Feld;
 import model.game.Level;
 import model.themeEditor.SpriteSheet;
-import view.Theme.FeldType;
+import model.themeEditor.Theme;
+import model.themeEditor.Theme.FeldType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +61,7 @@ public class View {
 
     private void showTheme() {
         ThemeEditorView themeEditorView = (ThemeEditorView) currentScene;
-        stage.setScene(themeEditorView.getSceneThemeView());
+        stage.setScene(themeEditorView.getScene());
     }
 
     private void showPrimary(){
@@ -129,30 +129,21 @@ public class View {
         }
     }
 
+    /*returns true if a sprite could be drawn (also when not requested position but default position was available)*/
     private static boolean drawFeld(double x, double y, GraphicsContext gc, Feld feld, double fieldSize, Theme theme){
         Map<FieldDirection,Feld> neighbours = getEdgeNeighbours(feld,true);
         Token t = feld.getToken();
         FeldType f = getFeldType(feld,neighbours);
         Theme.Position p = getFeldPosition(feld,f,neighbours);
         Image sprite;
-        SpriteSheet s = theme.getSpriteSheet(t,f,0);
-
-        if(s==null){
-            s = (f.isMovable())? theme.getSpriteSheet(t,FeldType.IDLE,0) : theme.getSpriteSheet(t,FeldType.FOUREDGE,0);
-            if (s==null) {
-                return false;
-            }
-            sprite = s.getSprite(p,0);
-            if(sprite == null){
-                sprite = s.getSprite(Theme.Position.DEFAULT,0);
-            }
-
+        SpriteSheet s = theme.getSpriteSheet(t,f,p);
+        if (s==null){
+            s = t.isMovable()
+                    ? theme.getSpriteSheet(t,Theme.FeldType.IDLE, Theme.Position.DEFAULT)
+                    : theme.getSpriteSheet(t, FeldType.FOUREDGE, Theme.Position.DEFAULT);
+            if(s==null) return false;
         }
-        else {
-            sprite = s.getSprite(p,0);
-            if (sprite== null) sprite = s.getSprite(Theme.Position.DEFAULT,0);
-        }
-        gc.drawImage(sprite,x,y,fieldSize,fieldSize);
+        gc.drawImage(s.getSprite(0),x,y,fieldSize,fieldSize);
         return true;
     }
 
@@ -190,7 +181,7 @@ public class View {
     }
 
     private static Theme.Position getFeldPosition (Feld feld, FeldType type, Map<FieldDirection,Feld> neighbours) {
-        if (type == FeldType.FOUREDGE || type == FeldType.TWOEDGE || type == FeldType.ZEROEDGE || type == FeldType.IDLE)
+        if (type == FeldType.FOUREDGE || type == FeldType.ZEROEDGE || type == FeldType.IDLE)
             return Theme.Position.DEFAULT;
         switch (type) {
             case ONEEDGE:
@@ -198,6 +189,10 @@ public class View {
                 if (neighbours.containsKey(FieldDirection.RIGHT)) return Theme.Position.LEFT;
                 if (neighbours.containsKey(FieldDirection.BOTTOM)) return Theme.Position.TOP;
                 if (neighbours.containsKey(FieldDirection.TOP)) return Theme.Position.BOTTOM;
+            case TWOEDGE:
+                if (neighbours.containsKey(FieldDirection.LEFT) && neighbours.containsKey(FieldDirection.RIGHT))
+                    return Theme.Position.HORIZONTAL;
+                else return Theme.Position.VERTICAL;
             case TWOEDGE_CORNER:
                 if (neighbours.containsKey(FieldDirection.TOP) && neighbours.containsKey(FieldDirection.RIGHT))
                     return Theme.Position.BOTTOMLEFT;

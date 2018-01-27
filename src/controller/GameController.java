@@ -31,13 +31,6 @@ public class GameController {
         addAlertEvent();
         addDirectionEvents();
         addGameViewComponents();
-
-
-
-
-
-
-
     }
 
     public void tick() {

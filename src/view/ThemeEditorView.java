@@ -1,211 +1,215 @@
 package view;
 
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import model.game.Feld;
 import model.enums.Token;
-import model.themeEditor.ThemeEditor;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import model.themeEditor.Theme;
+import model.themeEditor.Theme.FeldType;
 
 public class ThemeEditorView {
-
-private ThemeEditor themeEditor;
 private Theme theme;
 private Group root;
 private Stage stage;
 private Scene sceneThemeView;
 private Canvas themeCanvas;
 private GraphicsContext themeGC;
-private Feld[][] testFeld;
-private TabPane tabs;
-private Map<Token,TabPane> typeTabs;
+private TreeView<Cell> treeView; // + selected ItemProperty
+private ImageView preview; // +
+private ToggleGroup positionButtonGroup;  // + positionButtonGroup.selectedToggleProperty()
+private Button nextFrame; //+
+private Button previousFrame; //+
+private TextField frameNumberField; //+
+private BorderPane rootPane;
+private VBox positionButtons;
+private GridPane previewGridPane;
+private TextField frameCount;
+private TextField spriteSize;
+private Button exportButton;
+private Button importButton;
+private VBox ioButtons;
 
-private GridPane tabContentAndCanvas;
-private Button addButton;
-private Button removeButton;
-private Button backButton;
-private Button saveButton;
-private ImageView preview;
-private Label label;
-private ListView listView;
-private TextField sizeInput;
 private String stylesheet;
 
-    public ThemeEditorView(Stage stage, ThemeEditor themeEditor){
+    public ThemeEditorView(Stage stage){
         root = new Group();
-
-        this.testFeld = new Feld[5][6];
-
-        this.sceneThemeView = new Scene(this.root);
-        stylesheet= PrimaryPage.fileToStylesheetString(new File("src/view/style.css"));
-        sceneThemeView.getStylesheets().add(stylesheet);
+        this.sceneThemeView = new Scene(root);
         this.stage = stage;
-        this.themeEditor = themeEditor;
-        double width = stage.getWidth();
-        double height = stage.getHeight();
 
-        this.tabs = new TabPane(); // Token-Tabs
-        this.typeTabs = new HashMap<Token,TabPane>(); //Feldtype-Tabs
-        this.tabs.setStyle("-fx-font-size: 11;");
-        this.tabs.setMaxWidth(width-10);
+        rootPane = new BorderPane();
 
-        initTabContent();
 
-       /* create Tabs */
-        for(Token t: Token.values()){
-            /* create Tab-Content (type-tabs) */
-            HBox tabContent = new HBox();
-            tabContent.setStyle("-fx-padding: 2px; ");
-            TabPane typeTabPane = new TabPane();
+        /* TreeView */
+        TreeItem<Cell> treeRoot = new TreeItem<Cell> (null);
+        treeRoot.setExpanded(true);
 
-            // create Tabs for every feldtype
-            for(Theme.FeldType feldType: Theme.FeldType.values()){
-                if(t.isMovable() == feldType.isMovable()){
-                    Tab typeTab = new Tab();
-                    typeTab.setUserData(feldType); // associate FeldType with Tab
-                    typeTab.setClosable(false);
-                    typeTab.setText(feldType.name());
-                    typeTabPane.getTabs().add(typeTab);
+        for(Token t : Token.values()){
+            TreeItem<Cell> tokenItem = new TreeItem<Cell>(new Cell(t));
+            for(FeldType f : FeldType.values()){
+                if(f.isMovable()==t.isMovable()){
+                    TreeItem<Cell> feldTypeItem = new TreeItem<Cell>(new Cell(t,f));
+                    tokenItem.getChildren().add(feldTypeItem);
                 }
             }
-            tabContent.getChildren().add(typeTabPane);
-
-            this.typeTabs.put(t,typeTabPane);
-            Tab tab = new Tab();
-            tab.setUserData(t); // associate Token with Tab
-            tab.setText(t.name());
-            tab.setContent(tabContent);
-            tab.setClosable(false);
-            tabs.getTabs().add(tab);
-            if(!stage.isShowing()) stage.show();
+            treeRoot.getChildren().add(tokenItem);
         }
 
-        initCanvas();
+        treeView = new TreeView<Cell>(treeRoot);
+        treeView.setShowRoot(false);
 
+        /* Positioncontainer */
+        initPositionPaneRoot();
+        initOIButtons();
+        rootPane.setLeft(treeView);
 
-
-        VBox rootBox = new VBox();
-        saveButton = new Button("Speichern");
-        rootBox.getChildren().add(this.tabs);
-        rootBox.getChildren().add(this.tabContentAndCanvas);
-        rootBox.getChildren().add(this.saveButton);
-
-        root.getChildren().addAll(rootBox);
+        root.getChildren().add(rootPane);
+        if(!stage.isShowing()) stage.show();
     }
 
-    private void initTabContent(){
-        this.sizeInput = new TextField();
-        this.addButton = new Button("Bild hinzufügen");
-        this.removeButton = new Button("Bild löschen");
-        this.backButton = new Button("zurück zu Menu");
-        this.preview = new ImageView();
-        this.listView = new ListView();
-        this.label = new Label();
+    /* reloads content of positionPaneRoot on SelectionChange */
 
-        tabContentAndCanvas = new GridPane();
-        GridPane tabContent = new GridPane();
-        HBox buttons = new HBox();
-
-        tabContent.setStyle("-fx-padding:4px");
-        this.listView.setPlaceholder(this.label);
-        this.sizeInput.setMaxWidth(30.0);
-
-        this.listView.setPrefHeight(100);
-
-        this.preview.setPreserveRatio(true);
-        this.preview.setFitHeight(80);
-        this.removeButton.setDisable(true);
-
-        buttons.getChildren().addAll(this.addButton,this.removeButton, this.sizeInput,this.backButton);
-
-        tabContent.add(label,0,0);
-        tabContent.add(listView,0,1);
-        tabContent.add(buttons,0,2);
-        tabContent.add(preview,1,1);
-
-        initCanvas();
-
-        tabContentAndCanvas.add(tabContent,0,0);
-        tabContentAndCanvas.add(this.themeCanvas,1,0);
-
-
-
+    private void initOIButtons(){
+        this.exportButton = new Button("Überschreibe TestTheme");
+        this.importButton = new Button("Lade TestTheme");
+        ioButtons = new VBox();
+        ioButtons.getChildren().addAll(exportButton,importButton);
+        this.rootPane.setRight(ioButtons);
     }
+
+
+    private void initPositionPaneRoot(){
+        double maxWidth = 150;
+
+        GridPane positionPaneRoot = new GridPane();
+        positionPaneRoot.setGridLinesVisible(true);
+        GridPane buttonGridPane = new GridPane();
+        this.previewGridPane = new GridPane();
+
+        buttonGridPane.setMinWidth(150);
+        previewGridPane.setDisable(true);
+
+        this.nextFrame = new Button(); nextFrame.setGraphic(new ImageView("model/themeEditor/thumbnails/next.png"));
+        this.previousFrame = new Button(); previousFrame.setGraphic(new ImageView("model/themeEditor/thumbnails/previous.png"));
+        this.frameNumberField = new TextField("0");
+        frameNumberField.setMaxWidth(30);
+        frameNumberField.setEditable(false);
+        TilePane frameControllers = new TilePane();
+        frameControllers.setAlignment(Pos.CENTER);
+        frameControllers.setMaxWidth(maxWidth);
+        frameControllers.getChildren().addAll(previousFrame,frameNumberField,nextFrame);
+
+        frameCount = new TextField();
+        spriteSize = new TextField();
+        TilePane sizeAndCountPane = new TilePane();
+        sizeAndCountPane.getChildren().addAll(new Label("Frames: "),frameCount, new Label("SpriteSize: "),spriteSize);
+        sizeAndCountPane.setMaxWidth(maxWidth);
+        sizeAndCountPane.setAlignment(Pos.CENTER);
+
+        frameCount.setMaxWidth(30);
+        spriteSize.setMaxWidth(30);
+
+        positionButtonGroup = new ToggleGroup();
+        positionButtons = new VBox();
+
+        preview = new ImageView("model/themeEditor/thumbnails/defaultPreview.png");
+        preview.setPreserveRatio(true);
+        preview.setFitHeight(100);
+        preview.setDisable(true);
+        ImageView previewBackground = new ImageView(new Image("model/themeEditor/thumbnails/previewBackground.png"));
+        previewBackground.setPreserveRatio(true);
+        previewBackground.setFitHeight(100);
+        Group previewGroup = new Group();
+        previewGroup.getChildren().addAll(previewBackground,preview);
+
+        TilePane previewTilePane = new TilePane();previewTilePane.setMaxWidth(maxWidth);
+        previewTilePane.setAlignment(Pos.CENTER);
+        previewTilePane.getChildren().add(previewGroup);
+
+        previewGridPane.add(frameControllers,0,0);
+        previewGridPane.add(previewTilePane,0,1);
+        previewGridPane.add(sizeAndCountPane,0,2);
+        buttonGridPane.add(positionButtons,0,1);
+
+        positionPaneRoot.add(buttonGridPane,0,0);
+        positionPaneRoot.add(previewGridPane,1,0);
+        rootPane.setCenter(positionPaneRoot);
+    }
+
     private void initCanvas(){
         themeCanvas = new Canvas();
         themeCanvas.setHeight(200);
         themeCanvas.setWidth(200);
         themeGC = themeCanvas.getGraphicsContext2D();
         themeGC.fillRect(0,0,themeCanvas.getWidth(),themeCanvas.getHeight());
-
     }
 
     public GraphicsContext getGraphicsContext(){
         return this.themeGC;
     }
 
-    public Token getActiveToken(){
-        return (Token) this.tabs.getSelectionModel().getSelectedItem().getUserData();
-
-    }
-
-    public Theme.FeldType getActiveFeldType(){
-        Token activeToken = getActiveToken();
-        System.out.println(this.typeTabs.get(activeToken).getSelectionModel().getSelectedItem().getUserData());
-        return (Theme.FeldType) this.typeTabs.get(activeToken).getSelectionModel().getSelectedItem().getUserData();
-    }
-
-    public Button getAddButton(){
-        return this.addButton;
-    }
-
-    public Button getRemoveButton(){
-        return this.removeButton;
-    }
-
-
-   public Button getBackButton(){ return this.backButton;}
-
-    public ImageView getPreview(){
-        return this.preview;
-    }
-
-    public ListView getListView(){
-        return this.listView;
-    }
-
-    public Scene getSceneThemeView(){
+    public Scene getScene(){
         return this.sceneThemeView;
     }
 
-    public Label getLabel() {
-        return this.label;
+    public ReadOnlyObjectProperty<TreeItem<Cell>> getSelectedItemProperty() {
+        return treeView.getSelectionModel().selectedItemProperty();
     }
 
-    public TextField getSizeInput(){
-        return this.sizeInput;
+    public VBox getPositionButtons(){
+        return this.positionButtons;
     }
 
-    public Map<Token,TabPane> getTypeTabs(){
-        return this.typeTabs;
+    public ImageView getPreview() {
+        return preview;
     }
 
-    public TabPane getTabs(){
-        return this.tabs;
+    public GridPane getPreviewGridPane(){
+        return this.previewGridPane;
     }
 
-    public Button getSaveButton() {
-        return saveButton;
+    public ToggleGroup getPositionButtonGroup() {
+        return positionButtonGroup;
+    }
+
+    public Button getNextFrame() {
+        return nextFrame;
+    }
+
+    public Button getPreviousFrame() {
+        return previousFrame;
+    }
+
+    public TextField getFrameCount() {
+        return frameCount;
+    }
+
+    public TextField getSpriteSize() {
+        return spriteSize;
+    }
+
+    public TextField getFrameNumberField() {
+        return frameNumberField;
+    }
+
+
+
+    public void setTheme(Theme theme){
+        this.theme = theme;
+    }
+
+    public Button getExportButton() {
+        return exportButton;
+    }
+
+    public Button getImportButton() {
+        return importButton;
     }
 }
