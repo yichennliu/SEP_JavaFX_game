@@ -225,7 +225,12 @@ public class Level {
 
                 /* Spielerbewegung */
                 if (current.isToken(Token.ME) && !current.hasProperty(Property.MOVED)) {
-                    // nichts tun
+                    // direction setzen für view
+                    if (this.getInputDirection() != null) {
+                        current.setPropertyValue(Property.DIRECTION, this.getInputDirection().getFieldDirection().getDirection());
+                    }
+
+                    // keine Eingabe: nichts tun
                     if (this.getInputDirection() == null) {}
 
                     // nur graben
@@ -453,6 +458,10 @@ public class Level {
                 } else {
                     field.resetProperty(Property.PUSHABLE);
                 }
+
+                // reset movement origins / destinations
+                field.setCurrentTokenCameFrom(null);
+                field.setLastTokenWentTo(null);
             }
         }
     }
@@ -463,5 +472,21 @@ public class Level {
     public void tick() {
         Integer ticks = this.getPropertyValue(Property.TICKS);
         this.setPropertyValue(Property.TICKS, ticks == null ? 1 : ticks+1);
+    }
+
+    /**
+     * find ME
+     *
+     * @return Field with ME, or null if ME died
+     */
+    public Feld whereAmI() {
+        for (Feld[] row : this.getMap()) {
+            for (Feld feld : row) {
+                if (feld.isToken(Token.ME)) {
+                    return feld;
+                }
+            }
+        }
+        return null;
     }
 }

@@ -10,6 +10,8 @@ public class Feld {
     private int row;
     private int column;
     private Level level;
+    private Feld currentTokenCameFrom;
+    private Feld lastTokenWentTo;
 
     public Feld(Token token, int column, int row) {
         this(token, new HashMap<Property, Integer>(), column, row);
@@ -245,9 +247,20 @@ public class Feld {
         // Objekt am Ziel einsetzen
         goal.setToken(this.getToken());
         goal.setProperty(Property.MOVED);
+
+        // für ME direction verschieben
+        if (this.isToken(Token.ME)) {
+            goal.setPropertyValue(Property.DIRECTION, this.getPropertyValue(Property.DIRECTION));
+            this.resetProperty(Property.DIRECTION);
+        }
+
         // Platz freimachen
         this.setToken(Token.PATH);
         this.setProperty(Property.MOVED);
+
+        // set bi-drirectional link betwenn this and goal
+        goal.setCurrentTokenCameFrom(this);
+        this.setLastTokenWentTo(goal);
     }
 
     /**
@@ -316,12 +329,45 @@ public class Feld {
     }
 
     /**
-     *
+     * @param allowME true if something is able to walk on ME, false otherwise
+     * @return true if something can move here
      */
     public boolean isFree(boolean allowME) {
         if (allowME)
             return this.isToken(Token.ME) || (this.isToken(Token.PATH) && !this.hasProperty(Property.MOVED));
         else
             return this.isToken(Token.PATH) && !this.hasProperty(Property.MOVED);
+    }
+
+    /**
+     * @return The field of which the token of the current field came from,
+     * or null if nothing was moved to the current field
+     */
+    public Feld getCurrentTokenCameFrom() {
+        return this.currentTokenCameFrom;
+    }
+
+    /**
+     * @see Feld#getCurrentTokenCameFrom() Getter
+     * @param origin
+     */
+    public void setCurrentTokenCameFrom(Feld origin) {
+        this.currentTokenCameFrom = origin;
+    }
+
+    /**
+     * @return The field to which the token which previously was on the current field has been moved,
+     * or null if nothing was moved away from the current field
+     */
+    public Feld getLastTokenWentTo() {
+        return this.lastTokenWentTo;
+    }
+
+    /**
+     * @see Feld#getLastTokenWentTo() Getter
+     * @param destination
+     */
+    public void setLastTokenWentTo(Feld destination) {
+        this.lastTokenWentTo = destination;
     }
 }
