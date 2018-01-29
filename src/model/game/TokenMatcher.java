@@ -8,7 +8,7 @@ public class TokenMatcher {
     private List<Token> tokens;
 
     /**
-            * Match any token
+     * Match any token
      */
     public TokenMatcher() {}
 
@@ -29,6 +29,13 @@ public class TokenMatcher {
         } else {
             return this.tokens.contains(token);
         }
+    }
+
+    /**
+     * @return Tokens, or null (= "*")
+     */
+    public List<Token> getTokens() {
+        return tokens;
     }
 
 }

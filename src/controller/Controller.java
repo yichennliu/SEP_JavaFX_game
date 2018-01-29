@@ -1,6 +1,6 @@
 package controller;
 
-import main.LevelImporter;
+import main.LevelFactory;
 import model.game.Level;
 import view.*;
 
@@ -60,7 +60,7 @@ public class Controller {
 
     public void startGame(){
         this.currentMode = View.Mode.GAME;
-        Level level = LevelImporter.importLevel("json/level/text.json");
+        Level level = LevelFactory.importLevel("json/level/text.json");
 
         if (gameController == null) {
             GameView gameView = new GameView(this.view.getStage(),level);
@@ -74,7 +74,7 @@ public class Controller {
 
     public void startLevel(String levelPath){
         this.currentMode = View.Mode.GAME;
-        Level level = LevelImporter.importLevel("src/json/level/"+levelPath);
+        Level level = LevelFactory.importLevel("src/json/level/"+levelPath);
 
         if (gameController == null) {
             GameView gameView = new GameView(this.view.getStage(),level);

@@ -26,4 +26,24 @@ public class Rule {
     execute(){
         // TODO: implement
     }
+
+    public Situation getSituation() {
+        return this.situation;
+    }
+
+    public Direction getDirection() {
+        return this.direction;
+    }
+
+    public List<RuleElementOriginal> getOriginal() {
+        return this.original;
+    }
+
+    public List<RuleElementResult> getResult() {
+        return this.result;
+    }
+
+    public Integer getSparsity() {
+        return this.sparsity;
+    }
 }

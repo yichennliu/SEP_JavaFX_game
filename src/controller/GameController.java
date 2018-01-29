@@ -11,10 +11,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import main.LevelFactory;
 import model.enums.InputDirection;
 import model.enums.Property;
 import model.game.Level;
 import view.GameView;
+
+import java.io.IOException;
 import java.util.Optional;
 
 public class GameController {
@@ -78,28 +81,40 @@ public class GameController {
                 }
 
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Exiting the Game");
-                alert.setHeaderText("The Progress of the player might be lost, do you want to save the game?");
+                alert.setTitle("Exit or Save");
+                alert.setHeaderText("Do you want to save or exit the game?");
 
-                ButtonType yes_button = new ButtonType("Yes");
-                ButtonType no_button = new ButtonType("No");
-                ButtonType cancel_button = new ButtonType("Cancel");
+                ButtonType save_button = new ButtonType("Save", ButtonBar.ButtonData.OTHER);
+                ButtonType save_exit_button = new ButtonType("Save & Exit", ButtonBar.ButtonData.OTHER);
+                ButtonType exit_button = new ButtonType("Exit", ButtonBar.ButtonData.OTHER);
+                ButtonType cancel_button = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-                alert.getButtonTypes().setAll(yes_button,no_button,cancel_button);
+                alert.getButtonTypes().setAll(save_button, save_exit_button,exit_button,cancel_button);
 
                 Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == yes_button){
-                    //TODO:Save the game
 
+                if(result.get() == save_button){
+                    this.saveGame();
+                    alert.close();
+                    if (timeline != null) {
+                        timeline.play();
+                    }
+                }
+
+                if (result.get() == save_exit_button){
+                    this.saveGame();
                     this.menuController.startPrimaryPage();
                 }
 
-                if(result.get() == no_button) {
+                if(result.get() == exit_button) {
                     this.menuController.startPrimaryPage();
                 }
 
                 if(result.get() == cancel_button){
                     alert.close();
+                    if (timeline != null) {
+                        timeline.play();
+                    }
                 }
 
             }
@@ -172,6 +187,26 @@ public class GameController {
 
         this.gameView.getCanvas().heightProperty().bind(gamestage.heightProperty());
         this.gameView.getCanvas().widthProperty().bind(gamestage.widthProperty());
+    }
+
+    /**
+     * Spiel speichern
+     */
+    public void saveGame() {
+        try {
+            LevelFactory.exportLevel(this.level, "src/json/savegame/" + this.level.getName() + ".json");
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Fehler");
+            alert.setHeaderText("Fehler beim Speichern");
+            alert.setContentText(e.getStackTrace().toString());
+
+            ButtonType buttonOK = new ButtonType("OK", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            alert.getButtonTypes().setAll(buttonOK);
+
+            Optional<ButtonType> result = alert.showAndWait();
+        }
     }
 
 }

@@ -13,4 +13,11 @@ public class RuleElementResult {
         this.values = values;
     }
 
+    public TokenReplacer getToken() {
+        return this.token;
+    }
+
+    public Map<Property, Integer> getValues() {
+        return this.values;
+    }
 }

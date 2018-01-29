@@ -28,7 +28,8 @@ public class Level {
     private InputDirection inputDirection = null;
 
 
-    public Level(String name, Feld[][] map, int[] gemGoals, int[] tickGoals, List<Rule> pre, List<Rule> post, Integer maxslime) {
+    public Level(String name, Feld[][] map, int[] gemGoals, int[] tickGoals, List<Rule> pre, List<Rule> post,
+                 Integer maxslime, Map<Property, Integer> globalProperties) {
         this.name = name;
         this.map = map;
         this.gemGoals = gemGoals;
@@ -36,6 +37,7 @@ public class Level {
         this.pre = pre;
         this.post = post;
         this.maxslime = maxslime;
+        this.properties = globalProperties;
 
         for(int row = 0; row < this.getHeight();  row++){
             for (int column = 0; column < this.getWidth(); column++){
@@ -108,6 +110,21 @@ public class Level {
      */
     public void setInputDirection(InputDirection inputDirection) {
         this.inputDirection = inputDirection;
+    }
+
+    /**
+     * @return existing global properties (!= 0)
+     */
+    public Map<Property, Integer> getProperties() {
+        Map<Property, Integer> properties = new HashMap<>();
+        for (Map.Entry entry : this.properties.entrySet()) {
+            Integer i = (Integer) entry.getValue();
+            Property p = (Property) entry.getKey();
+            if (i != 0) {
+                properties.put(p, i);
+            }
+        }
+        return properties;
     }
 
     /** @return global value associated to property */

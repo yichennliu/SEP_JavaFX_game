@@ -141,6 +141,21 @@ public class Feld {
         this.level.bufferIncreaseProperty(this, property, by);
     }
 
+    /**
+     * @return existing non-global properties (value != 0)
+     */
+    public Map<Property, Integer> getProperties() {
+        Map<Property, Integer> properties = new HashMap<>();
+        for (Map.Entry entry : this.properties.entrySet()) {
+            Property p = (Property) entry.getKey();
+            Integer i = (Integer) entry.getValue();
+            if (entry.getValue() != null && i != 0) {
+                properties.put(p, i);
+            }
+        }
+        return properties;
+    }
+
     /** if property != 0 */
     public boolean hasProperty(Property property) {
         return this.getPropertyValue(property) != 0;
