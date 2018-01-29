@@ -27,6 +27,7 @@ public class GameView {
     private Theme theme;
     private Level level;
     private String stylesheet;
+    private double fieldSize = 15.0;
 
 
     public GraphicsContext getGameGC() {
@@ -43,14 +44,24 @@ public class GameView {
         this.level = level;
         stylesheet= PrimaryPage.fileToStylesheetString(new File("src/view/style.css"));
         sceneGame.getStylesheets().add(stylesheet);
-        gameCanvas = new Canvas(width,height);
+        gameCanvas = new Canvas(width,height-40);
         gameGC = gameCanvas.getGraphicsContext2D();
 
         root.getChildren().addAll(gameCanvas);
         stage.setTitle("BoulderDash - " + this.level.getName());
         this.update();
         this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+        setInitialZoom();
         if(!stage.isShowing()) stage.show();
+    }
+
+    private void setInitialZoom(){
+        int gameHeight = level.getMap().length;
+        int gameWidth =  level.getMap()[0].length;
+        if(gameWidth<=gameHeight)
+                zoom(1, gameCanvas.getWidth() / gameWidth/fieldSize);
+        else    zoom(1, gameCanvas.getHeight()/gameHeight/fieldSize);
+
     }
 
     public Canvas getCanvas(){
@@ -66,7 +77,7 @@ public class GameView {
     }
 
     public void update(){
-        View.drawMap(this.gameGC,level.getMap(),15.0, this.theme);
+        View.drawMap(this.gameGC,level.getMap(),this.fieldSize, this.theme);
     }
 
     public void translate(double x, double y){

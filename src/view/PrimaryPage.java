@@ -95,7 +95,6 @@ public class PrimaryPage {
 
     }
 
-
     public Scene getScene() {
         return this.sceneWelcome;
     }

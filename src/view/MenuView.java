@@ -11,6 +11,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
+import main.LevelImporter;
+import model.misc.LevelSnapshot;
+import model.themeEditor.ThemeIO;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,7 +56,8 @@ public class MenuView {
         group = new ToggleGroup();
         HBox menuHbox = new HBox(10);
         for (String path : scanLevelDirectory()) {
-            ToggleButton levelButton = new ToggleButton("level : " + path, new ImageView(levelImage1));
+            Image snapshot = LevelSnapshot.snap(ThemeIO.importTheme("src/json/theme/testTheme.zip"), LevelImporter.importLevel("src/json/level/"+path));
+            ToggleButton levelButton = new ToggleButton("level : " + path, new ImageView(snapshot));
             levelButton.setUserData(path);
             levelButton.setToggleGroup(group);
             levelButtons.add(levelButton);

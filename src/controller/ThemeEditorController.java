@@ -1,10 +1,8 @@
 package controller;
 
+import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 
 import javafx.scene.image.ImageView;
@@ -123,7 +121,6 @@ public class ThemeEditorController {
                 else {
                     ToggleGroup positionButtonGroup = this.themeEditorView.getPositionButtonGroup();
                     VBox positionButtons = this.themeEditorView.getPositionButtons();
-
                     positionButtonGroup.getToggles().clear();
                     positionButtons.getChildren().clear();
                 }
@@ -146,6 +143,7 @@ public class ThemeEditorController {
 
     }
 
+    /*reloads ToggleGroup of buttons and selects first option */
     private void reloadPositionPaneRoot(Token t, Theme.FeldType f){
         ToggleGroup positionButtonGroup = this.themeEditorView.getPositionButtonGroup();
         VBox positionButtons = this.themeEditorView.getPositionButtons();
@@ -163,6 +161,10 @@ public class ThemeEditorController {
 
                 positionButtons.getChildren().add(toggleButton);
                 positionButtonGroup.getToggles().add(toggleButton);
+        }
+        ObservableList<Toggle> toggles = positionButtonGroup.getToggles();
+        if(toggles.size()>0) {
+            positionButtonGroup.selectToggle(toggles.get(0));
         }
     }
 

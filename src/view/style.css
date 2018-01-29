@@ -47,7 +47,7 @@
 }
 
 #root{
-             -fx-background-image: url("images/beginn.gif");
+                -fx-background-image: url("images/beginn.gif");
 
                -fx-background-position: center center;
                -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);

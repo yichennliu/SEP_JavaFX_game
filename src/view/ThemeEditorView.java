@@ -1,6 +1,8 @@
 package view;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -14,6 +16,10 @@ import javafx.stage.Stage;
 import model.enums.Token;
 import model.themeEditor.Theme;
 import model.themeEditor.Theme.FeldType;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class ThemeEditorView {
 private Theme theme;
@@ -36,6 +42,9 @@ private TextField spriteSize;
 private Button exportButton;
 private Button importButton;
 private VBox ioButtons;
+private HBox header;
+
+private ObservableList<String> themes;
 
 private String stylesheet;
 
@@ -68,13 +77,34 @@ private String stylesheet;
         /* Positioncontainer */
         initPositionPaneRoot();
         initOIButtons();
+        initHeader();
         rootPane.setLeft(treeView);
 
         root.getChildren().add(rootPane);
         if(!stage.isShowing()) stage.show();
     }
 
-    /* reloads content of positionPaneRoot on SelectionChange */
+    private void initHeader(){
+        header = new HBox();
+        initThemeSelection();
+        rootPane.setTop(header);
+    }
+
+    private void initThemeSelection(){
+        updateThemeList();
+        ComboBox<String> themeChoiceBox = new ComboBox<>();
+        themeChoiceBox.setPromptText("Lade Theme");
+        themeChoiceBox.setItems(this.themes);
+        this.header.getChildren().add(themeChoiceBox);
+
+    }
+
+    private void updateThemeList(){
+        File themeDir = new File("src/json/theme");
+        if(themeDir.exists()){
+            this.themes = FXCollections.observableArrayList(Arrays.asList(themeDir.list()));
+        }
+    }
 
     private void initOIButtons(){
         this.exportButton = new Button("Überschreibe TestTheme");

@@ -11,8 +11,6 @@ public class PrimaryController {
     private Object model;
     private Controller primaryController;
 
-
-
     public PrimaryController(PrimaryPage primaryPage, Controller menuController) {
         this.primaryPage = primaryPage;
         //this.model = model;

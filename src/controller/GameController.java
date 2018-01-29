@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -152,11 +153,25 @@ public class GameController {
             this.gameView.update();
         });
 
-        gamestage.heightProperty().addListener((a,b,c) -> {
-            this.gameView.getCanvas().setHeight(c.doubleValue());
-            this.gameView.getCanvas().setWidth(gamestage.getWidth());
+        gamestage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            KeyCode code = e.getCode();
+            if(code == KeyCode.D){
+                this.gameView.translate(10,0);
+            }
+            else if(code == KeyCode.W){
+                this.gameView.translate(0,-10);
+            }
+            else if(code == KeyCode.S){
+                this.gameView.translate(0,10);
+            }
+            else if(code == KeyCode.A){
+                this.gameView.translate(-10,0);
+            }
+            this.gameView.update();
         });
 
+        this.gameView.getCanvas().heightProperty().bind(gamestage.heightProperty());
+        this.gameView.getCanvas().widthProperty().bind(gamestage.widthProperty());
     }
 
 }
