@@ -16,4 +16,12 @@ public class TokenReplacer {
         this.index = index;
     }
 
+    public Token getToken() {
+        return this.token;
+    }
+
+    public Integer getIndex() {
+        return this.index;
+    }
+
 }

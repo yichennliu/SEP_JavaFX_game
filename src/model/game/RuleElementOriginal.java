@@ -16,4 +16,12 @@ public class RuleElementOriginal {
     public boolean matches(Feld field) {
         return false; // TODO: implement
     }
+
+    public TokenMatcher getToken() {
+        return this.token;
+    }
+
+    public Map<Property, Integer> getValues() {
+        return this.values;
+    }
 }
