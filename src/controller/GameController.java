@@ -14,6 +14,7 @@ import javafx.util.Duration;
 import main.LevelFactory;
 import model.enums.InputDirection;
 import model.enums.Property;
+import model.game.Feld;
 import model.game.Level;
 import view.GameView;
 
