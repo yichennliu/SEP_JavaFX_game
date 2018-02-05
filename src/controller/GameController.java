@@ -156,8 +156,6 @@ public class GameController {
                 this.level.setInputDirection(InputDirection.GORIGHT);
             }
 
-            this.gameView.update();
-
         });
     }
 
@@ -166,23 +164,6 @@ public class GameController {
 
         gamestage.addEventHandler(ScrollEvent.SCROLL, e -> {
             this.gameView.zoom(e.getDeltaY(), 1.5);
-            this.gameView.update();
-        });
-
-        gamestage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            KeyCode code = e.getCode();
-            if(code == KeyCode.D){
-                this.gameView.translate(10,0);
-            }
-            else if(code == KeyCode.W){
-                this.gameView.translate(0,-10);
-            }
-            else if(code == KeyCode.S){
-                this.gameView.translate(0,10);
-            }
-            else if(code == KeyCode.A){
-                this.gameView.translate(-10,0);
-            }
             this.gameView.update();
         });
 
@@ -208,6 +189,10 @@ public class GameController {
 
             Optional<ButtonType> result = alert.showAndWait();
         }
+    }
+
+    public void clean(){
+
     }
 
 }

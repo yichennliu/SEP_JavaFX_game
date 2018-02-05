@@ -61,11 +61,8 @@ public class Controller {
     public void startGame(){
         this.currentMode = View.Mode.GAME;
         Level level = LevelFactory.importLevel("json/level/text.json");
-
-        if (gameController == null) {
-            GameView gameView = new GameView(this.view.getStage(),level);
-            gameController = new GameController(level,gameView,this);
-        }
+        GameView gameView = new GameView(this.view.getStage(),level);
+        gameController = new GameController(level,gameView,this);
 
         this.view.update(View.Mode.GAME, gameController.getGameView());
         gameController.tick();

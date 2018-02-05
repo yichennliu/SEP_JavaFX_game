@@ -79,6 +79,7 @@ public class ThemeEditorController {
             if(sheet!=null){
                 this.themeEditorView.getSpriteSize().setText(Integer.toString(sheet.getSpriteSize()));
                 this.themeEditorView.getFrameCount().setText(Integer.toString(sheet.getCount()));
+                this.themeEditorView.getFramesPerSecondField().setText(Integer.toString(sheet.getFpt()));
             }
         }
     }
@@ -171,6 +172,7 @@ public class ThemeEditorController {
     private void initFrameCountAndSizeFields(){
         TextField counter = this.themeEditorView.getFrameCount();
         TextField sizeField = this.themeEditorView.getSpriteSize();
+        TextField fptField = this.themeEditorView.getFramesPerSecondField();
 
         counter.textProperty().addListener((a,b,c) -> {
             Token t = getActiveToken();
@@ -185,7 +187,6 @@ public class ThemeEditorController {
                     counter.setStyle("-fx-text-fill: black");
                 }
                 catch(Exception e){
-                    System.out.println(e.getMessage());
                     counter.setStyle("-fx-text-fill: red");
                 }
             }
@@ -208,6 +209,24 @@ public class ThemeEditorController {
                     sizeField.setStyle("-fx-text-fill: red");
                 }
             }
+        });
+
+        fptField.textProperty().addListener((a,b,c) -> {
+           Token t = getActiveToken();
+           Theme.FeldType f = getActiveFeldType();
+           Theme.Position p = getActivePosition();
+           if(t!=null && f!=null && p!=null) {
+               try {
+                   int fpt = Integer.parseInt(c);
+                   if (fpt>0){
+                       this.theme.getSpriteSheet(t,f,p).setFpt(fpt);
+                       fptField.setStyle("-fx-text-fill: black");
+                       return;
+                   }
+               }
+               catch(Exception e){}
+               fptField.setStyle("-fx-text-fill: red");
+           }
         });
     }
 

@@ -1,10 +1,9 @@
 package view;
 
-import javafx.scene.canvas.Canvas;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
 import model.enums.FieldDirection;
 import model.enums.Token;
@@ -14,7 +13,9 @@ import model.themeEditor.SpriteSheet;
 import model.themeEditor.Theme;
 import model.themeEditor.Theme.FeldType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class View {
@@ -31,10 +32,7 @@ public class View {
     private double windowWidth = 800;
     private double windowHeight = 600;
 
-
-
-
-    private double fieldSize = 20;
+   private double fieldSize = 20;
 
     public enum Mode {EDITOR, GAME, MENU, THEME,PRIMARY};
 
@@ -83,7 +81,7 @@ public class View {
             case GAME:
                     showGame();
 //                    Canvas gameCanvas = gameScene.getCanvas();
-//                    drawMap(gameCanvas,gameCanvas.getGraphicsContext2D());
+//                    drawBoard(gameCanvas,gameCanvas.getGraphicsContext2D());
                     break;
 /*            case EDITOR:
                     showEditor();
@@ -97,19 +95,14 @@ public class View {
         }
     }
 
+    /*Draws board and starts animation on animationCanvas in Board*/
+    public static void drawBoard(Board board, Feld[][] feld, Theme theme){
+        board.clearBoard();
+        board.resetAnimator();
+        TokenTransition animator = board.getAnimator();
+        List<AnimationToken> tokenList = new ArrayList<>();
+        double fieldSize = board.getFieldSize();
 
-    public static void drawMap(GraphicsContext gc, Feld[][] feld, double fieldSize, Theme theme){
-        Canvas canvas = gc.getCanvas();
-
-        Affine actualTransformation = gc.getTransform();
-        Affine defaultTransform = new Affine();
-        gc.setTransform(defaultTransform);
-        gc.clearRect(0,0,canvas.getWidth(),canvas.getHeight());
-        gc.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
-        gc.setTransform(actualTransformation);
-
-        double canvasWidth = canvas.getWidth();
-        double canvasHeight = canvas.getHeight();
         int mapWidth = feld[0].length;
         int mapHeight = feld.length;
 
@@ -117,34 +110,85 @@ public class View {
             for (int colNum = 0; colNum < mapWidth; colNum++){
                 double xPos = colNum* fieldSize;
                 double yPos = rowNum*fieldSize;
-                if(theme == null || !drawFeld(xPos, yPos, gc, feld[rowNum][colNum], fieldSize, theme)) {
-                    String text = feld[rowNum][colNum].toString();
-                    // Path verstecken, sonst ersten Buchstaben anzeigen
-                    gc.setFill(Color.WHITE);
-                    gc.fillText(text.equals("PATH") ? "" : (text.equals("ME") ? "ME" : text.charAt(0)+""),
-                            xPos+fieldSize/2-7,yPos+fieldSize/2+5);
-                    gc.setFill(Color.BLACK);
+                Feld currentFeld =feld[rowNum][colNum];
+
+                Map<FieldDirection,Feld> neighbours = getEdgeNeighbours(currentFeld,true);
+                Token t = currentFeld.getToken();
+                FeldType f = getFeldType(currentFeld,neighbours);
+                Theme.Position p = getFeldPosition(currentFeld,f,neighbours);
+                SpriteSheet s = null;
+                if(theme!=null) s = retrieveSpriteSheet(t,f,p,theme);
+
+                AnimationToken animationToken = getAnimation(currentFeld,s);
+                if(animationToken!=null){
+                    tokenList.add(animationToken);
+                    continue;
+                }
+
+                if(theme == null || !drawFeld(xPos, yPos, board.getFieldSize(),board.getStaticGC(),s,theme)) {
+                    drawTextFeld(feld[rowNum][colNum],board.getStaticGC(),xPos,yPos,fieldSize);
                 }
             }
         }
+        animator.setNewAnimationTokens(tokenList);
+        board.playAnimation();
     }
 
-    /*returns true if a sprite could be drawn (also when not requested position but default position was available)*/
-    private static boolean drawFeld(double x, double y, GraphicsContext gc, Feld feld, double fieldSize, Theme theme){
-        Map<FieldDirection,Feld> neighbours = getEdgeNeighbours(feld,true);
-        Token t = feld.getToken();
-        FeldType f = getFeldType(feld,neighbours);
-        Theme.Position p = getFeldPosition(feld,f,neighbours);
-        Image sprite;
+    public static void drawTextFeld(Feld feld, GraphicsContext gc, double xPos, double yPos, double fieldSize){
+        String text = feld.toString();
+        gc.setFill(Color.WHITE);
+        gc.fillText(text.equals("PATH") ? "" : (text.equals("ME") ? "■" : text.charAt(0)+""),
+                xPos+fieldSize/2-7,yPos+fieldSize/2+5);
+        gc.setFill(Color.BLACK);
+    }
+
+
+    private static AnimationToken getAnimation(Feld feld, SpriteSheet sheet){
+       boolean moved= feld.getCurrentTokenCameFrom() != null;
+       boolean hasFrames = (sheet!=null) ? sheet.getCount()>1 : false;
+
+       Feld from = feld;
+       Feld to = feld;
+       SpriteSheet s = null;
+
+       if(!hasFrames && !moved) return null;
+
+       if(moved){
+           from = feld.getCurrentTokenCameFrom();
+           if(!hasFrames) s = sheet;
+       }
+
+       if(hasFrames ){
+           s = sheet;
+       }
+
+       return new AnimationToken(s,from,to,0);
+
+    }
+
+    /*returns true if a sprite could be drawn (also when not the requested but default/idle position was available)*/
+    private static boolean drawFeld(double x, double y, double fieldSize, GraphicsContext gc, SpriteSheet s, Theme theme){
+
+        if (s==null) return false;
+        drawImage(x,y,fieldSize,gc,s.getSprite(0));
+        return true;
+    }
+
+    public static void drawImage(double x, double y, double size, GraphicsContext gc, Image image){
+        gc.drawImage(image,x,y,size,size);
+    }
+
+    /*tries to get spritesheet (with given position, feldtype, and token) from theme. If not avaible, tries to get Default
+    * sheets for feldtype. returns null if no default spritesheet available*/
+    private static SpriteSheet retrieveSpriteSheet(Token t, FeldType f, Theme.Position p, Theme theme){
         SpriteSheet s = theme.getSpriteSheet(t,f,p);
         if (s==null){
             s = t.isMovable()
                     ? theme.getSpriteSheet(t,Theme.FeldType.IDLE, Theme.Position.DEFAULT)
                     : theme.getSpriteSheet(t, FeldType.FOUREDGE, Theme.Position.DEFAULT);
-            if(s==null) return false;
         }
-        gc.drawImage(s.getSprite(0),x,y,fieldSize,fieldSize);
-        return true;
+
+        return s;
     }
 
     private static Theme.FeldType getFeldType(Feld feld, Map<FieldDirection,Feld> neighbours){

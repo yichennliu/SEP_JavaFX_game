@@ -39,6 +39,7 @@ private VBox positionButtons;
 private GridPane previewGridPane;
 private TextField frameCount;
 private TextField spriteSize;
+private TextField fptField;
 private Button exportButton;
 private Button importButton;
 private VBox ioButtons;
@@ -138,13 +139,15 @@ private String stylesheet;
 
         frameCount = new TextField();
         spriteSize = new TextField();
+        fptField = new TextField();
         TilePane sizeAndCountPane = new TilePane();
-        sizeAndCountPane.getChildren().addAll(new Label("Frames: "),frameCount, new Label("SpriteSize: "),spriteSize);
+        sizeAndCountPane.getChildren().addAll(new Label("Frames: "),frameCount, new Label("SpriteSize: "),spriteSize, new Label("Frames per tick: "),fptField);
         sizeAndCountPane.setMaxWidth(maxWidth);
         sizeAndCountPane.setAlignment(Pos.CENTER);
 
         frameCount.setMaxWidth(30);
         spriteSize.setMaxWidth(30);
+        fptField.setMaxWidth(30);
 
         positionButtonGroup = new ToggleGroup();
         positionButtons = new VBox();
@@ -241,5 +244,9 @@ private String stylesheet;
 
     public Button getImportButton() {
         return importButton;
+    }
+
+    public TextField getFramesPerSecondField() {
+        return fptField;
     }
 }

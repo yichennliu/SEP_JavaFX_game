@@ -51,6 +51,7 @@ public class ThemeIO {
                             JSONObject spriteSheet = new JSONObject();
                             spriteSheet.put("size",sheet.getSpriteSize());
                             spriteSheet.put("count" , sheet.getCount());
+                            spriteSheet.put("fpt", sheet.getFpt());
                             ImagePath path = new ImagePath(t,f,p);
                             spriteSheet.put("path" , path.toString());
                             pathList.add(path);
@@ -184,8 +185,10 @@ public class ThemeIO {
                             Image spriteSheetImage = imageMap.get(spriteSheetInfo.getString("path"));
                             int spriteSize = spriteSheetInfo.getInt("size");
                             int count = spriteSheetInfo.getInt("count");
+                            int fpt = spriteSheetInfo.has("fpt") ? spriteSheetInfo.getInt("fpt") : count;
                             try {
                                 SpriteSheet spriteSheet = new SpriteSheet(spriteSheetImage,spriteSize,count);
+                                spriteSheet.setFpt(fpt);
                                 theme.putSpriteSheet(t,f,p,spriteSheet);
                             }
                             catch(IllegalArgumentException e){

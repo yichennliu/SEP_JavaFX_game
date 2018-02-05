@@ -20,16 +20,16 @@ import java.io.File;
 public class GameView {
 
     private GraphicsContext gameGC;
-    private Canvas gameCanvas;
+    private Canvas staticCanvas;
     private Scene sceneGame;
     private Stage stage;
     private double width, height;
     private Group root;
-    private Affine transformation = new Affine();
     private Theme theme;
     private Level level;
     private String stylesheet;
     private double fieldSize = 60.0;
+    private Board board;
 
 
     public GraphicsContext getGameGC() {
@@ -46,10 +46,14 @@ public class GameView {
         this.level = level;
         stylesheet= PrimaryPage.fileToStylesheetString(new File("src/view/style.css"));
         sceneGame.getStylesheets().add(stylesheet);
-        gameCanvas = new Canvas(width,height-40);
-        gameGC = gameCanvas.getGraphicsContext2D();
+        staticCanvas = new Canvas(width,height-40);
+        Canvas animatedCanvas = new Canvas(staticCanvas.getWidth(),staticCanvas.getHeight());
+        gameGC = staticCanvas.getGraphicsContext2D();
+        this.board = new Board(staticCanvas,animatedCanvas,fieldSize);
 
-        root.getChildren().addAll(gameCanvas);
+        Group canvasGroup = new Group(staticCanvas,animatedCanvas);
+
+        root.getChildren().addAll(canvasGroup);
         stage.setTitle("BoulderDash - " + this.level.getName());
         this.update();
         this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
@@ -59,7 +63,7 @@ public class GameView {
 
 
     public Canvas getCanvas(){
-        return this.gameCanvas;
+        return this.staticCanvas;
     }
 
     public Scene getScene(){
@@ -72,26 +76,23 @@ public class GameView {
 
     public void update(){
         scrollToMe();
-        View.drawMap(this.gameGC,level.getMap(),this.fieldSize, this.theme);
+        View.drawBoard(this.board,level.getMap(),this.theme);
 
-    }
-
-    public void translate(double x, double y){
-        this.transformation.append(new Translate(x,y));
-        this.gameGC.setTransform(this.transformation);
     }
 
     private void scrollToMe(){
         Feld meFeld = level.whereAmI();
         if(meFeld==null) return;
 
-        double canvasHeight = gameCanvas.getHeight();
-        double canvasWidth = gameCanvas.getWidth();
+        double canvasHeight = board.getHeight();
+        double canvasWidth = board.getWidth();
         double newTranslateX= 0;
         double newTranslateY = 0;
         double relativeMeX = meFeld.getColumn()*fieldSize + 0.5 * fieldSize;
         double relativeMeY = meFeld.getRow()*fieldSize + 0.5 * fieldSize;
-        Point2D meOnCanvas= this.transformation.transform(relativeMeX,relativeMeY);
+        Affine transformation = this.board.getTransformation();
+        Point2D meOnCanvas =  transformation.transform(relativeMeX,relativeMeY);
+
         double meOnCanvasX = meOnCanvas.getX();
         double meOnCanvasY = meOnCanvas.getY();
 
@@ -108,13 +109,13 @@ public class GameView {
             newTranslateY = canvasHeight*0.8 - meOnCanvasY;
         }
 
-
-           this.transformation.prepend(new Translate(newTranslateX,newTranslateY));
-        this.gameGC.setTransform(this.transformation);
+        transformation.prepend(new Translate(newTranslateX,newTranslateY));
+        this.board.applyTransformation(transformation);
     }
 
     /*gets a relative coordinate based on given input and affine transformation parameters*/
     private Point2D reverseTransform(double j, double k){
+        Affine transformation = this.board.getTransformation();
         double a = transformation.getMxx(); double b = transformation.getMxy();
         double c = transformation.getTx(); double d = transformation.getMyx();
         double e = transformation.getMyy(); double f = transformation.getTy();
@@ -124,20 +125,22 @@ public class GameView {
     }
 
     public void zoom(double delta, double factor){
+        Affine transformation = this.board.getTransformation();
 
         if(delta < 0){
-            this.transformation.append(new Scale(1/factor, 1/factor));
+           transformation.append(new Scale(1/factor, 1/factor));
         }
-        else this.transformation.append(new Scale(factor,factor));
-        this.gameGC.setTransform(this.transformation);
+        else transformation.append(new Scale(factor,factor));
+        this.board.applyTransformation(transformation);
     }
 
     public void rotate(double i) {
+        Affine transformation = this.board.getTransformation();
         double fieldSize= 15.0;
         double levelWidth  = this.level.getWidth();
         double levelHeight = this.level.getHeight();
-        this.transformation.append(new Rotate(i,levelWidth*fieldSize/2,levelHeight*fieldSize/2))  ;
-        this.gameGC.setTransform(this.transformation);
+        transformation.append(new Rotate(i,levelWidth*fieldSize/2,levelHeight*fieldSize/2))  ;
+        this.board.applyTransformation(transformation);
     }
 }
 

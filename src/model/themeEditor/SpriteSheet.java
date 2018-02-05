@@ -13,7 +13,7 @@ public class SpriteSheet {
 
     private Image spriteSheet;
     private List<Image> sprites;
-    int spriteSize, count;
+    int spriteSize, count, fpt;
 
     public SpriteSheet(Image spriteSheet, int spriteSize, int count) throws IllegalArgumentException{
         if(count> getMaxCount((int) spriteSheet.getWidth(), (int) spriteSheet.getHeight(), spriteSize) ||
@@ -24,6 +24,7 @@ public class SpriteSheet {
         this.count = count;
         this.sprites = spriteSheetToImageList(spriteSheet,this.spriteSize,this.count);
         this.spriteSheet = spriteSheet;
+        this.fpt = count;
     }
 
     /* refreshes SpriteSheet with all currently saved instance variables. Does nothing when illegal variables saved */
@@ -53,6 +54,16 @@ public class SpriteSheet {
     /* returns currently set spritecount */
     public int getCount(){
         return this.count;
+    }
+
+    /*gets frames per tick*/
+    public int getFpt() {
+        return fpt;
+    }
+
+    /*sets frames per tick. fpt must be greater than zero*/
+    public void setFpt(int fpt) {
+        this.fpt = fpt;
     }
 
     /*sets count to provided value. Throws Exception with illegal argument*/
