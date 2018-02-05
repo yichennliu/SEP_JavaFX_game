@@ -85,7 +85,8 @@ public class ThemeEditorController {
     }
 
     private void preparePreview(){
-        themeEditorView.getPreview().addEventHandler(MouseEvent.MOUSE_CLICKED, e-> {
+        ImageView preview = themeEditorView.getPreview();
+        preview.setOnMouseClicked( e-> {
             Cell cell = this.themeEditorView.getSelectedItemProperty().get().getValue();
             Theme.Position p = (Theme.Position) this.themeEditorView.getPositionButtonGroup().getSelectedToggle().getUserData();
             Image img = loadImage();

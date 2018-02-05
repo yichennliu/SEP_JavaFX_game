@@ -5,7 +5,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import model.enums.Direction;
 import model.enums.FieldDirection;
+import model.enums.Property;
 import model.enums.Token;
 import model.game.Feld;
 import model.game.Level;
@@ -151,6 +153,7 @@ public class View {
        Feld to = feld;
        SpriteSheet s = null;
 
+
        if(!hasFrames && !moved) return null;
 
        if(moved){
@@ -183,6 +186,7 @@ public class View {
     private static SpriteSheet retrieveSpriteSheet(Token t, FeldType f, Theme.Position p, Theme theme){
         SpriteSheet s = theme.getSpriteSheet(t,f,p);
         if (s==null){
+
             s = t.isMovable()
                     ? theme.getSpriteSheet(t,Theme.FeldType.IDLE, Theme.Position.DEFAULT)
                     : theme.getSpriteSheet(t, FeldType.FOUREDGE, Theme.Position.DEFAULT);
@@ -193,7 +197,18 @@ public class View {
 
     private static Theme.FeldType getFeldType(Feld feld, Map<FieldDirection,Feld> neighbours){
         if(feld.getToken().isMovable()){
-            // TODO: für die animation richtiges token bekommen ..
+            boolean moved = feld.getPropertyValue(Property.MOVED).equals(1);
+            if(moved){
+                int direction = feld.getPropertyValue(Property.DIRECTION);
+                if(direction>=1 && direction <=4) {
+                    FieldDirection fdirection = FieldDirection.getFromDirection(direction);
+                    switch(fdirection){
+                        case TOP: return FeldType.STEP_UP;
+                        case BOTTOM: return FeldType.STEP_DOWN;
+                        default: return FeldType.STEP_SIDE;
+                    }
+                }
+            }
             return FeldType.IDLE;
         }
         int neighbourCount = neighbours.size();
@@ -225,7 +240,7 @@ public class View {
     }
 
     private static Theme.Position getFeldPosition (Feld feld, FeldType type, Map<FieldDirection,Feld> neighbours) {
-        if (type == FeldType.FOUREDGE || type == FeldType.ZEROEDGE || type == FeldType.IDLE)
+        if (type == FeldType.FOUREDGE || type == FeldType.ZEROEDGE || type == FeldType.IDLE || type == FeldType.STEP_DOWN || type == FeldType.STEP_UP)
             return Theme.Position.DEFAULT;
         switch (type) {
             case ONEEDGE:
@@ -251,6 +266,10 @@ public class View {
                 if (!neighbours.containsKey(FieldDirection.BOTTOM)) return Theme.Position.BOTTOM;
                 if (!neighbours.containsKey(FieldDirection.RIGHT)) return Theme.Position.RIGHT;
                 if (!neighbours.containsKey(FieldDirection.LEFT)) return Theme.Position.LEFT;
+            case STEP_SIDE:
+                FieldDirection fd = FieldDirection.getFromDirection(feld.getPropertyValue(Property.DIRECTION));
+                if(fd.equals(FieldDirection.LEFT)) return Theme.Position.LEFT;
+                else return Theme.Position.RIGHT;
         }
         return null;
 
