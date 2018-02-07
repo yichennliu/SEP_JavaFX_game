@@ -5,11 +5,14 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import model.game.Feld;
 import model.game.Level;
 import model.themeEditor.Theme;
@@ -30,6 +33,9 @@ public class GameView {
     private String stylesheet;
     private double fieldSize = 60.0;
     private Board board;
+    private HBox  timeRewardInfo;
+    private Label countdown;
+    private Label restGem;
 
 
     public GraphicsContext getGameGC() {
@@ -50,14 +56,20 @@ public class GameView {
         Canvas animatedCanvas = new Canvas(staticCanvas.getWidth(),staticCanvas.getHeight());
         gameGC = staticCanvas.getGraphicsContext2D();
         this.board = new Board(staticCanvas,animatedCanvas,fieldSize);
-
         Group canvasGroup = new Group(staticCanvas,animatedCanvas);
 
         root.getChildren().addAll(canvasGroup);
         stage.setTitle("BoulderDash - " + this.level.getName());
         this.update();
         this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
-//        setInitialZoom();
+
+        this.timeRewardInfo = new HBox();
+        this.countdown = new Label();
+        this.restGem = new Label();
+        setCountdownInfo();
+        timeRewardInfo.getChildren().addAll(countdown,restGem);
+        root.getChildren().addAll(timeRewardInfo);
+
         if(!stage.isShowing()) stage.show();
     }
 
@@ -141,6 +153,13 @@ public class GameView {
         double levelHeight = this.level.getHeight();
         transformation.append(new Rotate(i,levelWidth*fieldSize/2,levelHeight*fieldSize/2))  ;
         this.board.applyTransformation(transformation);
+    }
+
+
+    public void setCountdownInfo() {
+        Pair<Integer, Integer> showCountdown= level.getRemainingGoldTicksGems();
+        countdown.setAccessibleText("Zeit:"+showCountdown.getKey());
+        restGem.setAccessibleText("Gem:"+showCountdown.getValue());
     }
 }
 

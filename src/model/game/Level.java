@@ -1,5 +1,6 @@
 package model.game;
 
+import javafx.util.Pair;
 import model.enums.*;
 
 import java.util.*;
@@ -61,6 +62,24 @@ public class Level {
         } else {
             return null;
         }
+    }
+
+    public Pair<Integer, Integer> getRemainingGoldTicksGems() {
+        Integer remainingTicks = this.getPropertyValue(Property.TICKS) - this.getTickGoals()[2];
+        Integer remainingGems = this.getPropertyValue(Property.GEMS) - this.getGemGoals()[2];
+        return new Pair<Integer, Integer>(remainingTicks, remainingGems);
+    }
+
+    public Pair<Integer, Integer> getRemainingSilverTickGems(){
+        Integer remainingTicks = this.getPropertyValue(Property.TICKS) - this.getTickGoals()[1];
+        Integer remainingGems = this.getPropertyValue(Property.GEMS) - this.getGemGoals()[1];
+        return new Pair<Integer,Integer>(remainingTicks, remainingGems);
+    }
+
+    public Pair<Integer, Integer> getRemainingBronzeTickGems(){
+        Integer remainingTicks = this.getPropertyValue(Property.TICKS) - this.getTickGoals()[0];
+        Integer remainingGems = this.getPropertyValue(Property.GEMS) - this.getGemGoals()[0];
+        return new Pair<Integer, Integer>(remainingTicks, remainingGems);
     }
 
     public Feld[][] getMap(){
