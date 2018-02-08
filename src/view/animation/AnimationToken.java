@@ -1,4 +1,4 @@
-package view;
+package view.animation;
 
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;

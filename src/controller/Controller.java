@@ -3,6 +3,7 @@ package controller;
 import main.LevelFactory;
 import model.game.Level;
 import view.*;
+import view.themeEditor.ThemeEditorView;
 
 public class Controller {
     private View view;

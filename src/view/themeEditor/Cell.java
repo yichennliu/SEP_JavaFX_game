@@ -1,4 +1,4 @@
-package view;
+package view.themeEditor;
 
 import model.enums.Token;
 import model.themeEditor.Theme;

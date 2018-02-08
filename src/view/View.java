@@ -1,19 +1,21 @@
 package view;
 
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import model.enums.Direction;
 import model.enums.FieldDirection;
 import model.enums.Property;
 import model.enums.Token;
 import model.game.Feld;
-import model.game.Level;
 import model.themeEditor.SpriteSheet;
 import model.themeEditor.Theme;
 import model.themeEditor.Theme.FeldType;
+import view.animation.AnimationToken;
+import view.animation.BoardTranslationTransition;
+import view.animation.StaticViewToken;
+import view.animation.TokenTransition;
+import view.themeEditor.ThemeEditorView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,20 +23,12 @@ import java.util.List;
 import java.util.Map;
 
 public class View {
-
-    private GraphicsContext gameGC;
-    private GraphicsContext  editorGC;
-
     private Stage stage;
     private Object currentScene;
-
-    private Level level;
-    private int maxSize = 1000;
 
     private double windowWidth = 800;
     private double windowHeight = 600;
 
-   private double fieldSize = 20;
 
     public enum Mode {EDITOR, GAME, MENU, THEME,PRIMARY};
 
@@ -98,21 +92,32 @@ public class View {
     }
 
     /*Draws board and starts animation on animationCanvas in Board*/
-    public static void drawBoard(Board board, Feld[][] feld, Theme theme){
+    public static void drawBoard(Board board, Feld[][] feld, Theme theme, boolean animate){
         board.clearBoard();
-        board.resetAnimator();
         TokenTransition animator = board.getAnimator();
+        BoardTranslationTransition translationAnimator = board.getTranslationAnimator();
+        List<StaticViewToken> staticTokenList = new ArrayList<>();
         List<AnimationToken> tokenList = new ArrayList<>();
         double fieldSize = board.getFieldSize();
+        drawMap(feld,fieldSize,theme,tokenList, staticTokenList, board.getStaticGC());
 
-        int mapWidth = feld[0].length;
-        int mapHeight = feld.length;
+        animator.setNewAnimationTokens(tokenList);
+        translationAnimator.setStaticViewTokens(staticTokenList);
+        if(animate){
+            board.playAnimation();
+        }
+
+    }
+
+    public static void drawMap(Feld[][] map, double fieldSize, Theme theme, List<AnimationToken> tokenList, List<StaticViewToken> staticTokenList, GraphicsContext gc){
+        int mapWidth = map[0].length;
+        int mapHeight = map.length;
 
         for(int rowNum = 0; rowNum < mapHeight; rowNum++){
             for (int colNum = 0; colNum < mapWidth; colNum++){
                 double xPos = colNum* fieldSize;
                 double yPos = rowNum*fieldSize;
-                Feld currentFeld =feld[rowNum][colNum];
+                Feld currentFeld =map[rowNum][colNum];
 
                 Map<FieldDirection,Feld> neighbours = getEdgeNeighbours(currentFeld,true);
                 Token t = currentFeld.getToken();
@@ -121,27 +126,43 @@ public class View {
                 SpriteSheet s = null;
                 if(theme!=null) s = retrieveSpriteSheet(t,f,p,theme);
 
-                AnimationToken animationToken = getAnimation(currentFeld,s);
-                if(animationToken!=null){
-                    tokenList.add(animationToken);
-                    continue;
+                if(tokenList!=null){
+                    AnimationToken animationToken = getAnimation(currentFeld,s);
+                    if(animationToken!=null){
+                        tokenList.add(animationToken);
+                        continue;
+                    }
                 }
-
-                if(theme == null || !drawFeld(xPos, yPos, board.getFieldSize(),board.getStaticGC(),s,theme)) {
-                    drawTextFeld(feld[rowNum][colNum],board.getStaticGC(),xPos,yPos,fieldSize);
+                if(theme == null || !drawFeld(xPos, yPos,fieldSize,gc,s,theme)) {
+                    drawTextFeld(map[rowNum][colNum],gc,xPos,yPos,fieldSize);
                 }
+                staticTokenList.add(new StaticViewToken(xPos,yPos,map[rowNum][colNum].getToken().name(),s));
             }
         }
-        animator.setNewAnimationTokens(tokenList);
-        board.playAnimation();
     }
 
-    public static void drawTextFeld(Feld feld, GraphicsContext gc, double xPos, double yPos, double fieldSize){
-        String text = feld.toString();
+    private static void drawTextFeld(String text, GraphicsContext gc, double xPos, double yPos, double fieldSize){
         gc.setFill(Color.WHITE);
         gc.fillText(text.equals("PATH") ? "" : (text.equals("ME") ? "■" : text.charAt(0)+""),
                 xPos+fieldSize/2-7,yPos+fieldSize/2+5);
         gc.setFill(Color.BLACK);
+    }
+
+    public static void drawTextFeld(Feld feld, GraphicsContext gc, double xPos, double yPos, double fieldSize){
+        String text = feld.toString();
+        drawTextFeld(text, gc, xPos, yPos,fieldSize);
+    }
+
+
+    public static void drawViewTokens(Board board, List<StaticViewToken> list){
+        board.clearStaticGC();
+        for(StaticViewToken elmnt: list){
+            double x = elmnt.getX();
+            double y = elmnt.getY();
+            if(!drawFeld(x,y,board.getFieldSize(),board.getStaticGC(),elmnt.getS(),board.getTheme())){
+                drawTextFeld(elmnt.getName(),board.getStaticGC(),x,y,board.getFieldSize());
+            }
+        }
     }
 
 

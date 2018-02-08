@@ -49,15 +49,16 @@ public class GameView {
         staticCanvas = new Canvas(width,height-40);
         Canvas animatedCanvas = new Canvas(staticCanvas.getWidth(),staticCanvas.getHeight());
         gameGC = staticCanvas.getGraphicsContext2D();
-        this.board = new Board(staticCanvas,animatedCanvas,fieldSize);
 
         Group canvasGroup = new Group(staticCanvas,animatedCanvas);
 
         root.getChildren().addAll(canvasGroup);
         stage.setTitle("BoulderDash - " + this.level.getName());
-        this.update();
         this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
-//        setInitialZoom();
+        this.board = new Board(staticCanvas,animatedCanvas, level.getMap(),theme,fieldSize);
+
+        this.update();
+
         if(!stage.isShowing()) stage.show();
     }
 
@@ -76,7 +77,8 @@ public class GameView {
 
     public void update(){
         scrollToMe();
-        View.drawBoard(this.board,level.getMap(),this.theme);
+        board.stopAnimation();
+        View.drawBoard(this.board,level.getMap(),this.theme,true);
 
     }
 
@@ -109,8 +111,12 @@ public class GameView {
             newTranslateY = canvasHeight*0.8 - meOnCanvasY;
         }
 
-        transformation.prepend(new Translate(newTranslateX,newTranslateY));
-        this.board.applyTransformation(transformation);
+        if(newTranslateX!=0.0 || newTranslateY!=0.0){
+            this.board.translate(new Translate(newTranslateX,newTranslateY));
+            System.out.println("TranslatioN!");
+        }
+
+
     }
 
     /*gets a relative coordinate based on given input and affine transformation parameters*/
@@ -134,13 +140,5 @@ public class GameView {
         this.board.applyTransformation(transformation);
     }
 
-    public void rotate(double i) {
-        Affine transformation = this.board.getTransformation();
-        double fieldSize= 15.0;
-        double levelWidth  = this.level.getWidth();
-        double levelHeight = this.level.getHeight();
-        transformation.append(new Rotate(i,levelWidth*fieldSize/2,levelHeight*fieldSize/2))  ;
-        this.board.applyTransformation(transformation);
-    }
 }
 
