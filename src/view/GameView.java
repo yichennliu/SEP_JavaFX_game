@@ -7,14 +7,17 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import model.enums.Property;
 import model.game.Feld;
 import model.game.Level;
+import model.game.Medaille;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 
@@ -36,6 +39,8 @@ public class GameView {
     private HBox  timeRewardInfo;
     private Label countdown;
     private Label restGem;
+    private Label currentGems;
+    private Label currentTime;
 
 
     public GraphicsContext getGameGC() {
@@ -63,13 +68,16 @@ public class GameView {
         this.update();
         this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
 
-        this.timeRewardInfo = new HBox();
+        this.timeRewardInfo = new HBox(10);
+        this.currentGems = new Label();
         this.countdown = new Label();
         this.restGem = new Label();
-        setCountdownInfo();
-        timeRewardInfo.getChildren().addAll(countdown,restGem);
+        this.currentTime = new Label();
+        showCollectedGems();
+        setMedalInfo();
+        showCurrentTime();
+        timeRewardInfo.getChildren().addAll(countdown,restGem, currentGems, currentTime);
         root.getChildren().addAll(timeRewardInfo);
-
         if(!stage.isShowing()) stage.show();
     }
 
@@ -156,10 +164,58 @@ public class GameView {
     }
 
 
-    public void setCountdownInfo() {
-        Pair<Integer, Integer> showCountdown= level.getRemainingGoldTicksGems();
-        countdown.setAccessibleText("Zeit:"+showCountdown.getKey());
-        restGem.setAccessibleText("Gem:"+showCountdown.getValue());
+    public void showCurrentTime(){
+        this.currentTime.setText("Time:"+level.getPropertyValue(Property.TICKS)*5);
+
     }
+
+    public void showCollectedGems(){
+        int result = level.getPropertyValue(Property.GEMS);
+        currentGems.setText("Gems: "+result);
+
+
+    }
+
+    public void setCountdownGoldInfo() {
+        Pair<Integer, Integer> showCountdown= level.getRemainingGoldTicksGems();
+        countdown.setText("You still have:"+showCountdown.getKey());
+        restGem.setText("Needed Gems:"+showCountdown.getValue());
+        countdown.setTextFill(Color.GOLD);
+        restGem.setTextFill(Color.GOLD);
+
+
+    }
+
+    public void setCountdownSilverInfo(){
+        Pair<Integer, Integer> showCountdown= level.getRemainingSilverTickGems();
+        countdown.setText("You still have:"+showCountdown.getKey());
+        restGem.setText("needed Gems:"+showCountdown.getValue());
+        countdown.setTextFill(Color.GOLD);
+        restGem.setTextFill(Color.GOLD);
+
+    }
+
+    public void setCountdownBronzeInfo(){
+        Pair<Integer, Integer> showCountdown= level.getRemainingBronzeTickGems();
+        countdown.setText("You still have:"+showCountdown.getKey());
+        restGem.setText("needed Gems:"+showCountdown.getValue());
+        countdown.setTextFill(Color.GOLD);
+        restGem.setTextFill(Color.GOLD);
+
+    }
+
+    public void setMedalInfo(){
+        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2]){
+            setCountdownGoldInfo();
+        }
+        else if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1]){
+            setCountdownSilverInfo();
+        }
+
+        else{
+            setCountdownBronzeInfo();
+        }
+    }
+
 }
 
