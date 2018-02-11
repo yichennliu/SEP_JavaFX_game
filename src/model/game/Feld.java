@@ -182,19 +182,19 @@ public class Feld {
      * Make a 3*3 explosion
      *
      * @param rich true to generate GEMs, otherwise EXPLOSIONs
-     * @return true if ME was killed, false otherwise
      */
-    public boolean bam(boolean rich) {
+    public void bam(boolean rich) {
         Collection<Feld> fields = this.getNeighbours();
         fields.add(this);
-        boolean killed = false;
         for (Feld f : fields) {
             if (f.getToken() != Token.EXIT && f.getToken() != Token.WALL) {
-                if (f.isToken(Token.ME)) killed = true;
+                if (f.isToken(Token.ME) && this.getLevel().getWinningStatus() != WinningStatus.WON) {
+                    // ME killed: loose
+                    this.getLevel().setWinningStatus(WinningStatus.LOST);
+                }
                 f.setToken(rich ? Token.GEM : Token.EXPLOSION);
             }
         }
-        return killed;
     }
 
     /**

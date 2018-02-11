@@ -14,8 +14,6 @@ public class MenuController {
     private Controller menuController;
     private ToggleGroup group;
 
-
-
     public MenuController(MenuView menuView, Object model, Controller menuController){
         this.menuView = menuView;
         this.model = model;
@@ -36,29 +34,18 @@ public class MenuController {
 
         menuView.getThemeEditorButton().setOnAction(e -> {
             this.menuController.startThemeEditor();
-        });}
+        });
+    }
 
-     private void chooseLevel(){
+    private void chooseLevel() {
+        List <ToggleButton> levelButtons = menuView.getLevelButtons();
+        ToggleButton level;
 
+        for(int i=0; i<levelButtons.size();i++){
+            level = levelButtons.get(i);
 
-         List <ToggleButton> levelButtons = menuView.getLevelButtons();
-            ToggleButton level ;
-
-         for(int i=0; i<levelButtons.size();i++){
-                level= levelButtons.get(i);
-
-             final String path= (String) level.getUserData();
-
-                 level.setOnAction(e -> {
-                 this.menuController.startLevel(path);
-             });
-
-         }
-
-
-
-
-
-
+            final String path = "src/json/level/" + level.getUserData();
+            level.setOnAction(e -> this.menuController.startLevel(path));
+        }
     }
 }

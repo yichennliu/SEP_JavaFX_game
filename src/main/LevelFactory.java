@@ -101,7 +101,7 @@ public class LevelFactory {
         }
 
         // create level
-        return new Level(name, map, gems, ticks, pre, post, maxslime, globalProperties);
+        return new Level(name, map, gems, ticks, pre, post, maxslime, globalProperties, jsonPath);
     }
 
     /**

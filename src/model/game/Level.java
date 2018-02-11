@@ -20,17 +20,22 @@ public class Level {
     private Integer maxslime;
     /** globale properties: GEMS, TICKS, X, Y, Z */
     private Map<Property, Integer> properties = new HashMap<>();
+    /** Path to this level */
+    private String jsonPath;
     /** Derzeitige Anzahl der Felder mit Schleim */
     public int slimeCount;
     /** vorbereitete Änderungen */
     private Map<Feld, Token> tokensToChange = new HashMap<>();
     /** vorbereitete Änderungen */
     private Map<Feld, Map<Property, Integer>> propertiesToChange = new HashMap<>();
+    /** buffer for control keys */
     private InputDirection inputDirection = null;
+    /** whether the game is ongoing, lost, or won */
+    private WinningStatus winningStatus = WinningStatus.PLAYING;
 
 
     public Level(String name, Feld[][] map, int[] gemGoals, int[] tickGoals, List<Rule> pre, List<Rule> post,
-                 Integer maxslime, Map<Property, Integer> globalProperties) {
+                 Integer maxslime, Map<Property, Integer> globalProperties, String jsonPath) {
         this.name = name;
         this.map = map;
         this.gemGoals = gemGoals;
@@ -39,6 +44,7 @@ public class Level {
         this.post = post;
         this.maxslime = maxslime;
         this.properties = globalProperties;
+        this.jsonPath = jsonPath;
 
         for(int row = 0; row < this.getHeight();  row++){
             for (int column = 0; column < this.getWidth(); column++){
@@ -131,6 +137,19 @@ public class Level {
         this.inputDirection = inputDirection;
     }
 
+    /** get path to json soruce for this level */
+    public String getJsonPath() {
+        return this.jsonPath;
+    }
+
+    public WinningStatus getWinningStatus() {
+        return this.winningStatus;
+    }
+
+    public void setWinningStatus(WinningStatus winningStatus) {
+        this.winningStatus = winningStatus;
+    }
+
     /**
      * @return existing global properties (!= 0)
      */
@@ -219,7 +238,7 @@ public class Level {
         this.propertiesToChange.clear();
     }
 
-    public boolean executeMainRules() {
+    public void executeMainRules() {
         /* Explosionen aus vorigem Tick löschen */
         for (Feld[] row : this.getMap()) {
             for (Feld current : row) {
@@ -275,6 +294,24 @@ public class Level {
                                 }
                                 // bewegen (+graben/einsammeln)
                                 current.moveTo(next);
+                            }
+
+                            // in Ausgang gehen
+                            if (next.isToken(Token.EXIT)) {
+                                System.out.println("Current gems: "+this.getPropertyValue(Property.GEMS));
+                                System.out.println("Current ticks: "+this.getPropertyValue(Property.TICKS));
+                                for (int goalNo = 2; goalNo >= 0; goalNo--) {
+                                    System.out.println("Gem goal "+goalNo+": "+this.getGemGoals()[goalNo]);
+                                    System.out.println("Tick goal "+goalNo+": "+this.getTickGoals()[goalNo]);
+                                    if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[goalNo] &&
+                                        this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[goalNo]) {
+                                            current.moveTo(next);
+                                            this.setWinningStatus(WinningStatus.WON);
+                                            System.out.println("ACHIEVED goal no. "+goalNo);
+                                    } else {
+                                        System.out.println("FAILED goal no. "+goalNo);
+                                    }
+                                }
                             }
 
                             // schieben
@@ -438,17 +475,16 @@ public class Level {
         for (Feld[] row : this.getMap()) {
             for (Feld current : row) {
                 if (current.hasProperty(Property.BAM)) {
-                    return current.bam(false);
+                    current.bam(false);
                 }
                 if (current.hasProperty(Property.BAMRICH)) {
-                    return current.bam(true);
+                    current.bam(true);
                 }
             }
         }
 
         // apply buffer
         this.applyBufferedChanges();
-        return false;
     }
 
     /**
@@ -496,6 +532,11 @@ public class Level {
     public void tick() {
         Integer ticks = this.getPropertyValue(Property.TICKS);
         this.setPropertyValue(Property.TICKS, ticks == null ? 1 : ticks+1);
+
+        //  lose if time ran out
+        if (this.getPropertyValue(Property.TICKS) > this.getTickGoals()[0]) {
+            this.setWinningStatus(WinningStatus.LOST);
+        }
     }
 
     /**
