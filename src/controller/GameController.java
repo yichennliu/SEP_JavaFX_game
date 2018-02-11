@@ -94,9 +94,10 @@ public class GameController {
                 ButtonType save_button = new ButtonType("Save", ButtonBar.ButtonData.OTHER);
                 ButtonType save_exit_button = new ButtonType("Save & Exit", ButtonBar.ButtonData.OTHER);
                 ButtonType exit_button = new ButtonType("Exit", ButtonBar.ButtonData.OTHER);
+                ButtonType retry_button = new ButtonType("Restart level", ButtonBar.ButtonData.OTHER);
                 ButtonType cancel_button = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-                alert.getButtonTypes().setAll(save_button, save_exit_button,exit_button,cancel_button);
+                alert.getButtonTypes().setAll(save_button, save_exit_button,exit_button,retry_button,cancel_button);
 
                 Optional<ButtonType> result = alert.showAndWait();
 
@@ -115,6 +116,10 @@ public class GameController {
 
                 if(result.get() == exit_button) {
                     this.menuController.startPrimaryPage();
+                }
+
+                if (result.get() == retry_button) {
+                    this.menuController.startLevel(level.getJsonPath());
                 }
 
                 if(result.get() == cancel_button){
@@ -144,7 +149,7 @@ public class GameController {
             alert.setHeaderText("You lost. Dont't worry, try again!");
         }
 
-        ButtonType retry_button = new ButtonType("Try again", ButtonBar.ButtonData.OTHER);
+        ButtonType retry_button = new ButtonType("Restart level", ButtonBar.ButtonData.OTHER);
         ButtonType cancel_exit_button = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(retry_button, cancel_exit_button);
@@ -158,7 +163,6 @@ public class GameController {
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if (result.get() == retry_button) {
-                    // FIXME
                     menuControllerLocal.startLevel(levelLOcal.getJsonPath());
                 }
 
