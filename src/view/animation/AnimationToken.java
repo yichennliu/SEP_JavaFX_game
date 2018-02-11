@@ -1,4 +1,4 @@
-package view;
+package view.animation;
 
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
@@ -8,6 +8,7 @@ import model.themeEditor.SpriteSheet;
 public class AnimationToken {
 
     private int index = 0;
+    private int frameIndex = 0;
     private SpriteSheet sheet;
     private Point2D from,to;
     private String name;
@@ -52,7 +53,14 @@ public class AnimationToken {
     }
 
     private boolean tresholdReached(double frac){
-        return (this.sheet.getFpt() % (frac*this.sheet.getFpt()) == 0.0);
+        double fpt =this.sheet.getFpt();
+        int x = (int) (fpt*frac);
+        if (x!=frameIndex){
+            frameIndex = x;
+            return true;
+        }
+        return false;
+
     }
 
     private void increaseIndex(){

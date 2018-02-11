@@ -1,9 +1,13 @@
 package view;
 
-import javafx.animation.Interpolator;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
+import javafx.scene.transform.Translate;
+import model.game.Feld;
+import model.themeEditor.Theme;
+import view.animation.BoardTranslationTransition;
+import view.animation.TokenTransition;
 
 public class Board {
 
@@ -11,37 +15,60 @@ public class Board {
     private Canvas animationCanvas;
     private double fieldSize;
     private TokenTransition animator;
+    private BoardTranslationTransition translationAnimator;
     private Affine transformation;
     private GraphicsContext staticGC;
     private GraphicsContext animationGC;
+    private Feld[][] map;
+    private Theme theme;
 
-    public Board(Canvas staticCanvas, Canvas animationCanvas, double fieldSize){
+    public Board(Canvas staticCanvas, Canvas animationCanvas, Feld[][] map, Theme theme, double fieldSize){
         this.staticCanvas = staticCanvas;
         this.animationCanvas = animationCanvas;
         this.transformation = new Affine();
         this.fieldSize =fieldSize;
+        this.map = map;
+        this.theme = theme;
 
         this.staticGC = staticCanvas.getGraphicsContext2D();
         this.animationGC = animationCanvas.getGraphicsContext2D();
 
         this.animator = new TokenTransition(this.animationGC, this.fieldSize);
+        this.translationAnimator = new BoardTranslationTransition(this);
         animationCanvas.widthProperty().bind(staticCanvas.widthProperty());
         animationCanvas.heightProperty().bind(staticCanvas.heightProperty());
+    }
 
+    public BoardTranslationTransition getTranslationAnimator(){
+        return this.translationAnimator;
     }
 
     public GraphicsContext getStaticGC(){
         return this.staticGC;
     }
 
+    public Theme getTheme() {
+        return theme;
+    }
+
     public void stopAnimation(){
         if(animator!=null)
             animator.stop();
+        if(translationAnimator!=null)
+            translationAnimator.stop();
+    }
+
+    public Feld[][] getMap() {
+        return map;
     }
 
     public void clearBoard(){
        clearGraphicsContext(this.staticGC);
        clearGraphicsContext(this.animationGC);
+    }
+
+    public void clearStaticGC(){
+        clearGraphicsContext(this.staticGC);
     }
 
     private void clearGraphicsContext(GraphicsContext gc){
@@ -52,14 +79,8 @@ public class Board {
         gc.setTransform(transformation);
     }
 
-    public void setAnimator(TokenTransition animator) {
-        this.animator = animator;
-    }
-
     public void resetAnimator(){
-        if(this.animator!=null){
-            this.animator.stop();
-        }
+        stopAnimation();
     }
 
     public TokenTransition getAnimator() {
@@ -68,10 +89,14 @@ public class Board {
 
     public void playAnimation() {
         if (animator != null)
-            animator.setInterpolator(Interpolator.LINEAR);
-            animator.setCycleCount(1);
-            animator.setDuration(1.0/5.0);
             animator.play();
+        if (translationAnimator!=null){
+            translationAnimator.play();
+        }
+    }
+
+    public void translate(Translate translation){
+        translationAnimator.setTranslate(translation);
     }
 
     public double getHeight(){

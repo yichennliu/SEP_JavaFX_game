@@ -16,9 +16,9 @@ import model.enums.Token;
 
 import model.themeEditor.ThemeIO;
 import model.themeEditor.SpriteSheet;
-import view.Cell;
+import view.themeEditor.Cell;
 import model.themeEditor.Theme;
-import view.ThemeEditorView;
+import view.themeEditor.ThemeEditorView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -85,7 +85,8 @@ public class ThemeEditorController {
     }
 
     private void preparePreview(){
-        themeEditorView.getPreview().addEventHandler(MouseEvent.MOUSE_CLICKED, e-> {
+        ImageView preview = themeEditorView.getPreview();
+        preview.setOnMouseClicked( e-> {
             Cell cell = this.themeEditorView.getSelectedItemProperty().get().getValue();
             Theme.Position p = (Theme.Position) this.themeEditorView.getPositionButtonGroup().getSelectedToggle().getUserData();
             Image img = loadImage();
@@ -312,6 +313,15 @@ public class ThemeEditorController {
 
     private void prepareIOButtons(){
         this.themeEditorView.getExportButton().setOnAction( e -> {
+            File file = new File("src/json/theme/"+this.theme.getName()+".zip");
+            System.out.println(theme.getName());
+            if(file.exists()){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Überschreiben?");
+                alert.setHeaderText("Datei existiert bereits");
+                alert.setContentText("Soll die bestehende Datei " +this.theme.getName()+".zip überschrieben werden?");
+
+            }
             ThemeIO.exportTheme(this.theme);
         });
 
