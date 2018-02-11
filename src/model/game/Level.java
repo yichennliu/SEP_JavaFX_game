@@ -431,9 +431,14 @@ public class Level {
                     }
                 }
 
-                /* Explosionen ausführen */
+            }
+        }
+
+        /* Explosionen ausführen */
+        for (Feld[] row : this.getMap()) {
+            for (Feld current : row) {
                 if (current.hasProperty(Property.BAM)) {
-                     return current.bam(false);
+                    return current.bam(false);
                 }
                 if (current.hasProperty(Property.BAMRICH)) {
                     return current.bam(true);
