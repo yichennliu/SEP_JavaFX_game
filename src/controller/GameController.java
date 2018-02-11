@@ -2,19 +2,19 @@ package controller;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.LevelFactory;
 import model.enums.InputDirection;
 import model.enums.Property;
-import model.game.Feld;
+import model.enums.WinningStatus;
 import model.game.Level;
 import view.GameView;
 
@@ -33,9 +33,9 @@ public class GameController {
         this.menuController = menuController;
         this.gameView = gameView;
         this.level = level;
-        addAlertEvent();
-        addDirectionEvents();
-        addGameViewComponents();
+        this.addIngameMenu();
+        this.addDirectionEvents();
+        this.addGameViewComponents();
     }
 
     public void tick() {
@@ -47,13 +47,19 @@ public class GameController {
 
             /* Compute a tick */
             this.level.resetProperties();
-            //killedPre = this.level.executePre();
-            killedMain = this.level.executeMainRules();
-            //killedPost = this.level.executePost();
+            //this.level.executePre();
+            this.level.executeMainRules();
+            //this.level.executePost();
 
             this.level.setInputDirection(null);
             this.gameView.update();
             this.level.tick();
+
+            if (this.level.getWinningStatus() == WinningStatus.WON) {
+                this.endOfGameDialog(true);
+            } else if (this.level.getWinningStatus() == WinningStatus.LOST) {
+                this.endOfGameDialog(false);
+            }
         };
 
         KeyFrame frame = new KeyFrame(Duration.seconds(1.0/5.0),loop);
@@ -73,7 +79,7 @@ public class GameController {
 
     }
 
-    private void addAlertEvent(){
+    private void addIngameMenu(){
         Stage gamestage = this.gameView.getStage();
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if(event.getCode().equals(KeyCode.ESCAPE)) {
@@ -122,6 +128,45 @@ public class GameController {
 
         });
 
+    }
+
+    /**
+     * Show end of game dialog
+     */
+    private void endOfGameDialog(boolean won) {
+        this.timeline.stop();
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(won ? "You won!" : "Game Over");
+        if (won) {
+            alert.setHeaderText("You successfully completed the level \""+this.level.getName()+"\". Hooray!");
+        } else {
+            alert.setHeaderText("You lost. Dont't worry, try again!");
+        }
+
+        ButtonType retry_button = new ButtonType("Try again", ButtonBar.ButtonData.OTHER);
+        ButtonType cancel_exit_button = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(retry_button, cancel_exit_button);
+        Controller menuControllerLocal = this.menuController;
+        Level levelLOcal = this.level;
+
+        // This "runlater" is necessary because alert.showAndWait is not allowed during animation
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.get() == retry_button) {
+                    // FIXME
+                    menuControllerLocal.startLevel(levelLOcal.getJsonPath());
+                }
+
+                if (result.get() == cancel_exit_button) {
+                    menuControllerLocal.startPrimaryPage();
+                }
+            }
+        });
     }
 
     private void addDirectionEvents() {

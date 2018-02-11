@@ -70,9 +70,11 @@ public class Controller {
     }
 
 
-    public void startLevel(String levelPath){
+    public void startLevel (String levelPath){
+        // FIXME: Starting a level is not possible after one was already started/exited
+
         this.currentMode = View.Mode.GAME;
-        Level level = LevelFactory.importLevel("src/json/level/"+levelPath);
+        Level level = LevelFactory.importLevel(levelPath);
 
         if (gameController == null) {
             GameView gameView = new GameView(this.view.getStage(),level);
