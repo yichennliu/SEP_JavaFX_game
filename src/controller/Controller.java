@@ -33,9 +33,9 @@ public class Controller {
 
     }
 
-    public void startMenu(String playerName){
+    public void startMenu(){
         this.currentMode = View.Mode.MENU;
-        MenuView menuView = new MenuView(this.view.getStage(),null,playerName);
+        MenuView menuView = new MenuView(this.view.getStage(),null);
 
         if (menuController == null) {
             menuController = new MenuController(menuView,null,this);

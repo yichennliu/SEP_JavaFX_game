@@ -1,10 +1,10 @@
 package controller;
 
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Button;
 import javafx.scene.control.ToggleGroup;
 import view.MenuView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 
 public class MenuController {
@@ -30,27 +30,30 @@ public class MenuController {
     }
 
     private void addMenuViewComponents() {
-        menuView.getGameButton().setOnAction(e -> {
+      menuView.getContentFrame().getGameButton().setOnAction(e -> {
             this.menuController.startGame();
         });
 
-        menuView.getThemeEditorButton().setOnAction(e -> {
+     menuView.getContentFrame().getThemeEditorButton().setOnAction(e -> {
             this.menuController.startThemeEditor();
-        });}
+        });
+
+        }
 
      private void chooseLevel(){
 
+         ArrayList <Button> levelButtons = menuView.getContentFrame().getListlevelButtons();
+            Button level ;
 
-         List <ToggleButton> levelButtons = menuView.getLevelButtons();
-            ToggleButton level ;
 
          for(int i=0; i<levelButtons.size();i++){
                 level= levelButtons.get(i);
 
              final String path= (String) level.getUserData();
-
+             System.out.println(path);
                  level.setOnAction(e -> {
                  this.menuController.startLevel(path);
+                 System.out.println("sldc");
              });
 
          }
