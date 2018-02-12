@@ -23,16 +23,20 @@ import java.util.Optional;
 
 public class GameController {
 
+    private final Integer startSecond;
     private Controller menuController;
     private GameView gameView;
     private Level level;
     private Timeline timeline;
+    private Integer second;
 
 
     public GameController(Level level, GameView gameView, Controller menuController){
         this.menuController = menuController;
         this.gameView = gameView;
         this.level = level;
+        startSecond= this.level.getTickGoals()[0]/5;
+        this.second = startSecond;
         this.addIngameMenu();
         this.addDirectionEvents();
         this.addGameViewComponents();
@@ -63,20 +67,44 @@ public class GameController {
         };
 
         KeyFrame frame = new KeyFrame(Duration.seconds(1.0/5.0),loop);
+        this.countDown();
         this.timeline = new Timeline(frame);
         this.timeline.setCycleCount(Timeline.INDEFINITE);
         this.timeline.play();
+
+    }
+
+
+    public void countDown(){
+        Label countdownLabel = this.gameView.getCountdownLabel();
+        Timeline time = new Timeline();
+        time.setCycleCount(Timeline.INDEFINITE);
+            if(time != null) {
+                time.stop();
+            }
+
+        KeyFrame frame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                second --;
+                countdownLabel.setText("Time Left: "+ second.toString());
+
+                if(second <= 0){
+                    time.stop();
+                }
+
+
+            }
+        });
+
+        time.getKeyFrames().add(frame);
+        time.playFromStart();
+
     }
 
 
     public GameView getGameView() {
         return gameView;
-    }
-
-    public void setGameView(GameView gameView) {
-        this.gameView = gameView;
-        addGameViewComponents();
-
     }
 
     private void addIngameMenu(){
