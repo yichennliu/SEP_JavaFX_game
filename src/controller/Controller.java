@@ -71,6 +71,7 @@ public class Controller {
 
         this.view.update(View.Mode.GAME, gameController.getGameView());
         gameController.tick();
+
     }
 
 }

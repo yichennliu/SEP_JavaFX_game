@@ -23,11 +23,12 @@ import java.util.Optional;
 
 public class GameController {
 
-    private final Integer startSecond;
     private Controller menuController;
     private GameView gameView;
     private Level level;
     private Timeline timeline;
+    private Timeline timer;
+    private final Integer startSecond;
     private Integer second;
 
 
@@ -40,6 +41,7 @@ public class GameController {
         this.addIngameMenu();
         this.addDirectionEvents();
         this.addGameViewComponents();
+        this.countDown();
     }
 
     public void tick() {
@@ -64,43 +66,43 @@ public class GameController {
             } else if (this.level.getWinningStatus() == WinningStatus.LOST) {
                 this.endOfGameDialog(false);
             }
+
         };
 
         KeyFrame frame = new KeyFrame(Duration.seconds(1.0/5.0),loop);
-        this.countDown();
         this.timeline = new Timeline(frame);
         this.timeline.setCycleCount(Timeline.INDEFINITE);
         this.timeline.play();
 
     }
 
-
-    public void countDown(){
-        Label countdownLabel = this.gameView.getCountdownLabel();
-        Timeline time = new Timeline();
-        time.setCycleCount(Timeline.INDEFINITE);
-            if(time != null) {
-                time.stop();
-            }
-
-        KeyFrame frame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+    public void countDown() {
+        Label countDownLabel = this.gameView.updateTimerLabel();
+        this.timer = new Timeline();
+        timer.setCycleCount(Timeline.INDEFINITE);
+        if (timer != null) {
+            timer.stop();
+        }
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                second --;
-                countdownLabel.setText("Time Left: "+ second.toString());
+                second--;
+                countDownLabel.setText("Time Left: " + second.toString());
 
-                if(second <= 0){
-                    time.stop();
+                if (second <= 0) {
+                    timer.stop();
+                    }
+
+                if (second <= 10) {
+                    countDownLabel.setTextFill(javafx.scene.paint.Color.YELLOW);
+                    }
+
                 }
+            });
 
-
-            }
-        });
-
-        time.getKeyFrames().add(frame);
-        time.playFromStart();
-
-    }
+            timer.getKeyFrames().add(keyFrame);
+            timer.playFromStart();
+        }
 
 
     public GameView getGameView() {
@@ -113,6 +115,7 @@ public class GameController {
             if(event.getCode().equals(KeyCode.ESCAPE)) {
                 if (timeline != null) {
                     timeline.stop();
+                    timer.stop();
                 }
 
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -168,6 +171,7 @@ public class GameController {
      */
     private void endOfGameDialog(boolean won) {
         this.timeline.stop();
+        this.timer.stop();
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(won ? "You won!" : "Game Over");

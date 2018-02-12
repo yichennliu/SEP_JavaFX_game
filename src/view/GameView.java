@@ -1,6 +1,7 @@
 package view;
 
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -36,7 +37,7 @@ public class GameView {
     private Board board;
 
     private HBox  timeRewardInfo;
-    private Label countdown;
+    private Label timer;
     private Label restGem;
     private Label currentGems;
     private Label currentMedal;
@@ -68,13 +69,13 @@ public class GameView {
 
         this.timeRewardInfo = new HBox(10);
         this.currentGems = new Label();
-        this.countdown = new Label();
+        this.timer = new Label();
         this.restGem = new Label();
         this.currentMedal = new Label();
         setHboxStyle();
         showMedalInfo();
         showCollectedGems();
-        timeRewardInfo.getChildren().addAll(countdown, currentGems, restGem, currentMedal);
+        timeRewardInfo.getChildren().addAll(timer, currentGems, currentMedal, restGem);
         root.getChildren().addAll(timeRewardInfo);
         this.board = new Board(staticCanvas,animatedCanvas, level.getMap(),theme,fieldSize);
 
@@ -173,12 +174,18 @@ public class GameView {
 
     public void setHboxStyle(){
         this.timeRewardInfo.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 1;"
-                + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: #6699ff;"
-                + "-fx-background-color: #627e89;");
+                + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: brown;"
+                + "-fx-background-color: brown;");
+
+        this.timeRewardInfo.setSpacing(20);
+        this.timeRewardInfo.setAlignment(Pos.CENTER);
+        this.timeRewardInfo.toFront();
+        this.timeRewardInfo.setPrefHeight(50);
+        this.timeRewardInfo.setPrefWidth(width);
     }
 
-    public Label getCountdownLabel(){
-        return this.countdown;
+    public Label updateTimerLabel(){
+        return this.timer;
     }
 
     public void showCollectedGems(){
@@ -186,38 +193,41 @@ public class GameView {
         currentGems.setText("Gems got: "+ result);
     }
 
-    public void setCountdownGoldInfo() {
+    public void setCountToGoldInfo() {
         Pair<Integer, Integer> showInfo = level.getRemainingGoldTicksGems();
-        restGem.setText("Needed Gems to Gold:"+showInfo.getValue());
+        restGem.setText("Needed Gems to Gold: "+showInfo.getValue());
 
     }
 
-    public void setCountdownSilverInfo(){
+    public void setCountToSilverInfo(){
         Pair<Integer, Integer> showInfo= level.getRemainingSilverTickGems();
-        restGem.setText("Needed Gems to Silver:"+showInfo.getValue());
+        restGem.setText("Needed Gems to Silver :"+showInfo.getValue());
 
     }
 
-    public void setCountdownBronzeInfo(){
+    public void setCountToBronzeInfo(){
         Pair<Integer, Integer> showInfo= level.getRemainingBronzeTickGems();
-        restGem.setText("Needed Gems to Bronze:"+showInfo.getValue());
+        restGem.setText("Needed Gems to Bronze: "+showInfo.getValue());
 
     }
 
     public void showMedalInfo(){
-        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2]){
-            setCountdownGoldInfo();
-            currentMedal.setText("Current Medal: Silver");
-
-        }
-        else if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1]){
-            setCountdownSilverInfo();
+        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[0]){
+            setCountToSilverInfo();
             currentMedal.setText("Current Medal: Bronze");
 
         }
+        else if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1]){
+            setCountToGoldInfo();
+            currentMedal.setText("Current Medal: Silver");
+        }
+
+        else if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2]){
+            currentMedal.setText("You've got Gold!");
+        }
 
         else{
-            setCountdownBronzeInfo();
+            setCountToBronzeInfo();
             currentMedal.setText("No medal :(");
         }
     }
