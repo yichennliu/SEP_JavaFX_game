@@ -27,12 +27,12 @@ public class LevelSnapshot {
         canvas2.setHeight(canvas.getHeight());
         canvas2.setWidth(canvas.getWidth());
 
-        Board board = new Board(canvas,canvas2,fieldSize);
+        Board board = new Board(canvas,canvas2, level.getMap(),theme,fieldSize);
         root.getChildren().addAll(canvas,canvas2);
         Stage tempStage = new Stage();
         Scene tempScene = new Scene(root);
 
-        View.drawBoard(board,level.getMap(),theme);
+        View.drawBoard(board,level.getMap(),theme,false);
 
        return canvas.snapshot(null,new WritableImage(width*fieldSize,height*fieldSize));
     }

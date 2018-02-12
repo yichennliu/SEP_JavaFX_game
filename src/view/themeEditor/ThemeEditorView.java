@@ -1,4 +1,4 @@
-package view;
+package view.themeEditor;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
@@ -19,7 +19,6 @@ import model.themeEditor.Theme.FeldType;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 
 public class ThemeEditorView {
 private Theme theme;
@@ -28,7 +27,7 @@ private Stage stage;
 private Scene sceneThemeView;
 private Canvas themeCanvas;
 private GraphicsContext themeGC;
-private TreeView<Cell> treeView; // + selected ItemProperty
+private TreeView<view.themeEditor.Cell> treeView; // + selected ItemProperty
 private ImageView preview; // +
 private ToggleGroup positionButtonGroup;  // + positionButtonGroup.selectedToggleProperty()
 private Button nextFrame; //+
@@ -58,21 +57,21 @@ private String stylesheet;
 
 
         /* TreeView */
-        TreeItem<Cell> treeRoot = new TreeItem<Cell> (null);
+        TreeItem<view.themeEditor.Cell> treeRoot = new TreeItem<view.themeEditor.Cell> (null);
         treeRoot.setExpanded(true);
 
         for(Token t : Token.values()){
-            TreeItem<Cell> tokenItem = new TreeItem<Cell>(new Cell(t));
+            TreeItem<view.themeEditor.Cell> tokenItem = new TreeItem<view.themeEditor.Cell>(new view.themeEditor.Cell(t));
             for(FeldType f : FeldType.values()){
                 if(f.isMovable()==t.isMovable()){
-                    TreeItem<Cell> feldTypeItem = new TreeItem<Cell>(new Cell(t,f));
+                    TreeItem<view.themeEditor.Cell> feldTypeItem = new TreeItem<view.themeEditor.Cell>(new view.themeEditor.Cell(t,f));
                     tokenItem.getChildren().add(feldTypeItem);
                 }
             }
             treeRoot.getChildren().add(tokenItem);
         }
 
-        treeView = new TreeView<Cell>(treeRoot);
+        treeView = new TreeView<view.themeEditor.Cell>(treeRoot);
         treeView.setShowRoot(false);
 
         /* Positioncontainer */
@@ -231,8 +230,6 @@ private String stylesheet;
     public TextField getFrameNumberField() {
         return frameNumberField;
     }
-
-
 
     public void setTheme(Theme theme){
         this.theme = theme;

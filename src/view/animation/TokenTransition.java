@@ -1,15 +1,13 @@
-package view;
+package view.animation;
 
+import javafx.animation.Interpolator;
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.util.Duration;
-import model.game.Feld;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +44,9 @@ public class TokenTransition extends javafx.animation.Transition {
         this.fieldSize = fieldSize;
         this.tokenMap = new HashMap<>();
         this.active = true;
+        setInterpolator(Interpolator.LINEAR);
+        setCycleCount(1);
+        setDuration(1.0/5.0);
     }
 
     public void setDuration(double seconds){

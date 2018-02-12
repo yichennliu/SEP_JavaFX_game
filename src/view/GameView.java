@@ -1,15 +1,20 @@
 package view;
 
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import model.enums.Property;
 import model.game.Feld;
 import model.game.Level;
 import model.themeEditor.Theme;
@@ -31,6 +36,11 @@ public class GameView {
     private double fieldSize = 60.0;
     private Board board;
 
+    private HBox  timeRewardInfo;
+    private Label timer;
+    private Label restGem;
+    private Label currentGems;
+    private Label currentMedal;
 
     public GraphicsContext getGameGC() {
         return gameGC;
@@ -49,15 +59,28 @@ public class GameView {
         staticCanvas = new Canvas(width,height-40);
         Canvas animatedCanvas = new Canvas(staticCanvas.getWidth(),staticCanvas.getHeight());
         gameGC = staticCanvas.getGraphicsContext2D();
-        this.board = new Board(staticCanvas,animatedCanvas,fieldSize);
+        //this.board = new Board(staticCanvas,animatedCanvas,fieldSize);
 
         Group canvasGroup = new Group(staticCanvas,animatedCanvas);
 
         root.getChildren().addAll(canvasGroup);
         stage.setTitle("BoulderDash - " + this.level.getName());
-        this.update();
         this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
-//        setInitialZoom();
+
+        this.timeRewardInfo = new HBox(10);
+        this.currentGems = new Label();
+        this.timer = new Label();
+        this.restGem = new Label();
+        this.currentMedal = new Label();
+        setHboxStyle();
+        showMedalInfo();
+        showCollectedGems();
+        timeRewardInfo.getChildren().addAll(timer, currentGems, currentMedal, restGem);
+        root.getChildren().addAll(timeRewardInfo);
+        this.board = new Board(staticCanvas,animatedCanvas, level.getMap(),theme,fieldSize);
+
+        this.update();
+
         if(!stage.isShowing()) stage.show();
     }
 
@@ -76,7 +99,10 @@ public class GameView {
 
     public void update(){
         scrollToMe();
-        View.drawBoard(this.board,level.getMap(),this.theme);
+        board.stopAnimation();
+        View.drawBoard(this.board,level.getMap(),this.theme,true);
+        showCollectedGems();
+        showMedalInfo();
 
     }
 
@@ -109,8 +135,11 @@ public class GameView {
             newTranslateY = canvasHeight*0.8 - meOnCanvasY;
         }
 
-        transformation.prepend(new Translate(newTranslateX,newTranslateY));
-        this.board.applyTransformation(transformation);
+        if(newTranslateX!=0.0 || newTranslateY!=0.0){
+            this.board.translate(new Translate(newTranslateX,newTranslateY));
+            System.out.println("TranslatioN!");
+        }
+
     }
 
     /*gets a relative coordinate based on given input and affine transformation parameters*/
@@ -142,5 +171,66 @@ public class GameView {
         transformation.append(new Rotate(i,levelWidth*fieldSize/2,levelHeight*fieldSize/2))  ;
         this.board.applyTransformation(transformation);
     }
+
+    public void setHboxStyle(){
+        this.timeRewardInfo.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 1;"
+                + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: brown;"
+                + "-fx-background-color: brown;");
+
+        this.timeRewardInfo.setSpacing(20);
+        this.timeRewardInfo.setAlignment(Pos.CENTER);
+        this.timeRewardInfo.toFront();
+        this.timeRewardInfo.setPrefHeight(50);
+        this.timeRewardInfo.setPrefWidth(width);
+    }
+
+    public Label updateTimerLabel(){
+        return this.timer;
+    }
+
+    public void showCollectedGems(){
+        int result= this.level.getPropertyValue(Property.GEMS);
+        currentGems.setText("Gems got: "+ result);
+    }
+
+    public void setCountToGoldInfo() {
+        Pair<Integer, Integer> showInfo = level.getRemainingGoldTicksGems();
+        restGem.setText("Needed Gems to Gold: "+showInfo.getValue());
+
+    }
+
+    public void setCountToSilverInfo(){
+        Pair<Integer, Integer> showInfo= level.getRemainingSilverTickGems();
+        restGem.setText("Needed Gems to Silver :"+showInfo.getValue());
+
+    }
+
+    public void setCountToBronzeInfo(){
+        Pair<Integer, Integer> showInfo= level.getRemainingBronzeTickGems();
+        restGem.setText("Needed Gems to Bronze: "+showInfo.getValue());
+
+    }
+
+    public void showMedalInfo(){
+        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[0]){
+            setCountToSilverInfo();
+            currentMedal.setText("Current Medal: Bronze");
+
+        }
+        else if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1]){
+            setCountToGoldInfo();
+            currentMedal.setText("Current Medal: Silver");
+        }
+
+        else if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2]){
+            currentMedal.setText("You've got Gold!");
+        }
+
+        else{
+            setCountToBronzeInfo();
+            currentMedal.setText("No medal :(");
+        }
+    }
+
 }
 

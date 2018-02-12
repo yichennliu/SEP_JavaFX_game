@@ -52,7 +52,6 @@ public class MenuView {
         this.helpButton = new Button("H E L P");
         this.showName = new Label("W I L L K O M M E N " + this.playerName);
         this.levelButtons = new ArrayList<>();
-        Image levelImage1 = new Image(getClass().getResourceAsStream("level2.gif"));
         group = new ToggleGroup();
         HBox menuHbox = new HBox(10);
         for (String path : scanLevelDirectory()) {

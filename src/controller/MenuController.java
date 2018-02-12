@@ -14,8 +14,6 @@ public class MenuController {
     private Controller menuController;
     private ToggleGroup group;
 
-
-
     public MenuController(MenuView menuView, Object model, Controller menuController){
         this.menuView = menuView;
         this.model = model;
