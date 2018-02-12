@@ -137,6 +137,7 @@ public class GameController {
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
+                        timer.playFromStart();
                     }
                 }
 
@@ -157,6 +158,7 @@ public class GameController {
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
+                        timer.playFromStart();
                     }
                 }
 

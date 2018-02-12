@@ -31,7 +31,6 @@ public class Controller {
         }
 
         this.view.update(View.Mode.PRIMARY,primaryPage);
-
     }
 
     public void startMenu(String playerName){
