@@ -19,7 +19,6 @@ import java.io.File;
 
 public class GameView {
 
-    private GraphicsContext gameGC;
     private Canvas staticCanvas;
     private Scene sceneGame;
     private Stage stage;
@@ -30,11 +29,6 @@ public class GameView {
     private String stylesheet;
     private double fieldSize = 60.0;
     private Board board;
-
-
-    public GraphicsContext getGameGC() {
-        return gameGC;
-    }
 
     public GameView(Stage stage, Level level){
         root = new Group();
@@ -48,13 +42,18 @@ public class GameView {
         sceneGame.getStylesheets().add(stylesheet);
         staticCanvas = new Canvas(width,height-40);
         Canvas animatedCanvas = new Canvas(staticCanvas.getWidth(),staticCanvas.getHeight());
-        gameGC = staticCanvas.getGraphicsContext2D();
 
         Group canvasGroup = new Group(staticCanvas,animatedCanvas);
 
         root.getChildren().addAll(canvasGroup);
         stage.setTitle("BoulderDash - " + this.level.getName());
-        this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+        try {
+            this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+        }
+        catch(Exception e){
+            System.out.println("Theme-Import-Fail: " + e.getMessage());
+        }
+
         this.board = new Board(staticCanvas,animatedCanvas, level.getMap(),theme,fieldSize);
 
         this.update();
@@ -90,8 +89,8 @@ public class GameView {
         double canvasWidth = board.getWidth();
         double newTranslateX= 0;
         double newTranslateY = 0;
-        double relativeMeX = meFeld.getColumn()*fieldSize + 0.5 * fieldSize;
-        double relativeMeY = meFeld.getRow()*fieldSize + 0.5 * fieldSize;
+        double relativeMeX = meFeld.getColumn()*fieldSize;
+        double relativeMeY = meFeld.getRow()*fieldSize;
         Affine transformation = this.board.getTransformation();
         Point2D meOnCanvas =  transformation.transform(relativeMeX,relativeMeY);
 
@@ -113,7 +112,6 @@ public class GameView {
 
         if(newTranslateX!=0.0 || newTranslateY!=0.0){
             this.board.translate(new Translate(newTranslateX,newTranslateY));
-            System.out.println("TranslatioN!");
         }
 
 

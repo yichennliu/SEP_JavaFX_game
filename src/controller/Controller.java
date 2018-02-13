@@ -38,11 +38,8 @@ public class Controller {
         this.currentMode = View.Mode.MENU;
         MenuView menuView = new MenuView(this.view.getStage(),null,playerName);
 
-        if (menuController == null) {
-            menuController = new MenuController(menuView,null,this);
-        } else {
-            menuController.setMenuView(menuView);
-        }
+        menuController = new MenuController(menuView,null,this);
+        menuController.setMenuView(menuView);
 
         this.view.update(View.Mode.MENU,menuView);
 

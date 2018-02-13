@@ -120,17 +120,17 @@ public class ThemeIO {
     }
 
     /*imports theme or null if theme-File does not exist */
-    public static Theme importTheme(String path){
+    public static Theme importTheme(String path) throws Exception{
         File themeFile = new File(path);
         if(themeFile.exists()){
             return importTheme(themeFile);
         }
-        return null;
+        throw new Exception("Datei nicht vorhanden");
     }
 
     /*imports theme or null if theme-File does not exist */
-    public static Theme importTheme(File path){
-        if (!path.exists()) return null;
+    public static Theme importTheme(File path) throws Exception{
+        if (!path.exists()) throw new Exception("Datei nicht vorhanden");
         try {
             ZipFile file = new ZipFile(path);
             Map<String,Image> imageMap = new HashMap<String, Image>();
@@ -154,13 +154,13 @@ public class ThemeIO {
 
         }
         catch(IOException ioException){
-            ioException.printStackTrace();
+           throw new Exception("Fehler beim Import");
         }
-        return null;
+        throw new Exception("Fehler beim Import");
     }
 
     /*returns Theme-Object or, if parsing fails, null*/
-    private static Theme parseJSONToTheme(JSONObject themeObj, Map<String,Image> imageMap){
+    private static Theme parseJSONToTheme(JSONObject themeObj, Map<String,Image> imageMap) throws Exception{
         String name = themeObj.getString("name");
         JSONArray sprites = themeObj.getJSONArray("sprites");
         Theme theme = new Theme(name);
@@ -192,7 +192,7 @@ public class ThemeIO {
                                 theme.putSpriteSheet(t,f,p,spriteSheet);
                             }
                             catch(IllegalArgumentException e){
-                                System.out.println("WAAAAS?");
+                               throw new Exception("Fehler beim Lesen der Datei");
                             }
 
                         }
