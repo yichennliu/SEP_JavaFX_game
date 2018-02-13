@@ -6,6 +6,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,8 @@ public class MenuView {
     private List<ToggleButton> levelButtons;
     private BorderPane root;
     private  ContentFrame contentFrame;
+
+
 
     public MenuView(Stage stage, Object model) {
 
@@ -35,19 +38,11 @@ public class MenuView {
         root.getChildren().addAll(Vmenu);
 
         if (!stage.isShowing()) stage.show();
-       stylesheet = PrimaryPage.fileToStylesheetString(new File("src/view/style.css"));
+        stylesheet = fileToStylesheetString(new File("src/view/style.css"));
        sceneMenu.getStylesheets().add(stylesheet);
 
 
-
     }
-
-    private String[] scanLevelDirectory() {
-        File dir = new File("src/json/level");
-        return dir.list();
-    }
-
-
 
     public Scene getSceneMenu() {
         return this.sceneMenu;
@@ -57,6 +52,22 @@ public class MenuView {
     public ContentFrame getContentFrame() {
         return contentFrame;
     }
+
+
+
+    public static String fileToStylesheetString(File stylesheet) {
+        try {
+            return stylesheet.toURI().toURL().toString();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+    }
+
+
 
 
 

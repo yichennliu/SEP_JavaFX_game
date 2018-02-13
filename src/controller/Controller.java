@@ -9,7 +9,7 @@ public class Controller {
     private View view;
     private View.Mode currentMode;
 
-    private PrimaryController primaryController;
+
     private MenuController menuController;
     private ThemeEditorController themeEditorController;
     private GameController gameController;
@@ -25,19 +25,6 @@ public class Controller {
 
 
 
-    }
-
-    public void startPrimaryPage(){
-        this.currentMode = View.Mode.PRIMARY;
-        PrimaryPage primaryPage = new PrimaryPage(this.view.getStage());
-
-        if (primaryController == null) {
-            primaryController = new PrimaryController(primaryPage,this);
-        } else {
-            primaryController.setPrimaryPage(primaryPage);
-        }
-
-        this.view.update(View.Mode.PRIMARY,primaryPage);
     }
 
     public void startMenu(){

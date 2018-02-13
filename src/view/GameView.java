@@ -55,7 +55,7 @@ public class GameView {
         this.width = stage.getWidth();
         this.height = stage.getHeight();
         this.level = level;
-        stylesheet= PrimaryPage.fileToStylesheetString(new File("src/view/style.css"));
+        stylesheet= MenuView.fileToStylesheetString(new File("src/view/style.css"));
         sceneGame.getStylesheets().add(stylesheet);
         staticCanvas = new Canvas(width,height-40);
         Canvas animatedCanvas = new Canvas(staticCanvas.getWidth(),staticCanvas.getHeight());

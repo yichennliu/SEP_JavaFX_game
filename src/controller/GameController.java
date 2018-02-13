@@ -148,11 +148,11 @@ public class GameController {
 
                 if (result.get() == save_exit_button){
                     this.saveGame();
-                    this.menuController.startPrimaryPage();
+                    this.menuController.startMenu();
                 }
 
                 if(result.get() == exit_button) {
-                    this.menuController.startPrimaryPage();
+                    this.menuController.startMenu();
                 }
 
                 if (result.get() == retry_button) {
