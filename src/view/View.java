@@ -37,6 +37,7 @@ public class View {
         this.stage.setWidth(windowWidth);
         this.stage.setHeight(windowHeight);
         this.stage.centerOnScreen();
+        this.stage.setMaximized(true);
     }
 
     private void showMenu(){
