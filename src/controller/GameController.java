@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.LevelFactory;
@@ -88,13 +89,14 @@ public class GameController {
             public void handle(ActionEvent event) {
                 second--;
                 countDownLabel.setText("Time Left: " + second.toString());
+                countDownLabel.setTextFill(Color.WHITE);
 
                 if (second <= 0) {
                     timer.stop();
                     }
 
                 if (second <= 10) {
-                    countDownLabel.setTextFill(javafx.scene.paint.Color.YELLOW);
+                    countDownLabel.setTextFill(Color.RED);
                     }
 
                 }
@@ -108,6 +110,7 @@ public class GameController {
     public GameView getGameView() {
         return gameView;
     }
+
 
     private void addIngameMenu(){
         Stage gamestage = this.gameView.getStage();
@@ -138,6 +141,7 @@ public class GameController {
                     if (timeline != null) {
                         timeline.play();
                         timer.playFromStart();
+
                     }
                 }
 

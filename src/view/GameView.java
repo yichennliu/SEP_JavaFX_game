@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -174,8 +175,8 @@ public class GameView {
 
     public void setHboxStyle(){
         this.timeRewardInfo.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 1;"
-                + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: brown;"
-                + "-fx-background-color: brown;");
+                + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: black;"
+                + "-fx-background-color: black;");
 
         this.timeRewardInfo.setSpacing(20);
         this.timeRewardInfo.setAlignment(Pos.CENTER);
@@ -191,44 +192,51 @@ public class GameView {
     public void showCollectedGems(){
         int result= this.level.getPropertyValue(Property.GEMS);
         currentGems.setText("Gems got: "+ result);
+        currentGems.setTextFill(Color.WHITE);
     }
 
     public void setCountToGoldInfo() {
         Pair<Integer, Integer> showInfo = level.getRemainingGoldTicksGems();
         restGem.setText("Needed Gems to Gold: "+showInfo.getValue());
+        restGem.setTextFill(Color.WHITE);
 
     }
 
     public void setCountToSilverInfo(){
         Pair<Integer, Integer> showInfo= level.getRemainingSilverTickGems();
         restGem.setText("Needed Gems to Silver :"+showInfo.getValue());
+        restGem.setTextFill(Color.WHITE);
 
     }
 
     public void setCountToBronzeInfo(){
         Pair<Integer, Integer> showInfo= level.getRemainingBronzeTickGems();
         restGem.setText("Needed Gems to Bronze: "+showInfo.getValue());
-
+        restGem.setTextFill(Color.WHITE);
     }
 
     public void showMedalInfo(){
         if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[0]){
             setCountToSilverInfo();
             currentMedal.setText("Current Medal: Bronze");
+            currentMedal.setTextFill(Color.WHITE);
 
         }
         else if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1]){
             setCountToGoldInfo();
             currentMedal.setText("Current Medal: Silver");
+            currentMedal.setTextFill(Color.WHITE);
         }
 
         else if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2]){
             currentMedal.setText("You've got Gold!");
+            currentMedal.setTextFill(Color.WHITE);
         }
 
         else{
             setCountToBronzeInfo();
             currentMedal.setText("No medal :(");
+            currentMedal.setTextFill(Color.WHITE);
         }
     }
 

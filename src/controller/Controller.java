@@ -14,11 +14,20 @@ public class Controller {
     private ThemeEditorController themeEditorController;
     private GameController gameController;
 
+
+
     public Controller(View view, Object menuModel) { // Todo: MenuModel
         this.view = view;
         this.currentMode = View.Mode.GAME;
+
       }
 
+    public void start(View.Mode mode){
+        this.currentMode = mode;
+
+
+
+    }
 
     public void startPrimaryPage(){
         this.currentMode = View.Mode.PRIMARY;
@@ -61,6 +70,7 @@ public class Controller {
     public void startGame(){
         this.startLevel("json/level/text.json");
     }
+
 
     public void startLevel(String levelPath){
         this.currentMode = View.Mode.GAME;
