@@ -75,6 +75,7 @@ public class View {
                 break;
 
             case GAME:
+
                     showGame();
 //                    Canvas gameCanvas = gameScene.getCanvas();
 //                    drawBoard(gameCanvas,gameCanvas.getGraphicsContext2D());

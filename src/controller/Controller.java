@@ -14,8 +14,6 @@ public class Controller {
     private ThemeEditorController themeEditorController;
     private GameController gameController;
 
-
-
     public Controller(View view, Object menuModel) { // Todo: MenuModel
         this.view = view;
         this.currentMode = View.Mode.GAME;
@@ -49,6 +47,7 @@ public class Controller {
         if (menuController == null) {
             menuController = new MenuController(menuView,null,this);
         } else {
+
             menuController.setMenuView(menuView);
         }
 

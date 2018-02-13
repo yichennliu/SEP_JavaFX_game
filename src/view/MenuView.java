@@ -20,8 +20,6 @@ public class MenuView {
     private BorderPane root;
     private  ContentFrame contentFrame;
 
-
-
     public MenuView(Stage stage, Object model) {
 
         this.stage = stage;
@@ -59,12 +57,6 @@ public class MenuView {
     public ContentFrame getContentFrame() {
         return contentFrame;
     }
-
-
-
-
-
-
 
 
 
