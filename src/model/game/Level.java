@@ -26,6 +26,8 @@ public class Level {
     /** vorbereitete Änderungen */
     private Map<Feld, Map<Property, Integer>> propertiesToChange = new HashMap<>();
     private InputDirection inputDirection = null;
+    private boolean alive;
+
 
 
     public Level(String name, Feld[][] map, int[] gemGoals, int[] tickGoals, List<Rule> pre, List<Rule> post, Integer maxslime) {
@@ -410,6 +412,18 @@ public class Level {
 
         // apply main rules
         this.applyBufferedChanges();
+    }
+
+    public void execPreRules(){
+       for(Rule rule: pre){
+           rule.execute(this.map,this.inputDirection);
+       }
+    }
+
+    public void execPostRules(){
+        for(Rule rule: post){
+            rule.execute(this.map,this.inputDirection);
+        }
     }
 
 }

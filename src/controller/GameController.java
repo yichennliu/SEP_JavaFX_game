@@ -72,9 +72,9 @@ public class GameController {
 
         EventHandler<ActionEvent> loop = e -> {
             /* Compute a tick */
-            //this.level.executePre();
+            this.level.execPreRules();
             this.level.executeMainRules();
-            //this.level.executePost();
+            this.level.execPostRules();
             this.gameView.update();
             //this.level.tick();
             this.level.setInputDirection(null);

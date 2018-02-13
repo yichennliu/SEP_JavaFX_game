@@ -45,7 +45,7 @@ public class Controller {
     public void startGame(){
         this.currentMode = View.Mode.GAME;
 
-        Level level = LevelImporter.importLevel("json/level/text.json") ;
+        Level level = LevelImporter.importLevel("json/level/spiegelgeist.json") ;
         GameView gameView = new GameView(this.view.getStage(),level);
         new GameController(level,gameView,this);
         this.view.update(View.Mode.GAME,gameView);
