@@ -41,15 +41,7 @@ public class MenuView {
        sceneMenu.getStylesheets().add(stylesheet);
 
 
-
     }
-
-    private String[] scanLevelDirectory() {
-        File dir = new File("src/json/level");
-        return dir.list();
-    }
-
-
 
     public Scene getSceneMenu() {
         return this.sceneMenu;

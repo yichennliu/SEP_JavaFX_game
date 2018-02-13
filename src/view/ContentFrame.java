@@ -44,18 +44,19 @@ public  class ContentFrame extends StackPane {
 
 
     public ContentFrame() {
-        this.gameButton = createContent("Start game ");
-        this.helpButton = createContent("Help ");
-        this.themeEditorButton = createContent("Start theme editor ");
+        this.gameButton = createContent("S T A R T");
+        this.helpButton = createContent("L E V E L S   ");
+        this.themeEditorButton = createContent("T H E M E ");
         gameButton.setMinSize(Button.USE_PREF_SIZE, Button.USE_PREF_SIZE);
          setAlignment(Pos.CENTER);
         VBox vbButtons = new VBox(gameButton,helpButton,themeEditorButton);
-        vbButtons.setStyle("-fx-background-color: #0ABFCF;" +
+        vbButtons.setStyle("-fx-background-color: #020d1e;" +
                 "    -fx-padding: 100;\n" +
                 "    -fx-spacing: 10;");
         vbButtons.setMinHeight(600);
         this.scene= new Scene(vbButtons);
         this.listlevelButtons = new ArrayList<Button>();
+        menuBox = createLevelMenuItems();
 
         helpButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
@@ -65,12 +66,11 @@ public  class ContentFrame extends StackPane {
                 scroll.setTranslateX(400);
                 scroll.setTranslateY(0);
                 scroll.setMinSize(500,600);
-               getChildren().addAll(scroll);
+                getListlevelButtons();
+                getChildren().addAll(scroll);
 
             }
         });
-
-
 
         getChildren().addAll(vbButtons);
     }
@@ -124,7 +124,7 @@ public  class ContentFrame extends StackPane {
 
 
     public ArrayList getListlevelButtons() {
-   System.out.println(listlevelButtons);
+   System.out.println(listlevelButtons.size());
         return listlevelButtons;
     }
 
@@ -155,7 +155,7 @@ public  class ContentFrame extends StackPane {
         setOnActivate(() -> System.out.println(menuItemName + " aktiv geworden"));
         levelButton.setUserData(menuItemName);
         listlevelButtons.add(levelButton);
-        System.out.println();
+      //  System.out.println(listlevelButtons);
 
     }
 
@@ -213,7 +213,7 @@ public  class ContentFrame extends StackPane {
         for (String path : scanLevelDirectory()) {
             Image snapshot = LevelSnapshot.snap(ThemeIO.importTheme("src/json/theme/testTheme.zip"), LevelFactory.importLevel("src/json/level/"+path));
             ImageView snapshotview =  new ImageView(snapshot);
-            menuBox.getChildren().add( 0, new LevelItem( path,"laksdj",snapshotview));
+            menuBox.getChildren().add( 0, new LevelItem( path,"laksdKJj",snapshotview));
             snapshotview.setFitWidth(100);
             snapshotview.setFitHeight(100);
             getMenuItem(0).setActive(true);
