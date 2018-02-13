@@ -6,6 +6,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class MenuView {
         root.getChildren().addAll(Vmenu);
 
         if (!stage.isShowing()) stage.show();
-       stylesheet = PrimaryPage.fileToStylesheetString(new File("src/view/style.css"));
+        stylesheet = fileToStylesheetString(new File("src/view/style.css"));
        sceneMenu.getStylesheets().add(stylesheet);
 
 
@@ -54,7 +55,17 @@ public class MenuView {
 
 
 
+    public static String fileToStylesheetString(File stylesheet) {
+        try {
+            return stylesheet.toURI().toURL().toString();
 
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+    }
 
 
 

@@ -58,21 +58,12 @@ public class View {
         stage.setScene(themeEditorView.getScene());
     }
 
-    private void showPrimary(){
 
-        PrimaryPage primaryPage= (PrimaryPage) currentScene;
-        stage.setScene(primaryPage.getScene());
-
-    }
 
 
     public void update(Mode mode, Object scene) {
         this.currentScene = scene;
         switch (mode) {
-            case PRIMARY:
-                showPrimary();
-
-                break;
 
             case GAME:
                     showGame();
