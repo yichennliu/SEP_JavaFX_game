@@ -196,22 +196,22 @@ public class GameView {
     }
 
     public void setCountToGoldInfo() {
-        Pair<Integer, Integer> showInfo = level.getRemainingGoldTicksGems();
-        restGem.setText("Needed Gems to Gold: "+showInfo.getValue());
+        int showInfo = level.getRemainingGemsToGold();
+        restGem.setText("Needed Gems to Gold: "+showInfo);
         restGem.setTextFill(Color.WHITE);
 
     }
 
     public void setCountToSilverInfo(){
-        Pair<Integer, Integer> showInfo= level.getRemainingSilverTickGems();
-        restGem.setText("Needed Gems to Silver :"+showInfo.getValue());
+        int showInfo= level.getRemainingGemsToSilver();
+        restGem.setText("Needed Gems to Silver: "+showInfo);
         restGem.setTextFill(Color.WHITE);
 
     }
 
     public void setCountToBronzeInfo(){
-        Pair<Integer, Integer> showInfo= level.getRemainingBronzeTickGems();
-        restGem.setText("Needed Gems to Bronze: "+showInfo.getValue());
+        int showInfo= level.getRemainingGemsToBronze();
+        restGem.setText("Needed Gems to Bronze: "+showInfo);
         restGem.setTextFill(Color.WHITE);
     }
 

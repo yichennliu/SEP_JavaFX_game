@@ -20,12 +20,6 @@ public class Controller {
 
       }
 
-    public void start(View.Mode mode){
-        this.currentMode = mode;
-
-
-
-    }
 
     public void startMenu(){
         this.currentMode = View.Mode.MENU;

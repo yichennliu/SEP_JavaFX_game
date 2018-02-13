@@ -33,7 +33,6 @@ public class GameController {
     private final Integer startSecond;
     private Integer second;
 
-
     public GameController(Level level, GameView gameView, Controller menuController){
         this.menuController = menuController;
         this.gameView = gameView;
@@ -78,13 +77,17 @@ public class GameController {
 
     }
 
+
+
     public void countDown() {
         Label countDownLabel = this.gameView.updateTimerLabel();
         this.timer = new Timeline();
         timer.setCycleCount(Timeline.INDEFINITE);
         if (timer != null) {
             timer.stop();
+
         }
+
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -220,28 +223,41 @@ public class GameController {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGUP);
                 }
-
+                else {
                 this.level.setInputDirection(InputDirection.GOUP);
+
+                }
             }
 
             if (event.getCode().equals(KeyCode.DOWN)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGDOWN);
                 }
+
+                else {
                 this.level.setInputDirection(InputDirection.GODOWN);
+                }
             }
 
             if (event.getCode().equals(KeyCode.LEFT)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGLEFT);
                 }
+                else{
+
                 this.level.setInputDirection(InputDirection.GOLEFT);
+
+                }
             }
             if (event.getCode().equals(KeyCode.RIGHT)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGRIGHT);
                 }
+                else{
+
                 this.level.setInputDirection(InputDirection.GORIGHT);
+
+                }
             }
 
         });
