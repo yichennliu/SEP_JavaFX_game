@@ -31,12 +31,11 @@ public class Controller {
         }
 
         this.view.update(View.Mode.PRIMARY,primaryPage);
-
     }
 
-    public void startMenu(String playerName){
+    public void startMenu(){
         this.currentMode = View.Mode.MENU;
-        MenuView menuView = new MenuView(this.view.getStage(),null,playerName);
+        MenuView menuView = new MenuView(this.view.getStage(),null);
 
         menuController = new MenuController(menuView,null,this);
         menuController.setMenuView(menuView);
@@ -57,37 +56,18 @@ public class Controller {
     }
 
     public void startGame(){
+        this.startLevel("json/level/text.json");
+    }
+
+    public void startLevel(String levelPath){
         this.currentMode = View.Mode.GAME;
-        Level level = LevelFactory.importLevel("json/level/text.json");
+        Level level = LevelFactory.importLevel(levelPath);
         GameView gameView = new GameView(this.view.getStage(),level);
         gameController = new GameController(level,gameView,this);
 
         this.view.update(View.Mode.GAME, gameController.getGameView());
         gameController.tick();
-    }
-
-
-    public void startLevel(String levelPath){
-        this.currentMode = View.Mode.GAME;
-        Level level = LevelFactory.importLevel("src/json/level/"+levelPath);
-
-        if (gameController == null) {
-            GameView gameView = new GameView(this.view.getStage(),level);
-            gameController = new GameController(level,gameView,this);
-        }
-
-        this.view.update(View.Mode.GAME, gameController.getGameView());
-        gameController.tick();
-
-
-
 
     }
-
-
-
-
-
-
 
 }

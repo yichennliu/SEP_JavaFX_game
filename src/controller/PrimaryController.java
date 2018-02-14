@@ -26,12 +26,11 @@ public class PrimaryController {
 
     private void addPrimaryPageComponents() {
         primaryPage.getName().setOnAction(e -> {
-            String  playerNameInput = primaryPage.getPlayerName();
-            this.primaryController.startMenu(playerNameInput);
+            this.primaryController.startMenu();
         });
 
         primaryPage.getNoName().setOnAction(e -> {
-            this.primaryController.startMenu("   ");
+            this.primaryController.startMenu();
         });
     }
 
