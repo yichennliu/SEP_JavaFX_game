@@ -21,6 +21,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import main.LevelFactory;
 import model.misc.LevelSnapshot;
+import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 
 import java.io.File;
@@ -210,8 +211,17 @@ public  class ContentFrame extends StackPane {
         menuBox.setAlignment(Pos.TOP_CENTER);
       //  menuBox.setTranslateX(300);
       //  menuBox.setTranslateY(60);
+
+        Theme theme = null;
+        try {
+            theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+        }
+        catch(Exception e) {
+            System.out.println("Theme not found / corrupt file");
+        }
+
         for (String path : scanLevelDirectory()) {
-            Image snapshot = LevelSnapshot.snap(ThemeIO.importTheme("src/json/theme/testTheme.zip"), LevelFactory.importLevel("src/json/level/"+path));
+            Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/level/"+path));
             ImageView snapshotview =  new ImageView(snapshot);
             menuBox.getChildren().add( 0, new LevelItem( path,"laksdKJj",snapshotview));
             snapshotview.setFitWidth(100);

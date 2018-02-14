@@ -156,7 +156,7 @@ public class ThemeEditorController {
     private void exit(){
         this.theme = null;
         this.themeEditorView= null;
-        this.menuController.startMenu("player");
+        this.menuController.startMenu();
     }
 
     /*reloads ToggleGroup of buttons and selects first option */
