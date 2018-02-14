@@ -37,6 +37,7 @@ public class View {
         this.stage.setWidth(windowWidth);
         this.stage.setHeight(windowHeight);
         this.stage.centerOnScreen();
+        this.stage.setMaximized(true);
     }
 
     private void showMenu(){
@@ -58,23 +59,15 @@ public class View {
         stage.setScene(themeEditorView.getScene());
     }
 
-    private void showPrimary(){
 
-        PrimaryPage primaryPage= (PrimaryPage) currentScene;
-        stage.setScene(primaryPage.getScene());
-
-    }
 
 
     public void update(Mode mode, Object scene) {
         this.currentScene = scene;
         switch (mode) {
-            case PRIMARY:
-                showPrimary();
-
-                break;
 
             case GAME:
+
                     showGame();
 //                    Canvas gameCanvas = gameScene.getCanvas();
 //                    drawBoard(gameCanvas,gameCanvas.getGraphicsContext2D());

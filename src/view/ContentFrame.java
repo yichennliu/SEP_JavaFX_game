@@ -20,6 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import main.LevelFactory;
+import model.game.Level;
 import model.misc.LevelSnapshot;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
@@ -67,7 +68,6 @@ public  class ContentFrame extends StackPane {
                 scroll.setTranslateX(400);
                 scroll.setTranslateY(0);
                 scroll.setMinSize(500,600);
-                getListlevelButtons();
                 getChildren().addAll(scroll);
 
             }
@@ -222,8 +222,10 @@ public  class ContentFrame extends StackPane {
 
         for (String path : scanLevelDirectory()) {
             Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/level/"+path));
+            Level level = LevelFactory.importLevel("src/json/level/"+path);
             ImageView snapshotview =  new ImageView(snapshot);
-            menuBox.getChildren().add( 0, new LevelItem( path,"laksdKJj",snapshotview));
+
+            menuBox.getChildren().add( 0, new LevelItem( level.getName(),"  ",snapshotview));
             snapshotview.setFitWidth(100);
             snapshotview.setFitHeight(100);
             getMenuItem(0).setActive(true);

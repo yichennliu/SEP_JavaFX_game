@@ -15,8 +15,10 @@ public class MenuView {
     private ToggleGroup group;
     private String stylesheet;
     private List<ToggleButton> levelButtons;
-    private BorderPane root;     private
-    ContentFrame contentFrame;
+    private BorderPane root;
+    private  ContentFrame contentFrame;
+
+
 
     public MenuView(Stage stage, Object model) {
         this.stage = stage;
@@ -29,24 +31,39 @@ public class MenuView {
 
         if (!stage.isShowing()) stage.show();
         stylesheet = fileToStylesheetString(new File("src/view/style.css"));
-        sceneMenu.getStylesheets().add(stylesheet);
+       sceneMenu.getStylesheets().add(stylesheet);
+
+
     }
 
     public Scene getSceneMenu() {
         return this.sceneMenu;
     }
 
+
     public ContentFrame getContentFrame() {
         return contentFrame;
     }
 
+
+
     public static String fileToStylesheetString(File stylesheet) {
         try {
             return stylesheet.toURI().toURL().toString();
-        }
-        catch (MalformedURLException e) {
+
+        } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
         }
+
+
     }
+
+
+
+
+
+
 }
+
+

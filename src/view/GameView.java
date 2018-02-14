@@ -49,7 +49,7 @@ public class GameView {
         this.width = stage.getWidth();
         this.height = stage.getHeight();
         this.level = level;
-        stylesheet= PrimaryPage.fileToStylesheetString(new File("src/view/style.css"));
+        stylesheet= MenuView.fileToStylesheetString(new File("src/view/style.css"));
         sceneGame.getStylesheets().add(stylesheet);
         staticCanvas = new Canvas(width,height-40);
         Canvas animatedCanvas = new Canvas(staticCanvas.getWidth(),staticCanvas.getHeight());
@@ -100,6 +100,8 @@ public class GameView {
         scrollToMe();
         board.stopAnimation();
         View.drawBoard(this.board,level.getMap(),this.theme,true);
+        showCollectedGems();
+        showMedalInfo();
 
     }
 
@@ -135,8 +137,6 @@ public class GameView {
         if(newTranslateX!=0.0 || newTranslateY!=0.0){
             this.board.translate(new Translate(newTranslateX,newTranslateY));
         }
-
-
     }
 
     /*gets a relative coordinate based on given input and affine transformation parameters*/
@@ -164,6 +164,7 @@ public class GameView {
         this.timeRewardInfo.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 1;"
                 + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: black;"
                 + "-fx-background-color: black;");
+
         this.timeRewardInfo.setSpacing(20);
         this.timeRewardInfo.setAlignment(Pos.CENTER);
         this.timeRewardInfo.toFront();
@@ -174,22 +175,24 @@ public class GameView {
             return this.timer;
         }
 
-        public void showCollectedGems(){
-            int result= this.level.getPropertyValue(Property.GEMS);
-            currentGems.setText("Gems got: "+ result);
-            currentGems.setTextFill(Color.WHITE);
-        }
+    public void showCollectedGems(){
+        int result= this.level.getPropertyValue(Property.GEMS);
+        currentGems.setText("Gems got: "+ result);
+        currentGems.setTextFill(Color.WHITE);
+    }
 
-        public void setCountToGoldInfo() {
-            int showInfo = level.getRemainingGemsToGold();
-            restGem.setText("Needed Gems to Gold: "+showInfo);
-            restGem.setTextFill(Color.WHITE);
-         }
+    public void setCountToGoldInfo() {
+        int showInfo = level.getRemainingGemsToGold();
+        restGem.setText("Needed Gems to Gold: "+showInfo);
+        restGem.setTextFill(Color.WHITE);
+
+    }
 
     public void setCountToSilverInfo(){
         int showInfo= level.getRemainingGemsToSilver();
         restGem.setText("Needed Gems to Silver: "+showInfo);
         restGem.setTextFill(Color.WHITE);
+
     }
 
     public void setCountToBronzeInfo(){
@@ -203,11 +206,14 @@ public class GameView {
             setCountToSilverInfo();
             currentMedal.setText("Current Medal: Bronze");
             currentMedal.setTextFill(Color.WHITE);
+
         }
         else if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1]){
             setCountToGoldInfo();
             currentMedal.setText("Current Medal: Silver");
-            currentMedal.setTextFill(Color.WHITE);         }
+            currentMedal.setTextFill(Color.WHITE);
+        }
+
         else if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2]){
             currentMedal.setText("You've got Gold!");
             currentMedal.setTextFill(Color.WHITE);
