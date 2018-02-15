@@ -20,7 +20,6 @@ import model.enums.WinningStatus;
 import model.game.Level;
 import view.GameView;
 
-
 import java.io.IOException;
 import java.util.Optional;
 
@@ -31,15 +30,12 @@ public class GameController {
     private Level level;
     private Timeline timeline;
     private Timeline timer;
-    private final Integer startSecond;
-    private Integer second;
+
 
     public GameController(Level level, GameView gameView, Controller menuController){
         this.menuController = menuController;
         this.gameView = gameView;
         this.level = level;
-        startSecond= this.level.getTickGoals()[0]/5;
-        this.second = startSecond;
         this.addIngameMenu();
         this.addDirectionEvents();
         this.addGameViewComponents();
@@ -85,10 +81,9 @@ public class GameController {
 
     }
 
-
-
     public void countDown() {
         Label countDownLabel = this.gameView.updateTimerLabel();
+        final Integer startSecond = this.level.getTickGoals()[0]/5;
         this.timer = new Timeline();
         timer.setCycleCount(Timeline.INDEFINITE);
         if (timer != null) {
@@ -97,10 +92,11 @@ public class GameController {
         }
 
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+            int second = startSecond;
             @Override
             public void handle(ActionEvent event) {
                 second--;
-                countDownLabel.setText("Time Left: " + second.toString());
+                countDownLabel.setText("Time Left: " + second);
                 countDownLabel.setTextFill(Color.WHITE);
 
                 if (second <= 0) {
@@ -160,6 +156,7 @@ public class GameController {
                 if (result.get() == save_exit_button){
                     this.saveGame();
                     this.menuController.startMenu();
+
                 }
 
                 if(result.get() == exit_button) {
@@ -169,13 +166,14 @@ public class GameController {
                 if (result.get() == retry_button) {
                     this.menuController.startLevel(level.getJsonPath());
                     timeline.playFromStart();
+                    timer.playFromStart();
                 }
 
                 if(result.get() == cancel_button){
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
-                        timer.playFromStart();
+                        timer.play();
 
                     }
                 }
@@ -216,6 +214,7 @@ public class GameController {
 
                 if (result.get() == retry_button) {
                     menuControllerLocal.startLevel(levelLOcal.getJsonPath());
+
                 }
 
                 if (result.get() == cancel_exit_button) {
@@ -281,7 +280,6 @@ public class GameController {
             this.gameView.update();
         });
 
-
         this.gameView.getCanvas().heightProperty().bind(gamestage.heightProperty());
         this.gameView.getCanvas().widthProperty().bind(gamestage.widthProperty());
     }
@@ -311,7 +309,6 @@ public class GameController {
         this.gameView = gameView;
 
     }
-
 
     public void setLevel(Level level){
         this.level = level;

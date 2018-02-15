@@ -68,6 +68,7 @@ public class Controller {
             gameController.setGameView(gameView);
             gameController.setLevel(level);
             gameController.update();
+
         }
 
         this.view.update(View.Mode.GAME, gameController.getGameView());

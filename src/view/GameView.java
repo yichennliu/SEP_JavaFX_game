@@ -219,7 +219,7 @@ public class GameView {
         }
         else{
             setCountToBronzeInfo();
-            currentMedal.setText("No medal :(");
+            currentMedal.setText("No Medal :(");
             currentMedal.setTextFill(Color.WHITE);
         }
     }
