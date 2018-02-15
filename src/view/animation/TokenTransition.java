@@ -19,22 +19,44 @@ public class TokenTransition extends javafx.animation.Transition {
     private boolean active;
     private GraphicsContext gc;
 
-    /*updates old and/or sets new animationTokens*/
-    public void setNewAnimationTokens(List<AnimationToken> list){
-        Map<Point2D, AnimationToken> newTokenMap = new HashMap<>();
+    private Map<Point2D,AnimationToken> newTokenMap;
 
-        for(AnimationToken newToken: list){
-            Point2D newFrom = newToken.getFrom();
-            Point2D newTo = newToken.getTo();
-            AnimationToken oldToken = tokenMap.get(newFrom);
-            if(oldToken!=null){
-                if(oldToken.getSpriteSheet()== newToken.getSpriteSheet()){
-                    newToken.setIndex(oldToken.getIndex());
-                }
-            }
-            newTokenMap.put(newTo,newToken);
-        }
+    public void startAdding(){
+        newTokenMap = new HashMap<>();
+    }
+
+    public void stopAdding(){
         tokenMap = newTokenMap;
+        newTokenMap = null;
+    }
+
+    /*Adds and draws Token (with first frame)*/
+    public void add(AnimationToken token){
+        if(newTokenMap==null) return;
+        Point2D newFrom = token.getFrom();
+        Point2D newTo = token.getTo();
+        AnimationToken oldToken = tokenMap.get(newFrom);
+        if(oldToken!=null){
+            if(oldToken.getSpriteSheet()== token.getSpriteSheet()){
+                token.setIndex(oldToken.getIndex());
+            }
+        }
+        Image image = token.getNextImage(0);
+
+        double posX = token.getFrom().getX() * fieldSize;
+        double posY = token.getFrom().getY() * fieldSize;
+
+        if(image!=null){
+            gc.drawImage(image,posX,posY,fieldSize,fieldSize);
+        }
+        else{
+            System.out.println("No Image!!!!");
+            gc.setFill(Color.WHITE);
+            gc.fillText('■'+"",posX+fieldSize/2,posY+fieldSize/2);
+            gc.setFill(Color.BLACK);
+        }
+
+        newTokenMap.put(newTo,token);
     }
 
 
@@ -59,7 +81,7 @@ public class TokenTransition extends javafx.animation.Transition {
     }
 
     public void stop(){
-        interpolate(1.0);
+        interpolate(0.99);
         this.active = false;
         super.stop();
     }
@@ -92,6 +114,7 @@ public class TokenTransition extends javafx.animation.Transition {
                     gc.drawImage(image,posX,posY,fieldSize,fieldSize);
                 }
                 else{
+                    System.out.println("No Image!!!!");
                     gc.setFill(Color.WHITE);
                     gc.fillText('■'+"",posX+fieldSize/2,posY+fieldSize/2);
                     gc.setFill(Color.BLACK);
