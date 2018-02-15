@@ -306,10 +306,12 @@ public class GameController {
         }
     }
 
+
     public void setGameView(GameView gameView){
         this.gameView = gameView;
 
     }
+
 
     public void setLevel(Level level){
         this.level = level;
