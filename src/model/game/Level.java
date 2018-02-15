@@ -415,6 +415,10 @@ public class Level {
                             } else if (backwards != null && backwards.isFree(true)) {
                                 // umkehren
                                 current.moveEnemyTo(FieldDirection.BOTTOM);
+                            // sonst wenn rechts frei
+                            } else if (rightSide != null && rightSide.isFree(true)) {
+                                // nach rechts gehen
+                                current.moveEnemyTo(FieldDirection.RIGHT);
                             } else {
                                 // eingeschlossen
                             }
@@ -437,6 +441,10 @@ public class Level {
                             } else if (backwards != null && backwards.isFree(true)) {
                                 // umkehren
                                 current.moveEnemyTo(FieldDirection.BOTTOM);
+                            // sonst wenn links frei
+                            } else if (leftSide != null && leftSide.isFree(true)) {
+                                // nach links gehen
+                                current.moveEnemyTo(FieldDirection.LEFT);
                             } else {
                                 // eingeschlossen
                             }
