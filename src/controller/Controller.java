@@ -8,6 +8,8 @@ import view.themeEditor.ThemeEditorView;
 public class Controller {
     private View view;
     private View.Mode currentMode;
+
+
     private MenuController menuController;
     private ThemeEditorController themeEditorController;
     private GameController gameController;
@@ -15,6 +17,7 @@ public class Controller {
     public Controller(View view, Object menuModel) { // Todo: MenuModel
         this.view = view;
         this.currentMode = View.Mode.GAME;
+
       }
 
 
@@ -25,6 +28,7 @@ public class Controller {
         if (menuController == null) {
             menuController = new MenuController(menuView,null,this);
         } else {
+
             menuController.setMenuView(menuView);
         }
 
@@ -46,6 +50,7 @@ public class Controller {
     public void startGame(){
         this.startLevel("json/level/text.json");
     }
+
 
     public void startLevel(String levelPath){
         this.currentMode = View.Mode.GAME;
