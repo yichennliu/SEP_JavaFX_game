@@ -34,6 +34,7 @@ public class Controller {
 
         this.view.update(View.Mode.MENU,menuView);
 
+
     }
 
     public void startThemeEditor(){
@@ -54,13 +55,27 @@ public class Controller {
 
     public void startLevel(String levelPath){
         this.currentMode = View.Mode.GAME;
+
         Level level = LevelFactory.importLevel(levelPath);
+
         GameView gameView = new GameView(this.view.getStage(),level);
-        gameController = new GameController(level,gameView,this);
+
+        if(gameController == null){
+            gameController = new GameController(level,gameView,this);
+
+        } else{
+
+            gameController.setGameView(gameView);
+            gameController.setLevel(level);
+            gameController.update();
+        }
 
         this.view.update(View.Mode.GAME, gameController.getGameView());
         gameController.tick();
 
     }
 
-}
+
+    }
+
+

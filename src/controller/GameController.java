@@ -20,6 +20,7 @@ import model.enums.WinningStatus;
 import model.game.Level;
 import view.GameView;
 
+
 import java.io.IOException;
 import java.util.Optional;
 
@@ -43,6 +44,13 @@ public class GameController {
         this.addDirectionEvents();
         this.addGameViewComponents();
         this.countDown();
+    }
+
+    public void update(){
+        countDown();
+        addGameViewComponents();
+        addDirectionEvents();
+
     }
 
     public void tick() {
@@ -160,6 +168,7 @@ public class GameController {
 
                 if (result.get() == retry_button) {
                     this.menuController.startLevel(level.getJsonPath());
+                    timeline.playFromStart();
                 }
 
                 if(result.get() == cancel_button){
@@ -167,6 +176,7 @@ public class GameController {
                     if (timeline != null) {
                         timeline.play();
                         timer.playFromStart();
+
                     }
                 }
 
@@ -224,7 +234,7 @@ public class GameController {
                     this.level.setInputDirection(InputDirection.DIGUP);
                 }
                 else {
-                this.level.setInputDirection(InputDirection.GOUP);
+                    this.level.setInputDirection(InputDirection.GOUP);
 
                 }
             }
@@ -235,7 +245,7 @@ public class GameController {
                 }
 
                 else {
-                this.level.setInputDirection(InputDirection.GODOWN);
+                    this.level.setInputDirection(InputDirection.GODOWN);
                 }
             }
 
@@ -245,7 +255,7 @@ public class GameController {
                 }
                 else{
 
-                this.level.setInputDirection(InputDirection.GOLEFT);
+                    this.level.setInputDirection(InputDirection.GOLEFT);
 
                 }
             }
@@ -255,7 +265,7 @@ public class GameController {
                 }
                 else{
 
-                this.level.setInputDirection(InputDirection.GORIGHT);
+                    this.level.setInputDirection(InputDirection.GORIGHT);
 
                 }
             }
@@ -270,6 +280,7 @@ public class GameController {
             this.gameView.zoom(e.getDeltaY(), 1.5);
             this.gameView.update();
         });
+
 
         this.gameView.getCanvas().heightProperty().bind(gamestage.heightProperty());
         this.gameView.getCanvas().widthProperty().bind(gamestage.widthProperty());
@@ -295,9 +306,15 @@ public class GameController {
         }
     }
 
-    public void clean(){
+    public void setGameView(GameView gameView){
+        this.gameView = gameView;
 
     }
+
+    public void setLevel(Level level){
+        this.level = level;
+    }
+
 
 }
 

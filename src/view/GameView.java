@@ -104,7 +104,6 @@ public class GameView {
         View.drawBoard(this.board,level.getMap(),this.theme,true);
         showCollectedGems();
         showMedalInfo();
-
     }
 
     private void scrollToMe(){
