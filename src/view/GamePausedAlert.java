@@ -65,39 +65,21 @@ public class GamePausedAlert extends Alert {
         return saveButton;
     }
 
-    public void setSaveButton(ButtonType saveButton) {
-        this.saveButton = saveButton;
-    }
-
     public ButtonType getSaveExitButton() {
         return saveExitButton;
-    }
-
-    public void setSaveExitButton(ButtonType saveExitButton) {
-        this.saveExitButton = saveExitButton;
     }
 
     public ButtonType getExitButton() {
         return exitButton;
     }
 
-    public void setExitButton(ButtonType exitButton) {
-        this.exitButton = exitButton;
-    }
-
     public ButtonType getRetryButton() {
         return retryButton;
     }
 
-    public void setRetryButton(ButtonType retryButton) {
-        this.retryButton = retryButton;
-    }
 
     public ButtonType getCancelButton() {
         return cancelButton;
     }
 
-    public void setCancelButton(ButtonType cancelButton) {
-        this.cancelButton = cancelButton;
-    }
 }
