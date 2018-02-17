@@ -25,6 +25,7 @@ import model.enums.InputDirection;
 import model.enums.Property;
 import model.enums.WinningStatus;
 import model.game.Level;
+import view.EndGameAlert;
 import view.GamePausedAlert;
 import view.GameView;
 
@@ -178,8 +179,8 @@ public class GameController {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     GameController.this.menuController.startMenu();
                 } else if (result.get() == alert.getRetryButton()) {
-                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     alert.close();
+                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     GameController.this.menuController.startLevel(level.getJsonPath());
                     timeline.playFromStart();
                     timer.playFromStart();
@@ -208,18 +209,15 @@ public class GameController {
         this.timeline.stop();
         this.timer.stop();
 
-        Alert alert = this.gameView.createEndOfGameAlert();
+        EndGameAlert alert = new EndGameAlert();
+
         if (won) {
             alert.setHeaderText("You successfully completed the level \""+this.level.getName()+"\". Hooray!");
         } else {
             alert.setHeaderText("You lost. Dont't worry, try again!");
         }
 
-        ButtonType retry_button = new ButtonType("Restart level", ButtonBar.ButtonData.OTHER);
-        ButtonType cancel_exit_button = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        alert.getButtonTypes().setAll(retry_button, cancel_exit_button);
-        this.addAlertKeyEvent(alert);
+        GameController.this.addAlertKeyEvent(alert);
         Controller menuControllerLocal = this.menuController;
         Level levelLOcal = this.level;
 
@@ -229,12 +227,12 @@ public class GameController {
             public void run() {
                 Optional<ButtonType> result = alert.showAndWait();
 
-                if (result.get() == retry_button) {
+                if (result.get() == alert.getRetryButton()) {
                     gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
                     menuControllerLocal.startLevel(levelLOcal.getJsonPath());
                 }
 
-                if (result.get() == cancel_exit_button) {
+                if (result.get() == alert.getCancelExitButton()) {
                     gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
                     menuControllerLocal.startMenu();
                 }

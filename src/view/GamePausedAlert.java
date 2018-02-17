@@ -77,7 +77,6 @@ public class GamePausedAlert extends Alert {
         return retryButton;
     }
 
-
     public ButtonType getCancelButton() {
         return cancelButton;
     }
