@@ -20,13 +20,14 @@ public class MenuView {
     private List<ToggleButton> levelButtons;
     private BorderPane root;
     private  ContentFrame contentFrame;
-
-
+    private double width;
+    private double height;
 
     public MenuView(Stage stage, Object model) {
 
         this.stage = stage;
-
+        this.width = stage.getWidth();
+        this.height = stage.getHeight();
         root = new BorderPane();
 
 

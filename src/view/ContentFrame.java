@@ -58,17 +58,20 @@ public  class ContentFrame extends StackPane {
         this.scene= new Scene(vbButtons);
         this.listlevelButtons = new ArrayList<Button>();
         menuBox = createLevelMenuItems();
+        scroll= new ScrollPane(menuBox);
+        scroll.setTranslateX(400);
+        scroll.setMinSize(500,600);
+        scroll.setVisible(false);
+        getChildren().addAll(scroll);
+
+
 
         helpButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-               menuBox = showLevelMenuItems(showMenuItems);
-
-                scroll= new ScrollPane(menuBox);
-                scroll.setTranslateX(400);
-                scroll.setTranslateY(0);
-                scroll.setMinSize(500,600);
-                getChildren().addAll(scroll);
-
+             if(scroll.isVisible()){
+                 scroll.setVisible(false);
+             }
+             else scroll.setVisible(true);
             }
         });
 
@@ -134,7 +137,7 @@ public  class ContentFrame extends StackPane {
         private Runnable script;
 
 
-    public LevelItem(String menuItemName, String info, ImageView image) {
+    public LevelItem(String menuItemName, String info, ImageView image, String path) {
         super(5);
         setAlignment(Pos.CENTER);
         levelButton = new Button(menuItemName);
@@ -153,7 +156,7 @@ public  class ContentFrame extends StackPane {
         getChildren().addAll( vbox,menu,image);
         setActive(false);
         setOnActivate(() -> System.out.println(menuItemName + " aktiv geworden"));
-        levelButton.setUserData(menuItemName);
+        levelButton.setUserData(path);
         listlevelButtons.add(levelButton);
       //  System.out.println(listlevelButtons);
 
@@ -190,13 +193,14 @@ public  class ContentFrame extends StackPane {
 
         if (!show) {
             System.out.println("das ist kliked");
-            menuBox = createLevelMenuItems();
+
             showMenuItems=true;
 
         }
         else {
             System.out.println("das niiiiiiicht  kliked");
             showMenuItems=false;
+            scroll.setVisible(true);
             menuBox.getChildren().clear();
         }
         return menuBox;
@@ -216,7 +220,7 @@ public  class ContentFrame extends StackPane {
             Image snapshot = LevelSnapshot.snap(ThemeIO.importTheme("src/json/theme/testTheme.zip"),level);
             ImageView snapshotview =  new ImageView(snapshot);
 
-            menuBox.getChildren().add( 0, new LevelItem( level.getName(),"  ",snapshotview));
+            menuBox.getChildren().add( 0, new LevelItem( level.getName(),"  ",snapshotview,path));
             snapshotview.setFitWidth(100);
             snapshotview.setFitHeight(100);
             getMenuItem(0).setActive(true);
