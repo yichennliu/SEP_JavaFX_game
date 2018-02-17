@@ -59,7 +59,7 @@ public class Controller {
             gameController = new GameController(level,gameView,this);
 
         } else{
-
+            gameController.addIngameMenu();
             gameController.setGameView(gameView);
             gameController.setLevel(level);
             gameController.update();

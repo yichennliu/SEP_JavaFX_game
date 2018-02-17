@@ -181,11 +181,11 @@ public class GameController {
                 if (result.get() == save_exit_button){
                     GameController.this.saveGame();
                     GameController.this.menuController.startMenu();
+                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                 }
 
                 if(result.get() == exit_button) {
                     GameController.this.menuController.startMenu();
-                    // TODO: remove listerner from stage
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                 }
 
@@ -207,7 +207,7 @@ public class GameController {
     }
 
 
-    private void addIngameMenu() {
+    public void addIngameMenu() {
         Stage gamestage = this.gameView.getStage();
         EscapeButtonHandler handler = new EscapeButtonHandler(gamestage);
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, handler);
