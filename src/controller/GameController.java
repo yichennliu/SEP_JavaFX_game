@@ -34,6 +34,7 @@ public class GameController {
     private Level level;
     private Timeline timeline;
     private Timeline timer;
+    private EscapeButtonHandler handler;
 
 
     public GameController(Level level, GameView gameView, Controller menuController){
@@ -139,8 +140,6 @@ public class GameController {
 
     }
 
-
-
     private class EscapeButtonHandler implements EventHandler<KeyEvent> {
 
         private Stage gamestage;
@@ -164,6 +163,7 @@ public class GameController {
                 ButtonType exit_button = new ButtonType("Exit", ButtonBar.ButtonData.OTHER);
                 ButtonType retry_button = new ButtonType("Restart level", ButtonBar.ButtonData.OTHER);
                 ButtonType cancel_button = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
 
                 alert.getButtonTypes().setAll(save_button, save_exit_button,exit_button,retry_button,cancel_button);
                 GameController.this.addAlertKeyEvent(alert);
@@ -209,7 +209,7 @@ public class GameController {
 
     public void addIngameMenu() {
         Stage gamestage = this.gameView.getStage();
-        EscapeButtonHandler handler = new EscapeButtonHandler(gamestage);
+        handler = new EscapeButtonHandler(gamestage);
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, handler);
     }
 
@@ -242,11 +242,12 @@ public class GameController {
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if (result.get() == retry_button) {
+                    gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
                     menuControllerLocal.startLevel(levelLOcal.getJsonPath());
-
                 }
 
                 if (result.get() == cancel_exit_button) {
+                    gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
                     menuControllerLocal.startMenu();
                 }
             }
@@ -299,6 +300,7 @@ public class GameController {
             }
 
         });
+
     }
 
     private void addGameViewComponents() {
