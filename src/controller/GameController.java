@@ -25,6 +25,7 @@ import model.enums.InputDirection;
 import model.enums.Property;
 import model.enums.WinningStatus;
 import model.game.Level;
+import view.GamePausedAlert;
 import view.GameView;
 
 public class GameController {
@@ -157,48 +158,32 @@ public class GameController {
                     timer.stop();
                 }
 
-                Alert alert = GameController.this.gameView.createEscapeAlert();
-                ButtonType save_button = new ButtonType("Save", ButtonBar.ButtonData.OTHER);
-                ButtonType save_exit_button = new ButtonType("Save & Exit", ButtonBar.ButtonData.OTHER);
-                ButtonType exit_button = new ButtonType("Exit", ButtonBar.ButtonData.OTHER);
-                ButtonType retry_button = new ButtonType("Restart level", ButtonBar.ButtonData.OTHER);
-                ButtonType cancel_button = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                GamePausedAlert alert = new GamePausedAlert();
 
-                alert.getButtonTypes().setAll(save_button, save_exit_button,exit_button,retry_button,cancel_button);
                 GameController.this.addAlertKeyEvent(alert);
                 Optional<ButtonType> result = alert.showAndWait();
 
-                if(result.get() == save_button){
+                if (result.get() == alert.getSaveButton()){
                     GameController.this.saveGame();
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
                         timer.playFromStart();
                     }
-                }
-
-                if (result.get() == save_exit_button){
+                } else if (result.get() == alert.getSaveExitButton()){
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     GameController.this.saveGame();
                     GameController.this.menuController.startMenu();
-                }
-
-                if(result.get() == exit_button) {
+                } else if(result.get() == alert.getExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     GameController.this.menuController.startMenu();
-
-                }
-
-                if (result.get() == retry_button) {
+                } else if (result.get() == alert.getRetryButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     alert.close();
                     GameController.this.menuController.startLevel(level.getJsonPath());
                     timeline.playFromStart();
                     timer.playFromStart();
-
-                }
-
-                if(result.get() == cancel_button){
+                } else if(result.get() == alert.getCancelButton()){
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
@@ -337,6 +322,7 @@ public class GameController {
             Optional<ButtonType> result = alert.showAndWait();
         }
     }
+
 
     public void setGameView(GameView gameView){
         this.gameView = gameView;

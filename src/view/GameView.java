@@ -157,7 +157,7 @@ public class GameView {
         Affine transformation = this.board.getTransformation();
 
         if(delta < 0){
-           transformation.append(new Scale(1/factor, 1/factor));
+            transformation.append(new Scale(1/factor, 1/factor));
         }
         else transformation.append(new Scale(factor,factor));
         this.board.applyTransformation(transformation);
@@ -174,9 +174,9 @@ public class GameView {
         this.timeRewardInfo.setPrefHeight(50);
         this.timeRewardInfo.setPrefWidth(width);     }
 
-        public Label updateTimerLabel(){
-            return this.timer;
-        }
+    public Label updateTimerLabel(){
+        return this.timer;
+    }
 
     public void showCollectedGems(){
         int result= this.level.getPropertyValue(Property.GEMS);
@@ -228,39 +228,7 @@ public class GameView {
         }
     }
 
-    public Alert createEscapeAlert(){
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Exit or Save");
-        alert.setHeaderText("Do you want to save or exit the game?");
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.setStyle("-fx-background-color: black;");
-        dialogPane.getStyleClass().remove("alert");
-
-        GridPane grid = (GridPane)dialogPane.lookup(".header-panel");
-        grid.setStyle("-fx-background-color: black; "
-                + "-fx-font: bold normal 20pt \"Arial\";"+"-fx-text-fill: red;");
-
-        dialogPane.lookup(".content.label").setStyle("-fx-font-size: 30px; "
-                + "-fx-font-weight: bold;" + "-fx-fill: white;");
-
-        ButtonBar buttonBar = (ButtonBar)alert.getDialogPane().lookup(".button-bar");
-        buttonBar.setStyle("-fx-background-color:black;"+
-                "-fx-text-fill:white;"+ "-fx-wrap-text: true;"+
-                "-fx-effect: dropshadow(three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);"+
-                "-fx-cursor:hand;");
-
-        StackPane stackPane = new StackPane(new ImageView(
-                new Image(getClass().getResourceAsStream("images/end.gif"))));
-        stackPane.setPrefSize(24, 24);
-        stackPane.setAlignment(Pos.CENTER);
-        dialogPane.setGraphic(stackPane);
-
-        return alert;
-
-    }
-
-    public ArrayList<ButtonType> addEscapeAlertButtons(){
+/*    public ArrayList<ButtonType> addEscapeAlertButtons(){
 
         Alert alert = this.createEscapeAlert();
         ButtonType save_button = new ButtonType("Save", ButtonBar.ButtonData.OTHER);
@@ -281,7 +249,7 @@ public class GameView {
 
         return buttons;
 
-    }
+    }*/
 
     public Alert createEndOfGameAlert(){
 
