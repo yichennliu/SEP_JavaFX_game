@@ -41,6 +41,7 @@ public class GameController {
         this.gameView = gameView;
         this.level = level;
         this.addDirectionEvents();
+        this.addIngameMenu();
         this.addGameViewComponents();
         this.countDown();
     }
@@ -157,10 +158,7 @@ public class GameController {
                     timer.stop();
                 }
 
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Exit or Save");
-                alert.setHeaderText("Do you want to save or exit the game?");
-
+                Alert alert = GameController.this.gameView.createEscapeAlert();
                 ButtonType save_button = new ButtonType("Save", ButtonBar.ButtonData.OTHER);
                 ButtonType save_exit_button = new ButtonType("Save & Exit", ButtonBar.ButtonData.OTHER);
                 ButtonType exit_button = new ButtonType("Exit", ButtonBar.ButtonData.OTHER);
