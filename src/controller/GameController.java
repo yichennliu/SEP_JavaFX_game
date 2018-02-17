@@ -164,7 +164,6 @@ public class GameController {
                 ButtonType retry_button = new ButtonType("Restart level", ButtonBar.ButtonData.OTHER);
                 ButtonType cancel_button = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-
                 alert.getButtonTypes().setAll(save_button, save_exit_button,exit_button,retry_button,cancel_button);
                 GameController.this.addAlertKeyEvent(alert);
                 Optional<ButtonType> result = alert.showAndWait();
@@ -179,20 +178,24 @@ public class GameController {
                 }
 
                 if (result.get() == save_exit_button){
+                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     GameController.this.saveGame();
                     GameController.this.menuController.startMenu();
-                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                 }
 
                 if(result.get() == exit_button) {
-                    GameController.this.menuController.startMenu();
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                    GameController.this.menuController.startMenu();
+
                 }
 
                 if (result.get() == retry_button) {
+                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                    alert.close();
                     GameController.this.menuController.startLevel(level.getJsonPath());
                     timeline.playFromStart();
                     timer.playFromStart();
+
                 }
 
                 if(result.get() == cancel_button){
@@ -334,7 +337,6 @@ public class GameController {
             Optional<ButtonType> result = alert.showAndWait();
         }
     }
-
 
     public void setGameView(GameView gameView){
         this.gameView = gameView;
