@@ -6,8 +6,12 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
@@ -21,6 +25,7 @@ import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class GameView {
 
@@ -64,7 +69,6 @@ public class GameView {
         catch(Exception e){
             System.out.println("Theme-Import-Fail: " + e.getMessage());
         }
-
 
         this.timeRewardInfo = new HBox(10);
         this.currentGems = new Label();
@@ -223,6 +227,94 @@ public class GameView {
             currentMedal.setTextFill(Color.WHITE);
         }
     }
+
+    public Alert createEscapeAlert(){
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Exit or Save");
+        alert.setHeaderText("Do you want to save or exit the game?");
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle("-fx-background-color: black;");
+        dialogPane.getStyleClass().remove("alert");
+
+        GridPane grid = (GridPane)dialogPane.lookup(".header-panel");
+        grid.setStyle("-fx-background-color: black; "
+                + "-fx-font: bold normal 20pt \"Arial\";"+"-fx-text-fill: red;");
+
+        dialogPane.lookup(".content.label").setStyle("-fx-font-size: 30px; "
+                + "-fx-font-weight: bold;" + "-fx-fill: white;");
+
+        ButtonBar buttonBar = (ButtonBar)alert.getDialogPane().lookup(".button-bar");
+        buttonBar.setStyle("-fx-background-color:black;"+
+                "-fx-text-fill:white;"+ "-fx-wrap-text: true;"+
+                "-fx-effect: dropshadow(three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);"+
+                "-fx-cursor:hand;");
+
+        StackPane stackPane = new StackPane(new ImageView(
+                new Image(getClass().getResourceAsStream("images/end.gif"))));
+        stackPane.setPrefSize(24, 24);
+        stackPane.setAlignment(Pos.CENTER);
+        dialogPane.setGraphic(stackPane);
+
+        return alert;
+
+    }
+
+    public ArrayList<ButtonType> addEscapeAlertButtons(){
+
+        Alert alert = this.createEscapeAlert();
+        ButtonType save_button = new ButtonType("Save", ButtonBar.ButtonData.OTHER);
+        ButtonType save_exit_button = new ButtonType("Save & Exit", ButtonBar.ButtonData.OTHER);
+        ButtonType exit_button = new ButtonType("Exit", ButtonBar.ButtonData.OTHER);
+        ButtonType retry_button = new ButtonType("Restart level", ButtonBar.ButtonData.OTHER);
+        ButtonType cancel_button = new ButtonType("Cancel", ButtonBar.ButtonData.OTHER);
+
+        alert.getButtonTypes().setAll(save_button, save_exit_button,exit_button,retry_button,cancel_button);
+
+        ArrayList<ButtonType> buttons = new ArrayList<ButtonType>();
+
+        buttons.add(save_button);
+        buttons.add(save_exit_button);
+        buttons.add(exit_button);
+        buttons.add(retry_button);
+        buttons.add(cancel_button);
+
+        return buttons;
+
+    }
+
+    public Alert createEndOfGameAlert(){
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Exit or Save");
+        alert.setHeaderText("Do you want to save or exit the game?");
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle("-fx-background-color: black;"+"-fx-text-fill: white;");
+        dialogPane.getStyleClass().remove("alert");
+
+        GridPane grid = (GridPane)dialogPane.lookup(".header-panel");
+        grid.setStyle("-fx-background-color: black; "
+                + "-fx-font: bold normal 20pt \"Arial\";"+"-fx-text-fill: white;");
+
+        dialogPane.lookup(".content.label").setStyle("-fx-font-size: 30px; "
+                + "-fx-font-weight: bold;" + "-fx-text-fill: white;");
+
+        ButtonBar buttonBar = (ButtonBar)alert.getDialogPane().lookup(".button-bar");
+        buttonBar.setStyle("-fx-background-color:black;"+
+                "-fx-text-fill: white;"+ "-fx-wrap-text: true;"+
+                "-fx-effect: dropshadow(three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);"+
+                "-fx-cursor:hand;");
+
+        StackPane stackPane = new StackPane(new ImageView(
+                new Image(getClass().getResourceAsStream("images/fire.png"))));
+        stackPane.setPrefSize(24, 24);
+        stackPane.setAlignment(Pos.CENTER);
+        dialogPane.setGraphic(stackPane);
+
+        return alert;
+
+    }
+
 
 }
 

@@ -1,13 +1,20 @@
 package controller;
 
+import java.io.IOException;
+import java.util.Optional;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -19,9 +26,6 @@ import model.enums.Property;
 import model.enums.WinningStatus;
 import model.game.Level;
 import view.GameView;
-
-import java.io.IOException;
-import java.util.Optional;
 
 public class GameController {
 
@@ -36,7 +40,6 @@ public class GameController {
         this.menuController = menuController;
         this.gameView = gameView;
         this.level = level;
-        this.addIngameMenu();
         this.addDirectionEvents();
         this.addGameViewComponents();
         this.countDown();
@@ -101,29 +104,54 @@ public class GameController {
 
                 if (second <= 0) {
                     timer.stop();
-                    }
+                }
 
                 if (second <= 10) {
                     countDownLabel.setTextFill(Color.RED);
-                    }
-
                 }
-            });
 
-            timer.getKeyFrames().add(keyFrame);
-            timer.playFromStart();
-        }
+            }
+        });
+
+        timer.getKeyFrames().add(keyFrame);
+        timer.playFromStart();
+    }
 
 
     public GameView getGameView() {
         return gameView;
     }
 
+    private void addAlertKeyEvent(Alert alert){
 
-    private void addIngameMenu(){
-        Stage gamestage = this.gameView.getStage();
-        gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if(event.getCode().equals(KeyCode.ESCAPE)) {
+        EventHandler<KeyEvent> fireOnEnter = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (KeyCode.ENTER.equals(event.getCode()) && event.getTarget() instanceof Button) {
+                    ((Button) event.getTarget()).fire();
+                }
+            }
+        };
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button -> button.addEventHandler(KeyEvent.KEY_PRESSED, fireOnEnter));
+
+    }
+
+
+
+    private class EscapeButtonHandler implements EventHandler<KeyEvent> {
+
+        private Stage gamestage;
+
+        public EscapeButtonHandler(Stage gamestage) {
+            this.gamestage = gamestage;
+        }
+
+        @Override
+        public void handle(KeyEvent event) {
+            if (event.getCode().equals(KeyCode.ESCAPE)) {
+
                 if (timeline != null) {
                     timeline.stop();
                     timer.stop();
@@ -140,31 +168,31 @@ public class GameController {
                 ButtonType cancel_button = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
                 alert.getButtonTypes().setAll(save_button, save_exit_button,exit_button,retry_button,cancel_button);
-
+                GameController.this.addAlertKeyEvent(alert);
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if(result.get() == save_button){
-                    this.saveGame();
+                    GameController.this.saveGame();
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
                         timer.playFromStart();
-
                     }
                 }
 
                 if (result.get() == save_exit_button){
-                    this.saveGame();
-                    this.menuController.startMenu();
-
+                    GameController.this.saveGame();
+                    GameController.this.menuController.startMenu();
                 }
 
                 if(result.get() == exit_button) {
-                    this.menuController.startMenu();
+                    GameController.this.menuController.startMenu();
+                    // TODO: remove listerner from stage
+                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                 }
 
                 if (result.get() == retry_button) {
-                    this.menuController.startLevel(level.getJsonPath());
+                    GameController.this.menuController.startLevel(level.getJsonPath());
                     timeline.playFromStart();
                     timer.playFromStart();
                 }
@@ -174,14 +202,17 @@ public class GameController {
                     if (timeline != null) {
                         timeline.play();
                         timer.play();
-
                     }
                 }
-
             }
+        }
+    }
 
-        });
 
+    private void addIngameMenu() {
+        Stage gamestage = this.gameView.getStage();
+        EscapeButtonHandler handler = new EscapeButtonHandler(gamestage);
+        gamestage.addEventHandler(KeyEvent.KEY_PRESSED, handler);
     }
 
     /**
@@ -191,8 +222,7 @@ public class GameController {
         this.timeline.stop();
         this.timer.stop();
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(won ? "You won!" : "Game Over");
+        Alert alert = this.gameView.createEndOfGameAlert();
         if (won) {
             alert.setHeaderText("You successfully completed the level \""+this.level.getName()+"\". Hooray!");
         } else {
@@ -203,6 +233,7 @@ public class GameController {
         ButtonType cancel_exit_button = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(retry_button, cancel_exit_button);
+        this.addAlertKeyEvent(alert);
         Controller menuControllerLocal = this.menuController;
         Level levelLOcal = this.level;
 

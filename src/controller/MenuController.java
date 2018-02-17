@@ -12,17 +12,19 @@ public class MenuController {
     private Controller menuController;
     private ToggleGroup group;
 
-    public MenuController(MenuView menuView, Object model, Controller menuController){
+    public MenuController(MenuView menuView, Object model,Controller menuController){
         this.menuView = menuView;
         this.model = model;
         this.menuController = menuController;
         addMenuViewComponents();
         chooseLevel();
+
     }
 
     public void setMenuView(MenuView menuView) {
         this.menuView = menuView;
         addMenuViewComponents();
+
     }
 
     private void addMenuViewComponents() {

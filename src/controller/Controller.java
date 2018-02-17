@@ -9,7 +9,6 @@ public class Controller {
     private View view;
     private View.Mode currentMode;
 
-
     private MenuController menuController;
     private ThemeEditorController themeEditorController;
     private GameController gameController;
@@ -19,7 +18,6 @@ public class Controller {
         this.currentMode = View.Mode.GAME;
 
       }
-
 
     public void startMenu(){
         this.currentMode = View.Mode.MENU;
@@ -33,8 +31,6 @@ public class Controller {
         }
 
         this.view.update(View.Mode.MENU,menuView);
-
-
     }
 
     public void startThemeEditor(){
@@ -43,7 +39,6 @@ public class Controller {
         ThemeEditorView themeEditorView = new ThemeEditorView(this.view.getStage());
 
             themeEditorController = new ThemeEditorController(themeEditorView,this);
-
 
         this.view.update(View.Mode.THEME,themeEditorView);
     }
