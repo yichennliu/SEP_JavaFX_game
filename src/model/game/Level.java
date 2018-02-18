@@ -71,19 +71,15 @@ public class Level {
     }
 
     public Integer getRemainingGemsToGold() {
-        Integer remainingGems = this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS);
-        return remainingGems;
+        return this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS);
     }
 
     public Integer getRemainingGemsToSilver(){
-
-        Integer remainingGems = this.getGemGoals()[1] - this.getPropertyValue(Property.GEMS);
-        return remainingGems;
+        return this.getGemGoals()[1] - this.getPropertyValue(Property.GEMS);
     }
 
     public Integer getRemainingGemsToBronze(){
-        Integer remainingGems =  this.getGemGoals()[0] - this.getPropertyValue(Property.GEMS);
-        return remainingGems;
+        return this.getGemGoals()[0] - this.getPropertyValue(Property.GEMS);
     }
 
     public Feld[][] getMap(){

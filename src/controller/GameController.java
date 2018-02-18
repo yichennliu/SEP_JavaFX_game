@@ -26,7 +26,7 @@ import java.util.Optional;
 
 public class GameController {
 
-    private Controller menuController;
+    private Controller controller;
     private GameView gameView;
     private Level level;
     private Timeline timeline;
@@ -35,7 +35,7 @@ public class GameController {
 
 
     public GameController(Level level, GameView gameView, Controller menuController) {
-        this.menuController = menuController;
+        this.controller = menuController;
         this.gameView = gameView;
         this.level = level;
         this.addDirectionEvents();
@@ -68,12 +68,9 @@ public class GameController {
             this.gameView.update();
             this.level.tick();
 
-            if (this.level.getWinningStatus() == WinningStatus.WON) {
-                this.endOfGameDialog(true);
-            } else if (this.level.getWinningStatus() == WinningStatus.LOST) {
-                this.endOfGameDialog(false);
+            if (this.level.getWinningStatus() != WinningStatus.PLAYING) {
+                this.endOfGameDialog();
             }
-
         };
 
         KeyFrame frame = new KeyFrame(Duration.seconds(1.0 / 5.0), loop);
@@ -171,17 +168,17 @@ public class GameController {
                 } else if (result.get() == alert.getSaveExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     GameController.this.saveGame();
-                    GameController.this.menuController.startMenu();
+                    GameController.this.controller.startMenu();
                 } else if (result.get() == alert.getExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                    GameController.this.menuController.startMenu();
+                    GameController.this.controller.startMenu();
 
 
                 } else if (result.get() == alert.getRetryButton()) {
 //                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, handler);
 //                    gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
 
-                    GameController.this.menuController.startLevel(level.getJsonPath());
+                    GameController.this.controller.startLevel(level.getJsonPath());
                     alert.close();
                     timeline.playFromStart();
                     timer.playFromStart();
@@ -210,37 +207,32 @@ public class GameController {
     /**
      * Show end of game dialog
      */
-    private void endOfGameDialog(boolean won) {
+    private void endOfGameDialog() {
         this.timeline.stop();
         this.timer.stop();
 
         EndGameAlert endGameAlert = new EndGameAlert();
 
-        if (won) {
+        if (this.level.getWinningStatus() == WinningStatus.WON) {
             endGameAlert.setHeaderText("You successfully completed the level \"" + this.level.getName() + "\". Hooray!");
         } else {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");
         }
 
         GameController.this.addAlertKeyEvent(endGameAlert);
-        Controller menuControllerLocal = this.menuController;
-        Level levelLOcal = this.level;
 
-        // This "runlater" is necessary because alert.showAndWait is not allowed during animation
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Optional<ButtonType> result = endGameAlert.showAndWait();
+        // "runlater" is necessary because alert.showAndWait is not allowed during animation
+        Platform.runLater(() -> {
+            Optional<ButtonType> result = endGameAlert.showAndWait();
 
-                if (result.get() == endGameAlert.getRetryButton()) {
-                    gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-                    menuControllerLocal.startLevel(levelLOcal.getJsonPath());
-                }
+            if (result.get() == endGameAlert.getRetryButton()) {
+                gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
+                this.controller.startLevel(this.level.getJsonPath());
+            }
 
-                if (result.get() == endGameAlert.getCancelExitButton()) {
-                    gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-                    menuControllerLocal.startMenu();
-                }
+            if (result.get() == endGameAlert.getCancelExitButton()) {
+                gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
+                this.controller.startMenu();
             }
         });
     }
@@ -302,11 +294,13 @@ public class GameController {
     }
 
     /**
-     * Spiel speichern
+     * Levelfortschritt speichern
      */
     public void saveGame() {
         try {
-            LevelFactory.exportLevel(this.level, "src/json/savegame/" + this.level.getName() + ".json");
+            String[] originalPath = this.level.getJsonPath().split("/");
+            String originalFileName = originalPath[originalPath.length-1];
+            LevelFactory.exportLevel(this.level, "src/json/savegame/" + originalFileName);
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Fehler");
