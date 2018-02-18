@@ -296,18 +296,11 @@ public class Level {
 
                             // in Ausgang gehen
                             if (next.isToken(Token.EXIT)) {
-                                System.out.println("Current gems: "+this.getPropertyValue(Property.GEMS));
-                                System.out.println("Current ticks: "+this.getPropertyValue(Property.TICKS));
                                 for (int goalNo = 2; goalNo >= 0; goalNo--) {
-                                    System.out.println("Gem goal "+goalNo+": "+this.getGemGoals()[goalNo]);
-                                    System.out.println("Tick goal "+goalNo+": "+this.getTickGoals()[goalNo]);
                                     if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[goalNo] &&
                                         this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[goalNo]) {
                                             current.moveTo(next);
                                             this.setWinningStatus(WinningStatus.WON);
-                                            System.out.println("ACHIEVED goal no. "+goalNo);
-                                    } else {
-                                        System.out.println("FAILED goal no. "+goalNo);
                                     }
                                 }
                             }
@@ -469,7 +462,7 @@ public class Level {
                     List<Feld> slimeFields = new ArrayList<>();
                     if (current.isInSlimeArea(slimeFields)) {
                         for (Feld slime : slimeFields) {
-                            slime.bufferSetToken(this.isSlimeMaximumReached() ? Token.STONE : Token.GEM);
+                            slime.setToken(this.isSlimeMaximumReached() ? Token.STONE : Token.GEM);
                         }
                     }
                 }
