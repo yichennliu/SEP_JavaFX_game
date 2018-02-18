@@ -17,21 +17,23 @@ public class MenuView {
     private List<ToggleButton> levelButtons;
     private BorderPane root;
     private  ContentFrame contentFrame;
-
-
+    private double width;
+    private double height;
 
     public MenuView(Stage stage, Object model) {
         this.stage = stage;
+        this.width = stage.getWidth();
+        this.height = stage.getHeight();
         root = new BorderPane();
-        contentFrame = new ContentFrame();
+        contentFrame = new ContentFrame(width,height);
         VBox Vmenu= new VBox(contentFrame);
         this.levelButtons = new ArrayList<>();
         this.sceneMenu = new Scene(root);
         root.getChildren().addAll(Vmenu);
-
         if (!stage.isShowing()) stage.show();
         stylesheet = fileToStylesheetString(new File("src/view/style.css"));
        sceneMenu.getStylesheets().add(stylesheet);
+        root.getStyleClass().add("borderPane");
 
 
     }
