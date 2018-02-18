@@ -25,15 +25,15 @@ public class MenuView {
         this.width = stage.getWidth();
         this.height = stage.getHeight();
         root = new BorderPane();
-        contentFrame = new ContentFrame();
+        contentFrame = new ContentFrame(width,height);
         VBox Vmenu= new VBox(contentFrame);
         this.levelButtons = new ArrayList<>();
         this.sceneMenu = new Scene(root);
         root.getChildren().addAll(Vmenu);
-
         if (!stage.isShowing()) stage.show();
         stylesheet = fileToStylesheetString(new File("src/view/style.css"));
        sceneMenu.getStylesheets().add(stylesheet);
+        root.getStyleClass().add("borderPane");
 
 
     }
