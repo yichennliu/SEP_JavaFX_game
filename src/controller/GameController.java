@@ -20,7 +20,6 @@ import model.game.Level;
 import view.EndGameAlert;
 import view.GamePausedAlert;
 import view.GameView;
-
 import java.io.IOException;
 import java.util.Optional;
 
@@ -134,7 +133,8 @@ public class GameController {
         };
 
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button -> button.addEventHandler(KeyEvent.KEY_PRESSED, fireOnEnter));
+        dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button
+                -> button.addEventHandler(KeyEvent.KEY_PRESSED, fireOnEnter));
 
     }
 
@@ -178,8 +178,6 @@ public class GameController {
 
 
                 } else if (result.get() == alert.getRetryButton()) {
-//                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-//                    gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
 
                     GameController.this.menuController.startLevel(level.getJsonPath());
                     alert.close();
@@ -322,10 +320,7 @@ public class GameController {
     }
 
 
-    public void setGameView(GameView gameView) {
-        this.gameView = gameView;
-
-    }
+    public void setGameView(GameView gameView) { this.gameView = gameView; }
 
     public void setLevel(Level level) {
         this.level = level;
