@@ -285,6 +285,9 @@ public class LevelFactory {
         }
         jsonLevel.put("values", jsonValues);
 
+        // save original path
+        jsonLevel.put("jsonPath", level.getJsonPath());
+
         // save level
         PrintWriter out = new PrintWriter(destionationPath);
         out.print(jsonLevel.toString(4));

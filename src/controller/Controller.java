@@ -2,8 +2,11 @@ package controller;
 
 import main.LevelFactory;
 import model.game.Level;
+import model.game.MedalStatus;
 import view.*;
 import view.themeEditor.ThemeEditorView;
+
+import java.util.HashMap;
 
 public class Controller {
     private View view;
@@ -24,7 +27,7 @@ public class Controller {
         MenuView menuView = new MenuView(this.view.getStage(),null);
 
         if (menuController == null) {
-            menuController = new MenuController(menuView,null,this);
+            menuController = new MenuController(menuView, new HashMap<String, MedalStatus>(),this);
         } else {
 
             menuController.setMenuView(menuView);
