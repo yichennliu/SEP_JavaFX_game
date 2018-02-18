@@ -5,19 +5,19 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum InputDirection {
-    GOUP(true, Neighbour.TOP, Situation.UP), GORIGHT(true, Neighbour.RIGHT, Situation.RIGHT),
-    GODOWN(true, Neighbour.BOTTOM, Situation.DOWN), GOLEFT(true, Neighbour.LEFT, Situation.LEFT),
+    GOUP(true, FieldDirection.TOP, Situation.UP), GORIGHT(true, FieldDirection.RIGHT, Situation.RIGHT),
+    GODOWN(true, FieldDirection.BOTTOM, Situation.DOWN), GOLEFT(true, FieldDirection.LEFT, Situation.LEFT),
 
-    DIGUP(false, Neighbour.TOP,Situation.METAUP), DIGRIGHT(false, Neighbour.RIGHT,Situation.METARIGHT),
-    DIGDOWN(false, Neighbour.BOTTOM,Situation.METARIGHT), DIGLEFT(false, Neighbour.LEFT,Situation.METALEFT);
+    DIGUP(false, FieldDirection.TOP,Situation.METAUP), DIGRIGHT(false, FieldDirection.RIGHT,Situation.METARIGHT),
+    DIGDOWN(false, FieldDirection.BOTTOM,Situation.METARIGHT), DIGLEFT(false, FieldDirection.LEFT,Situation.METALEFT);
 
     private final boolean go;
-    private final Neighbour neighbour;
+    private final FieldDirection fieldDirection;
     private final Situation situation;
 
-    InputDirection(boolean go, Neighbour neighbour, Situation situation) {
+    InputDirection(boolean go, FieldDirection fieldDirection, Situation situation) {
         this.go = go;
-        this.neighbour = neighbour;
+        this.fieldDirection = fieldDirection;
         this.situation = situation;
     }
 
@@ -33,7 +33,7 @@ public enum InputDirection {
         return !this.go;
     }
 
-    public Neighbour getNeighbour() {
-        return neighbour;
+    public FieldDirection getFieldDirection() {
+        return fieldDirection;
     }
 }

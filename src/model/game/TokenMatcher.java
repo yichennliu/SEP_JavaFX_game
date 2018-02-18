@@ -8,7 +8,7 @@ public class TokenMatcher {
     private List<Token> tokens;
 
     /**
-            * Match any token
+     * Match any token
      */
     public TokenMatcher() {}
 
@@ -36,11 +36,18 @@ public class TokenMatcher {
 
     public boolean matches(Token token) {
         if (this.tokens == null) {
-            System.out.print(" --- (ANY) ---");
+//            System.out.print(" --- (ANY) ---");
             return true;
         }
         return this.tokens.contains(token);
 
+    }
+
+    /**
+     * @return Tokens, or null (= "*")
+     */
+    public List<Token> getTokens() {
+        return tokens;
     }
 
 }

@@ -13,9 +13,9 @@ public enum Situation {
     private InputDirection inputD;
 
 
-    public Neighbour getNeighbour(){
+   /* public FieldDirection getNeighbour(){
         if(inputD != null)
-        return inputD.getNeighbour();
+            return inputD.getFieldDirection();
         return null;
-    }
+    }*/
 }

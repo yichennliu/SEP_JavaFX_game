@@ -10,12 +10,14 @@ public class Feld {
     private int row;
     private int column;
     private Level level;
+    private Feld currentTokenCameFrom;
+    private Feld lastTokenWentTo;
 
     public Feld(Token token, int column, int row) {
         this(token, new HashMap<Property, Integer>(), column, row);
     }
 
-    public Feld(Token token, Map<Property, Integer> properties, int column, int row) {
+    public Feld(Token token, Map<Property, Integer> properties, int column, int row){
         this.token = token;
         this.properties = properties;
         this.column = column;
@@ -47,14 +49,12 @@ public class Feld {
         this.token = token;
     }
 
-    /**
-     * buffer to set token, do not apply yet
-     */
+    /** buffer to set token, do not apply yet */
     public void bufferSetToken(Token token) {
         this.level.bufferChangeToken(this, token);
     }
 
-    public Token getToken() {
+    public Token getToken(){
         return this.token;
     }
 
@@ -68,12 +68,12 @@ public class Feld {
         return false;
     }
 
-    public Feld getNeighbour(Neighbour nb) {
-        return this.getLevel().getFeld(this.getRow() + nb.getRowOffset(), this.getColumn() + nb.getColumnOffset());
+    public Feld getNeighbour(FieldDirection nb) {
+        return this.getLevel().getFeld(this.getRow()+nb.getRowOffset(), this.getColumn()+nb.getColumnOffset());
     }
 
     public Feld getNeighbour(InputDirection input) {
-        return this.getNeighbour(input.getNeighbour());
+        return this.getNeighbour(input.getFieldDirection());
     }
 
     /**
@@ -81,9 +81,9 @@ public class Feld {
      */
     public Collection<Feld> getNeighbours() {
         Collection<Feld> neighbours = new ArrayList<>();
-        for (Neighbour nb : Neighbour.values()) {
-            Feld neighbour = this.getLevel().getFeld(this.getRow() + nb.getRowOffset(),
-                    this.getColumn() + nb.getColumnOffset());
+        for (FieldDirection nb : FieldDirection.values()) {
+            Feld neighbour = this.getLevel().getFeld(this.getRow()+nb.getRowOffset(),
+                    this.getColumn()+nb.getColumnOffset());
             if (neighbour != null) neighbours.add(neighbour);
         }
         return neighbours;
@@ -94,8 +94,8 @@ public class Feld {
      */
     public Collection<Feld> getNeighboursDirect() {
         Collection<Feld> neighbours = new ArrayList<>();
-        for (Neighbour nb : Neighbour.values()) {
-            if (nb == Neighbour.TOP || nb == Neighbour.RIGHT || nb == Neighbour.BOTTOM || nb == Neighbour.LEFT) {
+        for (FieldDirection nb : FieldDirection.values()) {
+            if (nb == FieldDirection.TOP || nb == FieldDirection.RIGHT || nb == FieldDirection.BOTTOM || nb == FieldDirection.LEFT) {
                 Feld neighbour = this.getLevel().getFeld(this.getRow() + nb.getRowOffset(),
                         this.getColumn() + nb.getColumnOffset());
                 if (neighbour != null) neighbours.add(neighbour);
@@ -108,10 +108,8 @@ public class Feld {
         return this.token.name();
     }
 
-    /**
-     * @return value associated to local or global property
-     */
-    public Integer getPropertyValue(Property property) {
+    /** @return value associated to local or global property */
+    public Integer getPropertyValue(Property property){
         if (property.isGlobal()) {
             return this.level.getPropertyValue(property);
         } else {
@@ -121,10 +119,8 @@ public class Feld {
         }
     }
 
-    /**
-     * sets local or global property
-     */
-    public void setPropertyValue(Property property, int value) {
+    /** sets local or global property */
+    public void setPropertyValue(Property property, int value){
         if (property.isGlobal()) {
             this.level.setPropertyValue(property, value);
         } else {
@@ -132,68 +128,92 @@ public class Feld {
         }
     }
 
-    /**
-     * buffer setting local or global property, do not apply yet
-     */
+    /** buffer setting local or global property, do not apply yet */
     public void bufferSetPropertyValue(Property property, int value) {
         this.level.bufferChangeProperty(this, property, value);
     }
 
-    /**
-     * increases value of property by the given value
-     */
+    /** increases value of property by the given value */
     public void increasePropertyValue(Property property, int by) {
-        this.setPropertyValue(property, this.getPropertyValue(property) + by);
+        this.setPropertyValue(property, this.getPropertyValue(property)+by);
     }
 
-    /**
-     * buffer to increase property by the given value, do not apply yet
-     */
+    /** buffer to increase property by the given value, do not apply yet */
     public void bufferIncreasePropertyValue(Property property, int by) {
         this.level.bufferIncreaseProperty(this, property, by);
     }
 
     /**
-     * if property != 0
+     * @return existing non-global properties (value != 0)
      */
+    public Map<Property, Integer> getProperties() {
+        Map<Property, Integer> properties = new HashMap<>();
+        for (Map.Entry entry : this.properties.entrySet()) {
+            Property p = (Property) entry.getKey();
+            Integer i = (Integer) entry.getValue();
+            if (entry.getValue() != null && i != 0) {
+                properties.put(p, i);
+            }
+        }
+        return properties;
+    }
+
+    /** if property != 0 */
     public boolean hasProperty(Property property) {
         return this.getPropertyValue(property) != 0;
     }
 
-    /**
-     * set property = 1
-     */
+    /** set property = 1 */
     public void setProperty(Property property) {
         this.setPropertyValue(property, 1);
     }
 
-    /**
-     * buffer set property = 1, do not apply yet
-     */
+    /** buffer set property = 1, do not apply yet */
     public void bufferSetProperty(Property property) {
         this.bufferSetPropertyValue(property, 1);
     }
 
-    /**
-     * set property = 0
-     */
+    /** set property = 0 */
     public void resetProperty(Property property) {
         this.setPropertyValue(property, 0);
+    }
+
+    /**
+     * Make a 3*3 explosion
+     *
+     * @param rich true to generate GEMs, otherwise EXPLOSIONs
+     */
+    public void bam(boolean rich) {
+        Collection<Feld> fields = this.getNeighbours();
+        fields.add(this);
+        for (Feld f : fields) {
+            if (f.getToken() != Token.EXIT && f.getToken() != Token.WALL) {
+                if (f.isToken(Token.ME) && this.getLevel().getWinningStatus() != WinningStatus.WON) {
+                    // ME killed: loose
+                    this.getLevel().setWinningStatus(WinningStatus.LOST);
+                }
+                f.setToken(rich ? Token.GEM : Token.EXPLOSION);
+            }
+        }
     }
 
     /**
      * Buffer a 3*3 explosion
      *
      * @param rich true to generate GEMs, otherwise EXPLOSIONs
+     * @return true if ME was killed, false otherwise
      */
-    public void bufferBam(boolean rich) {
+    public boolean bufferBam(boolean rich) {
         Collection<Feld> fields = this.getNeighbours();
         fields.add(this);
+        boolean killed = false;
         for (Feld f : fields) {
             if (f.getToken() != Token.EXIT && f.getToken() != Token.WALL) {
+                if (f.isToken(Token.ME)) killed = true;
                 f.bufferSetToken(rich ? Token.GEM : Token.EXPLOSION);
             }
         }
+        return killed;
     }
 
     /**
@@ -218,6 +238,32 @@ public class Feld {
     }
 
     /**
+     * make a movement:
+     * Move to goal, set both to MOVED, replace current Token with PATH
+     *
+     * @param goal not null
+     */
+    public void moveTo(Feld goal) {
+        // Objekt am Ziel einsetzen
+        goal.setToken(this.getToken());
+        goal.setProperty(Property.MOVED);
+
+        // für ME direction verschieben
+        if (this.isToken(Token.ME)) {
+            goal.setPropertyValue(Property.DIRECTION, this.getPropertyValue(Property.DIRECTION));
+            this.resetProperty(Property.DIRECTION);
+        }
+
+        // Platz freimachen
+        this.setToken(Token.PATH);
+        this.setProperty(Property.MOVED);
+
+        // set bi-drirectional link betwenn this and goal
+        goal.setCurrentTokenCameFrom(this);
+        this.setLastTokenWentTo(goal);
+    }
+
+    /**
      * Buffer a movement:
      * Move to goal, set both to MOVED, replaceToken current Token with PATH
      *
@@ -232,34 +278,109 @@ public class Feld {
         this.bufferSetProperty(Property.MOVED);
     }
 
-    public enum Move {FORWARD, TORIGHT, BACKWARD, TOLEFT}
+    /**
+     * execute an enemy move relative to its direction, check for ME collision
+     */
+    public void moveEnemyTo(FieldDirection to) {
+        FieldDirection curDirection = FieldDirection.getFromDirection(this.getPropertyValue(Property.DIRECTION));
+        if (curDirection.getDirection() == null || to.getDirection() == null)
+            throw new IllegalArgumentException("'currentDir' and 'to' must not be diagonal");
+
+        FieldDirection nbGoal = FieldDirection.getRotated(curDirection, to);
+        Feld goal = this.getNeighbour(nbGoal);
+
+        if (goal.isToken(Token.ME)) {
+            // explode
+            goal.setProperty(this.isToken(Token.BLOCKLING) ? Property.BAM : Property.BAMRICH);
+        } else {
+            this.moveTo(goal);
+            goal.setPropertyValue(Property.DIRECTION, nbGoal.getDirection());
+            this.setPropertyValue(Property.DIRECTION, 0);
+        }
+    }
 
     /**
-     * buffer an enemy move
+     * buffer an enemy move relative to its direction, check for ME collision
      */
-    public void bufferMoveEnemyTo(Feld goal, int currentDirection, Move to) {
-        if (to == null || currentDirection < 1 || currentDirection > 4)
-            throw new IllegalArgumentException("'direction' must be between 1 and 4, 'to' must not be null");
-        int newDirection = 0;
-        if (to == Move.FORWARD) newDirection = currentDirection;
-        else if (to == Move.TORIGHT) newDirection = currentDirection == 4 ? 1 : currentDirection + 1;
-        else if (to == Move.BACKWARD)
-            newDirection = currentDirection <= 2 ? currentDirection + 2 : currentDirection - 2;
-        else if (to == Move.TOLEFT) newDirection = currentDirection == 1 ? 4 : currentDirection - 1;
+    public void bufferMoveEnemyTo(FieldDirection to) {
+        FieldDirection curDirection = FieldDirection.getFromDirection(this.getPropertyValue(Property.DIRECTION));
+        if (curDirection.getDirection() == null || to.getDirection() == null)
+            throw new IllegalArgumentException("'currentDir' and 'to' must not be diagonal");
 
-        this.bufferMoveTo(goal);
-        goal.bufferSetPropertyValue(Property.DIRECTION, newDirection);
-        this.bufferSetPropertyValue(Property.DIRECTION, 0);
+        FieldDirection nbGoal = FieldDirection.getRotated(curDirection, to);
+        Feld goal = this.getNeighbour(nbGoal);
+
+        if (goal.isToken(Token.ME)) {
+            // explode
+            goal.bufferSetProperty(this.isToken(Token.BLOCKLING) ? Property.BAM : Property.BAMRICH);
+        } else {
+            this.bufferMoveTo(goal);
+            goal.bufferSetPropertyValue(Property.DIRECTION, nbGoal.getDirection());
+            this.bufferSetPropertyValue(Property.DIRECTION, 0);
+        }
     }
 
     public List getNeighboursRecursive(Direction direction, int counter, List<Feld> result) throws IndexOutOfBoundsException {
         counter--;
         if (counter == 0) return result;
-        Feld current = result.get(result.size() - 1).getNeighbour(direction.getNeighbour());
+        Feld current = result.get(result.size() - 1).getNeighbour(direction.getFieldDirection());
         if (current == null && counter > 0) throw new IndexOutOfBoundsException("Out of bounds, biatch!");
 
         result.add(current);
         return getNeighboursRecursive(direction, counter, result);
     }
 
+
+
+    /**
+     * Get neighbour field relative to an original direction
+     * E.g. original RIGHT, relative RIGHT -> BOTTOM
+     */
+    public Feld getNeighbourRelative(FieldDirection original, FieldDirection relative) {
+        return this.getNeighbour(FieldDirection.getRotated(original, relative));
+    }
+
+    /**
+     * @param allowME true if something is able to walk on ME, false otherwise
+     * @return true if something can move here
+     */
+    public boolean isFree(boolean allowME) {
+        if (allowME)
+            return this.isToken(Token.ME) || (this.isToken(Token.PATH) && !this.hasProperty(Property.MOVED));
+        else
+            return this.isToken(Token.PATH) && !this.hasProperty(Property.MOVED);
+    }
+
+    /**
+     * @return The field of which the token of the current field came from,
+     * or null if nothing was moved to the current field
+     */
+    public Feld getCurrentTokenCameFrom() {
+        return this.currentTokenCameFrom;
+    }
+
+    /**
+     * @see Feld#getCurrentTokenCameFrom() Getter
+     * @param origin
+     */
+    public void setCurrentTokenCameFrom(Feld origin) {
+        this.currentTokenCameFrom = origin;
+    }
+
+    /**
+     * @return The field to which the token which previously was on the current field has been moved,
+     * or null if nothing was moved away from the current field
+     */
+    public Feld getLastTokenWentTo() {
+        return this.lastTokenWentTo;
+    }
+
+    /**
+     * @see Feld#getLastTokenWentTo() Getter
+     * @param destination
+     */
+    public void setLastTokenWentTo(Feld destination) {
+        this.lastTokenWentTo = destination;
+    }
 }
+

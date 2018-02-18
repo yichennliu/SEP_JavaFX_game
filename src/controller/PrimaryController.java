@@ -11,20 +11,27 @@ public class PrimaryController {
     private Object model;
     private Controller primaryController;
 
-    public PrimaryController(PrimaryPage primaryPage, Controller menuController){
+    public PrimaryController(PrimaryPage primaryPage, Controller menuController) {
         this.primaryPage = primaryPage;
-        this.model = model;
+        //this.model = model;
         this.primaryController = menuController;
+        addPrimaryPageComponents();
+    }
 
 
-        PrimaryPage.getName().setOnAction(e -> {
+    public void setPrimaryPage(PrimaryPage primaryPage) {
+        this.primaryPage = primaryPage;
+        addPrimaryPageComponents();
+    }
+
+    private void addPrimaryPageComponents() {
+        primaryPage.getName().setOnAction(e -> {
             this.primaryController.startMenu();
         });
 
-       PrimaryPage.getNoName().setOnAction(e -> {
+        primaryPage.getNoName().setOnAction(e -> {
             this.primaryController.startMenu();
         });
     }
-
 
 }

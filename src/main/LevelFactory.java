@@ -7,7 +7,7 @@ import org.json.*;
 import java.io.*;
 import java.util.*;
 
-public class LevelImporter {
+public class LevelFactory {
 
     /**
      * Imports a BoulderDash level
@@ -89,8 +89,19 @@ public class LevelImporter {
                 ? importLevelRules(jsonLevel.getJSONArray("post"))
                 : new ArrayList<>();
 
+        // import global properties (non-standard, for savegames)
+        Map<Property, Integer> globalProperties = new HashMap<>();
+        if (jsonLevel.has("values")) {
+            JSONObject jsonValues = jsonLevel.getJSONObject("values");
+            for (Iterator<String> i = jsonValues.keys(); i.hasNext();) {
+                String key = i.next();
+                int keyVal = jsonValues.getInt(key);
+                globalProperties.put(Property.valueOf(key.toUpperCase()), keyVal);
+            }
+        }
+
         // create level
-        return new Level(name, map, gems, ticks, pre, post, maxslime);
+        return new Level(name, map, gems, ticks, pre, post, maxslime, globalProperties, jsonPath);
     }
 
     /**
@@ -202,6 +213,146 @@ public class LevelImporter {
         }
 
         return levelRules;
+    }
+
+    /**
+     * Exports a boulder dash level
+     *
+     * @param level
+     */
+    public static void exportLevel(Level level, String destionationPath) throws IOException {
+        JSONObject jsonLevel = new JSONObject();
+
+        // add name
+        jsonLevel.put("name", level.getName());
+
+        // add height/width
+        jsonLevel.put("height", level.getHeight());
+        jsonLevel.put("width", level.getWidth());
+
+        // add gem goals
+        jsonLevel.put("gems", level.getGemGoals());
+
+        // add tick goals
+        jsonLevel.put("ticks", level.getTickGoals());
+
+        // add max slime
+        jsonLevel.putOpt("maxslime", level.getMaxslime());
+
+        // add pre rules
+        if (!level.getPre().isEmpty()) {
+            jsonLevel.put("pre", LevelFactory.exportLevelRules(level.getPre()));
+        }
+
+        // add post rules
+        if (!level.getPost().isEmpty()) {
+            jsonLevel.put("post", LevelFactory.exportLevelRules(level.getPost()));
+        }
+
+        // add map
+        JSONArray jsonMap = new JSONArray();
+        for (Feld[] row : level.getMap()) {
+            for (Feld feld : row) {
+                Object jsonFeld = null;
+                Token token = feld.getToken();
+                Map<Property, Integer> properties = feld.getProperties();
+
+                // Token + properties
+                JSONObject values = new JSONObject();
+                for (Map.Entry entry : properties.entrySet()) {
+                    Property property = (Property) entry.getKey();
+                    if (property == Property.DIRECTION || property == Property.A || property == Property.B
+                            || property == Property.C || property == Property.D) {
+                        values.put(property.toString().toLowerCase(), entry.getValue());
+                    }
+                }
+                if (values.length() > 0) {
+                    jsonFeld = new JSONObject();
+                    ((JSONObject) jsonFeld).put("values", values);
+                    ((JSONObject) jsonFeld).put("token", token.toString().toLowerCase());
+                } else {
+                    jsonFeld = token.toString().toLowerCase();
+                }
+                jsonMap.put(jsonFeld);
+            }
+        }
+        jsonLevel.put("map", jsonMap);
+
+        // add global properties in a field "values" (this is necessary for running games but non-standard!)
+        JSONObject jsonValues = new JSONObject();
+        for (Map.Entry entry : level.getProperties().entrySet()) {
+            jsonValues.put(entry.getKey().toString().toLowerCase(), entry.getValue());
+        }
+        jsonLevel.put("values", jsonValues);
+
+        // save level
+        PrintWriter out = new PrintWriter(destionationPath);
+        out.print(jsonLevel.toString(4));
+        out.close();
+    }
+
+    /**
+     * @param rules level rules (pre or post)
+     * @return level rules in JSON format
+     */
+    private static JSONArray exportLevelRules(List<Rule> rules) {
+        JSONArray jsonRules = new JSONArray();
+        for (Rule rule : rules) {
+            JSONObject jsonRule = new JSONObject();
+            jsonRule.put("situation", rule.getSituation().toString().toLowerCase());
+            jsonRule.put("direction", rule.getDirection().toString().toLowerCase());
+            jsonRule.putOpt("sparsity", rule.getSparsity());
+
+            // matching patterns
+            JSONArray jsonOriginal = new JSONArray();
+            for (RuleElementOriginal elementOriginal : rule.getOriginal()) {
+                JSONObject jsonElementOriginal = new JSONObject();
+                TokenMatcher tokenMatcher = elementOriginal.getToken();
+
+                if (tokenMatcher.getTokens() == null || tokenMatcher.getTokens().size() == 0) {
+                    jsonElementOriginal.put("token", "*");
+                } else if (tokenMatcher.getTokens().size() == 1) {
+                    jsonElementOriginal.put("token", tokenMatcher.getTokens().get(0).toString().toLowerCase());
+                } else {
+                    JSONArray tokens = new JSONArray();
+                    for (Token token : tokenMatcher.getTokens()) {
+                        tokens.put(token.toString().toLowerCase());
+                    }
+                    jsonElementOriginal.put("token", tokens);
+                }
+
+                if (elementOriginal.getValues() != null && !elementOriginal.getValues().isEmpty()) {
+                    jsonElementOriginal.put("values", elementOriginal.getValues());
+                }
+
+                jsonOriginal.put(jsonElementOriginal);
+            }
+            jsonRule.put("original", jsonOriginal);
+
+            // replacing patterns
+            JSONArray jsonResult = new JSONArray();
+            for (RuleElementResult elementResult : rule.getResult()) {
+                JSONObject jsonElementResult = new JSONObject();
+                TokenReplacer tokenReplacer = elementResult.getToken();
+
+                if (tokenReplacer.getToken() != null) {
+                    jsonElementResult.put("token", tokenReplacer.getToken().toString().toLowerCase());
+                } else {
+                    jsonElementResult.put("token", tokenReplacer.getIndex().toString());
+                }
+
+                if (elementResult.getValues() != null && !elementResult.getValues().isEmpty()) {
+                    jsonElementResult.put("values", elementResult.getValues());
+                }
+
+                jsonResult.put(jsonElementResult);
+            }
+            jsonRule.put("result", jsonResult);
+
+            jsonRules.put(jsonRule);
+        }
+
+        return jsonRules;
     }
 
 }

@@ -1,15 +1,15 @@
 package model.enums;
 
 public enum Direction {
-    EAST(Neighbour.RIGHT), WEST(Neighbour.LEFT), NORTH(Neighbour.TOP), SOUTH(Neighbour.BOTTOM);
+    EAST(FieldDirection.RIGHT), WEST(FieldDirection.LEFT), NORTH(FieldDirection.TOP), SOUTH(FieldDirection.BOTTOM);
 
-    private final Neighbour neighbour;
+    private final FieldDirection fieldDirection;
 
-    Direction(Neighbour neighbour) {
-        this.neighbour = neighbour;
+    Direction(FieldDirection fieldDirection) {
+        this.fieldDirection = fieldDirection;
     }
 
-    public Neighbour getNeighbour() {
-        return neighbour;
+    public FieldDirection getFieldDirection() {
+        return fieldDirection;
     }
 }

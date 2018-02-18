@@ -30,10 +30,18 @@ public class RuleElementOriginal {
     }
 
     public boolean matches(Feld field) {
-        System.out.println("Token " + field.getToken() + " == " + token.toString()+ ". Zusatzwerte stimmen überein ist ");
+       /* System.out.println("Token " + field.getToken() + " == " + token.toString()+ ". Zusatzwerte stimmen überein ist ");
         System.out.println((compareValues(field)) + "\n");
         System.out.println("Tokens stimmen überein ist: \n");
-        System.out.println(token.matches(field.getToken()));
+        System.out.println(token.matches(field.getToken()));*/
         return ( token.matches(field.getToken()) && compareValues(field));
+    }
+
+    public TokenMatcher getToken() {
+        return this.token;
+    }
+
+    public Map<Property, Integer> getValues() {
+        return this.values;
     }
 }

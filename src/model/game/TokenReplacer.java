@@ -30,4 +30,8 @@ public class TokenReplacer {
             feld.setToken(this.token);
         }
     }
+
+    public Integer getIndex() {
+        return this.index;
+    }
 }
