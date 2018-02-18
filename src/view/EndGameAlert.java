@@ -16,7 +16,6 @@ public class EndGameAlert extends Alert {
     private ButtonType cancelExitButton;
 
     public EndGameAlert (){
-
         super(AlertType.INFORMATION);
 
         this.setTitle("Exit or Save");

@@ -52,7 +52,7 @@ public class GameController {
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
-//            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
+            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
             boolean killedPre;
             boolean killedMain;
             boolean killedPost;
@@ -238,7 +238,6 @@ public class GameController {
     private void addDirectionEvents() {
         Stage gamestage = this.gameView.getStage();
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            //KeyCombination combine = new KeyCombination() {}
             if (event.getCode().equals(KeyCode.UP)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGUP);
