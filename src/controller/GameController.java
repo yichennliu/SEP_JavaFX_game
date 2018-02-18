@@ -7,8 +7,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.LevelFactory;
@@ -28,20 +30,23 @@ public class GameController {
     private Level level;
     private Timeline timeline;
     private Timeline timer;
-    private final Integer startSecond;
-    private Integer second;
 
 
     public GameController(Level level, GameView gameView, Controller menuController){
         this.menuController = menuController;
         this.gameView = gameView;
         this.level = level;
-        startSecond= this.level.getTickGoals()[0]/5;
-        this.second = startSecond;
         this.addIngameMenu();
         this.addDirectionEvents();
         this.addGameViewComponents();
         this.countDown();
+    }
+
+    public void update(){
+        countDown();
+        addGameViewComponents();
+        addDirectionEvents();
+
     }
 
     public void tick() {
@@ -78,23 +83,28 @@ public class GameController {
 
     public void countDown() {
         Label countDownLabel = this.gameView.updateTimerLabel();
+        final Integer startSecond = this.level.getTickGoals()[0]/5;
         this.timer = new Timeline();
         timer.setCycleCount(Timeline.INDEFINITE);
         if (timer != null) {
             timer.stop();
+
         }
+
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+            int second = startSecond;
             @Override
             public void handle(ActionEvent event) {
                 second--;
-                countDownLabel.setText("Time Left: " + second.toString());
+                countDownLabel.setText("Time Left: " + second);
+                countDownLabel.setTextFill(Color.WHITE);
 
                 if (second <= 0) {
                     timer.stop();
                     }
 
                 if (second <= 10) {
-                    countDownLabel.setTextFill(javafx.scene.paint.Color.YELLOW);
+                    countDownLabel.setTextFill(Color.RED);
                     }
 
                 }
@@ -108,6 +118,7 @@ public class GameController {
     public GameView getGameView() {
         return gameView;
     }
+
 
     private void addIngameMenu(){
         Stage gamestage = this.gameView.getStage();
@@ -138,12 +149,14 @@ public class GameController {
                     if (timeline != null) {
                         timeline.play();
                         timer.playFromStart();
+
                     }
                 }
 
                 if (result.get() == save_exit_button){
                     this.saveGame();
                     this.menuController.startMenu();
+
                 }
 
                 if(result.get() == exit_button) {
@@ -152,13 +165,16 @@ public class GameController {
 
                 if (result.get() == retry_button) {
                     this.menuController.startLevel(level.getJsonPath());
+                    timeline.playFromStart();
+                    timer.playFromStart();
                 }
 
                 if(result.get() == cancel_button){
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
-                        timer.playFromStart();
+                        timer.play();
+
                     }
                 }
 
@@ -198,6 +214,7 @@ public class GameController {
 
                 if (result.get() == retry_button) {
                     menuControllerLocal.startLevel(levelLOcal.getJsonPath());
+
                 }
 
                 if (result.get() == cancel_exit_button) {
@@ -210,33 +227,46 @@ public class GameController {
     private void addDirectionEvents() {
         Stage gamestage = this.gameView.getStage();
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-
+            //KeyCombination combine = new KeyCombination() {}
             if (event.getCode().equals(KeyCode.UP)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGUP);
                 }
+                else {
+                    this.level.setInputDirection(InputDirection.GOUP);
 
-                this.level.setInputDirection(InputDirection.GOUP);
+                }
             }
 
             if (event.getCode().equals(KeyCode.DOWN)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGDOWN);
                 }
-                this.level.setInputDirection(InputDirection.GODOWN);
+
+                else {
+                    this.level.setInputDirection(InputDirection.GODOWN);
+                }
             }
 
             if (event.getCode().equals(KeyCode.LEFT)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGLEFT);
                 }
-                this.level.setInputDirection(InputDirection.GOLEFT);
+                else{
+
+                    this.level.setInputDirection(InputDirection.GOLEFT);
+
+                }
             }
             if (event.getCode().equals(KeyCode.RIGHT)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGRIGHT);
                 }
-                this.level.setInputDirection(InputDirection.GORIGHT);
+                else{
+
+                    this.level.setInputDirection(InputDirection.GORIGHT);
+
+                }
             }
 
         });
@@ -274,9 +304,16 @@ public class GameController {
         }
     }
 
-    public void clean(){
+
+    public void setGameView(GameView gameView){
+        this.gameView = gameView;
 
     }
+
+    public void setLevel(Level level){
+        this.level = level;
+    }
+
 
 }
 

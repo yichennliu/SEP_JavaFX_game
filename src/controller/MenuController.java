@@ -3,9 +3,7 @@ package controller;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleGroup;
 import view.MenuView;
-
 import java.util.ArrayList;
-
 
 public class MenuController {
 

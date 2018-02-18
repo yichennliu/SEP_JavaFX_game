@@ -24,7 +24,7 @@ public class Theme {
             switch(this){
                 case ONEEDGE: return new Position[]{Position.LEFT,Position.RIGHT,Position.TOP,Position.BOTTOM};
                 case TWOEDGE: return new Position[]{Position.HORIZONTAL, Position.VERTICAL};
-                case TWOEDGE_CORNER: return new Position[]{Position.BOTTOMLEFT,Position.BOTTOMRIGHT,Position.TOPLEFT,Position.BOTTOMLEFT};
+                case TWOEDGE_CORNER: return new Position[]{Position.BOTTOMLEFT,Position.TOPRIGHT,Position.TOPLEFT,Position.BOTTOMRIGHT};
                 case THREEEDGE: return new Position[] {Position.TOP, Position.BOTTOM, Position.LEFT, Position.RIGHT};
                 case STEP_SIDE: return new Position[] {Position.RIGHT, Position.LEFT};
                 default: return new Position[]{Position.DEFAULT};

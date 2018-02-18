@@ -70,22 +70,20 @@ public class Level {
         }
     }
 
-    public Pair<Integer, Integer> getRemainingGoldTicksGems() {
-        Integer remainingTicks = this.getPropertyValue(Property.TICKS) - this.getTickGoals()[2];
-        Integer remainingGems = this.getPropertyValue(Property.GEMS) - this.getGemGoals()[2];
-        return new Pair<Integer, Integer>(remainingTicks, remainingGems);
+    public Integer getRemainingGemsToGold() {
+        Integer remainingGems = this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS);
+        return remainingGems;
     }
 
-    public Pair<Integer, Integer> getRemainingSilverTickGems(){
-        Integer remainingTicks = this.getPropertyValue(Property.TICKS) - this.getTickGoals()[1];
-        Integer remainingGems = this.getPropertyValue(Property.GEMS) - this.getGemGoals()[1];
-        return new Pair<Integer,Integer>(remainingTicks, remainingGems);
+    public Integer getRemainingGemsToSilver(){
+
+        Integer remainingGems = this.getGemGoals()[1] - this.getPropertyValue(Property.GEMS);
+        return remainingGems;
     }
 
-    public Pair<Integer, Integer> getRemainingBronzeTickGems(){
-        Integer remainingTicks = this.getPropertyValue(Property.TICKS) - this.getTickGoals()[0];
-        Integer remainingGems = this.getPropertyValue(Property.GEMS) - this.getGemGoals()[0];
-        return new Pair<Integer, Integer>(remainingTicks, remainingGems);
+    public Integer getRemainingGemsToBronze(){
+        Integer remainingGems =  this.getGemGoals()[0] - this.getPropertyValue(Property.GEMS);
+        return remainingGems;
     }
 
     public Feld[][] getMap(){
@@ -415,6 +413,10 @@ public class Level {
                             } else if (backwards != null && backwards.isFree(true)) {
                                 // umkehren
                                 current.moveEnemyTo(FieldDirection.BOTTOM);
+                            // sonst wenn rechts frei
+                            } else if (rightSide != null && rightSide.isFree(true)) {
+                                // nach rechts gehen
+                                current.moveEnemyTo(FieldDirection.RIGHT);
                             } else {
                                 // eingeschlossen
                             }
@@ -437,6 +439,10 @@ public class Level {
                             } else if (backwards != null && backwards.isFree(true)) {
                                 // umkehren
                                 current.moveEnemyTo(FieldDirection.BOTTOM);
+                            // sonst wenn links frei
+                            } else if (leftSide != null && leftSide.isFree(true)) {
+                                // nach links gehen
+                                current.moveEnemyTo(FieldDirection.LEFT);
                             } else {
                                 // eingeschlossen
                             }
