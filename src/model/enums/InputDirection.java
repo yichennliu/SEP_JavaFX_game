@@ -1,18 +1,28 @@
 package model.enums;
 
-public enum InputDirection {
-    GOUP(true, FieldDirection.TOP), GORIGHT(true, FieldDirection.RIGHT),
-    GODOWN(true, FieldDirection.BOTTOM), GOLEFT(true, FieldDirection.LEFT),
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-    DIGUP(false, FieldDirection.TOP), DIGRIGHT(false, FieldDirection.RIGHT),
-    DIGDOWN(false, FieldDirection.BOTTOM), DIGLEFT(false, FieldDirection.LEFT);
+public enum InputDirection {
+    GOUP(true, FieldDirection.TOP, Situation.UP), GORIGHT(true, FieldDirection.RIGHT, Situation.RIGHT),
+    GODOWN(true, FieldDirection.BOTTOM, Situation.DOWN), GOLEFT(true, FieldDirection.LEFT, Situation.LEFT),
+
+    DIGUP(false, FieldDirection.TOP,Situation.METAUP), DIGRIGHT(false, FieldDirection.RIGHT,Situation.METARIGHT),
+    DIGDOWN(false, FieldDirection.BOTTOM,Situation.METARIGHT), DIGLEFT(false, FieldDirection.LEFT,Situation.METALEFT);
 
     private final boolean go;
     private final FieldDirection fieldDirection;
+    private final Situation situation;
 
-    InputDirection(boolean go, FieldDirection fieldDirection) {
+    InputDirection(boolean go, FieldDirection fieldDirection, Situation situation) {
         this.go = go;
         this.fieldDirection = fieldDirection;
+        this.situation = situation;
+    }
+
+    public Situation getSituation(){
+        return this.situation;
     }
 
     public boolean isGo() {

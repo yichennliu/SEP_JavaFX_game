@@ -50,7 +50,6 @@ public class MenuController {
                 level= levelButtons.get(i);
 
              final String path= (String) level.getUserData();
-             System.out.println(path);
                  level.setOnAction(e -> {
                  this.controller.startLevel("src/json/level/"+path);
              });

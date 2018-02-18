@@ -49,7 +49,6 @@ public class BoardTranslationTransition extends Transition{
             this.translY = translation.getY();
             this.transformationStart = transformation.clone();
             hasTranslate = true;
-            System.out.println("Translation set");
         }
 
     }
