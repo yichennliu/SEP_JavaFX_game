@@ -37,16 +37,13 @@ public class View {
         this.stage.setWidth(windowWidth);
         this.stage.setHeight(windowHeight);
         this.stage.centerOnScreen();
+        this.stage.setMaximized(true);
     }
 
     private void showMenu(){
         MenuView menuView = (MenuView) currentScene;
         stage.setScene(menuView.getSceneMenu());
     }
-
-//    private void showEditor(){
-//        stage.setScene(this.levelEditor);
-//    }
 
     public void showGame(){
         GameView gameView = (GameView) currentScene;
@@ -58,23 +55,12 @@ public class View {
         stage.setScene(themeEditorView.getScene());
     }
 
-    private void showPrimary(){
-
-        PrimaryPage primaryPage= (PrimaryPage) currentScene;
-        stage.setScene(primaryPage.getScene());
-
-    }
-
-
     public void update(Mode mode, Object scene) {
         this.currentScene = scene;
         switch (mode) {
-            case PRIMARY:
-                showPrimary();
-
-                break;
 
             case GAME:
+
                     showGame();
 //                    Canvas gameCanvas = gameScene.getCanvas();
 //                    drawBoard(gameCanvas,gameCanvas.getGraphicsContext2D());
@@ -94,22 +80,24 @@ public class View {
     /*Draws board and starts animation on animationCanvas in Board*/
     public static void drawBoard(Board board, Feld[][] feld, Theme theme, boolean animate){
         board.clearBoard();
-        TokenTransition animator = board.getAnimator();
+        TokenTransition animator = (animate) ? board.getAnimator() : null;
         BoardTranslationTransition translationAnimator = board.getTranslationAnimator();
-        List<StaticViewToken> staticTokenList = new ArrayList<>();
-        List<AnimationToken> tokenList = new ArrayList<>();
+        List<StaticViewToken> staticTokenList = (animate) ? new ArrayList<>() : null;
         double fieldSize = board.getFieldSize();
-        drawMap(feld,fieldSize,theme,tokenList, staticTokenList, board.getStaticGC());
 
-        animator.setNewAnimationTokens(tokenList);
-        translationAnimator.setStaticViewTokens(staticTokenList);
+        if(animate) animator.startAdding();
+        drawMap(feld,fieldSize,theme,animator, staticTokenList, board.getStaticGC());
+
         if(animate){
+            animator.stopAdding();
+            translationAnimator.setStaticViewTokens(staticTokenList);
             board.playAnimation();
         }
-
     }
 
-    public static void drawMap(Feld[][] map, double fieldSize, Theme theme, List<AnimationToken> tokenList, List<StaticViewToken> staticTokenList, GraphicsContext gc){
+
+    /*Draws 2D Feld-Array and fills Lists (if provided) of Animatable Items*/
+    public static void drawMap(Feld[][] map, double fieldSize, Theme theme, TokenTransition animator, List<StaticViewToken> staticTokenList, GraphicsContext gc){
         int mapWidth = map[0].length;
         int mapHeight = map.length;
 
@@ -126,17 +114,18 @@ public class View {
                 SpriteSheet s = null;
                 if(theme!=null) s = retrieveSpriteSheet(t,f,p,theme);
 
-                if(tokenList!=null){
+                if(animator!=null){
                     AnimationToken animationToken = getAnimation(currentFeld,s);
                     if(animationToken!=null){
-                        tokenList.add(animationToken);
+                        animator.add(animationToken);
                         continue;
                     }
                 }
                 if(theme == null || !drawFeld(xPos, yPos,fieldSize,gc,s,theme)) {
                     drawTextFeld(map[rowNum][colNum],gc,xPos,yPos,fieldSize);
                 }
-                staticTokenList.add(new StaticViewToken(xPos,yPos,map[rowNum][colNum].getToken().name(),s));
+                if(staticTokenList!=null)
+                    staticTokenList.add(new StaticViewToken(xPos,yPos,map[rowNum][colNum].getToken().name(),s));
             }
         }
     }
@@ -164,7 +153,6 @@ public class View {
             }
         }
     }
-
 
     private static AnimationToken getAnimation(Feld feld, SpriteSheet sheet){
        boolean moved= feld.getCurrentTokenCameFrom() != null;

@@ -4,57 +4,73 @@
 
 .button {
             -fx-background-color:
-                linear-gradient(#686868 0%, #232723 25%, #373837 75%, #191d23 100%),
-                linear-gradient(#020b02, #3a3a3a),
-                linear-gradient(#9d9e9d 0%, #6b6a6b 20%, #343534 80%, #191d23 100%),
-                linear-gradient(#8a8a8a 0%, #6b6a6b 20%, #343534 80%, #191d23 100%),
-                linear-gradient(#777777 0%, #606060 50%, #505250 51%,#191d23 100%);
+              linear-gradient(#000000 0%, #232723 25%, #373837 75%, #191d23 100%),
+              linear-gradient(#9d9e9d 0%, #6b6a6b 20%, #343534 80%, #191d23 100%),
+             linear-gradient(#000000 0%, #606060 0%, #505250 3%,#191d23 100%);
             -fx-background-insets: 0,1,4,5,6;
             -fx-background-radius: 9,8,5,4,3;
             -fx-padding: 15 30 15 30;
             -fx-spacing: 150;
             -fx-font-family: "Helvetica";
-            -fx-font-size: 18px;
+            -fx-font-size: 19px;
             -fx-font-weight: bold;
             -fx-text-fill: white;
             -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);
         }
 
-.Superklasse {
-                         -fx-background-color:
-                             linear-gradient(#686868 0%, #232723 25%, #373837 75%, #191d23 100%),
-                             linear-gradient(#020b02, #3a3a3a),
-                             linear-gradient(#9d9e9d 0%, #6b6a6b 20%, #343534 80%, #191d23 100%),
-                             linear-gradient(#8a8a8a 0%, #6b6a6b 20%, #343534 80%, #191d23 100%),
-                             linear-gradient(#777777 0%, #606060 50%, #505250 51%,#191d23 100%);
-
-                     }
-
-
-.label {
--fx-font: bold 20px "Helvetica";
--fx-text-fill: #191d23;
-
+#vboxLinks{  -fx-background-color: #020d1e;
+                                     -fx-padding: 100;
+                                     -fx-spacing: 10;
+                                       -fx-stroke: green;
+                                        -fx-stroke-width: 2;
+                                        -fx-stroke-dash-array: 12 2 4 2;
+                                       -fx-stroke-dash-offset: 1;
+                                         -fx-stroke-line-cap: butt;
 
 
 }
-#boulderdash{
--fx-font: bold 26px "Helvetica";
-             -fx-padding: 50,80,50,0;
-            -fx-text-fill: #931300;
-            -fx-alignment: CENTER;
+
+
+.levelbox{ -fx-background-color:#cca270;
+       -fx-spacing: 150;
+            -fx-font-family: "Helvetica";
+            -fx-font-size: 19px;
+            -fx-font-weight: bold;
+            -fx-text-fill: white;
+            -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);
+                      }
+
+
+.hover {
+-fx-background-color:#cca270;
 
 }
 
-#root{
-                -fx-background-image: url("images/beginn.gif");
 
-               -fx-background-position: center center;
-               -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);
-
-}
-#hbox {
-    -fx-padding: 10;
-    -fx-spacing: 28;
+.scroll-pane {
+   -fx-background-color: #fcd62a;
 }
 
+
+.dialog-pane:header{
+  -fx-background-color: yellow;
+  -fx-background-radius:10px;
+  -fx-text-fill:black;
+  -fx-font-size:15.0px;
+}
+
+
+/**Costumization of Buttons**/
+.dialog-Pane .button{
+   -fx-background-color:black;
+   -fx-text-fill:white;
+   -fx-wrap-text: true;
+   -fx-effect: dropshadow( three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);
+   -fx-cursor:hand;
+ }
+
+.dialog-pane .button:hover{
+  -fx-background-color:white;
+  -fx-text-fill:black;
+  -fx-font-weight:bold;
+ }

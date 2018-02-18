@@ -27,12 +27,12 @@ private Stage stage;
 private Scene sceneThemeView;
 private Canvas themeCanvas;
 private GraphicsContext themeGC;
-private TreeView<view.themeEditor.Cell> treeView; // + selected ItemProperty
-private ImageView preview; // +
-private ToggleGroup positionButtonGroup;  // + positionButtonGroup.selectedToggleProperty()
-private Button nextFrame; //+
-private Button previousFrame; //+
-private TextField frameNumberField; //+
+private TreeView<view.themeEditor.Cell> treeView;
+private ImageView preview;
+private ToggleGroup positionButtonGroup;
+private Button nextFrame;
+private Button previousFrame;
+private TextField frameNumberField;
 private BorderPane rootPane;
 private VBox positionButtons;
 private GridPane previewGridPane;
@@ -40,12 +40,13 @@ private TextField frameCount;
 private TextField spriteSize;
 private TextField fptField;
 private Button exportButton;
-private Button importButton;
-private VBox ioButtons;
+private Button exitButton;
+private TextField nameInput;
+private Group ioButtons;
 private HBox header;
+ComboBox<String> themeChoiceBox;
 
 private ObservableList<String> themes;
-
 private String stylesheet;
 
     public ThemeEditorView(Stage stage){
@@ -76,8 +77,9 @@ private String stylesheet;
 
         /* Positioncontainer */
         initPositionPaneRoot();
-        initOIButtons();
         initHeader();
+        initIOButtons();
+        initExitButton();
         rootPane.setLeft(treeView);
 
         root.getChildren().add(rootPane);
@@ -92,28 +94,44 @@ private String stylesheet;
 
     private void initThemeSelection(){
         updateThemeList();
-        ComboBox<String> themeChoiceBox = new ComboBox<>();
+        themeChoiceBox = new ComboBox<>();
         themeChoiceBox.setPromptText("Lade Theme");
         themeChoiceBox.setItems(this.themes);
-        this.header.getChildren().add(themeChoiceBox);
 
+        this.nameInput = new TextField();
+        nameInput.setPrefColumnCount(10);
+        nameInput.setPromptText("[Theme-Name]");
+        this.header.getChildren().addAll(themeChoiceBox,nameInput);
     }
 
-    private void updateThemeList(){
+    public TextField getNameInput() {
+        return nameInput;
+    }
+
+    public ComboBox<String> getThemeChoiceBox() {
+        return themeChoiceBox;
+    }
+
+    public void updateThemeList(){
         File themeDir = new File("src/json/theme");
         if(themeDir.exists()){
             this.themes = FXCollections.observableArrayList(Arrays.asList(themeDir.list()));
+            if(themeChoiceBox!=null) themeChoiceBox.setItems(themes);
         }
     }
 
-    private void initOIButtons(){
-        this.exportButton = new Button("Überschreibe TestTheme");
-        this.importButton = new Button("Lade TestTheme");
-        ioButtons = new VBox();
-        ioButtons.getChildren().addAll(exportButton,importButton);
-        this.rootPane.setRight(ioButtons);
+    private void initIOButtons(){
+        this.exportButton = new Button("Speichern");
+        exportButton.setGraphic(new ImageView("view/themeEditor/save.png"));
+        ioButtons = new Group();
+        ioButtons.getChildren().addAll(exportButton);
+        this.header.getChildren().add(exportButton);
     }
 
+    private void initExitButton(){
+        this.exitButton = new Button("Zurück zum Menü");
+        this.header.getChildren().add(0,exitButton);
+    }
 
     private void initPositionPaneRoot(){
         double maxWidth = 150;
@@ -175,18 +193,6 @@ private String stylesheet;
         rootPane.setCenter(positionPaneRoot);
     }
 
-    private void initCanvas(){
-        themeCanvas = new Canvas();
-        themeCanvas.setHeight(200);
-        themeCanvas.setWidth(200);
-        themeGC = themeCanvas.getGraphicsContext2D();
-        themeGC.fillRect(0,0,themeCanvas.getWidth(),themeCanvas.getHeight());
-    }
-
-    public GraphicsContext getGraphicsContext(){
-        return this.themeGC;
-    }
-
     public Scene getScene(){
         return this.sceneThemeView;
     }
@@ -239,11 +245,11 @@ private String stylesheet;
         return exportButton;
     }
 
-    public Button getImportButton() {
-        return importButton;
-    }
-
     public TextField getFramesPerSecondField() {
         return fptField;
+    }
+
+    public Button getExitButton() {
+        return exitButton;
     }
 }

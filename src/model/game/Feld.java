@@ -224,7 +224,9 @@ public class Feld {
             slimeFields.add(this);
             for (Feld nb : this.getNeighboursDirect()) {
                 if (!slimeFields.contains(nb)) {
-                    return nb.isInSlimeArea(slimeFields);
+                    if (!nb.isInSlimeArea(slimeFields)) {
+                        return false;
+                    }
                 }
             }
             return true;

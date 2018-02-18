@@ -4,23 +4,27 @@ package view;
  * Created by aidabakhtiari on 09.02.18.
  */
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import main.LevelFactory;
+import model.game.Level;
 import model.misc.LevelSnapshot;
+import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 
 import java.io.File;
@@ -29,94 +33,137 @@ import java.util.ArrayList;
 
 public  class ContentFrame extends StackPane {
 
-    public Button gameButton;
-    private Button helpButton;
+    private Button gameButton;
+    private Button continueButton;
+    private Button saveButton;
+    private Button restartLevel;
+    private Button levelButtons;
     private Button themeEditorButton;
-    private Button test;
+    private Button helpbutton;  private Button close;
     private int currentItem = 0;
     private boolean  showMenuItems= false;
-    private VBox menuBox;
+    private VBox menuBox,helpVbox;
     private ArrayList listlevelButtons;
     private Scene scene;
     private MenuView menuView;
-    ScrollPane scroll ;
+    private ScrollPane levelItemScrollPane,helpVboxScrollPane;
+    private ScrollPane helpScrollPane;
+    private double widthLinks,heightLinks ;
+    private int buttonfactor=4;
 
 
 
-    public ContentFrame() {
-        this.gameButton = createContent("Start game ");
-        this.helpButton = createContent("Help ");
-        this.themeEditorButton = createContent("Start theme editor ");
-        gameButton.setMinSize(Button.USE_PREF_SIZE, Button.USE_PREF_SIZE);
-         setAlignment(Pos.CENTER);
-        VBox vbButtons = new VBox(gameButton,helpButton,themeEditorButton);
-        vbButtons.setStyle("-fx-background-color: #0ABFCF;" +
-                "    -fx-padding: 100;\n" +
-                "    -fx-spacing: 10;");
-        vbButtons.setMinHeight(600);
-        this.scene= new Scene(vbButtons);
+
+    public ContentFrame(double widthLinks, double heightLinks) {
+
+        this.widthLinks=widthLinks;
+        this.heightLinks=heightLinks;
+        this.gameButton = createButton("S T A R T");
+        this.levelButtons = createButton("L E V E L S   ");
+        this.themeEditorButton = createButton("T H E M E ");
+        this.helpbutton = createButton("H E L P");
+        this.close = createButton("C L O S E ");
+        this.continueButton = createButton("C O N T I N U E");
+        this.saveButton = createButton("S A V E ");
+        setAlignment(Pos.CENTER);
+
+        VBox menuGamePause = new VBox(15,saveButton,continueButton);
+        menuGamePause.setVisible(false);
+
+        VBox menuGameMain = new VBox(15,gameButton,levelButtons,themeEditorButton,helpbutton,close);
+        VBox menuVboxlinks = new VBox(menuGamePause,menuGameMain);
+        menuVboxlinks.setMinSize(widthLinks,heightLinks*2);
+        menuVboxlinks.setId("vboxLinks");
+
+    Label boulderdash = new Label(" B o u l d e r d a s h ");
+        HBox boulderdashHbox = new HBox(boulderdash);
+       boulderdashHbox.setAlignment(Pos.BOTTOM_LEFT);
+             boulderdash.setId("boulderdash");
+          boulderdash.setTranslateX(widthLinks/4);
+       // VBox ganz =  new VBox(boulderdashHbox,vboxLinks);
+
+
+
+        this.scene= new Scene(menuVboxlinks);
         this.listlevelButtons = new ArrayList<Button>();
+        menuBox = createLevelMenuItems();
+        menuBox.getStyleClass().add("levelbox");
+        levelItemScrollPane = createscrollPane(menuBox);
 
-        helpButton.setOnAction(new EventHandler<ActionEvent>() {
+
+        levelButtons.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-               menuBox = showLevelMenuItems(showMenuItems);
-
-                scroll= new ScrollPane(menuBox);
-                scroll.setTranslateX(400);
-                scroll.setTranslateY(0);
-                scroll.setMinSize(500,600);
-               getChildren().addAll(scroll);
-
+             if(levelItemScrollPane.isVisible()){
+                 levelItemScrollPane.setVisible(false);
+             }
+             else levelItemScrollPane.setVisible(true);
+                helpVboxScrollPane.setVisible(false);
             }
         });
 
 
+        /*todo    arraylist of buttons*/
+        setHover(gameButton);
+        setHover(levelButtons);
+        setHover(themeEditorButton);
+        setHover(helpbutton);
+        setHover(close);
+        setHover(saveButton);
 
-        getChildren().addAll(vbButtons);
+        close.setOnAction(e -> Platform.exit());
+
+        helpVbox=createHelpMenuItem();
+        helpVboxScrollPane= createscrollPane(helpVbox);
+
+        helpbutton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(helpVboxScrollPane.isVisible()){
+                    helpVboxScrollPane.setVisible(false);
+
+                }
+                else{ helpVboxScrollPane.setVisible(true);
+                levelItemScrollPane.setVisible(false);}
+            }
+
+        });
+
+        getChildren().addAll(menuVboxlinks, levelItemScrollPane,helpVboxScrollPane);
     }
 
+
+
+
+
+    public ScrollPane createscrollPane(VBox scrollVbox){
+
+        ScrollPane ScrollPane = new ScrollPane(scrollVbox);
+        ScrollPane.setId("scroll");
+        ScrollPane.setTranslateX(widthLinks/2);
+        //  levelItemScrollPane.setTranslateY(heightLinks/8);
+        ScrollPane.setMinSize(widthLinks*2,heightLinks/2);
+        ScrollPane.setVisible(false);
+
+
+        return ScrollPane;
+    }
+
+
+
+    /////////////ende konstruktor
     private String[] scanLevelDirectory() {
         File dir = new File("src/json/level");
         return dir.list();
     }
 
 
-    public Button createContent(String titel ) {
+    public Button createButton(String titel ) {
        Button button= new Button(titel);
-        // VBox letters = new VBox(button);
-       // button.setAlignment(Pos.TOP_CENTER);
+        button.setMinWidth(widthLinks/buttonfactor);
         return button;
     }
 
 
-   /* public void setHelpButton() {
-        helpButton.setOnAction((ActionEvent event) -> {
-            Dialog<Pair<String, String>> helpWindow = new Dialog<>();
-            helpWindow.setTitle("HELP INSTRUCTIONS");
-            helpWindow.setHeaderText("DIESER TEXT  IST EIN DUMMIE : ");
-            helpWindow.setContentText(" hier findest du Hilfe : http://code.makery.ch/blog/javafx-dialogs-official/");
-            helpWindow.initStyle(StageStyle.UTILITY);
-            ButtonType okButton = new ButtonType("ok", ButtonBar.ButtonData.OK_DONE);
-            helpWindow.getDialogPane().getButtonTypes().addAll(okButton);
-            helpWindow.showAndWait();
-
-        });
-    }*/
-
-
-
-
-    public Button getGameButton() {
-        return gameButton;
-    }
-
-    public Button getHelpButton() {
-        return helpButton;
-    }
-
-    public Button getThemeEditorButton() {
-        return themeEditorButton;
-    }
 
     public LevelItem getMenuItem(int index) {
         return (LevelItem)menuBox.getChildren().get(index);
@@ -124,7 +171,6 @@ public  class ContentFrame extends StackPane {
 
 
     public ArrayList getListlevelButtons() {
-//   System.out.println(listlevelButtons);
         return listlevelButtons;
     }
 
@@ -134,7 +180,7 @@ public  class ContentFrame extends StackPane {
         private Runnable script;
 
 
-    public LevelItem(String menuItemName, String info, ImageView image) {
+    public LevelItem(String menuItemName, String info, ImageView image, String path) {
         super(5);
         setAlignment(Pos.CENTER);
         levelButton = new Button(menuItemName);
@@ -142,81 +188,55 @@ public  class ContentFrame extends StackPane {
         information.setEffect(new GaussianBlur(1));
         levelButton.setFont(FONT);
         levelButton.setEffect(new GaussianBlur(2));
+        levelButton.setMinWidth(widthLinks/2);
+        levelButton.setMaxWidth(widthLinks/2);
+
         HBox menu = new HBox(levelButton);
-        menu.setMinSize(100,10);
+        menu.setMinSize(widthLinks/2,100);
         menu.setAlignment(Pos.CENTER);
         image.setFitWidth(55);
         image.setFitHeight(55);
 
-        VBox vbox= new VBox(information);
-        vbox.setMinSize(50,100);
-        getChildren().addAll( vbox,menu,image);
-        setActive(false);
-        setOnActivate(() -> System.out.println(menuItemName + " aktiv geworden"));
-        levelButton.setUserData(menuItemName);
+        VBox vboxLevelInformation= new VBox(information);
+
+         vboxLevelInformation.setMinSize(widthLinks/2,heightLinks/2);
+        vboxLevelInformation.setAlignment(Pos.CENTER_LEFT);
+        getChildren().addAll( vboxLevelInformation,menu,image);
+       // setActive(false);
+        // setOnActivate(() -> System.out.println(menuItemName + " aktiv geworden"));
+        levelButton.setUserData(path);
         listlevelButtons.add(levelButton);
-//        System.out.println();
 
-    }
-
-    public void setActive(boolean b) {
-        //levelButton.setFill(b ? Color.RED : Color.grayRgb(10,0.9));
-        levelButton.setStyle("-fx-font: 12 arial; -fx-base: #b6e7c9;");
-        information.setFill(b? Color.grayRgb(10,0.8) : Color.grayRgb(10,0.0) );
-       // image.setVisible(b);
 
     }
 
 
 
-    public void setOnActivate(Runnable r) {
-        script = r;
-    }
-
-    public void activate() {
-        if (script != null)
-            script.run();
-
-    }
-
-
-
-
-} // ende levelitem
-
-
-
-    public VBox showLevelMenuItems(boolean show) {
-
-        if (!show) {
-//            System.out.println("das ist kliked");
-            menuBox = createLevelMenuItems();
-            showMenuItems=true;
-
-        }
-        else {
-//            System.out.println("das niiiiiiicht  kliked");
-            showMenuItems=false;
-            menuBox.getChildren().clear();
-        }
-        return menuBox;
-
-    }
+}
 
     private VBox createLevelMenuItems(){
 
         menuBox = new VBox(5 );
-        menuBox.setMinWidth(300);
         menuBox.setAlignment(Pos.TOP_CENTER);
-      //  menuBox.setTranslateX(300);
-      //  menuBox.setTranslateY(60);
+
+        Theme theme = null;
+        try {
+            theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+        }
+        catch(Exception e) {
+            System.out.println("Theme not found / corrupt file");
+        }
+
         for (String path : scanLevelDirectory()) {
-            Image snapshot = LevelSnapshot.snap(ThemeIO.importTheme("src/json/theme/testTheme.zip"), LevelFactory.importLevel("src/json/level/"+path));
+            Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/level/"+path));
+            Level level = LevelFactory.importLevel("src/json/level/"+path);
             ImageView snapshotview =  new ImageView(snapshot);
-            menuBox.getChildren().add( 0, new LevelItem( path,"laksdj",snapshotview));
+
+            menuBox.getChildren().add( 0, new LevelItem( level.getName()," hier kommen die level infos",snapshotview,path));
             snapshotview.setFitWidth(100);
             snapshotview.setFitHeight(100);
-            getMenuItem(0).setActive(true);
+
+         //   getMenuItem(0).setActive(true);
 
         }
 
@@ -226,61 +246,95 @@ public  class ContentFrame extends StackPane {
     }//ende create levele
 
 
+    private VBox createHelpMenuItem(){
+        helpVbox = new VBox();
+        Label shortcut = new Label(" Ctr "+" + "+" schift");
+        Label description = new Label(" move forward");
+        HBox hboxHelp = new HBox(shortcut,description);
+
+        helpVbox.getChildren().addAll(hboxHelp);
+
+        return helpVbox;
+    }
 
 
 
 
 
-}
+
+
+
+
+    public void doHover(Button button){
+
+        button.getStyleClass().add("hover");
+        button.setCursor(Cursor.HAND);
+      //  button.setText("hier kannst du "+text);
+    }
+
+    public void unHover(Button button){
+
+        button.getStyleClass().clear();
+        button.getStyleClass().add("button");
+
+
+    }
 
 
 
 
 
+    public void setHover(Button button){
 
-//   ToggleButton levelButton = new ToggleButton("level : " + path,snapshotview );
+        button.setOnMouseEntered(new EventHandler<MouseEvent>() {
 
-        /*  LevelItem levelButton = new LevelItem("level : " + path, " hier kommt info",new ImageView(snapshot));
-            levelButton.setUserData(path);
-            levelButton.setToggleGroup(group);
-            levelButton.setMinSize(200,100);
-            levelButton.setMaxSize(400,200);*/
+            @Override
+            public void handle(MouseEvent t) {
+                doHover(button);
 
+            }
+        });
 
+        button.setOnMouseExited(new EventHandler<MouseEvent>() {
 
+            @Override
+            public void handle(MouseEvent t) {
+                unHover(button);
 
-  /*
-
-   helpButton.addEventHandler(MouseEvent.MOUSE_ENTERED,
-                new EventHandler<MouseEvent>() {
-                    @Override public void handle(MouseEvent e) {
-                        menuView.getSceneMenu().setOnKeyPressed(event -> {
-                            System.out.println(currentItem);
-
-                            if (event.getCode() == KeyCode.UP) {
-                                if (currentItem > 0) {
-                                    getMenuItem(currentItem).setActive(false);
-                                    getMenuItem(--currentItem).setActive(true);
-                                }
-                            }
-
-                            if (event.getCode() == KeyCode.DOWN) {
-                                if (currentItem < menuBox.getChildren().size() - 1) {
-                                    getMenuItem(currentItem).setActive(false);
-                                    getMenuItem(++currentItem).setActive(true);
-                                    System.out.println("unten");
-                                }
-                            }
-
-                            if (event.getCode() == KeyCode.ENTER) {
-                                System.out.println("eeeeenter");
-                                getMenuItem(currentItem).activate();
-
-                            }
-                        });
+            }
+        });
 
 
-                    }
 
-                });
-*/
+
+    }
+
+
+
+
+
+    public Button getContinueButton() {
+        return continueButton;
+    }
+
+    public Button getSaveButton() {
+        return saveButton;
+    }
+
+    public Button getGameButton() {
+        return gameButton;
+    }
+
+    public Button getHelpButton() {
+        return levelButtons;
+    }
+
+    public Button getThemeEditorButton() {
+        return themeEditorButton;
+    }
+
+
+
+
+} // ende class content frame
+

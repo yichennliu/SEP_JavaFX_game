@@ -31,6 +31,7 @@ public class ThemeEditorController {
     private Controller menuController;
     private Theme theme;
     private File initialDirImage = new File("src/");
+    private boolean changes;
 
     public ThemeEditorController(ThemeEditorView view, Controller menuController) {
         this.themeEditorView = view;
@@ -41,7 +42,9 @@ public class ThemeEditorController {
         prepareTreeView();
         initFrameButtons();
         initFrameCountAndSizeFields();
+        initNameInput();
         prepareIOButtons();
+        prepareExitButton();
     }
 
     private void preparePreviewGridPane(){
@@ -69,7 +72,6 @@ public class ThemeEditorController {
     }
 
     private void reloadTextFields(){
-//        System.out.println("reload Textfield!");
         Token t = getActiveToken();
         Theme.Position p = getActivePosition();
         Theme.FeldType f = getActiveFeldType();
@@ -97,16 +99,15 @@ public class ThemeEditorController {
                 sheet = new SpriteSheet(img,spriteSize,count);
                 theme.putSpriteSheet(cell.getToken(),cell.getFeldType(),p,sheet);
                 setPreviewImage(cell.getToken(),cell.getFeldType(),p,0);
+                changes = true;
             }
             catch(IllegalArgumentException exception){
-//                System.out.println("Fehler beim Erstellen des SpriteSheets");
             }
 
         });
 
         themeEditorView.getPreview().imageProperty().addListener((a,b,c) -> {
             if(c!=null){
-//                System.out.println("bild geändert");
                 reloadTextFields();
             }
         });
@@ -143,6 +144,18 @@ public class ThemeEditorController {
                 incrementFrameNumberField(false);
         });
 
+    }
+
+    private void prepareExitButton(){
+        this.themeEditorView.getExitButton().setOnAction(e -> {
+            exit();
+        });
+    }
+
+    private void exit(){
+        this.theme = null;
+        this.themeEditorView= null;
+        this.menuController.startMenu();
     }
 
     /*reloads ToggleGroup of buttons and selects first option */
@@ -206,7 +219,6 @@ public class ThemeEditorController {
                     sizeField.setStyle("-fx-text-fill: black");
                 }
                 catch(Exception e){
-//                    System.out.println(e.getMessage());
                     sizeField.setStyle("-fx-text-fill: red");
                 }
             }
@@ -240,7 +252,6 @@ public class ThemeEditorController {
         Theme.Position p = getActivePosition();
         SpriteSheet s = this.theme.getSpriteSheet(t,f,p);
         if(p==null || f == null || p == null || s == null) return;
-//        System.out.println("zurück!");
         int count = this.theme.getSpriteSheet(t,f,p).getCount();
         try {
             frame=Integer.parseInt(frameNumberField.getText());
@@ -252,7 +263,6 @@ public class ThemeEditorController {
             }
         }
         catch(NumberFormatException exception){
-//            System.out.println("Keine Zahl als Frame!!!");
         }
     }
 
@@ -303,7 +313,6 @@ public class ThemeEditorController {
             try {
                 image = new Image(new FileInputStream(selectedFile.getPath()));
             } catch (Exception e) {
-//                System.out.println(e.getMessage());
                 return null;
             }
         return image;
@@ -313,22 +322,70 @@ public class ThemeEditorController {
 
     private void prepareIOButtons(){
         this.themeEditorView.getExportButton().setOnAction( e -> {
-            File file = new File("src/json/theme/"+this.theme.getName()+".zip");
-//            System.out.println(theme.getName());
-            if(file.exists()){
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Überschreiben?");
-                alert.setHeaderText("Datei existiert bereits");
-                alert.setContentText("Soll die bestehende Datei " +this.theme.getName()+".zip überschrieben werden?");
-
-            }
-            ThemeIO.exportTheme(this.theme);
+            manageFileExport();
+            themeEditorView.updateThemeList();
         });
 
-        this.themeEditorView.getImportButton().setOnAction(e -> {
-            Theme theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
-            this.theme = theme;
+        this.themeEditorView.getThemeChoiceBox().getSelectionModel().selectedItemProperty().addListener((a,b,c) -> {
+            if(b!=null && b.equals(c) || c == null) return;
+            manageThemeImport("src/json/theme/"+c);
         });
     }
+
+    private void manageThemeImport(String path){
+            Theme theme;
+            try{
+                theme = ThemeIO.importTheme(path);
+                this.theme = theme;
+                changes = false;
+                themeEditorView.getNameInput().setText(theme.getName());
+            }
+            catch(Exception importException){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Fehler beim Import");
+                alert.setHeaderText("Datei fehlerhaft: ");
+                alert.setContentText(importException.getMessage());
+                alert.showAndWait();
+            }
+    }
+
+    private void initNameInput(){
+        this.themeEditorView.getNameInput().textProperty().addListener((a,b,c) -> {
+            if(!this.theme.getName().equals(c)){
+                this.theme.setName(c);
+            }
+        });
+    }
+
+    /*exports file only if theme has a name*/
+    private void manageFileExport(){
+        String name = this.theme.getName();
+        if(name.equals("")) return;
+        File file = new File("src/json/theme/"+name+".zip");
+        System.out.println(theme.getName());
+        if(file.exists()){
+            if(!overwrite(name)){
+                return;
+            }
+        }
+        ThemeIO.exportTheme(this.theme);
+        }
+
+
+
+    /*shows alert-window, returns true if user clicked yes (overwrite)*/
+    private boolean overwrite(String fileToOverwrite){
+        ButtonType yes = new ButtonType("Überschreiben" , ButtonBar.ButtonData.YES);
+        ButtonType close  = new ButtonType("Abbrechen" , ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(Alert.AlertType.WARNING,"Soll die bestehende Datei " +fileToOverwrite+".zip überschrieben werden?",yes, close);
+        alert.setTitle("Überschreiben?");
+        alert.setHeaderText("Datei existiert bereits");
+        return alert.showAndWait().get().equals(yes);
+    }
+
 }
+
+
+
+
 
