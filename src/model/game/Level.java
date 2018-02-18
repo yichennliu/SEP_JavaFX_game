@@ -486,6 +486,18 @@ public class Level {
         this.applyBufferedChanges();
     }
 
+    public void execPreRules(){
+       for(Rule rule: pre){
+           rule.execute(this.map,this.inputDirection);
+       }
+    }
+
+    public void execPostRules(){
+        for(Rule rule: post){
+            rule.execute(this.map,this.inputDirection);
+        }
+    }
+
     /**
      * reset / set properties where necessary
      */

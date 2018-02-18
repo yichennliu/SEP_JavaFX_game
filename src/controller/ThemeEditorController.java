@@ -102,7 +102,6 @@ public class ThemeEditorController {
                 changes = true;
             }
             catch(IllegalArgumentException exception){
-                System.out.println("Fehler beim Erstellen des SpriteSheets");
             }
 
         });
@@ -220,7 +219,6 @@ public class ThemeEditorController {
                     sizeField.setStyle("-fx-text-fill: black");
                 }
                 catch(Exception e){
-                    System.out.println(e.getMessage());
                     sizeField.setStyle("-fx-text-fill: red");
                 }
             }
@@ -254,7 +252,6 @@ public class ThemeEditorController {
         Theme.Position p = getActivePosition();
         SpriteSheet s = this.theme.getSpriteSheet(t,f,p);
         if(p==null || f == null || p == null || s == null) return;
-        System.out.println("zurück!");
         int count = this.theme.getSpriteSheet(t,f,p).getCount();
         try {
             frame=Integer.parseInt(frameNumberField.getText());
@@ -266,7 +263,6 @@ public class ThemeEditorController {
             }
         }
         catch(NumberFormatException exception){
-            System.out.println("Keine Zahl als Frame!!!");
         }
     }
 
@@ -317,7 +313,6 @@ public class ThemeEditorController {
             try {
                 image = new Image(new FileInputStream(selectedFile.getPath()));
             } catch (Exception e) {
-                System.out.println(e.getMessage());
                 return null;
             }
         return image;

@@ -52,16 +52,16 @@ public class GameController {
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
-            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
+//            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
             boolean killedPre;
             boolean killedMain;
             boolean killedPost;
 
             /* Compute a tick */
             this.level.resetProperties();
-            //this.level.executePre();
+            this.level.execPreRules();
             this.level.executeMainRules();
-            //this.level.executePost();
+            this.level.execPostRules();
 
             this.level.setInputDirection(null);
             this.gameView.update();

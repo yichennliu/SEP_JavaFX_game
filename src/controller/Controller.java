@@ -44,7 +44,7 @@ public class Controller {
     }
 
     public void startGame(){
-        this.startLevel("json/level/text.json");
+        this.startLevel("json/level/spiegelgeist.json");
     }
 
 
