@@ -14,19 +14,26 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.LevelFactory;
 import model.enums.InputDirection;
+import model.enums.Medal;
 import model.enums.Property;
 import model.enums.WinningStatus;
 import model.game.Level;
+import model.game.MedalStatus;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import view.EndGameAlert;
 import view.GamePausedAlert;
 import view.GameView;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 import java.util.Optional;
 
 public class GameController {
 
-    private Controller menuController;
+    private Controller controller;
     private GameView gameView;
     private Level level;
     private Timeline timeline;
@@ -34,8 +41,8 @@ public class GameController {
     private EscapeButtonHandler handler;
 
 
-    public GameController(Level level, GameView gameView, Controller menuController) {
-        this.menuController = menuController;
+    public GameController(Level level, GameView gameView, Controller controller) {
+        this.controller = controller;
         this.gameView = gameView;
         this.level = level;
         this.addDirectionEvents();
@@ -53,7 +60,7 @@ public class GameController {
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
-//            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
+            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
             boolean killedPre;
             boolean killedMain;
             boolean killedPost;
@@ -68,12 +75,15 @@ public class GameController {
             this.gameView.update();
             this.level.tick();
 
-            if (this.level.getWinningStatus() == WinningStatus.WON) {
-                this.endOfGameDialog(true);
-            } else if (this.level.getWinningStatus() == WinningStatus.LOST) {
-                this.endOfGameDialog(false);
-            }
+            if (this.level.getWinningStatus() != WinningStatus.PLAYING) {
+                // save medal
+                if (this.level.getWinningStatus() == WinningStatus.WON) {
+                    this.saveMedal();
+                }
 
+                // show end game dialog
+                this.endOfGameDialog();
+            }
         };
 
         KeyFrame frame = new KeyFrame(Duration.seconds(1.0 / 5.0), loop);
@@ -134,7 +144,8 @@ public class GameController {
         };
 
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button -> button.addEventHandler(KeyEvent.KEY_PRESSED, fireOnEnter));
+        dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button
+                -> button.addEventHandler(KeyEvent.KEY_PRESSED, fireOnEnter));
 
     }
 
@@ -171,17 +182,15 @@ public class GameController {
                 } else if (result.get() == alert.getSaveExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     GameController.this.saveGame();
-                    GameController.this.menuController.startMenu();
+                    GameController.this.controller.startMenu();
                 } else if (result.get() == alert.getExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                    GameController.this.menuController.startMenu();
+                    GameController.this.controller.startMenu();
 
 
                 } else if (result.get() == alert.getRetryButton()) {
-//                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-//                    gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
 
-                    GameController.this.menuController.startLevel(level.getJsonPath());
+                    GameController.this.controller.startLevel(level.getJsonPath());
                     alert.close();
                     timeline.playFromStart();
                     timer.playFromStart();
@@ -210,37 +219,32 @@ public class GameController {
     /**
      * Show end of game dialog
      */
-    private void endOfGameDialog(boolean won) {
+    private void endOfGameDialog() {
         this.timeline.stop();
         this.timer.stop();
 
         EndGameAlert endGameAlert = new EndGameAlert();
 
-        if (won) {
+        if (this.level.getWinningStatus() == WinningStatus.WON) {
             endGameAlert.setHeaderText("You successfully completed the level \"" + this.level.getName() + "\". Hooray!");
         } else {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");
         }
 
         GameController.this.addAlertKeyEvent(endGameAlert);
-        Controller menuControllerLocal = this.menuController;
-        Level levelLOcal = this.level;
 
-        // This "runlater" is necessary because alert.showAndWait is not allowed during animation
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Optional<ButtonType> result = endGameAlert.showAndWait();
+        // "runlater" is necessary because alert.showAndWait is not allowed during animation
+        Platform.runLater(() -> {
+            Optional<ButtonType> result = endGameAlert.showAndWait();
 
-                if (result.get() == endGameAlert.getRetryButton()) {
-                    gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-                    menuControllerLocal.startLevel(levelLOcal.getJsonPath());
-                }
+            if (result.get() == endGameAlert.getRetryButton()) {
+                gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
+                this.controller.startLevel(this.level.getJsonPath());
+            }
 
-                if (result.get() == endGameAlert.getCancelExitButton()) {
-                    gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-                    menuControllerLocal.startMenu();
-                }
+            if (result.get() == endGameAlert.getCancelExitButton()) {
+                gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
+                this.controller.startMenu();
             }
         });
     }
@@ -248,7 +252,6 @@ public class GameController {
     private void addDirectionEvents() {
         Stage gamestage = this.gameView.getStage();
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            //KeyCombination combine = new KeyCombination() {}
             if (event.getCode().equals(KeyCode.UP)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGUP);
@@ -302,11 +305,13 @@ public class GameController {
     }
 
     /**
-     * Spiel speichern
+     * Levelfortschritt speichern
      */
     public void saveGame() {
         try {
-            LevelFactory.exportLevel(this.level, "src/json/savegame/" + this.level.getName() + ".json");
+            String[] originalPath = this.level.getJsonPath().split("/");
+            String originalFileName = originalPath[originalPath.length-1];
+            LevelFactory.exportLevel(this.level, "src/json/savegame/" + originalFileName);
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Fehler");
@@ -321,11 +326,41 @@ public class GameController {
         }
     }
 
+    /**
+     * Save current medal
+     */
+    private void saveMedal() {
+        Map<String, MedalStatus> medalStatuses = this.controller.getMenuController().getMedalStatuses();
+        MedalStatus medalStatus = medalStatuses.get(this.level.getJsonPath());
+        if (medalStatus == null) {
+            medalStatus = new MedalStatus();
+        }
+        medalStatus.set(this.level.getCurrentMedal());
+        medalStatuses.put(this.level.getJsonPath(), medalStatus);
 
-    public void setGameView(GameView gameView) {
-        this.gameView = gameView;
+        // save as json
+        JSONObject jsonMedalStatuses = new JSONObject();
+        for (Map.Entry<String, MedalStatus> entry : medalStatuses.entrySet()) {
+            MedalStatus status = entry.getValue();
+            JSONObject jsonStatus = new JSONObject();
+            jsonStatus.put("bronze", status.has(Medal.BRONZE));
+            jsonStatus.put("silver", status.has(Medal.SILVER));
+            jsonStatus.put("gold", status.has(Medal.GOLD));
+            jsonMedalStatuses.put(entry.getKey(), jsonStatus);
+        }
 
+        // write
+        try {
+            PrintWriter out = new PrintWriter("src/json/medals/medalstatuses.json");
+            out.print(jsonMedalStatuses.toString(4));
+            out.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Medal couldn't be saved: " + e.getMessage());
+        }
     }
+
+
+    public void setGameView(GameView gameView) { this.gameView = gameView; }
 
     public void setLevel(Level level) {
         this.level = level;

@@ -71,19 +71,33 @@ public class Level {
     }
 
     public Integer getRemainingGemsToGold() {
-        Integer remainingGems = this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS);
-        return remainingGems;
+        return this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS);
     }
 
     public Integer getRemainingGemsToSilver(){
-
-        Integer remainingGems = this.getGemGoals()[1] - this.getPropertyValue(Property.GEMS);
-        return remainingGems;
+        return this.getGemGoals()[1] - this.getPropertyValue(Property.GEMS);
     }
 
     public Integer getRemainingGemsToBronze(){
-        Integer remainingGems =  this.getGemGoals()[0] - this.getPropertyValue(Property.GEMS);
-        return remainingGems;
+        return this.getGemGoals()[0] - this.getPropertyValue(Property.GEMS);
+    }
+
+    /**
+     * @return current medal, or null
+     */
+    public Medal getCurrentMedal() {
+        if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[2]
+                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[2]) {
+            return Medal.GOLD;
+        } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[1]
+                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[1]) {
+            return Medal.SILVER;
+        } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[0]
+                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[0]) {
+            return Medal.BRONZE;
+        } else {
+            return null;
+        }
     }
 
     public Feld[][] getMap(){
