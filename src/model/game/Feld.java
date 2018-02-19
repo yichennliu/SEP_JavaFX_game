@@ -370,4 +370,13 @@ public class Feld {
     public void setLastTokenWentTo(Feld destination) {
         this.lastTokenWentTo = destination;
     }
+
+    public Feld clone(){
+        Map<Property,Integer> propertiesClone = new HashMap<>();
+        for(Map.Entry<Property,Integer> entry: properties.entrySet()){
+            propertiesClone.put(entry.getKey(),new Integer(entry.getValue()));
+        }
+        return new Feld(token,propertiesClone,column,row);
+    }
+
 }

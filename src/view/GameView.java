@@ -105,6 +105,7 @@ public class GameView {
 
     }
 
+    /*if ME is at the edge of the viewport, a new translation will be set (starts indirectly tranlsation transition)*/
     private void scrollToMe(){
         Feld meFeld = level.whereAmI();
         if(meFeld==null) return;

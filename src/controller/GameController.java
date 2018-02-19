@@ -14,6 +14,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.LevelFactory;
+import model.ai.AI;
+import model.ai.Robot;
 import model.enums.InputDirection;
 import model.enums.Property;
 import model.enums.WinningStatus;
@@ -32,6 +34,8 @@ public class GameController {
     private Timeline timer;
     private final Integer startSecond;
     private Integer second;
+    private AI robot;
+    private boolean robotActive;
 
     public GameController(Level level, GameView gameView, Controller menuController){
         this.menuController = menuController;
@@ -41,13 +45,20 @@ public class GameController {
         this.second = startSecond;
         this.addIngameMenu();
         this.addDirectionEvents();
+        this.robot = new Robot(level,5);
+        robotize(false);
         this.addGameViewComponents();
         this.countDown();
+    }
+
+    public void robotize(boolean activate){
+        this.robotActive = activate;
     }
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
             System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
+            if(robotActive) this.level.setInputDirection(robot.getNextMove());
             boolean killedPre;
             boolean killedMain;
             boolean killedPost;
@@ -61,6 +72,7 @@ public class GameController {
             this.level.setInputDirection(null);
             this.gameView.update();
             this.level.tick();
+            System.out.println(this.level.getWinningStatus());
 
             if (this.level.getWinningStatus() == WinningStatus.WON) {
                 this.endOfGameDialog(true);
@@ -218,7 +230,7 @@ public class GameController {
     private void addDirectionEvents() {
         Stage gamestage = this.gameView.getStage();
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            //KeyCombination combine = new KeyCombination() {}
+            if(robotActive) return;
             if (event.getCode().equals(KeyCode.UP)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGUP);

@@ -296,18 +296,18 @@ public class Level {
 
                             // in Ausgang gehen
                             if (next.isToken(Token.EXIT)) {
-                                System.out.println("Current gems: "+this.getPropertyValue(Property.GEMS));
-                                System.out.println("Current ticks: "+this.getPropertyValue(Property.TICKS));
+//                                System.out.println("Current gems: "+this.getPropertyValue(Property.GEMS));
+//                                System.out.println("Current ticks: "+this.getPropertyValue(Property.TICKS));
                                 for (int goalNo = 2; goalNo >= 0; goalNo--) {
-                                    System.out.println("Gem goal "+goalNo+": "+this.getGemGoals()[goalNo]);
-                                    System.out.println("Tick goal "+goalNo+": "+this.getTickGoals()[goalNo]);
+//                                    System.out.println("Gem goal "+goalNo+": "+this.getGemGoals()[goalNo]);
+//                                    System.out.println("Tick goal "+goalNo+": "+this.getTickGoals()[goalNo]);
                                     if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[goalNo] &&
                                         this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[goalNo]) {
                                             current.moveTo(next);
                                             this.setWinningStatus(WinningStatus.WON);
-                                            System.out.println("ACHIEVED goal no. "+goalNo);
+//                                            System.out.println("ACHIEVED goal no. "+goalNo);
                                     } else {
-                                        System.out.println("FAILED goal no. "+goalNo);
+//                                        System.out.println("FAILED goal no. "+goalNo);
                                     }
                                 }
                             }
@@ -551,5 +551,32 @@ public class Level {
             }
         }
         return null;
+    }
+
+    /*ATTENTION: returns a fake-clone (only map and properties are really cloned, rules,goals, jsonPath and other unchangable vars are the same)*/
+    public Level clone(){
+        Feld[][] copyOfMap = copyMap();
+        Map<Property, Integer> globalPropsClone = copyGlobalProps();
+        return new Level(new String(name),copyOfMap,gemGoals,tickGoals,pre,post,maxslime,globalPropsClone, jsonPath);
+    }
+
+    /*copies global properties*/
+    private Map<Property,Integer> copyGlobalProps() {
+        Map<Property,Integer> propertyClone= new HashMap<>();
+        for(Map.Entry<Property,Integer> entry:properties.entrySet()){
+            propertyClone.put(entry.getKey(),new Integer(entry.getValue()));
+        }
+        return propertyClone;
+    }
+
+    /*copies map by copying every Feld*/
+    public Feld[][] copyMap(){
+        Feld[][] copy = new Feld[map.length][map[0].length];
+        for(int y = 0; y<copy.length;y++){
+            for(int x =0; x<copy[0].length;x++){
+                copy[y][x] = map[y][x].clone();
+            }
+        }
+        return copy;
     }
 }

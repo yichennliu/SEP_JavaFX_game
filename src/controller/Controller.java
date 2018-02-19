@@ -17,9 +17,7 @@ public class Controller {
     public Controller(View view, Object menuModel) { // Todo: MenuModel
         this.view = view;
         this.currentMode = View.Mode.GAME;
-
       }
-
 
     public void startMenu(){
         this.currentMode = View.Mode.MENU;
@@ -48,7 +46,7 @@ public class Controller {
     }
 
     public void startGame(){
-        this.startLevel("json/level/text.json");
+        this.startLevel("json/level/wand" +".json");
     }
 
 

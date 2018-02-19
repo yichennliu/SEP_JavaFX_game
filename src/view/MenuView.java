@@ -23,10 +23,10 @@ public class MenuView {
     public MenuView(Stage stage, Object model) {
         this.stage = stage;
         root = new BorderPane();
-        contentFrame = new ContentFrame();
-        VBox Vmenu= new VBox(contentFrame);
         this.levelButtons = new ArrayList<>();
         this.sceneMenu = new Scene(root);
+        contentFrame = new ContentFrame();
+        VBox Vmenu= new VBox(contentFrame);
         root.getChildren().addAll(Vmenu);
 
         if (!stage.isShowing()) stage.show();

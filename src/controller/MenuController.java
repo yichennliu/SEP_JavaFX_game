@@ -39,8 +39,7 @@ public class MenuController {
      private void chooseLevel(){
 
          ArrayList <Button> levelButtons = menuView.getContentFrame().getListlevelButtons();
-            Button level ;
-
+         Button level ;
 
          for(int i=0; i<levelButtons.size();i++){
                 level= levelButtons.get(i);
@@ -49,7 +48,7 @@ public class MenuController {
              System.out.println(path);
                  level.setOnAction(e -> {
                  this.menuController.startLevel(path);
-                 System.out.println("sldc");
+
              });
 
          }
