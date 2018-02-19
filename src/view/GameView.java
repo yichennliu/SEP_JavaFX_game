@@ -20,8 +20,6 @@ import model.game.Level;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 import java.io.File;
-import java.util.Map;
-
 
 public class GameView {
 
@@ -37,9 +35,11 @@ public class GameView {
     private Board board;
 
     private Label timer;
+    private ImageView timerIcons;
     private HBox timeRewardInfo;
     private Label restGem;
     private Label currentGems;
+    private ImageView gemIcon;
     private ImageView currentMedal;
 
     public GameView(Stage stage, Level level){
@@ -68,13 +68,21 @@ public class GameView {
 
         this.timeRewardInfo = new HBox(10);
         this.currentGems = new Label();
+        this.gemIcon = new ImageView();
         this.timer = new Label();
+        this.timerIcons = new ImageView();
         this.restGem = new Label();
         this.currentMedal = new ImageView();
+        this.currentMedal.setFitHeight(30);
+        this.currentMedal.setFitWidth(30);
+        this.timerIcons.setFitHeight(30);
+        this.timerIcons.setFitWidth(30);
         createHboxStyle();
         showMedalInfo();
+        showCurrentSandUhr();
         showCollectedGems();
-        timeRewardInfo.getChildren().addAll(timer, currentGems, currentMedal, restGem);
+        createDiamondIcons();
+        timeRewardInfo.getChildren().addAll(timerIcons, timer, gemIcon, currentGems, currentMedal, restGem);
         root.getChildren().addAll(timeRewardInfo);
 
         this.board = new Board(staticCanvas,animatedCanvas, level.getMap(),theme,fieldSize);
@@ -102,6 +110,7 @@ public class GameView {
         View.drawBoard(this.board,level.getMap(),this.theme,true);
         showCollectedGems();
         showMedalInfo();
+        showCurrentSandUhr();
     }
 
     private void scrollToMe(){
@@ -185,11 +194,24 @@ public class GameView {
     }
 
 
-    public void createSandUhrIcons(){
+    public Image[] createSandUhrIcons(){
+        final Image greenSandUhr = new Image(GameView.class.getResourceAsStream("images/GreenSandUhr.png"));
+        final Image yellowSandUhr = new Image(GameView.class.getResourceAsStream("images/YellowSandUhr.png"));
+        final Image redSandUhr = new Image(GameView.class.getResourceAsStream("images/RedSandUhr.png"));
+
+        Image[] sandUhrImages = new Image[] {
+
+                greenSandUhr, yellowSandUhr, redSandUhr };
+
+        return sandUhrImages;
 
     }
 
     public void createDiamondIcons(){
+        final Image gem = new Image(GameView.class.getResourceAsStream("images/Diamand.png"));
+        this.gemIcon.setImage(gem);
+        this.gemIcon.setFitHeight(30);
+        this.gemIcon.setFitWidth(30);
 
     }
 
@@ -199,8 +221,8 @@ public class GameView {
     }
 
     public void showCollectedGems(){
-        int result= this.level.getPropertyValue(Property.GEMS);
-        currentGems.setText("Gems got: "+ result);
+        Integer result= this.level.getPropertyValue(Property.GEMS);
+        currentGems.setText(result.toString());
         currentGems.setTextFill(Color.WHITE);
     }
 
@@ -229,23 +251,43 @@ public class GameView {
         if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS)<=level.getTickGoals()[0]){
             setCountToSilverInfo();
             currentMedal.setImage(this.createMedalIcons()[2]);
-            timeRewardInfo.getChildren().add(currentMedal);
 
         }
         else if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1] && level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[1]){
             setCountToGoldInfo();
             currentMedal.setImage(this.createMedalIcons()[1]);
-            timeRewardInfo.getChildren().add(currentMedal);
         }
 
-        else if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2]&& level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[2]){
+        else if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2] && level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[2]){
             currentMedal.setImage(this.createMedalIcons()[0]);
-            timeRewardInfo.getChildren().add(currentMedal);
         }
         else{
             setCountToBronzeInfo();
         }
     }
 
+
+    public void showCurrentSandUhr(){
+
+        double currentsecond = this.level.getPropertyValue(Property.TICKS)/5;
+
+        double totalSecond = this.level.getTickGoals()[0]/5;
+
+        if(currentsecond/totalSecond >= 0.3){
+            timerIcons.setImage(this.createSandUhrIcons()[1]);
+
+        } else if(currentsecond/totalSecond >= 0.6){
+            timerIcons.setImage(this.createSandUhrIcons()[2]);
+
+        } else{
+            timerIcons.setImage(this.createSandUhrIcons()[0]);
+
+        }
+    }
+
+
+
 }
+
+
 
