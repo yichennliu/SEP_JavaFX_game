@@ -1,0 +1,21 @@
+{
+  "gems":[4,6,8],
+  "height":11,
+  "name":"menu",
+  "ticks":[200000,600,300],
+  "width":12,
+
+  "map":[
+    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall","wall","wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud","mud","mud","mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"]
+  ]
+}
