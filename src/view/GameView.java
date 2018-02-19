@@ -276,14 +276,13 @@ public class GameView {
         double totalSecond = this.level.getTickGoals()[0]/5;
         if(currentsecond/totalSecond >= 0.3){
             timerIcons.setImage(this.createSandUhrIcons()[1]);
+        } else{
+            timerIcons.setImage(this.createSandUhrIcons()[0]);
         }
         if(currentsecond/totalSecond >= 0.6){
             timerIcons.setImage(this.createSandUhrIcons()[2]);
+        }
 
-        }
-        if (currentsecond/totalSecond < 0.3){
-            timerIcons.setImage(this.createSandUhrIcons()[0]);
-        }
     }
 
 
