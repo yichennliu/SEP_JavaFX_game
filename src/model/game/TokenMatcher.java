@@ -23,12 +23,24 @@ public class TokenMatcher {
         this.tokens = tokens;
     }
 
+    public String toString(){
+        if(tokens==null) return "any";
+        else {
+            String result = "";
+            for(Token token: tokens){
+               result = result + " " +token.name();
+            }
+        return result;
+        }
+    }
+
     public boolean matches(Token token) {
         if (this.tokens == null) {
+//            System.out.print(" --- (ANY) ---");
             return true;
-        } else {
-            return this.tokens.contains(token);
         }
+        return this.tokens.contains(token);
+
     }
 
     /**

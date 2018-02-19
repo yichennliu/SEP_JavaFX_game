@@ -224,7 +224,9 @@ public class Feld {
             slimeFields.add(this);
             for (Feld nb : this.getNeighboursDirect()) {
                 if (!slimeFields.contains(nb)) {
-                    return nb.isInSlimeArea(slimeFields);
+                    if (!nb.isInSlimeArea(slimeFields)) {
+                        return false;
+                    }
                 }
             }
             return true;
@@ -265,7 +267,7 @@ public class Feld {
 
     /**
      * Buffer a movement:
-     * Move to goal, set both to MOVED, replace current Token with PATH
+     * Move to goal, set both to MOVED, replaceToken current Token with PATH
      *
      * @param goal not null
      */
@@ -319,6 +321,18 @@ public class Feld {
             this.bufferSetPropertyValue(Property.DIRECTION, 0);
         }
     }
+
+    public List getNeighboursRecursive(Direction direction, int counter, List<Feld> result) throws IndexOutOfBoundsException {
+        counter--;
+        if (counter == 0) return result;
+        Feld current = result.get(result.size() - 1).getNeighbour(direction.getFieldDirection());
+        if (current == null && counter > 0) throw new IndexOutOfBoundsException("Out of bounds, biatch!");
+
+        result.add(current);
+        return getNeighboursRecursive(direction, counter, result);
+    }
+
+
 
     /**
      * Get neighbour field relative to an original direction
@@ -380,3 +394,4 @@ public class Feld {
     }
 
 }
+

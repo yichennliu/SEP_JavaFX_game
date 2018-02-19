@@ -5,12 +5,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
-import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
@@ -19,8 +17,8 @@ import model.game.Feld;
 import model.game.Level;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
-
 import java.io.File;
+
 
 public class GameView {
 
@@ -65,7 +63,6 @@ public class GameView {
             System.out.println("Theme-Import-Fail: " + e.getMessage());
         }
 
-
         this.timeRewardInfo = new HBox(10);
         this.currentGems = new Label();
         this.timer = new Label();
@@ -102,7 +99,6 @@ public class GameView {
         View.drawBoard(this.board,level.getMap(),this.theme,true);
         showCollectedGems();
         showMedalInfo();
-
     }
 
     /*if ME is at the edge of the viewport, a new translation will be set (starts indirectly tranlsation transition)*/
@@ -155,7 +151,7 @@ public class GameView {
         Affine transformation = this.board.getTransformation();
 
         if(delta < 0){
-           transformation.append(new Scale(1/factor, 1/factor));
+            transformation.append(new Scale(1/factor, 1/factor));
         }
         else transformation.append(new Scale(factor,factor));
         this.board.applyTransformation(transformation);
@@ -172,9 +168,9 @@ public class GameView {
         this.timeRewardInfo.setPrefHeight(50);
         this.timeRewardInfo.setPrefWidth(width);     }
 
-        public Label updateTimerLabel(){
-            return this.timer;
-        }
+    public Label updateTimerLabel(){
+        return this.timer;
+    }
 
     public void showCollectedGems(){
         int result= this.level.getPropertyValue(Property.GEMS);
@@ -221,7 +217,7 @@ public class GameView {
         }
         else{
             setCountToBronzeInfo();
-            currentMedal.setText("No medal :(");
+            currentMedal.setText("No Medal :(");
             currentMedal.setTextFill(Color.WHITE);
         }
     }

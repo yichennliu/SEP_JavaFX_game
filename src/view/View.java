@@ -45,10 +45,6 @@ public class View {
         stage.setScene(menuView.getSceneMenu());
     }
 
-//    private void showEditor(){
-//        stage.setScene(this.levelEditor);
-//    }
-
     public void showGame(){
         GameView gameView = (GameView) currentScene;
         stage.setScene(gameView.getScene());
@@ -58,9 +54,6 @@ public class View {
         ThemeEditorView themeEditorView = (ThemeEditorView) currentScene;
         stage.setScene(themeEditorView.getScene());
     }
-
-
-
 
     public void update(Mode mode, Object scene) {
         this.currentScene = scene;
