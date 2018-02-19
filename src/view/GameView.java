@@ -216,7 +216,6 @@ public class GameView {
 
     }
 
-
     public Label updateTimerLabel(){
         return this.timer;
     }
