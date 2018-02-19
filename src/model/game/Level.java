@@ -69,23 +69,11 @@ public class Level {
         }
     }
 
-    public Integer getRemainingGemsToGold() {
+    public Integer getRemainingGemsToGold() { return this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS); }
 
-        int remainingGems = this.getPropertyValue(Property.GEMS)- this.getGemGoals()[2];
-        return remainingGems;
-    }
+    public Integer getRemainingGemsToSilver(){ return this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS); }
 
-    public Integer getRemainingGemsToSilver(){
-
-        int remainingGems = this.getPropertyValue(Property.GEMS) - this.getGemGoals()[2];
-        return remainingGems;
-    }
-
-    public Integer getRemainingGemsToBronze(){
-
-        int remainingGems = this.getPropertyValue(Property.GEMS) - this.getGemGoals()[2];
-        return remainingGems;
-    }
+    public Integer getRemainingGemsToBronze(){ return this.getGemGoals()[2]- this.getPropertyValue(Property.GEMS); }
 
     /**
      * @return current medal, or null

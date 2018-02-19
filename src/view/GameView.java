@@ -229,21 +229,21 @@ public class GameView {
 
     public void setCountToGoldInfo() {
         int showInfo = level.getRemainingGemsToGold();
-        restGem.setText("Needed Gems to Gold: "+showInfo);
+        restGem.setText("Needed Gems to Gold Medal: "+showInfo);
         restGem.setTextFill(Color.WHITE);
 
     }
 
     public void setCountToSilverInfo(){
         int showInfo= level.getRemainingGemsToSilver();
-        restGem.setText("Needed Gems to Silver: "+showInfo);
+        restGem.setText("Needed Gems to Silver Medal: "+showInfo);
         restGem.setTextFill(Color.WHITE);
 
     }
 
     public void setCountToBronzeInfo(){
         int showInfo= level.getRemainingGemsToBronze();
-        restGem.setText("Needed Gems to Bronze: "+showInfo);
+        restGem.setText("Needed Gems to Bronze Medal: "+showInfo);
         restGem.setTextFill(Color.WHITE);
     }
 
