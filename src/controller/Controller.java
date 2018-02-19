@@ -27,7 +27,7 @@ public class Controller {
     public Controller(View view, Object model) { // Todo: ControllerModel
         this.view = view;
         this.currentMode = View.Mode.GAME;
-    }
+      }
 
     public MenuController getMenuController() {
         return this.menuController;

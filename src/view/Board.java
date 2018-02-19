@@ -22,6 +22,8 @@ public class Board {
     private Feld[][] map;
     private Theme theme;
 
+    /*this class manages the canvas on which the game is drawn. It starts and stops animations and wraps
+    * all important view-information about the current Game together*/
     public Board(Canvas staticCanvas, Canvas animationCanvas, Feld[][] map, Theme theme, double fieldSize){
         this.staticCanvas = staticCanvas;
         this.animationCanvas = animationCanvas;
@@ -39,18 +41,22 @@ public class Board {
         animationCanvas.heightProperty().bind(staticCanvas.heightProperty());
     }
 
+    /*returns the BoardTranslationTransition which manages the animation of the boards' translation*/
     public BoardTranslationTransition getTranslationAnimator(){
         return this.translationAnimator;
     }
 
+    /*returns the GraphicsContext on which all 'static', non-moving objects are drawn*/
     public GraphicsContext getStaticGC(){
         return this.staticGC;
     }
 
+    /*returns the current Theme*/
     public Theme getTheme() {
         return theme;
     }
 
+    /*stops all animations on both canvas*/
     public void stopAnimation(){
         if(animator!=null)
             animator.stop();
@@ -58,19 +64,23 @@ public class Board {
             translationAnimator.stop();
     }
 
+    /*returns map that is used to draw*/
     public Feld[][] getMap() {
         return map;
     }
 
+    /*clears both canvas*/
     public void clearBoard(){
        clearGraphicsContext(this.staticGC);
        clearGraphicsContext(this.animationGC);
     }
 
+    /*clears only canvas for the 'static', non-moving objects*/
     public void clearStaticGC(){
         clearGraphicsContext(this.staticGC);
     }
 
+    /*manages the clearing of a canvas specified by the provided GraphicsContext*/
     private void clearGraphicsContext(GraphicsContext gc){
         Affine defaultTransform = new Affine();
         gc.setTransform(defaultTransform);
@@ -79,14 +89,12 @@ public class Board {
         gc.setTransform(transformation);
     }
 
-    public void resetAnimator(){
-        stopAnimation();
-    }
-
+    /*returns the Animator that animates the moving and animated objects*/
     public TokenTransition getAnimator() {
         return animator;
     }
 
+    /*starts both the translation of the board and the moving/animating of objects*/
     public void playAnimation() {
         if (animator != null)
             animator.play();
@@ -95,6 +103,7 @@ public class Board {
         }
     }
 
+    /*sets a new translate for the board*/
     public void translate(Translate translation){
         translationAnimator.setTranslate(translation);
     }
@@ -111,6 +120,7 @@ public class Board {
         return this.animationGC;
     }
 
+    /*returns the transformation that is used to transform both canvas*/
     public Affine getTransformation(){
         return this.transformation;
     }

@@ -15,6 +15,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.LevelFactory;
+import model.ai.AI;
+import model.ai.Robot;
 import model.enums.InputDirection;
 import model.enums.Medal;
 import model.enums.Property;
@@ -41,6 +43,8 @@ public class GameController {
     private Timeline timeline;
     private Timeline timer;
     private EscapeButtonHandler handler;
+    private AI robot;
+    private boolean robotActive;
 
 
     public GameController(Level level, GameView gameView, Controller controller) {
@@ -49,8 +53,14 @@ public class GameController {
         this.level = level;
         this.addDirectionEvents();
         this.addInGameMenu();
+        this.robot = new Robot(level,5);
+        robotize(false);
         this.addGameViewComponents();
         this.countDown();
+    }
+
+    public void robotize(boolean activate){
+        this.robotActive = activate;
     }
 
     public void update() {
@@ -63,6 +73,7 @@ public class GameController {
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
             System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
+            if(robotActive) this.level.setInputDirection(robot.getNextMove());
             boolean killedPre;
             boolean killedMain;
             boolean killedPost;
@@ -254,6 +265,7 @@ public class GameController {
     private void addDirectionEvents() {
         Stage gamestage = this.gameView.getStage();
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if(robotActive) return;
             if (event.getCode().equals(KeyCode.UP)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGUP);
