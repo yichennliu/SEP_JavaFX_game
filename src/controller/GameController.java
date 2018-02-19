@@ -60,7 +60,7 @@ public class GameController {
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
-//            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
+            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
             boolean killedPre;
             boolean killedMain;
             boolean killedPost;
@@ -144,7 +144,8 @@ public class GameController {
         };
 
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button -> button.addEventHandler(KeyEvent.KEY_PRESSED, fireOnEnter));
+        dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button
+                -> button.addEventHandler(KeyEvent.KEY_PRESSED, fireOnEnter));
 
     }
 
@@ -188,8 +189,6 @@ public class GameController {
 
 
                 } else if (result.get() == alert.getRetryButton()) {
-//                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-//                    gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
 
                     GameController.this.controller.startLevel(level.getJsonPath());
                     alert.close();
@@ -253,7 +252,6 @@ public class GameController {
     private void addDirectionEvents() {
         Stage gamestage = this.gameView.getStage();
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            //KeyCombination combine = new KeyCombination() {}
             if (event.getCode().equals(KeyCode.UP)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGUP);
@@ -362,10 +360,7 @@ public class GameController {
     }
 
 
-    public void setGameView(GameView gameView) {
-        this.gameView = gameView;
-
-    }
+    public void setGameView(GameView gameView) { this.gameView = gameView; }
 
     public void setLevel(Level level) {
         this.level = level;
