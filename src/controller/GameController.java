@@ -14,14 +14,21 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.LevelFactory;
 import model.enums.InputDirection;
+import model.enums.Medal;
 import model.enums.Property;
 import model.enums.WinningStatus;
 import model.game.Level;
+import model.game.MedalStatus;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import view.EndGameAlert;
 import view.GamePausedAlert;
 import view.GameView;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 import java.util.Optional;
 
 public class GameController {
@@ -34,8 +41,8 @@ public class GameController {
     private EscapeButtonHandler handler;
 
 
-    public GameController(Level level, GameView gameView, Controller menuController) {
-        this.controller = menuController;
+    public GameController(Level level, GameView gameView, Controller controller) {
+        this.controller = controller;
         this.gameView = gameView;
         this.level = level;
         this.addDirectionEvents();
@@ -69,6 +76,12 @@ public class GameController {
             this.level.tick();
 
             if (this.level.getWinningStatus() != WinningStatus.PLAYING) {
+                // save medal
+                if (this.level.getWinningStatus() == WinningStatus.WON) {
+                    this.saveMedal();
+                }
+
+                // show end game dialog
                 this.endOfGameDialog();
             }
         };
@@ -312,6 +325,39 @@ public class GameController {
             alert.getButtonTypes().setAll(buttonOK);
 
             Optional<ButtonType> result = alert.showAndWait();
+        }
+    }
+
+    /**
+     * Save current medal
+     */
+    private void saveMedal() {
+        Map<String, MedalStatus> medalStatuses = this.controller.getMenuController().getMedalStatuses();
+        MedalStatus medalStatus = medalStatuses.get(this.level.getJsonPath());
+        if (medalStatus == null) {
+            medalStatus = new MedalStatus();
+        }
+        medalStatus.set(this.level.getCurrentMedal());
+        medalStatuses.put(this.level.getJsonPath(), medalStatus);
+
+        // save as json
+        JSONObject jsonMedalStatuses = new JSONObject();
+        for (Map.Entry<String, MedalStatus> entry : medalStatuses.entrySet()) {
+            MedalStatus status = entry.getValue();
+            JSONObject jsonStatus = new JSONObject();
+            jsonStatus.put("bronze", status.has(Medal.BRONZE));
+            jsonStatus.put("silver", status.has(Medal.SILVER));
+            jsonStatus.put("gold", status.has(Medal.GOLD));
+            jsonMedalStatuses.put(entry.getKey(), jsonStatus);
+        }
+
+        // write
+        try {
+            PrintWriter out = new PrintWriter("src/json/medals/medalstatuses.json");
+            out.print(jsonMedalStatuses.toString(4));
+            out.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Medal couldn't be saved: " + e.getMessage());
         }
     }
 

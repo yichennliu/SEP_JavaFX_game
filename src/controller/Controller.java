@@ -1,12 +1,20 @@
 package controller;
 
 import main.LevelFactory;
+import model.enums.Medal;
 import model.game.Level;
 import model.game.MedalStatus;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import view.*;
 import view.themeEditor.ThemeEditorView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Controller {
     private View view;
@@ -16,20 +24,23 @@ public class Controller {
     private ThemeEditorController themeEditorController;
     private GameController gameController;
 
-    public Controller(View view, Object menuModel) { // Todo: MenuModel
+    public Controller(View view, Object model) { // Todo: ControllerModel
         this.view = view;
         this.currentMode = View.Mode.GAME;
+    }
 
-      }
+    public MenuController getMenuController() {
+        return this.menuController;
+    }
 
     public void startMenu(){
         this.currentMode = View.Mode.MENU;
-        MenuView menuView = new MenuView(this.view.getStage(),null);
+        Map<String, MedalStatus> medalStatusMap = this.importMedalStatuses();
+        MenuView menuView = new MenuView(this.view.getStage(),medalStatusMap);
 
         if (menuController == null) {
-            menuController = new MenuController(menuView, new HashMap<String, MedalStatus>(),this);
+            menuController = new MenuController(menuView, medalStatusMap,this);
         } else {
-
             menuController.setMenuView(menuView);
         }
 
@@ -41,7 +52,7 @@ public class Controller {
 
         ThemeEditorView themeEditorView = new ThemeEditorView(this.view.getStage());
 
-            themeEditorController = new ThemeEditorController(themeEditorView,this);
+        this.themeEditorController = new ThemeEditorController(themeEditorView,this);
 
         this.view.update(View.Mode.THEME,themeEditorView);
     }
@@ -74,7 +85,33 @@ public class Controller {
 
     }
 
+    /**
+     * @return saved Medal statuses, an empty map otherwise
+     */
+    private Map<String, MedalStatus> importMedalStatuses() {
+        Map<String, MedalStatus> medalStatuses = new HashMap<>();
+        InputStream is = ClassLoader.getSystemResourceAsStream("json/medals/medalstatuses.json");
 
+        if (is != null) {
+            JSONObject jsonMedalStatuses = new JSONObject(new JSONTokener(is));
+
+            for (String path : jsonMedalStatuses.keySet()) {
+                JSONObject jsonMedalStatus = jsonMedalStatuses.getJSONObject(path);
+                MedalStatus medalStatus = new MedalStatus();
+
+                if (jsonMedalStatus.getBoolean("bronze"))
+                    medalStatus.set(Medal.BRONZE);
+                if (jsonMedalStatus.getBoolean("silver"))
+                    medalStatus.set(Medal.SILVER);
+                if (jsonMedalStatus.getBoolean("gold"))
+                    medalStatus.set(Medal.GOLD);
+
+                medalStatuses.put(path, medalStatus);
+            }
+        }
+
+        return medalStatuses;
     }
+}
 
 

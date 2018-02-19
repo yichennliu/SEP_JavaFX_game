@@ -1,35 +1,37 @@
 package model.game;
 
+import model.enums.Medal;
+
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Achieved medals for a level
  */
 public class MedalStatus {
-    boolean bronze;
-    boolean silver;
-    boolean gold;
+    boolean bronze = false;
+    boolean silver = false;
+    boolean gold = false;
 
-    public boolean isBronze() {
-        return bronze;
+    public void set(Medal medal) {
+        if (medal == Medal.BRONZE) {
+            this.bronze = true;
+        } else if (medal == Medal.SILVER) {
+            this.silver = true;
+        } else if (medal == Medal.GOLD)  {
+            this.gold = true;
+        }
     }
 
-    public void setBronze(boolean bronze) {
-        this.bronze = bronze;
-    }
-
-    public boolean isSilver() {
-        return silver;
-    }
-
-    public void setSilver(boolean silver) {
-        this.silver = silver;
-    }
-
-    public boolean isGold() {
-        return gold;
-    }
-
-    public void setGold(boolean gold) {
-        this.gold = gold;
+    public boolean has(Medal medal) {
+        if (medal == Medal.BRONZE && this.bronze) {
+            return true;
+        } else if (medal == Medal.SILVER && this.silver) {
+            return true;
+        } else if (medal == Medal.GOLD && this.gold)  {
+            return true;
+        }
+        return false;
     }
 
 }

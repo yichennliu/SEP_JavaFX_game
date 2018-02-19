@@ -22,13 +22,17 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import main.LevelFactory;
+import model.enums.Medal;
 import model.game.Level;
+import model.game.MedalStatus;
 import model.misc.LevelSnapshot;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 public  class ContentFrame extends StackPane {
@@ -52,12 +56,10 @@ public  class ContentFrame extends StackPane {
     private int buttonfactor=4;
 
 
-
-
-    public ContentFrame(double widthLinks, double heightLinks) {
-
+    public ContentFrame(double widthLinks, double heightLinks, MenuView menuView) {
         this.widthLinks=widthLinks;
         this.heightLinks=heightLinks;
+        this.menuView = menuView;
         this.gameButton = createButton("S T A R T");
         this.levelButtons = createButton("L E V E L S   ");
         this.themeEditorButton = createButton("T H E M E ");
@@ -231,8 +233,8 @@ public  class ContentFrame extends StackPane {
             Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/level/"+path));
             Level level = LevelFactory.importLevel("src/json/level/"+path);
             ImageView snapshotview =  new ImageView(snapshot);
-
-            menuBox.getChildren().add( 0, new LevelItem( level.getName()," hier kommen die level infos",snapshotview,path));
+            String levelText = "Medaillen: "+this.getMedalsFormatted(level.getJsonPath());
+            menuBox.getChildren().add( 0, new LevelItem( level.getName(),levelText,snapshotview,path));
             snapshotview.setFitWidth(100);
             snapshotview.setFitHeight(100);
 
@@ -240,10 +242,38 @@ public  class ContentFrame extends StackPane {
 
         }
 
-
         return menuBox;
 
     }//ende create levele
+
+    /**
+     * @param path Level path
+     * @return Medals formatted as String
+     */
+    private String getMedalsFormatted(String path) {
+        Map<String,MedalStatus> medalStatuses = this.menuView.getMedalStatuses();
+        MedalStatus medalStatus = medalStatuses.get(path);
+
+        String medals = "keine";
+        List<String> medalsList = new ArrayList();
+        if (medalStatus != null) {
+            if (medalStatus.has(Medal.GOLD)) {
+                medalsList.add(Medal.GOLD.getDisplayName());
+            }
+            if (medalStatus.has(Medal.SILVER)) {
+                medalsList.add(Medal.SILVER.getDisplayName());
+            }
+            if (medalStatus.has(Medal.BRONZE)) {
+                medalsList.add(Medal.BRONZE.getDisplayName());
+            }
+
+            if (!medalsList.isEmpty()) {
+                medals = String.join(", ", medalsList);
+            }
+        }
+
+        return medals;
+    }
 
 
     private VBox createHelpMenuItem(){
