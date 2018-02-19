@@ -2,61 +2,63 @@ package controller;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleGroup;
+import model.game.MedalStatus;
 import view.MenuView;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class MenuController {
 
     private MenuView menuView;
-    private Object model; // Todo: Menu-Model erstellen
-    private Controller menuController;
+    private Map<String, MedalStatus> medalStatuses;
+    private Controller controller;
     private ToggleGroup group;
 
-    public MenuController(MenuView menuView, Object model, Controller menuController){
+    public MenuController(MenuView menuView, Map<String, MedalStatus> medalStatuses, Controller controller){
         this.menuView = menuView;
-        this.model = model;
-        this.menuController = menuController;
+        this.medalStatuses = medalStatuses;
+        this.controller = controller;
         addMenuViewComponents();
         chooseLevel();
+
+    }
+
+    /**
+     * @return Status der Medaillen. Key ist der Pfad des Levels (level.getJsonPath()),
+     *         Value is ein Objekt in dem steht welche Medaillen für dieses Level erreicht wurden
+     */
+    public Map<String, MedalStatus> getMedalStatuses() {
+        return this.medalStatuses;
     }
 
     public void setMenuView(MenuView menuView) {
         this.menuView = menuView;
         addMenuViewComponents();
+
     }
 
     private void addMenuViewComponents() {
-      menuView.getContentFrame().getGameButton().setOnAction(e -> {
-            this.menuController.startGame();
+        menuView.getContentFrame().getGameButton().setOnAction(e -> {
+            this.controller.startGame();
         });
 
-     menuView.getContentFrame().getThemeEditorButton().setOnAction(e -> {
-            this.menuController.startThemeEditor();
+        menuView.getContentFrame().getThemeEditorButton().setOnAction(e -> {
+            this.controller.startThemeEditor();
         });
 
+    }
+
+     private void chooseLevel() {
+        ArrayList <Button> levelButtons = menuView.getContentFrame().getListlevelButtons();
+        Button level ;
+
+        for (int i=0; i<levelButtons.size();i++){
+            level = levelButtons.get(i);
+
+            final String path= (String) level.getUserData();
+                level.setOnAction(e -> {
+                this.controller.startLevel("src/json/level/"+path);
+            });
         }
-
-     private void chooseLevel(){
-
-         ArrayList <Button> levelButtons = menuView.getContentFrame().getListlevelButtons();
-         Button level ;
-
-         for(int i=0; i<levelButtons.size();i++){
-                level= levelButtons.get(i);
-
-             final String path= (String) level.getUserData();
-             System.out.println(path);
-                 level.setOnAction(e -> {
-                 this.menuController.startLevel(path);
-
-             });
-
-         }
-
-
-
-
-
-
     }
 }

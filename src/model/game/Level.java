@@ -71,19 +71,33 @@ public class Level {
     }
 
     public Integer getRemainingGemsToGold() {
-        Integer remainingGems = this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS);
-        return remainingGems;
+        return this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS);
     }
 
     public Integer getRemainingGemsToSilver(){
-
-        Integer remainingGems = this.getGemGoals()[1] - this.getPropertyValue(Property.GEMS);
-        return remainingGems;
+        return this.getGemGoals()[1] - this.getPropertyValue(Property.GEMS);
     }
 
     public Integer getRemainingGemsToBronze(){
-        Integer remainingGems =  this.getGemGoals()[0] - this.getPropertyValue(Property.GEMS);
-        return remainingGems;
+        return this.getGemGoals()[0] - this.getPropertyValue(Property.GEMS);
+    }
+
+    /**
+     * @return current medal, or null
+     */
+    public Medal getCurrentMedal() {
+        if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[2]
+                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[2]) {
+            return Medal.GOLD;
+        } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[1]
+                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[1]) {
+            return Medal.SILVER;
+        } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[0]
+                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[0]) {
+            return Medal.BRONZE;
+        } else {
+            return null;
+        }
     }
 
     public Feld[][] getMap(){
@@ -296,18 +310,11 @@ public class Level {
 
                             // in Ausgang gehen
                             if (next.isToken(Token.EXIT)) {
-//                                System.out.println("Current gems: "+this.getPropertyValue(Property.GEMS));
-//                                System.out.println("Current ticks: "+this.getPropertyValue(Property.TICKS));
                                 for (int goalNo = 2; goalNo >= 0; goalNo--) {
-//                                    System.out.println("Gem goal "+goalNo+": "+this.getGemGoals()[goalNo]);
-//                                    System.out.println("Tick goal "+goalNo+": "+this.getTickGoals()[goalNo]);
                                     if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[goalNo] &&
                                         this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[goalNo]) {
                                             current.moveTo(next);
                                             this.setWinningStatus(WinningStatus.WON);
-//                                            System.out.println("ACHIEVED goal no. "+goalNo);
-                                    } else {
-//                                        System.out.println("FAILED goal no. "+goalNo);
                                     }
                                 }
                             }
@@ -413,6 +420,10 @@ public class Level {
                             } else if (backwards != null && backwards.isFree(true)) {
                                 // umkehren
                                 current.moveEnemyTo(FieldDirection.BOTTOM);
+                            // sonst wenn rechts frei
+                            } else if (rightSide != null && rightSide.isFree(true)) {
+                                // nach rechts gehen
+                                current.moveEnemyTo(FieldDirection.RIGHT);
                             } else {
                                 // eingeschlossen
                             }
@@ -435,6 +446,10 @@ public class Level {
                             } else if (backwards != null && backwards.isFree(true)) {
                                 // umkehren
                                 current.moveEnemyTo(FieldDirection.BOTTOM);
+                            // sonst wenn links frei
+                            } else if (leftSide != null && leftSide.isFree(true)) {
+                                // nach links gehen
+                                current.moveEnemyTo(FieldDirection.LEFT);
                             } else {
                                 // eingeschlossen
                             }
@@ -461,7 +476,7 @@ public class Level {
                     List<Feld> slimeFields = new ArrayList<>();
                     if (current.isInSlimeArea(slimeFields)) {
                         for (Feld slime : slimeFields) {
-                            slime.bufferSetToken(this.isSlimeMaximumReached() ? Token.STONE : Token.GEM);
+                            slime.setToken(this.isSlimeMaximumReached() ? Token.STONE : Token.GEM);
                         }
                     }
                 }
@@ -483,6 +498,18 @@ public class Level {
 
         // apply buffer
         this.applyBufferedChanges();
+    }
+
+    public void execPreRules(){
+       for(Rule rule: pre){
+           rule.execute(this.map,this.inputDirection);
+       }
+    }
+
+    public void execPostRules(){
+        for(Rule rule: post){
+            rule.execute(this.map,this.inputDirection);
+        }
     }
 
     /**
