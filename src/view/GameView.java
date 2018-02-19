@@ -228,42 +228,45 @@ public class GameView {
     }
 
     public void setCountToGoldInfo() {
-        int showInfo = level.getRemainingGemsToGold();
-        restGem.setText("Needed Gems to Gold Medal: "+showInfo);
+        int showRemainingGemsGoldInfo = this.level.getRemainingGemsToGold();
+        currentMedal.setImage(this.createMedalIcons()[1]);
+        restGem.setText("Needed Gems to Gold Medal: "+showRemainingGemsGoldInfo);
         restGem.setTextFill(Color.WHITE);
 
     }
 
     public void setCountToSilverInfo(){
-        int showInfo= level.getRemainingGemsToSilver();
-        restGem.setText("Needed Gems to Silver Medal: "+showInfo);
+        int showRemainingGemsSilverInfo= this.level.getRemainingGemsToSilver();
+        currentMedal.setImage(this.createMedalIcons()[2]);
+        restGem.setText("Needed Gems to Silver Medal: "+showRemainingGemsSilverInfo);
         restGem.setTextFill(Color.WHITE);
 
     }
 
     public void setCountToBronzeInfo(){
-        int showInfo= level.getRemainingGemsToBronze();
-        restGem.setText("Needed Gems to Bronze Medal: "+showInfo);
+        int showRemainingBronzeInfo= this.level.getRemainingGemsToBronze();
+        restGem.setText("Needed Gems to Bronze Medal: "+showRemainingBronzeInfo);
         restGem.setTextFill(Color.WHITE);
     }
 
     public void showMedalInfo(){
 
-        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS)<=level.getTickGoals()[0]){
+        if(level.getPropertyValue(Property.GEMS)<level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS) >= level.getTickGoals()[2]){
+            restGem.setTextFill(Color.WHITE);
+            restGem.setText("No chance to get Medals!");
+        }
+
+        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS)<=level.getTickGoals()[2]){
             setCountToSilverInfo();
-            currentMedal.setImage(this.createMedalIcons()[2]);
-
         }
-        else if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1] && level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[1]){
+
+        if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1] && level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[1]){
             setCountToGoldInfo();
-            currentMedal.setImage(this.createMedalIcons()[1]);
         }
 
-        else if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2] && level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[2]){
+        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2] && level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[0]){
+            restGem.setText("Got gold!");
             currentMedal.setImage(this.createMedalIcons()[0]);
-        }
-        else{
-            setCountToBronzeInfo();
         }
     }
 
