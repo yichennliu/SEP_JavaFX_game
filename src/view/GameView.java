@@ -274,18 +274,16 @@ public class GameView {
     public void showCurrentSandUhr(){
 
         double currentsecond = this.level.getPropertyValue(Property.TICKS)/5;
-
         double totalSecond = this.level.getTickGoals()[0]/5;
-
         if(currentsecond/totalSecond >= 0.3){
             timerIcons.setImage(this.createSandUhrIcons()[1]);
-
-        } else if(currentsecond/totalSecond >= 0.6){
+        }
+        if(currentsecond/totalSecond >= 0.6){
             timerIcons.setImage(this.createSandUhrIcons()[2]);
 
-        } else{
+        }
+        if (currentsecond/totalSecond < 0.3){
             timerIcons.setImage(this.createSandUhrIcons()[0]);
-
         }
     }
 
