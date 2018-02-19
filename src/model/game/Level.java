@@ -4,7 +4,6 @@ import javafx.util.Pair;
 import model.enums.*;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Level {
     private String name;
@@ -71,15 +70,21 @@ public class Level {
     }
 
     public Integer getRemainingGemsToGold() {
-        return this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS);
+
+        int remainingGems = this.getPropertyValue(Property.GEMS)- this.getGemGoals()[2];
+        return remainingGems;
     }
 
     public Integer getRemainingGemsToSilver(){
-        return this.getGemGoals()[1] - this.getPropertyValue(Property.GEMS);
+
+        int remainingGems = this.getPropertyValue(Property.GEMS) - this.getGemGoals()[2];
+        return remainingGems;
     }
 
     public Integer getRemainingGemsToBronze(){
-        return this.getGemGoals()[0] - this.getPropertyValue(Property.GEMS);
+
+        int remainingGems = this.getPropertyValue(Property.GEMS) - this.getGemGoals()[2];
+        return remainingGems;
     }
 
     /**

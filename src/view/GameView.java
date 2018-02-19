@@ -6,6 +6,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
@@ -18,6 +20,7 @@ import model.game.Level;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 import java.io.File;
+import java.util.Map;
 
 
 public class GameView {
@@ -37,7 +40,7 @@ public class GameView {
     private HBox timeRewardInfo;
     private Label restGem;
     private Label currentGems;
-    private Label currentMedal;
+    private ImageView currentMedal;
 
     public GameView(Stage stage, Level level){
         root = new Group();
@@ -67,8 +70,8 @@ public class GameView {
         this.currentGems = new Label();
         this.timer = new Label();
         this.restGem = new Label();
-        this.currentMedal = new Label();
-        setHboxStyle();
+        this.currentMedal = new ImageView();
+        createHboxStyle();
         showMedalInfo();
         showCollectedGems();
         timeRewardInfo.getChildren().addAll(timer, currentGems, currentMedal, restGem);
@@ -156,16 +159,40 @@ public class GameView {
         this.board.applyTransformation(transformation);
     }
 
-    public void setHboxStyle(){
+    public void createHboxStyle(){
         this.timeRewardInfo.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 1;"
                 + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: black;"
                 + "-fx-background-color: black;");
-
         this.timeRewardInfo.setSpacing(20);
         this.timeRewardInfo.setAlignment(Pos.CENTER);
         this.timeRewardInfo.toFront();
         this.timeRewardInfo.setPrefHeight(50);
         this.timeRewardInfo.setPrefWidth(width);     }
+
+    public Image[] createMedalIcons(){
+
+        final Image goldMedalImage = new Image(GameView.class.getResourceAsStream("images/Gold.png"));
+        final Image silverMedalImage = new Image(GameView.class.getResourceAsStream("images/Silver.png"));
+        final Image bronzeMedalImage = new Image(GameView.class.getResourceAsStream("images/Bronze.png"));
+
+        Image[] medalImages = new Image[] {
+
+            goldMedalImage, silverMedalImage,bronzeMedalImage };
+
+
+        return medalImages;
+
+    }
+
+
+    public void createSandUhrIcons(){
+
+    }
+
+    public void createDiamondIcons(){
+
+    }
+
 
     public Label updateTimerLabel(){
         return this.timer;
@@ -198,26 +225,25 @@ public class GameView {
     }
 
     public void showMedalInfo(){
-        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[0]){
+
+        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS)<=level.getTickGoals()[0]){
             setCountToSilverInfo();
-            currentMedal.setText("Current Medal: Bronze");
-            currentMedal.setTextFill(Color.WHITE);
+            currentMedal.setImage(this.createMedalIcons()[2]);
+            timeRewardInfo.getChildren().add(currentMedal);
 
         }
-        else if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1]){
+        else if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1] && level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[1]){
             setCountToGoldInfo();
-            currentMedal.setText("Current Medal: Silver");
-            currentMedal.setTextFill(Color.WHITE);
+            currentMedal.setImage(this.createMedalIcons()[1]);
+            timeRewardInfo.getChildren().add(currentMedal);
         }
 
-        else if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2]){
-            currentMedal.setText("You've got Gold!");
-            currentMedal.setTextFill(Color.WHITE);
+        else if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2]&& level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[2]){
+            currentMedal.setImage(this.createMedalIcons()[0]);
+            timeRewardInfo.getChildren().add(currentMedal);
         }
         else{
             setCountToBronzeInfo();
-            currentMedal.setText("No Medal :(");
-            currentMedal.setTextFill(Color.WHITE);
         }
     }
 
