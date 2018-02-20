@@ -14,7 +14,6 @@ import java.util.Map;
 
 public class LevelEditor {
 
-    private boolean meSet = false;
     private int width = 25;
     private int height = 25;
     private int[] gemGoals;
@@ -88,6 +87,8 @@ public class LevelEditor {
 
     public void setMap(Feld[][] map) {
         this.map = map;
+        this.level.setMap(map);
+
     }
 
     public Theme getTheme() {

@@ -44,7 +44,11 @@ public class Level {
         this.maxslime = maxslime;
         this.properties = globalProperties;
         this.jsonPath = jsonPath;
+        setNeighbours();
+    }
 
+    /*sets level property on all fields*/
+    private void setNeighbours() {
         for(int row = 0; row < this.getHeight();  row++){
             for (int column = 0; column < this.getWidth(); column++){
                 Feld feld = this.getFeld(row, column);
@@ -602,5 +606,10 @@ public class Level {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setMap(Feld[][] map){
+        this.map = map;
+        setNeighbours();
     }
 }
