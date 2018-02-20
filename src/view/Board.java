@@ -1,5 +1,6 @@
 package view;
 
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
@@ -62,6 +63,15 @@ public class Board {
             animator.stop();
         if(translationAnimator!=null)
             translationAnimator.stop();
+    }
+
+    public Point2D reverseTransform(double j, double k){
+        double a = transformation.getMxx(); double b = transformation.getMxy();
+        double c = transformation.getTx(); double d = transformation.getMyx();
+        double e = transformation.getMyy(); double f = transformation.getTy();
+        double x = (b*f - b*k - c*e +e*j) / (a*e - b*d);
+        double y = ( a*k + c*d - d*j -a*f) / (a*e -b*d);
+        return new Point2D(x,y);
     }
 
     /*returns map that is used to draw*/

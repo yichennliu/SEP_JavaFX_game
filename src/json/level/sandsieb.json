@@ -1,0 +1,36 @@
+{
+  "gems":[1,2,4],
+  "name":"Kochen",
+  "ticks":[1100,700,400],
+  "width":15,
+  "height":15,
+  "pre":[
+    { "situation":"any",
+      "direction":"east",
+      "original":[{"token":"sand"}],
+      "result":[{"token":"0", "values":{"loose":1, "pushable":1}}]
+    },
+    { "situation":"any",
+      "direction":"south",
+      "original":[{"token":"sand"},{"token":"sieve"},{"token":"path"}],
+      "result":[{"token":"gem"},{"token":"1"},{"token":"sand"}]
+    }
+    ],
+  "map":[
+    ["wall", "wall", "wall", "wall", "wall", "exit", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "bricks", "mud", "mud", "mud", "stone", "stone", "wall"],
+    ["wall", "mud", "mud", "mud", "sieve", "sand", "mud", "mud", "mud", "mud", "mud", "mud", "stone", "stone", "wall"],
+    ["wall", "mud", "stone", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "bricks", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "path", "path", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "me", "sand", "mud", "mud", "mud", "exit"],
+    ["wall", "mud", "mud", "mud", "bricks", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "stone", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "path", "path", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "sieve", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "stone", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "mud", "path", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "mud", "path", "path", "path", "path", "path", "path", "path", "path", "wall"],
+    ["wall", "mud", "mud", "wall", "mud", "mud", "mud", "mud", "mud", "path", "sieve", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "bricks", "mud", "mud", "mud", "mud", "path", "path", "mud", "mud", "mud", "wall"],
+    ["wall", "mud", "mud", "mud", "mud", "bricks", "mud", "mud", "mud", "path", "path", "mud", "mud", "mud", "wall"],
+    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"]
+    ]
+}

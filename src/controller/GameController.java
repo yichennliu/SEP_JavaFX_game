@@ -6,6 +6,8 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -52,7 +54,7 @@ public class GameController {
         this.addDirectionEvents();
         this.addInGameMenu();
         this.robot = new Robot(level,5);
-        robotize(false);
+        robotize(true);
         this.addGameViewComponents();
         this.countDown();
     }

@@ -1,12 +1,15 @@
 package controller;
 
+import javafx.stage.Stage;
 import main.LevelFactory;
 import model.enums.Medal;
 import model.game.Level;
 import model.game.MedalStatus;
+import model.levelEditor.LevelEditor;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import view.*;
+import view.levelEditor.LevelEditorView;
 import view.themeEditor.ThemeEditorView;
 
 import java.io.File;
@@ -33,7 +36,13 @@ public class Controller {
         return this.menuController;
     }
 
-
+    public void startLevelEditor(){
+        this.currentMode = View.Mode.EDITOR;
+        LevelEditor levelEditor = new LevelEditor();
+        LevelEditorView levelEditorView = new LevelEditorView(this.view.getStage(), levelEditor);
+        LevelEditorController controller = new LevelEditorController(this, levelEditor, levelEditorView);
+        this.view.update(View.Mode.EDITOR, levelEditorView);
+    }
 
     public void startMenu(){
         this.currentMode = View.Mode.MENU;
@@ -51,6 +60,7 @@ public class Controller {
 
     public void startThemeEditor(){
         this.currentMode = View.Mode.THEME;
+
         ThemeEditorView themeEditorView = new ThemeEditorView(this.view.getStage());
 
         this.themeEditorController = new ThemeEditorController(themeEditorView,this);
@@ -59,7 +69,7 @@ public class Controller {
     }
 
     public void startGame(){
-        this.startLevel("json/level/spiegelgeist.json");
+        this.startLevel("json/level/wand.json");
     }
 
 

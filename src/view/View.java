@@ -15,6 +15,7 @@ import view.animation.AnimationToken;
 import view.animation.BoardTranslationTransition;
 import view.animation.StaticViewToken;
 import view.animation.TokenTransition;
+import view.levelEditor.LevelEditorView;
 import view.themeEditor.ThemeEditorView;
 
 import java.util.ArrayList;
@@ -45,6 +46,12 @@ public class View {
         stage.setScene(menuView.getSceneMenu());
     }
 
+    public void showLevelEditor(){
+        LevelEditorView levelEditorView = (LevelEditorView) currentScene;
+        System.out.println("SHOW IT");
+        stage.setScene(levelEditorView.getScene());
+    }
+
     public void showGame(){
         GameView gameView = (GameView) currentScene;
         stage.setScene(gameView.getScene());
@@ -58,16 +65,15 @@ public class View {
     public void update(Mode mode, Object scene) {
         this.currentScene = scene;
         switch (mode) {
-
             case GAME:
 
                     showGame();
 //                    Canvas gameCanvas = gameScene.getCanvas();
 //                    drawBoard(gameCanvas,gameCanvas.getGraphicsContext2D());
                     break;
-/*            case EDITOR:
-                    showEditor();
-                    break;*/
+            case EDITOR:
+                    showLevelEditor();
+                    break;
             case MENU:
                     showMenu();
                     break;

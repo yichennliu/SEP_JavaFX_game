@@ -100,6 +100,11 @@ public class LevelFactory {
             }
         }
 
+        // preserve original level path if available
+        if (jsonLevel.has("jsonPath")) {
+            jsonPath = jsonLevel.getString("jsonPath");
+        }
+
         // create level
         return new Level(name, map, gems, ticks, pre, post, maxslime, globalProperties, jsonPath);
     }
@@ -252,6 +257,7 @@ public class LevelFactory {
         // add map
         JSONArray jsonMap = new JSONArray();
         for (Feld[] row : level.getMap()) {
+            JSONArray jsonMapRow = new JSONArray();
             for (Feld feld : row) {
                 Object jsonFeld = null;
                 Token token = feld.getToken();
@@ -273,8 +279,10 @@ public class LevelFactory {
                 } else {
                     jsonFeld = token.toString().toLowerCase();
                 }
-                jsonMap.put(jsonFeld);
+                jsonMapRow.put(jsonFeld);
             }
+            jsonMap.put(jsonMapRow);
+
         }
         jsonLevel.put("map", jsonMap);
 

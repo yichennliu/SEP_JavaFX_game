@@ -1,0 +1,48 @@
+{
+  "gems":[1,8,16],
+  "name":"Feuerstein",
+  "ticks":[1500,500,350],
+  "time1":280,
+  "time2":90,
+  "time3":60,
+  "width":17,
+  "height":17,
+  "pre":[
+    { "situation":"any",
+      "direction":"south",
+      "original":[{"token":"swapling"},{"token":"sieve"},{"token":"path"},{"token":"me"}],
+      "result":[{"token":"0"},{"token":"1"},{"token":"gem"},{"token":"3", "values":{"bamrich":1}}]
+    },
+    { "situation":"any",
+      "direction":"south",
+      "original":[{"token":"swapling"},{"token":"sieve"},{"token":"path"}],
+      "result":[{"token":"0"},{"token":"1"},{"token":"gem"}]
+    }
+    ],
+  "post":[
+    { "situation":"any",
+      "direction":"south",
+      "original":[{"token":["gem", "me"]},{"token":"fire"}],
+      "result":[{"token":"explosion"},{"token":"1"}]
+    }
+    ],
+  "map":[
+    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"],
+    ["wall", "stone", "wall", "path", "path", "path", "path", "path", "path", {"token":"swapling", "values":{"direction":1}}, "path", "path", "path", "path", "wall", "stone", "wall"],
+    ["wall", "stone", "wall", "wall", "wall", "wall", "wall", "wall", "sieve", "wall", "wall", "wall", "wall", "wall", "wall", "stone", "wall"],
+    ["wall", "stone", "stone", "stone", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "stone", "stone", "stone", "wall"],
+    ["wall", "stone", "stone", "mud", "mud", "mud", "mud", "path", "path", "path", "mud", "mud", "mud", "mud", "stone", "stone", "wall"],
+    ["wall", "stone", "mud", "mud", "mud", "path", "path", "path", "path", "path", "path", "path", "mud", "mud", "mud", "stone", "wall"],
+    ["wall", "stone", "mud", "mud", "path", "path", "path", "path", "path", "path", "path", "path", "path", "mud", "mud", "stone", "wall"],
+    ["wall", "stone", "mud", "mud", "path", "path", "path", "path", "path", "path", "path", "path", "path", "mud", "mud", "stone", "wall"],
+    ["wall", "stone", "mud", "mud", "path", "path", "path", "path", "me", "path", "path", "path", "path", "mud", "mud", "stone", "wall"],
+    ["wall", "stone", "mud", "mud", "path", "path", "path", "path", "path", "path", "path", "path", "path", "mud", "mud", "stone", "wall"],
+    ["exit", "stone", "mud", "mud", "path", "path", "path", "path", "path", "path", "path", "path", "path", "mud", "mud", "stone", "exit"],
+    ["wall", "stone", "mud", "mud", "gem", "gem", "path", "path", "path", "path", "path", "gem", "gem", "mud", "mud", "stone", "wall"],
+    ["wall", "stone", "mud", "mud", "gem", "gem", "gem", "path", "path", "path", "gem", "gem", "gem", "mud", "mud", "stone", "wall"],
+    ["wall", "stone", "mud", "mud", "gem", "gem", "gem", "gem", "gem", "gem", "gem", "gem", "gem", "mud", "mud", "stone", "wall"],
+    ["wall", "stone", "mud", "mud", "gem", "gem", "gem", "gem", "gem", "gem", "gem", "gem", "gem", "mud", "mud", "stone", "wall"],
+    ["wall", "bricks", "bricks", "bricks", "fire", "fire", "fire", "fire", "fire", "fire", "fire", "fire", "fire", "bricks", "bricks", "bricks", "wall"],
+    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"]
+    ]
+}
