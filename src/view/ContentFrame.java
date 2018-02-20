@@ -269,10 +269,6 @@ public  class ContentFrame extends StackPane {
         return medals;
     }
 
-
-
-
-
     private VBox createHelpMenuItem(){
         helpVbox = new VBox();
         Label shortcut = new Label(" Ctr "+" + "+" schift");
