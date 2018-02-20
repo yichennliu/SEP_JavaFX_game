@@ -44,6 +44,7 @@ public  class ContentFrame extends StackPane {
     private Button levelButtons;
     private Button themeEditorButton;
     private Button helpbutton;  private Button close;
+    private Button levelEditorButton;
     private int currentItem = 0;
     private boolean  showMenuItems= false;
     private VBox menuBox,helpVbox;
@@ -67,12 +68,13 @@ public  class ContentFrame extends StackPane {
         this.close = createButton("C L O S E ");
         this.continueButton = createButton("C O N T I N U E");
         this.saveButton = createButton("S A V E ");
+        this.levelEditorButton = createButton("L E V E L E D I T O R");
         setAlignment(Pos.CENTER);
 
-        VBox menuGamePause = new VBox(15,saveButton,continueButton);
+        VBox menuGamePause = new VBox(15, saveButton, continueButton);
         menuGamePause.setVisible(false);
 
-        VBox menuGameMain = new VBox(15,gameButton,levelButtons,themeEditorButton,helpbutton,close);
+        VBox menuGameMain = new VBox(15, gameButton, levelButtons, themeEditorButton, levelEditorButton, helpbutton, close);
         VBox menuVboxlinks = new VBox(menuGamePause,menuGameMain);
         menuVboxlinks.setMinSize(widthLinks,heightLinks*2);
         menuVboxlinks.setId("vboxLinks");
@@ -111,6 +113,7 @@ public  class ContentFrame extends StackPane {
         setHover(helpbutton);
         setHover(close);
         setHover(saveButton);
+        setHover(levelEditorButton);
 
         close.setOnAction(e -> Platform.exit());
 
@@ -362,6 +365,8 @@ public  class ContentFrame extends StackPane {
     public Button getThemeEditorButton() {
         return themeEditorButton;
     }
+
+    public Button getLevelEditorButton() {return levelEditorButton;}
 
 
 

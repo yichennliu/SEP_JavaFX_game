@@ -42,6 +42,11 @@ public class MenuController {
             this.controller.startGame();
         });
 
+        menuView.getContentFrame().getLevelEditorButton().setOnAction(e -> {
+            this.controller.startLevelEditor();
+
+        });
+
         menuView.getContentFrame().getThemeEditorButton().setOnAction(e -> {
             this.controller.startThemeEditor();
         });

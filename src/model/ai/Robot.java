@@ -66,8 +66,12 @@ public class Robot implements AI {
                 if(goTo!=null){
                     return goTo.getInputDirection();
                 }
-                else return goToFreePlace();
+                else  {
+                    System.out.println("Was da los?!?"+goToFreePlace() );
+                    return goToFreePlace();
+                }
             }
+
         currentTarget =null;
         return null;
     }
