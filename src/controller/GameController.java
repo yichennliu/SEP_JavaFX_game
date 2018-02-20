@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -54,9 +55,10 @@ public class GameController {
         this.addDirectionEvents();
         this.addInGameMenu();
         this.robot = new Robot(level,5);
-        robotize(true);
+        robotize(false);
         this.addGameViewComponents();
         this.countDown();
+        this.addPauseResumeGameEvents();
     }
 
     public void robotize(boolean activate){
@@ -67,6 +69,7 @@ public class GameController {
         countDown();
         addGameViewComponents();
         addDirectionEvents();
+        addPauseResumeGameEvents();
 
     }
 
@@ -159,6 +162,23 @@ public class GameController {
         dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button
                 -> button.addEventHandler(KeyEvent.KEY_PRESSED, fireOnEnter));
 
+    }
+
+    private void addPauseResumeGameEvents(){
+        Stage gameStage = this.gameView.getStage();
+        gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.SPACE)) {
+                if(timeline!=null && timeline.getStatus().equals(Animation.Status.RUNNING)){
+                    timeline.stop();
+                    timer.stop();
+                }
+
+                else if(timeline!= null && timeline.getStatus()== Animation.Status.STOPPED){
+                    timeline.play();
+                    timer.play();
+                }
+            }
+        });
     }
 
     private class EscapeButtonHandler implements EventHandler<KeyEvent> {
