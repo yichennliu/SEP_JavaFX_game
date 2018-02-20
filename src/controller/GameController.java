@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -28,6 +29,7 @@ import org.json.JSONObject;
 import view.EndGameAlert;
 import view.GamePausedAlert;
 import view.GameView;
+import view.MenuView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -43,6 +45,7 @@ public class GameController {
     private Timeline timeline;
     private Timeline timer;
     private EscapeButtonHandler handler;
+    private EventHandler levelButtonHandler;
     private AI robot;
     private boolean robotActive;
 
@@ -224,8 +227,11 @@ public class GameController {
         if (handler == null) {
             handler = new EscapeButtonHandler(gamestage);
         }
+
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, handler);
     }
+
+
 
     /**
      * Show end of game dialog
