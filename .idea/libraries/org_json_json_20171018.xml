@@ -8,7 +8,7 @@
       <root url="jar://$PROJECT_DIR$/lib/json-20171018-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$USER_HOME$/.ideaLibSources/json-20171018-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/json-20171018-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
