@@ -1,8 +1,10 @@
 package view;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.enums.FieldDirection;
 import model.enums.Property;
@@ -26,19 +28,24 @@ import java.util.Map;
 public class View {
     private Stage stage;
     private Object currentScene;
+    private Rectangle2D getwidthfullscreen;
+    private double width;
+    private double height;
 
-    private double windowWidth = 800;
-    private double windowHeight = 600;
+    // private double windowWidth = 800;
+   // private double windowHeight = 600;
 
 
     public enum Mode {EDITOR, GAME, MENU, THEME,PRIMARY};
 
     public View(Stage stage){
         this.stage = stage;
-        this.stage.setWidth(windowWidth);
-        this.stage.setHeight(windowHeight);
-        this.stage.centerOnScreen();
-        this.stage.setMaximized(true);
+        this.getwidthfullscreen = Screen.getPrimary().getVisualBounds();
+        this.width= getwidthfullscreen.getWidth();
+        this.height= getwidthfullscreen.getHeight();
+        this.stage.setWidth(width);
+        this.stage.setHeight(height);
+        this.stage.setResizable(false);
     }
 
     private void showMenu(){
