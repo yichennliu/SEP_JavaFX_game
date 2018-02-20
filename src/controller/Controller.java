@@ -69,7 +69,7 @@ public class Controller {
     }
 
     public void startGame(){
-        this.startLevel("json/level/testExport.json");
+        this.startLevel("json/level/wand.json");
     }
 
 

@@ -100,6 +100,11 @@ public class LevelFactory {
             }
         }
 
+        // preserve original level path if available
+        if (jsonLevel.has("jsonPath")) {
+            jsonPath = jsonLevel.getString("jsonPath");
+        }
+
         // create level
         return new Level(name, map, gems, ticks, pre, post, maxslime, globalProperties, jsonPath);
     }

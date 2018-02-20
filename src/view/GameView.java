@@ -6,6 +6,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
@@ -18,7 +20,6 @@ import model.game.Level;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 import java.io.File;
-
 
 public class GameView {
 
@@ -34,10 +35,12 @@ public class GameView {
     private Board board;
 
     private Label timer;
+    private ImageView timerIcons;
     private HBox timeRewardInfo;
     private Label restGem;
     private Label currentGems;
-    private Label currentMedal;
+    private ImageView gemIcon;
+    private ImageView currentMedal;
 
     public GameView(Stage stage, Level level){
         root = new Group();
@@ -65,13 +68,21 @@ public class GameView {
 
         this.timeRewardInfo = new HBox(10);
         this.currentGems = new Label();
+        this.gemIcon = new ImageView();
         this.timer = new Label();
+        this.timerIcons = new ImageView();
         this.restGem = new Label();
-        this.currentMedal = new Label();
-        setHboxStyle();
+        this.currentMedal = new ImageView();
+        this.currentMedal.setFitHeight(30);
+        this.currentMedal.setFitWidth(30);
+        this.timerIcons.setFitHeight(30);
+        this.timerIcons.setFitWidth(30);
+        createHboxStyle();
         showMedalInfo();
+        showCurrentSandUhr();
         showCollectedGems();
-        timeRewardInfo.getChildren().addAll(timer, currentGems, currentMedal, restGem);
+        createDiamondIcons();
+        timeRewardInfo.getChildren().addAll(timerIcons, timer, gemIcon, currentGems, currentMedal, restGem);
         root.getChildren().addAll(timeRewardInfo);
 
         this.board = new Board(staticCanvas,animatedCanvas, level.getMap(),theme,fieldSize);
@@ -99,6 +110,7 @@ public class GameView {
         View.drawBoard(this.board,level.getMap(),this.theme,true);
         showCollectedGems();
         showMedalInfo();
+        showCurrentSandUhr();
     }
 
     /*if ME is at the edge of the viewport, a new translation will be set (starts indirectly tranlsation transition)*/
@@ -157,70 +169,125 @@ public class GameView {
         this.board.applyTransformation(transformation);
     }
 
-    public void setHboxStyle(){
+    public void createHboxStyle(){
         this.timeRewardInfo.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 1;"
                 + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: black;"
                 + "-fx-background-color: black;");
-
         this.timeRewardInfo.setSpacing(20);
         this.timeRewardInfo.setAlignment(Pos.CENTER);
         this.timeRewardInfo.toFront();
         this.timeRewardInfo.setPrefHeight(50);
         this.timeRewardInfo.setPrefWidth(width);     }
 
+    public Image[] createMedalIcons(){
+
+        final Image goldMedalImage = new Image(GameView.class.getResourceAsStream("images/Gold.png"));
+        final Image silverMedalImage = new Image(GameView.class.getResourceAsStream("images/Silver.png"));
+        final Image bronzeMedalImage = new Image(GameView.class.getResourceAsStream("images/Bronze.png"));
+
+        Image[] medalImages = new Image[] {
+
+            goldMedalImage, silverMedalImage,bronzeMedalImage };
+
+
+        return medalImages;
+
+    }
+
+
+    public Image[] createSandUhrIcons(){
+        final Image greenSandUhr = new Image(GameView.class.getResourceAsStream("images/GreenSandUhr.png"));
+        final Image yellowSandUhr = new Image(GameView.class.getResourceAsStream("images/YellowSandUhr.png"));
+        final Image redSandUhr = new Image(GameView.class.getResourceAsStream("images/RedSandUhr.png"));
+
+        Image[] sandUhrImages = new Image[] {
+
+                greenSandUhr, yellowSandUhr, redSandUhr };
+
+        return sandUhrImages;
+
+    }
+
+    public void createDiamondIcons(){
+        final Image gem = new Image(GameView.class.getResourceAsStream("images/Diamand.png"));
+        this.gemIcon.setImage(gem);
+        this.gemIcon.setFitHeight(30);
+        this.gemIcon.setFitWidth(30);
+
+    }
+
     public Label updateTimerLabel(){
         return this.timer;
     }
 
     public void showCollectedGems(){
-        int result= this.level.getPropertyValue(Property.GEMS);
-        currentGems.setText("Gems got: "+ result);
+        Integer result= this.level.getPropertyValue(Property.GEMS);
+        currentGems.setText(result.toString());
         currentGems.setTextFill(Color.WHITE);
     }
 
     public void setCountToGoldInfo() {
-        int showInfo = level.getRemainingGemsToGold();
-        restGem.setText("Needed Gems to Gold: "+showInfo);
+        int showRemainingGemsGoldInfo = this.level.getRemainingGemsToGold();
+        currentMedal.setImage(this.createMedalIcons()[1]);
+        restGem.setText("Needed Gems to Gold Medal: "+showRemainingGemsGoldInfo);
         restGem.setTextFill(Color.WHITE);
 
     }
 
     public void setCountToSilverInfo(){
-        int showInfo= level.getRemainingGemsToSilver();
-        restGem.setText("Needed Gems to Silver: "+showInfo);
+        int showRemainingGemsSilverInfo= this.level.getRemainingGemsToSilver();
+        currentMedal.setImage(this.createMedalIcons()[2]);
+        restGem.setText("Needed Gems to Silver Medal: "+showRemainingGemsSilverInfo);
         restGem.setTextFill(Color.WHITE);
 
     }
 
     public void setCountToBronzeInfo(){
-        int showInfo= level.getRemainingGemsToBronze();
-        restGem.setText("Needed Gems to Bronze: "+showInfo);
+        int showRemainingBronzeInfo= this.level.getRemainingGemsToBronze();
+        restGem.setText("Needed Gems to Bronze Medal: "+showRemainingBronzeInfo);
         restGem.setTextFill(Color.WHITE);
     }
 
     public void showMedalInfo(){
-        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[0]){
+
+        if(level.getPropertyValue(Property.GEMS)<level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS) >= level.getTickGoals()[2]){
+            restGem.setTextFill(Color.WHITE);
+            restGem.setText("No chance to get Medals!");
+        }
+
+        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS)<=level.getTickGoals()[2]){
             setCountToSilverInfo();
-            currentMedal.setText("Current Medal: Bronze");
-            currentMedal.setTextFill(Color.WHITE);
-
         }
-        else if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1]){
+
+        if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1] && level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[1]){
             setCountToGoldInfo();
-            currentMedal.setText("Current Medal: Silver");
-            currentMedal.setTextFill(Color.WHITE);
         }
 
-        else if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2]){
-            currentMedal.setText("You've got Gold!");
-            currentMedal.setTextFill(Color.WHITE);
-        }
-        else{
-            setCountToBronzeInfo();
-            currentMedal.setText("No Medal :(");
-            currentMedal.setTextFill(Color.WHITE);
+        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2] && level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[0]){
+            restGem.setText("Got gold!");
+            currentMedal.setImage(this.createMedalIcons()[0]);
         }
     }
 
+
+    public void showCurrentSandUhr(){
+
+        double currentsecond = this.level.getPropertyValue(Property.TICKS)/5;
+        double totalSecond = this.level.getTickGoals()[0]/5;
+        if(currentsecond/totalSecond >= 0.3){
+            timerIcons.setImage(this.createSandUhrIcons()[1]);
+        } else{
+            timerIcons.setImage(this.createSandUhrIcons()[0]);
+        }
+        if(currentsecond/totalSecond >= 0.6){
+            timerIcons.setImage(this.createSandUhrIcons()[2]);
+        }
+
+    }
+
+
+
 }
+
+
 
