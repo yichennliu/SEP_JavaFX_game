@@ -2,11 +2,13 @@ package controller;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import main.LevelFactory;
 import model.enums.Token;
+import model.game.Feld;
 import model.game.Level;
 import model.levelEditor.LevelEditor;
 import view.levelEditor.LevelEditorView;
@@ -17,6 +19,9 @@ public class LevelEditorController {
     private Controller controller;
     private LevelEditor editor;
     private LevelEditorView levelEditorView;
+    private boolean mouseDown = false;
+    private Point2D lastCoordinate;
+    private boolean meSet;
 
     public LevelEditorController(Controller controller, LevelEditor editor, LevelEditorView levelEditorView){
 
@@ -32,7 +37,7 @@ public class LevelEditorController {
         try{
             Level level  = LevelFactory.importLevel(path);
             if(level!=null){
-                this.editor.setMap(level.getMap());
+                setNewMap(level.getMap());
                 this.levelEditorView.getNameInput().textProperty().setValue(level.getName());
                 this.levelEditorView.update();
                 /*TODO: Level komplett importieren -> GemGoals und so*/
@@ -45,11 +50,35 @@ public class LevelEditorController {
         }
     }
 
+    private void setNewMap(Feld[][] map){
+        this.editor.setMap(map);
+        this.levelEditorView.reloadMap();
+    }
+
     private void initInputEvents() {
-        this.levelEditorView.getStaticCanvas().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            Point2D point = this.levelEditorView.getBoard().reverseTransform(e.getX(),e.getY());
-           this.editor.getMap()[(int) (point.getY()/20.0) ][(int) (point.getX()/20.0)].setToken(editor.getCurrentToken());
-           this.levelEditorView.update();
+       Canvas staticCanvas = this.levelEditorView.getStaticCanvas();
+       staticCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+            mouseDown = true;
+            int col = (int) (e.getY()/levelEditorView.getFieldSize());
+            int row = (int) (e.getX()/levelEditorView.getFieldSize());
+            lastCoordinate = new Point2D(col,row) ;
+            brushFeld(col,row);
+            this.levelEditorView.update();
+        });
+        staticCanvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
+            if(mouseDown){
+                int col = (int) (e.getY()/levelEditorView.getFieldSize());
+                int row = (int) (e.getX()/levelEditorView.getFieldSize());
+                Point2D newCoord = new Point2D(col,row);
+                if(!lastCoordinate.equals(newCoord)){
+                    lastCoordinate = newCoord;
+                    brushFeld(col,row);
+                    this.levelEditorView.update();
+                }
+            }
+        });
+        staticCanvas.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
+            mouseDown = false;
         });
         ToggleGroup buttons = this.levelEditorView.getHeaderButtons();
         buttons.selectedToggleProperty().addListener((a,b,c) -> {
@@ -70,6 +99,18 @@ public class LevelEditorController {
         });
 
         initLevelSettingsInput();
+    }
+
+    private void brushFeld(int column, int row){
+        Token token = editor.getCurrentToken();
+        Token oldToken = this.editor.getMap()[column][row].getToken();
+        if(token == Token.ME ){
+            if (meSet) return;
+            else meSet = true;
+        }
+        else if(oldToken==Token.ME) meSet = false;
+        this.editor.getMap()[column][row].setToken(editor.getCurrentToken());
+        this.levelEditorView.update();
     }
 
     private void initLevelSettingsInput(){

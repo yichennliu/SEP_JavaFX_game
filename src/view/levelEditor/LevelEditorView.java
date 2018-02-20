@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import model.enums.Token;
+import model.game.Feld;
 import model.levelEditor.LevelEditor;
 import view.Board;
 import view.View;
@@ -26,6 +27,7 @@ public class LevelEditorView {
     private TextField[] timeInputs;
     private double fieldSize = 20.0;
     private Button saveButton;
+    private Button exitButton;
     private TextField nameInput;
 
     public LevelEditorView(Stage stage, LevelEditor editor){
@@ -114,10 +116,20 @@ public class LevelEditorView {
         }
 
         saveButton = new Button("Speichern");
-        informationRoot.getChildren().addAll(nameInput, goalLabel, gemBox, timeBox, saveButton);
+        exitButton = new Button("Zurück zum Menü");
+        informationRoot.getChildren().addAll(nameInput, goalLabel, gemBox, timeBox, saveButton,exitButton);
 
         rootPane.setLeft(informationRoot);
 
+    }
+
+    private void initGoalsInput(){
+        gemInputs = new TextField[3];
+        timeInputs = new TextField[3];
+        for (int i = 0; i<gemInputs.length;i++){
+            gemInputs[i] = getGemTimeInput(30);
+            timeInputs[i] = getGemTimeInput(40);
+        }
     }
 
     public TextField getNameInput() {
@@ -136,18 +148,21 @@ public class LevelEditorView {
         return saveButton;
     }
 
-    private void initGoalsInput(){
-        gemInputs = new TextField[3];
-        timeInputs = new TextField[3];
-        for (int i = 0; i<gemInputs.length;i++){
-            gemInputs[i] = getGemTimeInput(30);
-            timeInputs[i] = getGemTimeInput(40);
-        }
+    public Button getExitButton(){
+        return this.exitButton;
     }
 
     private TextField getGemTimeInput(double size){
         TextField inputField = new TextField();
         inputField.setPrefWidth(size);
         return inputField;
+    }
+
+    public double getFieldSize(){
+        return  this.fieldSize;
+    }
+
+    public void reloadMap() {
+        this.board = new Board(staticCanvas,animationCanvas,editor.getMap(),editor.getTheme(),fieldSize);
     }
 }

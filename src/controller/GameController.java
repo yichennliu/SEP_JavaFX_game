@@ -57,7 +57,7 @@ public class GameController {
         this.addDirectionEvents();
         this.addInGameMenu();
         this.robot = new Robot(level,5);
-        robotize(true);
+        robotize(false);
         this.addGameViewComponents();
         this.countDown();
     }
