@@ -94,7 +94,6 @@ public  class ContentFrame extends StackPane {
         menuBox.getStyleClass().add("levelbox");
         levelItemScrollPane = createscrollPane(menuBox);
 
-
         levelButtons.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
              if(levelItemScrollPane.isVisible()){
@@ -107,7 +106,6 @@ public  class ContentFrame extends StackPane {
 
 
         close.setOnAction(e -> Platform.exit());
-
 
         helpVbox=createHelpMenuItem();
         helpVboxScrollPane= createscrollPane(helpVbox);
@@ -126,9 +124,6 @@ public  class ContentFrame extends StackPane {
 
         getChildren().addAll(menuVboxlinks, levelItemScrollPane,helpVboxScrollPane);
     }
-
-
-
 
 
     public ScrollPane createscrollPane(VBox scrollVbox){
@@ -150,19 +145,15 @@ public  class ContentFrame extends StackPane {
         return dir.list();
     }
 
-
     public Button createButton(String titel ) {
        Button button= new Button(titel);
         button.setMinWidth(widthLinks/buttonfactor);
         return button;
     }
 
-
-
     public LevelItem getMenuItem(int index) {
         return (LevelItem)menuBox.getChildren().get(index);
     }
-
 
     public ArrayList getListlevelButtons() {
         return listlevelButtons;
@@ -200,7 +191,7 @@ public  class ContentFrame extends StackPane {
 
         VBox vboxLevelInformation= new VBox(information);
 
-         vboxLevelInformation.setMinSize((widthLinks/2)/2,(heightLinks/2)/2);
+        vboxLevelInformation.setMinSize((widthLinks/2)/2,(heightLinks/2)/2);
         vboxLevelInformation.setAlignment(Pos.CENTER_LEFT);
         getChildren().addAll( vboxLevelInformation,menu,image);
         levelButton.setUserData(path);
@@ -208,8 +199,6 @@ public  class ContentFrame extends StackPane {
 
 
     }
-
-
 
 }
 
@@ -316,11 +305,7 @@ public  class ContentFrame extends StackPane {
         });
 
 
-
-
     }
-
-
 
 
 

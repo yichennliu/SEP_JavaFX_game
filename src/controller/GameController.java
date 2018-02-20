@@ -69,10 +69,10 @@ public class GameController {
     }
 
     public void update() {
-        countDown();
-        addGameViewComponents();
-        addDirectionEvents();
-        addPauseResumeGameEvents();
+        this.countDown();
+        this.addGameViewComponents();
+        this.addDirectionEvents();
+        this.addPauseResumeGameEvents();
 
     }
 
@@ -183,7 +183,6 @@ public class GameController {
             }
         });
     }
-
 
 
     public void addInGameMenu() {
@@ -344,9 +343,7 @@ public class GameController {
 
     public void setGameView(GameView gameView) { this.gameView = gameView; }
 
-    public void setLevel(Level level) {
-        this.level = level;
-    }
+    public void setLevel(Level level) { this.level = level; }
 
     private class EscapeButtonHandler implements EventHandler<KeyEvent> {
 
@@ -366,7 +363,6 @@ public class GameController {
                     timeline.stop();
                     timer.stop();
                 }
-
 
                 GameController.this.addAlertKeyEvent(alert);
                 Optional<ButtonType> result = alert.showAndWait();

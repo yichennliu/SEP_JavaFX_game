@@ -77,11 +77,11 @@ public class GameView {
         this.currentMedal.setFitWidth(30);
         this.timerIcons.setFitHeight(30);
         this.timerIcons.setFitWidth(30);
-        createHboxStyle();
-        showMedalInfo();
-        showCurrentSandUhr();
-        showCollectedGems();
-        createDiamondIcons();
+        this.createHboxStyle();
+        this.showMedalInfo();
+        this.showCurrentSandUhr();
+        this.showCollectedGems();
+        this.createDiamondIcons();
         timeRewardInfo.getChildren().addAll(timerIcons, timer, gemIcon, currentGems, currentMedal, restGem);
         root.getChildren().addAll(timeRewardInfo);
 
@@ -184,12 +184,9 @@ public class GameView {
         final Image silverMedalImage = new Image(GameView.class.getResourceAsStream("images/Silver.png"));
         final Image bronzeMedalImage = new Image(GameView.class.getResourceAsStream("images/Bronze.png"));
 
-        Image[] medalImages = new Image[] {
+        return  new Image[] {
 
             goldMedalImage, silverMedalImage,bronzeMedalImage };
-
-
-        return medalImages;
 
     }
 
@@ -199,11 +196,10 @@ public class GameView {
         final Image yellowSandUhr = new Image(GameView.class.getResourceAsStream("images/YellowSandUhr.png"));
         final Image redSandUhr = new Image(GameView.class.getResourceAsStream("images/RedSandUhr.png"));
 
-        Image[] sandUhrImages = new Image[] {
+       return  new Image[] {
 
                 greenSandUhr, yellowSandUhr, redSandUhr };
 
-        return sandUhrImages;
 
     }
 

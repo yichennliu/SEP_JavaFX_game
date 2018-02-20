@@ -5,15 +5,16 @@ import javafx.scene.image.ImageView;
 import view.GameView;
 
 public enum Medal {
-    BRONZE("Bronze"), SILVER("Silber"), GOLD("Gold");
+    BRONZE(new Image(GameView.class.getResourceAsStream("images/Bronze.png")),"Bronze"),
+    SILVER(new Image(GameView.class.getResourceAsStream("images/Silver.png")),"Silber"),
+    GOLD(new Image(GameView.class.getResourceAsStream("images/Gold.png")),"Gold");
+
     private String displayName;
-    final Image goldMedalImage = new Image(GameView.class.getResourceAsStream("images/Gold.png"));
-    final Image silverMedalImage = new Image(GameView.class.getResourceAsStream("images/Silver.png"));
-    final Image bronzeMedalImage = new Image(GameView.class.getResourceAsStream("images/Bronze.png"));
+    private final Image medalimage;
 
-
-    Medal (String displayName) {
+    Medal (Image medalimage, String displayName) {
         this.displayName = displayName;
+        this.medalimage = medalimage;
     }
 
     public String getDisplayName() {
@@ -21,25 +22,11 @@ public enum Medal {
     }
 
 
-    public ImageView getMedalImage(Image medalImage){
-        ImageView imageView = new ImageView(medalImage);
-        switch (this) {
-            case GOLD:
-                imageView = new ImageView(goldMedalImage);
-                break;
+    public ImageView getMedalImage(){
+        ImageView imageView = new ImageView(this.medalimage);
+        imageView.setFitHeight(30);
+        imageView.setFitWidth(30);
 
-            case SILVER:
-                imageView = new ImageView(silverMedalImage);
-                break;
-
-            case BRONZE:
-                imageView = new ImageView(bronzeMedalImage);
-                break;
-
-            default:
-                System.out.println("Bisher keine Medallions");
-                break;
-        }
         return imageView;
     }
 
