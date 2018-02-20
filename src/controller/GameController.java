@@ -138,7 +138,6 @@ public class GameController {
         timer.playFromStart();
     }
 
-
     public GameView getGameView() {
         return gameView;
     }
@@ -217,7 +216,6 @@ public class GameController {
             }
         }
     }
-
 
     public void addInGameMenu() {
         Stage gamestage = this.gameView.getStage();

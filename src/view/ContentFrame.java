@@ -287,14 +287,6 @@ public  class ContentFrame extends StackPane {
         return helpVbox;
     }
 
-
-
-
-
-
-
-
-
     public void doHover(Button button){
 
         button.getStyleClass().add("hover");
@@ -309,10 +301,6 @@ public  class ContentFrame extends StackPane {
 
 
     }
-
-
-
-
 
     public void setHover(Button button){
 

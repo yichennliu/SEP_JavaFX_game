@@ -80,7 +80,6 @@ public class GameView {
         if(!stage.isShowing()) stage.show();
     }
 
-
     public Canvas getCanvas(){
         return this.staticCanvas;
     }

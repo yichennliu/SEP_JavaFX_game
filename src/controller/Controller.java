@@ -33,6 +33,8 @@ public class Controller {
         return this.menuController;
     }
 
+
+
     public void startMenu(){
         this.currentMode = View.Mode.MENU;
         Map<String, MedalStatus> medalStatusMap = this.importMedalStatuses();
@@ -49,7 +51,6 @@ public class Controller {
 
     public void startThemeEditor(){
         this.currentMode = View.Mode.THEME;
-
         ThemeEditorView themeEditorView = new ThemeEditorView(this.view.getStage());
 
         this.themeEditorController = new ThemeEditorController(themeEditorView,this);

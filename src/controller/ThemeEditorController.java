@@ -143,7 +143,6 @@ public class ThemeEditorController {
         previousFButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e-> {
                 incrementFrameNumberField(false);
         });
-
     }
 
     private void prepareExitButton(){
