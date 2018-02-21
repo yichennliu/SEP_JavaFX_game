@@ -21,6 +21,10 @@ public class MenuController {
 
     }
 
+    public void update(){
+        this.chooseLevel();
+    }
+
     /**
      * @return Status der Medaillen. Key ist der Pfad des Levels (level.getJsonPath()),
      *         Value is ein Objekt in dem steht welche Medaillen für dieses Level erreicht wurden

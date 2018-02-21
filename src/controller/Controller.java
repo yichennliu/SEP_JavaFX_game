@@ -48,6 +48,7 @@ public class Controller {
             menuController = new MenuController(menuView, medalStatusMap,this);
         } else {
             menuController.setMenuView(menuView);
+            menuController.update();
         }
 
         this.view.update(View.Mode.MENU,menuView);
