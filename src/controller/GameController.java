@@ -5,11 +5,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -25,12 +22,10 @@ import model.enums.Property;
 import model.enums.WinningStatus;
 import model.game.Level;
 import model.game.MedalStatus;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import view.EndGameAlert;
 import view.GamePausedAlert;
 import view.GameView;
-import view.MenuView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -58,7 +53,7 @@ public class GameController {
         this.addDirectionEvents();
         this.addInGameMenu();
         this.robot = new Robot(level,5);
-        robotize(true);
+        robotize(false);
         this.addGameViewComponents();
         this.countDown();
         this.addPauseResumeGameEvents();
@@ -113,7 +108,7 @@ public class GameController {
     }
 
     public void countDown() {
-        Label countDownLabel = this.gameView.updateTimerLabel();
+        Label countDownLabel = this.gameView.getTimerLabel();
         final Integer startSecond = this.level.getTickGoals()[0] / 5;
         this.timer = new Timeline();
         timer.setCycleCount(Timeline.INDEFINITE);

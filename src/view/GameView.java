@@ -21,6 +21,7 @@ import model.game.Feld;
 import model.game.Level;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
+
 import java.io.File;
 
 public class GameView {
@@ -43,7 +44,7 @@ public class GameView {
     private ImageView gemIcon;
     private ImageView currentMedal;
 
-    public GameView(Stage stage, Level level){
+    public GameView(Stage stage, Level level) {
         root = new Group();
 
         this.sceneGame = new Scene(this.root);
@@ -51,19 +52,18 @@ public class GameView {
         this.width = stage.getWidth();
         this.height = stage.getHeight();
         this.level = level;
-        stylesheet= MenuView.fileToStylesheetString(new File("src/view/style.css"));
+        stylesheet = MenuView.fileToStylesheetString(new File("src/view/style.css"));
         sceneGame.getStylesheets().add(stylesheet);
-        staticCanvas = new Canvas(width,height-40);
-        Canvas animatedCanvas = new Canvas(staticCanvas.getWidth(),staticCanvas.getHeight());
+        staticCanvas = new Canvas(width, height - 40);
+        Canvas animatedCanvas = new Canvas(staticCanvas.getWidth(), staticCanvas.getHeight());
 
-        Group canvasGroup = new Group(staticCanvas,animatedCanvas);
+        Group canvasGroup = new Group(staticCanvas, animatedCanvas);
 
         root.getChildren().addAll(canvasGroup);
         stage.setTitle("BoulderDash - " + this.level.getName());
         try {
             this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Theme-Import-Fail: " + e.getMessage());
         }
 
@@ -85,17 +85,17 @@ public class GameView {
         this.createDiamondIcons();
         timeRewardInfo.getChildren().addAll(timerIcons, timer, gemIcon, currentGems, currentMedal, restGem);
         root.getChildren().addAll(timeRewardInfo);
-        this.board = new Board(staticCanvas,animatedCanvas, level.getMap(),theme,fieldSize);
+        this.board = new Board(staticCanvas, animatedCanvas, level.getMap(), theme, fieldSize);
         this.update();
 
-        if(!stage.isShowing()) stage.show();
+        if (!stage.isShowing()) stage.show();
     }
 
-    public Canvas getCanvas(){
+    public Canvas getCanvas() {
         return this.staticCanvas;
     }
 
-    public Scene getScene(){
+    public Scene getScene() {
         return this.sceneGame;
     }
 
@@ -103,11 +103,11 @@ public class GameView {
         return this.stage;
     }
 
-    public void update(){
+    public void update() {
 
         this.scrollToMe();
         board.stopAnimation();
-        View.drawBoard(this.board,level.getMap(),this.theme,true);
+        View.drawBoard(this.board, level.getMap(), this.theme, true);
         this.showCollectedGems();
         this.showMedalInfo();
         this.showCurrentSandUhr();
@@ -115,62 +115,64 @@ public class GameView {
     }
 
     /*if ME is at the edge of the viewport, a new translation will be set (starts indirectly tranlsation transition)*/
-    private void scrollToMe(){
+    private void scrollToMe() {
         Feld meFeld = level.whereAmI();
-        if(meFeld==null) return;
+        if (meFeld == null) return;
 
         double canvasHeight = board.getHeight();
         double canvasWidth = board.getWidth();
-        double newTranslateX= 0;
+        double newTranslateX = 0;
         double newTranslateY = 0;
-        double relativeMeX = meFeld.getColumn()*fieldSize;
-        double relativeMeY = meFeld.getRow()*fieldSize;
+        double relativeMeX = meFeld.getColumn() * fieldSize;
+        double relativeMeY = meFeld.getRow() * fieldSize;
         Affine transformation = this.board.getTransformation();
-        Point2D meOnCanvas =  transformation.transform(relativeMeX,relativeMeY);
+        Point2D meOnCanvas = transformation.transform(relativeMeX, relativeMeY);
 
         double meOnCanvasX = meOnCanvas.getX();
         double meOnCanvasY = meOnCanvas.getY();
 
-        if(meOnCanvasX<canvasWidth*0.2 && reverseTransform(0,0).getX()>0) {
-            newTranslateX = canvasWidth*0.2 - meOnCanvasX;
+        if (meOnCanvasX < canvasWidth * 0.2 && reverseTransform(0, 0).getX() > 0) {
+            newTranslateX = canvasWidth * 0.2 - meOnCanvasX;
         }
-        if(meOnCanvasX>canvasWidth*0.8 && reverseTransform(canvasWidth,0).getX()<this.level.getWidth()*fieldSize) {
-            newTranslateX = canvasWidth*0.8 - meOnCanvasX;
+        if (meOnCanvasX > canvasWidth * 0.8 && reverseTransform(canvasWidth, 0).getX() < this.level.getWidth() * fieldSize) {
+            newTranslateX = canvasWidth * 0.8 - meOnCanvasX;
         }
-        if(meOnCanvasY<canvasHeight*0.2) {
-            newTranslateY = canvasHeight*0.2 - meOnCanvasY;
+        if (meOnCanvasY < canvasHeight * 0.2) {
+            newTranslateY = canvasHeight * 0.2 - meOnCanvasY;
         }
-        if(meOnCanvasY>canvasHeight*0.8){
-            newTranslateY = canvasHeight*0.8 - meOnCanvasY;
+        if (meOnCanvasY > canvasHeight * 0.8) {
+            newTranslateY = canvasHeight * 0.8 - meOnCanvasY;
         }
 
-        if(newTranslateX!=0.0 || newTranslateY!=0.0){
-            this.board.translate(new Translate(newTranslateX,newTranslateY));
+        if (newTranslateX != 0.0 || newTranslateY != 0.0) {
+            this.board.translate(new Translate(newTranslateX, newTranslateY));
         }
     }
 
     /*gets a relative coordinate based on given input and affine transformation parameters*/
-    private Point2D reverseTransform(double j, double k){
+    private Point2D reverseTransform(double j, double k) {
         Affine transformation = this.board.getTransformation();
-        double a = transformation.getMxx(); double b = transformation.getMxy();
-        double c = transformation.getTx(); double d = transformation.getMyx();
-        double e = transformation.getMyy(); double f = transformation.getTy();
-        double x = (b*f - b*k - c*e +e*j) / (a*e - b*d);
-        double y = ( a*k + c*d - d*j -a*f) / (a*e -b*d);
-        return new Point2D(x,y);
+        double a = transformation.getMxx();
+        double b = transformation.getMxy();
+        double c = transformation.getTx();
+        double d = transformation.getMyx();
+        double e = transformation.getMyy();
+        double f = transformation.getTy();
+        double x = (b * f - b * k - c * e + e * j) / (a * e - b * d);
+        double y = (a * k + c * d - d * j - a * f) / (a * e - b * d);
+        return new Point2D(x, y);
     }
 
-    public void zoom(double delta, double factor){
+    public void zoom(double delta, double factor) {
         Affine transformation = this.board.getTransformation();
 
-        if(delta < 0){
-            transformation.append(new Scale(1/factor, 1/factor));
-        }
-        else transformation.append(new Scale(factor,factor));
+        if (delta < 0) {
+            transformation.append(new Scale(1 / factor, 1 / factor));
+        } else transformation.append(new Scale(factor, factor));
         this.board.applyTransformation(transformation);
     }
 
-    public void createHboxStyle(){
+    private void createHboxStyle() {
         this.timeRewardInfo.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;" + "-fx-border-width: 1;"
                 + "-fx-border-insets: 1;" + "-fx-border-radius: 1;" + "-fx-border-color: black;"
                 + "-fx-background-color: black;");
@@ -181,40 +183,39 @@ public class GameView {
         this.timeRewardInfo.setPrefWidth(width);
     }
 
-    public void createDiamondIcons(){
+    private void createDiamondIcons() {
         final Image gem = new Image(GameView.class.getResourceAsStream("images/Diamand.png"));
         this.gemIcon.setImage(gem);
         this.gemIcon.setFitHeight(30);
         this.gemIcon.setFitWidth(30);
-
     }
 
-    public Label updateTimerLabel(){
+    public Label getTimerLabel() {
         return this.timer;
     }
 
-    public void showCollectedGems(){
-        Integer result= this.level.getPropertyValue(Property.GEMS);
+    private void showCollectedGems() {
+        Integer result = this.level.getPropertyValue(Property.GEMS);
         currentGems.setText(result.toString());
         currentGems.setTextFill(Color.WHITE);
     }
 
-    public void setCountToGoldInfo() {
+    private void setCountToGoldInfo() {
         int showRemainingGemsGoldInfo = this.level.getRemainingGemsToGold();
-        restGem.setText("Needed Gems to Gold Medal: "+showRemainingGemsGoldInfo);
+        restGem.setText("Needed Gems to Gold Medal: " + showRemainingGemsGoldInfo);
         restGem.setTextFill(Color.WHITE);
 
     }
 
-    public void setCountToSilverInfo(){
-        int showRemainingGemsSilverInfo= this.level.getRemainingGemsToSilver();
-        restGem.setText("Needed Gems to Silver Medal: "+showRemainingGemsSilverInfo);
+    private void setCountToSilverInfo() {
+        int showRemainingGemsSilverInfo = this.level.getRemainingGemsToSilver();
+        restGem.setText("Needed Gems to Silver Medal: " + showRemainingGemsSilverInfo);
         restGem.setTextFill(Color.WHITE);
 
     }
 
 
-    public void setCurrentMedal(Medal medalType){
+    private void setCurrentMedal(Medal medalType) {
 
         switch (medalType) {
             case GOLD:
@@ -226,38 +227,42 @@ public class GameView {
             case SILVER:
                 currentMedal.setImage(Medal.SILVER.getMedalImage());
                 break;
-
         }
 
     }
 
-    public void showMedalInfo(){
+    private void showMedalInfo() {
 
-        if(level.getPropertyValue(Property.GEMS)<level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS) >= level.getTickGoals()[2]){
+        if (level.getPropertyValue(Property.GEMS) < level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS) >= level.getTickGoals()[2] ||
+                level.getPropertyValue(Property.GEMS) < level.getGemGoals()[1] && level.getPropertyValue(Property.TICKS) >= level.getTickGoals()[1] ||
+                level.getPropertyValue(Property.GEMS) < level.getGemGoals()[2] && level.getPropertyValue(Property.TICKS) >= level.getTickGoals()[0]) {
+
             restGem.setTextFill(Color.WHITE);
             restGem.setText("No chance to get Medals!");
         }
 
-        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS)<=level.getTickGoals()[2]){
+        if (level.getPropertyValue(Property.GEMS) >= level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS) <= level.getTickGoals()[2]) {
             this.setCountToSilverInfo();
             this.setCurrentMedal(Medal.BRONZE);
 
         }
 
-        if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1] && level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[1]){
+        if (level.getPropertyValue(Property.GEMS) >= level.getGemGoals()[1] && level.getPropertyValue(Property.TICKS) <= level.getTickGoals()[1]) {
             this.setCountToGoldInfo();
             this.setCurrentMedal(Medal.SILVER);
 
         }
 
-        if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[2] && level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[0]){
-            restGem.setText("Got gold!");
+        if (level.getPropertyValue(Property.GEMS) >= level.getGemGoals()[2] && level.getPropertyValue(Property.TICKS) <= level.getTickGoals()[0]) {
+            restGem.setText("You've got gold!");
             this.setCurrentMedal(Medal.GOLD);
         }
+
+
     }
 
 
-    public void setCurrentSandUhr(SandUhr sandUhrType) {
+    private void setCurrentSandUhr(SandUhr sandUhrType) {
 
         switch (sandUhrType) {
             case RED:
@@ -273,7 +278,7 @@ public class GameView {
 
     }
 
-    public void showCurrentSandUhr() {
+    private void showCurrentSandUhr() {
 
         double currentsecond = this.level.getPropertyValue(Property.TICKS) / 5;
         double totalSecond = this.level.getTickGoals()[0] / 5;
@@ -282,7 +287,7 @@ public class GameView {
             this.setCurrentSandUhr(SandUhr.YELLOW);
 
         } else {
-           this.setCurrentSandUhr(SandUhr.GREEN);
+            this.setCurrentSandUhr(SandUhr.GREEN);
 
         }
         if (currentsecond / totalSecond >= 0.6) {
