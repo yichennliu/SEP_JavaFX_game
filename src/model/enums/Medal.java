@@ -1,7 +1,6 @@
 package model.enums;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import view.GameView;
 
 public enum Medal {
