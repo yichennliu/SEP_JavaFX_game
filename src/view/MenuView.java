@@ -24,16 +24,17 @@ public class MenuView {
     private double width;
     private double height;
 
-    public MenuView(Stage stage, Map<String, MedalStatus> medalStatuses) {
+    public MenuView(Stage stage, Map <String, MedalStatus> medalStatuses) {
         this.stage = stage;
-        this.width = stage.getWidth();
-        this.height = stage.getHeight();
-        this.medalStatuses = medalStatuses;
         root = new BorderPane();
+        this.sceneMenu = new Scene(root);
+         width= stage.getWidth();
+         height= stage.getHeight();
+        this.medalStatuses = medalStatuses;
         contentFrame = new ContentFrame(width,height,this);
         VBox Vmenu= new VBox(contentFrame);
         this.levelButtons = new ArrayList<>();
-        this.sceneMenu = new Scene(root);
+        //this.sceneMenu = new Scene(root);
         root.getChildren().addAll(Vmenu);
         if (!stage.isShowing()) stage.show();
         stylesheet = fileToStylesheetString(new File("src/view/style.css"));

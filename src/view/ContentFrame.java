@@ -7,17 +7,22 @@ package view;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -28,11 +33,11 @@ import model.game.MedalStatus;
 import model.misc.LevelSnapshot;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 
 public  class ContentFrame extends StackPane {
@@ -45,8 +50,6 @@ public  class ContentFrame extends StackPane {
     private Button themeEditorButton;
     private Button helpbutton;  private Button close;
     private Button levelEditorButton;
-    private int currentItem = 0;
-    private boolean  showMenuItems= false;
     private VBox menuBox,helpVbox;
     private ArrayList listlevelButtons;
     private Scene scene;
@@ -55,9 +58,12 @@ public  class ContentFrame extends StackPane {
     private ScrollPane helpScrollPane;
     private double widthLinks,heightLinks ;
     private int buttonfactor=4;
+    private Group root;
+    private final Font FONT = Font.font("", FontWeight.BOLD, 18);
 
 
     public ContentFrame(double widthLinks, double heightLinks, MenuView menuView) {
+
         this.widthLinks=widthLinks;
         this.heightLinks=heightLinks;
         this.menuView = menuView;
@@ -71,22 +77,21 @@ public  class ContentFrame extends StackPane {
         this.levelEditorButton = createButton("L E V E L E D I T O R");
         setAlignment(Pos.CENTER);
 
-        VBox menuGamePause = new VBox(15, saveButton, continueButton);
-        menuGamePause.setVisible(false);
+        VBox menuGamePause = new VBox(15, saveButton, continueButton); // für einbindung im spiel
+        menuGamePause.setVisible(false); // für einbindung im spiel
 
         VBox menuGameMain = new VBox(15, gameButton, levelButtons, themeEditorButton, levelEditorButton, helpbutton, close);
-        VBox menuVboxlinks = new VBox(menuGamePause,menuGameMain);
-        menuVboxlinks.setMinSize(widthLinks,heightLinks*2);
+        VBox menuVboxlinks = new VBox(menuGamePause,menuGameMain); // für einbindung im spiel
+
+        menuVboxlinks.setMinSize(widthLinks/2,heightLinks);
         menuVboxlinks.setId("vboxLinks");
-
-    Label boulderdash = new Label(" B o u l d e r d a s h ");
-        HBox boulderdashHbox = new HBox(boulderdash);
-       boulderdashHbox.setAlignment(Pos.BOTTOM_LEFT);
-             boulderdash.setId("boulderdash");
-          boulderdash.setTranslateX(widthLinks/4);
-       // VBox ganz =  new VBox(boulderdashHbox,vboxLinks);
-
-
+        setHover(gameButton);
+        setHover(levelButtons);
+        setHover(themeEditorButton);
+        setHover(helpbutton);
+        setHover(close);
+        setHover(saveButton);
+        setHover(levelEditorButton);
 
         this.scene= new Scene(menuVboxlinks);
         this.listlevelButtons = new ArrayList<Button>();
@@ -106,20 +111,11 @@ public  class ContentFrame extends StackPane {
         });
 
 
-        /*todo    arraylist of buttons*/
-        setHover(gameButton);
-        setHover(levelButtons);
-        setHover(themeEditorButton);
-        setHover(helpbutton);
-        setHover(close);
-        setHover(saveButton);
-        setHover(levelEditorButton);
-
         close.setOnAction(e -> Platform.exit());
+
 
         helpVbox=createHelpMenuItem();
         helpVboxScrollPane= createscrollPane(helpVbox);
-
         helpbutton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -141,15 +137,12 @@ public  class ContentFrame extends StackPane {
 
 
     public ScrollPane createscrollPane(VBox scrollVbox){
-
         ScrollPane ScrollPane = new ScrollPane(scrollVbox);
         ScrollPane.setId("scroll");
-        ScrollPane.setTranslateX(widthLinks/2);
-        //  levelItemScrollPane.setTranslateY(heightLinks/8);
-        ScrollPane.setMinSize(widthLinks*2,heightLinks/2);
+        ScrollPane.setTranslateX(widthLinks/2-50);
+        ScrollPane.setMinSize(widthLinks/2+100,heightLinks*2);
+        ScrollPane.setMaxSize(widthLinks/2+50,heightLinks*2);
         ScrollPane.setVisible(false);
-
-
         return ScrollPane;
     }
 
@@ -180,40 +173,42 @@ public  class ContentFrame extends StackPane {
     }
 
     private class LevelItem extends HBox {
-        private final Font FONT = Font.font("", FontWeight.BOLD, 18);
         private Button levelButton; private Text information;
         private Runnable script;
 
 
     public LevelItem(String menuItemName, String info, ImageView image, String path) {
         super(5);
-        setAlignment(Pos.CENTER);
-        levelButton = new Button(menuItemName);
+
+        levelButton = new Button();
+        Text Levelname = new Text();
+        Levelname.setText(menuItemName);
+        InnerShadow is = new InnerShadow();
+        is.setOffsetX(4.0f);
+        is.setOffsetY(4.0f);
         information = new Text(info);
         information.setEffect(new GaussianBlur(1));
         levelButton.setFont(FONT);
-        levelButton.setEffect(new GaussianBlur(2));
-        levelButton.setMinWidth(widthLinks/2);
-        levelButton.setMaxWidth(widthLinks/2);
-
+        levelButton.setMinSize((widthLinks/2)/2,(widthLinks/2)/2);
+        levelButton.setMaxSize((widthLinks/4),(widthLinks/4));
+        levelButton.setTranslateY(30);
+        levelButton.setGraphic(image);
+        levelButton.setText(menuItemName);
+        levelButton.setContentDisplay(ContentDisplay.CENTER);
+        image.setFitHeight(widthLinks/4-20);
+        image.setFitWidth(widthLinks/4-20);
         HBox menu = new HBox(levelButton);
-        menu.setMinSize(widthLinks/2,100);
         menu.setAlignment(Pos.CENTER);
-        image.setFitWidth(55);
-        image.setFitHeight(55);
-
         VBox vboxLevelInformation= new VBox(information);
-
-         vboxLevelInformation.setMinSize(widthLinks/2,heightLinks/2);
+        vboxLevelInformation.setMinSize((widthLinks/2)/2,(heightLinks/2)/2);
         vboxLevelInformation.setAlignment(Pos.CENTER_LEFT);
         getChildren().addAll( vboxLevelInformation,menu,image);
-       // setActive(false);
-        // setOnActivate(() -> System.out.println(menuItemName + " aktiv geworden"));
         levelButton.setUserData(path);
         listlevelButtons.add(levelButton);
 
 
     }
+
 
 
 
@@ -236,13 +231,9 @@ public  class ContentFrame extends StackPane {
             Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/level/"+path));
             Level level = LevelFactory.importLevel("src/json/level/"+path);
             ImageView snapshotview =  new ImageView(snapshot);
-            String levelText = "Medaillen: "+this.getMedalsFormatted(level.getJsonPath());
+            String levelText = "Medaillen: "+ this.getMedalImage(level.getJsonPath());
+
             menuBox.getChildren().add( 0, new LevelItem( level.getName(),levelText,snapshotview,path));
-            snapshotview.setFitWidth(100);
-            snapshotview.setFitHeight(100);
-
-         //   getMenuItem(0).setActive(true);
-
         }
 
         return menuBox;
@@ -253,42 +244,60 @@ public  class ContentFrame extends StackPane {
      * @param path Level path
      * @return Medals formatted as String
      */
-    private String getMedalsFormatted(String path) {
+    private String getMedalImage(String path) {
+
         Map<String,MedalStatus> medalStatuses = this.menuView.getMedalStatuses();
         MedalStatus medalStatus = medalStatuses.get(path);
 
-        String medals = "keine";
-        List<String> medalsList = new ArrayList();
-        if (medalStatus != null) {
-            if (medalStatus.has(Medal.GOLD)) {
-                medalsList.add(Medal.GOLD.getDisplayName());
-            }
-            if (medalStatus.has(Medal.SILVER)) {
-                medalsList.add(Medal.SILVER.getDisplayName());
-            }
-            if (medalStatus.has(Medal.BRONZE)) {
-                medalsList.add(Medal.BRONZE.getDisplayName());
-            }
+        String medals = "Noch keine";
+        List<ImageView> medalsList = new ArrayList();
 
-            if (!medalsList.isEmpty()) {
-                medals = String.join(", ", medalsList);
+        if (medalStatus != null) {
+            for(Medal medal: Medal.values())
+            if (medalStatus.has(medal)) {
+                medalsList.add(new ImageView(medal.getMedalImage()));
             }
         }
-
         return medals;
     }
 
-
     private VBox createHelpMenuItem(){
-        helpVbox = new VBox();
-        Label shortcut = new Label(" Ctr "+" + "+" schift");
-        Label description = new Label(" move forward");
-        HBox hboxHelp = new HBox(shortcut,description);
+        Image keyboardImage = new Image ("view/images/tastatur.png");
+        ImageView keyboardImg= new ImageView(keyboardImage);
 
-        helpVbox.getChildren().addAll(hboxHelp);
+
+        String instructions =
+                "\nThe official Boulder Dash games started in 1984 with the original home computer title,\n" +
+                        " and continue to be published by First Star Software, Inc. \n" +
+                        "\nThe game's protagonist is called 'Rockford' \n" +
+                        "\n He must dig through caves collecting gems and diamonds and reach the exit  \n" +
+                        "\nwithin a time limit, while avoiding various types of dangerous creatures\n" +
+                        "\n\n" ;
+
+        String shortcuts =
+                "\nPress ESC  to get Back to the Menu\n" +
+                        "\nPress UP, RIGHT , DOWN , Left to move \n" +
+                        "\nPress W , A , D, S, to move your Map\n" +
+                        "\nPress Space to Pause the Game \n" +
+                        "\nWith shift you can move objects\n" +
+                        "\nund so weiter\n" ;
+        Label escape = new Label(shortcuts);
+        Label instruction = new Label(instructions);
+        escape.setFont(FONT);
+      //  LevelItem helptest = new LevelItem("shortcut","anhalten",keyboardImg," ");
+        helpVbox = new VBox(instruction,keyboardImg,escape);
+        helpVbox.setAlignment(Pos.CENTER);
+        helpVbox.setBackground(new Background(new BackgroundFill(Color.BEIGE, CornerRadii.EMPTY, Insets.EMPTY)));
+        helpVbox.setTranslateX(widthLinks/8);
+        helpVbox.setTranslateY(100);
+
 
         return helpVbox;
     }
+
+
+
+
 
     public void doHover(Button button){
 
@@ -298,11 +307,8 @@ public  class ContentFrame extends StackPane {
     }
 
     public void unHover(Button button){
-
         button.getStyleClass().clear();
         button.getStyleClass().add("button");
-
-
     }
 
     public void setHover(Button button){
@@ -329,8 +335,6 @@ public  class ContentFrame extends StackPane {
 
 
     }
-
-
 
 
 

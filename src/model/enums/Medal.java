@@ -1,5 +1,9 @@
 package model.enums;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import view.GameView;
+
 public enum Medal {
     BRONZE("Bronze"), SILVER("Silber"), GOLD("Gold");
     private String displayName;
@@ -11,4 +15,10 @@ public enum Medal {
     public String getDisplayName() {
         return displayName;
     }
+
+
+    public Image getMedalImage(){
+        return new Image("src/view/images/"+this.name()+".png");
+    }
+
 }

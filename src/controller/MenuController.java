@@ -2,6 +2,7 @@ package controller;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleGroup;
+import model.game.Level;
 import model.game.MedalStatus;
 import view.MenuView;
 import java.util.ArrayList;
@@ -12,12 +13,14 @@ public class MenuController {
     private MenuView menuView;
     private Map<String, MedalStatus> medalStatuses;
     private Controller controller;
-    private ToggleGroup group;
+
+
 
     public MenuController(MenuView menuView, Map<String, MedalStatus> medalStatuses, Controller controller){
         this.menuView = menuView;
         this.medalStatuses = medalStatuses;
         this.controller = controller;
+
         addMenuViewComponents();
         chooseLevel();
 
@@ -63,6 +66,7 @@ public class MenuController {
             final String path= (String) level.getUserData();
                 level.setOnAction(e -> {
                 this.controller.startLevel("src/json/level/"+path);
+
             });
         }
     }
