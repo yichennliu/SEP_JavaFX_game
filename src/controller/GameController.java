@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -60,6 +61,7 @@ public class GameController {
         robotize(false);
         this.addGameViewComponents();
         this.countDown();
+        this.addPauseResumeGameEvents();
     }
 
     public void robotize(boolean activate){
@@ -70,6 +72,7 @@ public class GameController {
         countDown();
         addGameViewComponents();
         addDirectionEvents();
+        addPauseResumeGameEvents();
 
     }
 
@@ -164,63 +167,24 @@ public class GameController {
 
     }
 
-    private class EscapeButtonHandler implements EventHandler<KeyEvent> {
-
-        private Stage gamestage;
-
-        public EscapeButtonHandler(Stage gamestage) {
-            this.gamestage = gamestage;
-        }
-
-        @Override
-        public void handle(KeyEvent event) {
-            if (event.getCode().equals(KeyCode.ESCAPE)) {
-
-                GamePausedAlert alert = new GamePausedAlert();
-
-                if (timeline != null) {
+    private void addPauseResumeGameEvents(){
+        Stage gameStage = this.gameView.getStage();
+        gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.SPACE)) {
+                if(timeline!=null && timeline.getStatus().equals(Animation.Status.RUNNING)){
                     timeline.stop();
                     timer.stop();
                 }
 
-
-                GameController.this.addAlertKeyEvent(alert);
-                Optional<ButtonType> result = alert.showAndWait();
-
-                if (result.get() == alert.getSaveButton()) {
-                    GameController.this.saveGame();
-                    alert.close();
-                    if (timeline != null) {
-                        timeline.play();
-                        timer.playFromStart();
-                    }
-                } else if (result.get() == alert.getSaveExitButton()) {
-                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                    GameController.this.saveGame();
-                    GameController.this.controller.startMenu();
-                } else if (result.get() == alert.getExitButton()) {
-                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                    GameController.this.controller.startMenu();
-
-
-                } else if (result.get() == alert.getRetryButton()) {
-
-                    GameController.this.controller.startLevel(level.getJsonPath());
-                    alert.close();
-                    timeline.playFromStart();
-                    timer.playFromStart();
-
-
-                } else if (result.get() == alert.getCancelButton()) {
-                    alert.close();
-                    if (timeline != null) {
-                        timeline.play();
-                        timer.play();
-                    }
+                else if(timeline!= null && timeline.getStatus()== Animation.Status.STOPPED){
+                    timeline.play();
+                    timer.play();
                 }
             }
-        }
+        });
     }
+
+
 
     public void addInGameMenu() {
         Stage gamestage = this.gameView.getStage();
@@ -382,6 +346,64 @@ public class GameController {
 
     public void setLevel(Level level) {
         this.level = level;
+    }
+
+    private class EscapeButtonHandler implements EventHandler<KeyEvent> {
+
+        private Stage gamestage;
+
+        public EscapeButtonHandler(Stage gamestage) {
+            this.gamestage = gamestage;
+        }
+
+        @Override
+        public void handle(KeyEvent event) {
+            if (event.getCode().equals(KeyCode.ESCAPE)) {
+
+                GamePausedAlert alert = new GamePausedAlert();
+
+                if (timeline != null) {
+                    timeline.stop();
+                    timer.stop();
+                }
+
+
+                GameController.this.addAlertKeyEvent(alert);
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.get() == alert.getSaveButton()) {
+                    GameController.this.saveGame();
+                    alert.close();
+                    if (timeline != null) {
+                        timeline.play();
+                        timer.playFromStart();
+                    }
+                } else if (result.get() == alert.getSaveExitButton()) {
+                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                    GameController.this.saveGame();
+                    GameController.this.controller.startMenu();
+                } else if (result.get() == alert.getExitButton()) {
+                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                    GameController.this.controller.startMenu();
+
+
+                } else if (result.get() == alert.getRetryButton()) {
+
+                    GameController.this.controller.startLevel(level.getJsonPath());
+                    alert.close();
+                    timeline.playFromStart();
+                    timer.playFromStart();
+
+
+                } else if (result.get() == alert.getCancelButton()) {
+                    alert.close();
+                    if (timeline != null) {
+                        timeline.play();
+                        timer.play();
+                    }
+                }
+            }
+        }
     }
 
 

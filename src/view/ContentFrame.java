@@ -93,7 +93,6 @@ public  class ContentFrame extends StackPane {
         setHover(saveButton);
         setHover(levelEditorButton);
 
-      //  this.root = new Group(menuVboxlinks,menuGameMain);
         this.scene= new Scene(menuVboxlinks);
         this.listlevelButtons = new ArrayList<Button>();
         menuBox = createLevelMenuItems();
@@ -213,7 +212,7 @@ public  class ContentFrame extends StackPane {
 
 
 
-} // end class levelItem
+}
 
     private VBox createLevelMenuItems(){
 
@@ -246,7 +245,7 @@ public  class ContentFrame extends StackPane {
      * @return Medals formatted as String
      */
     private String getMedalImage(String path) {
-        
+
         Map<String,MedalStatus> medalStatuses = this.menuView.getMedalStatuses();
         MedalStatus medalStatus = medalStatuses.get(path);
 

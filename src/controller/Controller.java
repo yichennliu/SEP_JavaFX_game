@@ -89,8 +89,6 @@ public class Controller {
             gameController.setLevel(level);
             gameController.update();
 
-
-
         }
 
         this.view.update(View.Mode.GAME, gameController.getGameView());
