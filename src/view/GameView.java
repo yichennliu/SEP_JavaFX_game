@@ -180,9 +180,9 @@ public class GameView {
 
     public Image[] createMedalIcons(){
 
-        final Image goldMedalImage = new Image(GameView.class.getResourceAsStream("images/Gold.png"));
-        final Image silverMedalImage = new Image(GameView.class.getResourceAsStream("images/Silver.png"));
-        final Image bronzeMedalImage = new Image(GameView.class.getResourceAsStream("images/Bronze.png"));
+        final Image goldMedalImage = new Image(GameView.class.getResourceAsStream("images/GOLD.png"));
+        final Image silverMedalImage = new Image(GameView.class.getResourceAsStream("images/SILVER.png"));
+        final Image bronzeMedalImage = new Image(GameView.class.getResourceAsStream("images/BRONZE.png"));
 
         Image[] medalImages = new Image[] {
 
