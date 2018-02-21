@@ -21,13 +21,6 @@ public enum Medal {
         return displayName;
     }
 
-
-    public ImageView getMedalImage(){
-        ImageView imageView = new ImageView(this.medalimage);
-        imageView.setFitHeight(30);
-        imageView.setFitWidth(30);
-
-        return imageView;
-    }
+    public Image getMedalImage() { return this.medalimage; }
 
 }

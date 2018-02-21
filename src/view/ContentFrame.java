@@ -162,7 +162,6 @@ public  class ContentFrame extends StackPane {
         private Button levelButton; private Text information;
         private Runnable script;
 
-
     public LevelItem(String menuItemName, String info, ImageView image, String path) {
         super(5);
 
