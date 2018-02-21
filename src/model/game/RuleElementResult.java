@@ -22,7 +22,7 @@ public class RuleElementResult {
         return this.values;
     }
 
-    public void replace(Feld feld, List<Feld> feldList) {
+    public void replace(Feld feld, List <Feld> feldList) {
         this.token.replaceToken(feld, feldList);
         for (Map.Entry<Property, Integer> entry : values.entrySet()) {
             Integer feldProp = feld.getPropertyValue(entry.getKey());
@@ -30,6 +30,9 @@ public class RuleElementResult {
             if( feldProp!=null && thisPropVal>0){
                 Integer newVal = feldProp+thisPropVal;
                 feld.setPropertyValue(entry.getKey(),(newVal>=0) ? newVal : 0);
+            }
+            else if(thisPropVal==0){
+                feld.setPropertyValue(entry.getKey(),0);
             }
             else if(feldProp==null){
                 Integer newVal = (entry.getValue()>=0) ? entry.getValue() : 0;

@@ -6,6 +6,8 @@ import model.enums.Token;
 import model.enums.WinningStatus;
 import model.game.Feld;
 import model.game.Level;
+import model.game.Rule;
+import model.misc.UsefullMethods;
 
 import java.util.*;
 
@@ -16,6 +18,7 @@ public class Robot implements AI {
     private InputDirection[] inputDirections;
     private Target currentTarget;
     private HashSet<Token> passableTokens = new HashSet<Token>();
+    private boolean deadlockPathPossible;
 
     public Robot(Level level, int maxWaittime){
         this.level = level;
@@ -32,8 +35,10 @@ public class Robot implements AI {
     }
 
     public InputDirection getNextMove() {
+        deadlockPathPossible = false;
         /*continue way to last Target if avalaible*/
         Feld me = getMe();
+        if(me==null) return null;
         Feld target = (currentTarget!=null) ? (level.getFeld(currentTarget.getRow(),currentTarget.getColumn())) : null;
         /*reset target, if reached*/
         if(me!=null && target!=null &&
@@ -44,15 +49,15 @@ public class Robot implements AI {
 
         if(currentTarget!=null){
             Feld feld = level.getFeld(currentTarget.getRow(),currentTarget.getColumn());
-            Breadcrumb stepTo = findSecurePath(getMe(),feld,20);
+            Breadcrumb stepTo = findSecurePath(getMe(),feld,(level.getWidth()*level.getHeight()));
             if(stepTo!=null) return stepTo.getInputDirection();
             currentTarget = null;
         }
-        List<FeldWithDistance> feldDistList = (getNearest(getMe(), Token.GEM, 20));
+        List<FeldWithDistance> gemList = (getNearest(getMe(), Token.GEM, (level.getWidth()*level.getHeight())));
         /*find Felds with GEMS*/
-        if(feldDistList.size()>0){
-            for(int i = 0; i<feldDistList.size(); i++){
-                Breadcrumb stepTo = findSecurePath(getMe(),feldDistList.get(i).getFeld(),50);
+        if(gemList.size()>0){
+            for(int i = 0; i<gemList.size(); i++){
+                Breadcrumb stepTo = findSecurePath(getMe(),gemList.get(i).getFeld(),(level.getWidth()*level.getHeight()));
                 if (stepTo == null) continue;
                 return stepTo.getInputDirection();
             }
@@ -66,30 +71,48 @@ public class Robot implements AI {
                 if(goTo!=null){
                     return goTo.getInputDirection();
                 }
-                else  {
-                    System.out.println("Was da los?!?"+goToFreePlace() );
-                    return goToFreePlace();
-                }
             }
-
-        currentTarget =null;
-        return null;
+            if(deadlockPathPossible){
+                Breadcrumb path = findSecurePath(getMe(),getMe().getCurrentTokenCameFrom(),1);
+                if(path!=null) return path.getInputDirection();
+                return null;
+            }
+                return goToFreePlace();
     }
 
+
     private InputDirection goToFreePlace(){
-        System.out.println("Go to free place!!!");
-                    Feld me = getMe();
-                    if(me!=null){
-                        for(InputDirection d: inputDirections){
-                            if(!d.isDigOnly()){
-                                Feld neighbour = me.getNeighbour(d);
-                                if(passableTokens.contains(neighbour.getToken())){
-                                    if(neighbour!=me.getCurrentTokenCameFrom())
-                                        return d;
-                                }
+
+        HashSet<Point2D> pointSet = new HashSet<>();
+
+        while (pointSet.size()<level.getHeight()*level.getWidth()) {
+            int x = (int) (Math.random() * level.getWidth());
+            int y = (int) (Math.random() * level.getHeight());
+            Point2D point = new Point2D(x, y);
+            if(pointSet.contains(point)) continue;
+            Feld me = getMe();
+            if(me!=null) {
+                for (InputDirection inputD : inputDirections) {
+                    if (!inputD.isDigOnly()) {
+                        if (me.getRow() != x && me.getColumn() != y)
+                            if (passableTokens.contains(level.getFeld(x, y).getToken())) {
+
+                                pointSet.add(point);
+                                Feld aim = level.getFeld(x, y);
+                                Breadcrumb securePath = findSecurePath(getMe(), aim, level.getWidth() * level.getHeight());
+
+                                if (securePath != null)
+                                    return securePath.getInputDirection();
+                                return null;
+
+                            }
+
+                    }
                 }
+
             }
         }
+
         return null;
     }
 
@@ -100,13 +123,24 @@ public class Robot implements AI {
 
     /*seeks for save (no death) shortest Path to specified Feld, returns null, if no path found*/
     private Breadcrumb findSecurePath(Feld start, Feld end, int maxSteps){
-        System.out.println("Wegsuche gestartet (von " + start.getRow() + " | " + start.getColumn() + " Nach " + end.getRow() + " | " + end.getColumn() + ")");
+        System.out.println("Wegsuche gestartet (von " + start.getColumn() + " | " + start.getRow() + " Nach " + end.getColumn() + " | " + end.getRow() + ")");
         Level levelClone = level.clone();
         Feld levelCloneStart = level.getFeld(start.getRow(),start.getColumn());
         Breadcrumb startBreadcrumb = new Breadcrumb(levelCloneStart,null, null,levelClone,0,0);
         List<Breadcrumb> path = breadthFirstSearch(startBreadcrumb,end.getRow(),end.getColumn(),maxSteps);
-        if(path!=null) this.currentTarget = new Target(path.get(path.size()-1).getCurrentFeld());
+        if(path!=null) {
+            printPath(path);
+            this.currentTarget = new Target(path.get(path.size()-1).getCurrentFeld());
+        }
+        if(path!=null) System.out.println("Erster schritt nach: " + path.get(1).getCurrentFeld().getColumn() + " " + path.get(1).getCurrentFeld().getRow());
         return (path!=null) ? path.get(1) : null;
+    }
+
+    private void printPath(List<Breadcrumb> path) {
+        System.out.println();
+        for(Breadcrumb b : path) {
+            System.out.print(" - " + b.getCurrentFeld().getColumn() + " " + b.getCurrentFeld().getRow());
+        }
     }
 
     /*finds secure Path to endRow and -column*/
@@ -115,7 +149,6 @@ public class Robot implements AI {
         ArrayDeque<Breadcrumb> deque = new ArrayDeque<>();
         deque.add(start);
         HashSet<Point2D> visited = new HashSet<>();
-
 
         while(!deque.isEmpty()){
             Breadcrumb currentBreadcrumb = deque.pollFirst();
@@ -128,7 +161,12 @@ public class Robot implements AI {
 
             visited.add(new Point2D(currentFeld.getColumn(), currentFeld.getRow()));
             if(currentFeld.getRow() == rowEnd && currentFeld.getColumn() == colEnd){
-               List<Breadcrumb> path = rebuildPath(currentBreadcrumb);
+                if (!checkForSaveTarget(currentFeld)) continue;
+                List<Breadcrumb> path = rebuildPath(currentBreadcrumb);
+                if (isDeadlockPath(path))  {
+                    deadlockPathPossible = true;
+                    continue;
+                }
                return path;
             }
             Set<Map.Entry<InputDirection,Feld>> neighbours = getNeighboursToVisit(currentBreadcrumb);
@@ -153,6 +191,30 @@ public class Robot implements AI {
                 }
             }
         return null;
+    }
+
+    private boolean isDeadlockPath(List<Breadcrumb> path){
+        Feld firstStep = path.get(1).getCurrentFeld();
+        Feld lastFeld = getMe().getCurrentTokenCameFrom();
+        if(firstStep!=null && lastFeld!=null){
+            if(firstStep.getRow()==lastFeld.getRow() && firstStep.getColumn() == lastFeld.getColumn()){
+                System.out.println("Deadlock: " +firstStep.getColumn()+"|" +firstStep.getRow() + " == " + lastFeld.getColumn()+"|"+lastFeld.getRow());
+                return true;
+            }
+            System.out.println(firstStep.getColumn()+"|" +firstStep.getRow() + " != " + lastFeld.getColumn()+"|"+lastFeld.getRow());
+        }
+        return false;
+    }
+
+    private boolean checkForSaveTarget(Feld target) {
+        Collection<Feld> neighbours= target.getNeighboursDirect();
+        for(Feld neighbour: neighbours){
+            Token t = neighbour.getToken();
+            if(t == Token.BLOCKLING || t == Token.XLING || t == Token.SWAPLING || t == Token. GHOSTLING){
+             return false;
+            }
+        }
+        return true;
     }
 
     private void removeUnsafe(Set<Map.Entry<InputDirection, Feld>> neighbours,Level level) {

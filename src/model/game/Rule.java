@@ -2,6 +2,8 @@ package model.game;
 import model.enums.Direction;
 import model.enums.InputDirection;
 import model.enums.Situation;
+import model.misc.UsefullMethods;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +43,11 @@ public class Rule {
             return;
         }
 
-        while (between(startI, i, endI)) {
+        while (UsefullMethods.between(startI, i, endI)) {
 
             int j = initJSE(map);
 
-            while (between(startJ, j, endJ)) {
+            while (UsefullMethods.between(startJ, j, endJ)) {
                 List<Feld> feldList = new ArrayList();
                 try {
                     int y = initY(i, j);
@@ -54,11 +56,11 @@ public class Rule {
                     map[y][x].getNeighboursRecursive(direction, ruleLength, feldList);
 
                     if (matchFeldListWithOriginalList(feldList)) {
-                        for (int z = 0; z <= ruleLength; z++) {
+                        for (int z = 0; z < ruleLength; z++) {
                             this.result.get(z).replace(feldList.get(z), feldList);
                         }
                         j = hoverOverRulelengthJNW(ruleLength, j);
-                        if (!between(startJ, j, endJ))
+                        if (!UsefullMethods.between(startJ, j, endJ))
                             throw new IndexOutOfBoundsException();
                     } else {
                         j = incOrDecJNW(j);
@@ -110,24 +112,12 @@ public class Rule {
         return false;
     }
 
-    /*überprüft, ob b zwischen a und c ist*/
-    private boolean between(int a, int b, int c) {
-        if (c > a) {
-            return (b >= a && b <= c);
-        }
-        if (a > c) {
-            return (b >= c && b <= a);
-        }
-
-        return (b == c);
-    }
-
     private int initJSE(Feld[][] map) {
         return ((direction == SOUTH || direction == EAST) ? 0 : (direction == NORTH) ? map.length - 1 : map[0].length - 1);
     }
 
     private int hoverOverRulelengthJNW(int ruleLength, int j) {
-        return (direction == NORTH || direction == WEST) ? j - ruleLength - 1 : j + ruleLength + 1;
+        return (direction == NORTH || direction == WEST) ? j - ruleLength  : j + ruleLength;
     }
 
     private int incOrDecJNW(int j) {

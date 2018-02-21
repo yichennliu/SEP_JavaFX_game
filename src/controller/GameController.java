@@ -58,7 +58,7 @@ public class GameController {
         this.addDirectionEvents();
         this.addInGameMenu();
         this.robot = new Robot(level,5);
-        robotize(true);
+        robotize(false);
         this.addGameViewComponents();
         this.countDown();
         this.addPauseResumeGameEvents();
@@ -78,7 +78,6 @@ public class GameController {
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
-            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
             if(robotActive) this.level.setInputDirection(robot.getNextMove());
             boolean killedPre;
             boolean killedMain;

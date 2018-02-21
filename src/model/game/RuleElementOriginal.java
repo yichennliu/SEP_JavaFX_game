@@ -21,19 +21,15 @@ public class RuleElementOriginal {
             Property prop = entry.getKey();
             Integer value = entry.getValue();
             Integer propertyValue = field.getPropertyValue(prop);  //Holen des Zusatzwertes aus dem aktuellen Feld
-            if( propertyValue!=null && ((value.equals(0) && value.equals(propertyValue)) ||
-                    (value.compareTo(0)>0 && value.compareTo(propertyValue)<=0)
-            )) continue;   //Überprüfen ob der gespeicherte Zusatzwert gleich dem Zusatzwert in dem RuleElement ist
+            if( (value.equals(0) && (propertyValue==null || propertyValue.equals(0))) ||
+                    (value.intValue()>0 && propertyValue.intValue()>=value.intValue())
+            ) continue;   //Überprüfen ob der gespeicherte Zusatzwert gleich dem Zusatzwert in dem RuleElement ist
             else return false;
         }
         return true;
     }
 
     public boolean matches(Feld field) {
-       /* System.out.println("Token " + field.getToken() + " == " + token.toString()+ ". Zusatzwerte stimmen überein ist ");
-        System.out.println((compareValues(field)) + "\n");
-        System.out.println("Tokens stimmen überein ist: \n");
-        System.out.println(token.matches(field.getToken()));*/
         return ( token.matches(field.getToken()) && compareValues(field));
     }
 

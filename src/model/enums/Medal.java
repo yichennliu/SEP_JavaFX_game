@@ -18,7 +18,7 @@ public enum Medal {
 
 
     public Image getMedalImage(){
-        return new Image("src/view/images/"+this.name()+".png");
+        return new Image("view/images/"+this.name()+".png");
     }
 
 }

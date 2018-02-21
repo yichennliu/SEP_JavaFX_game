@@ -501,9 +501,11 @@ public class Level {
        for(Rule rule: pre){
            rule.execute(this.map,this.inputDirection);
        }
+        System.out.println("Pre\nX: " + getPropertyValue(Property.X) + " Y: " + getPropertyValue(Property.Y));
     }
 
     public void execPostRules(){
+        System.out.println("VOr Post\nX: " + getPropertyValue(Property.X) + " Y: " + getPropertyValue(Property.Y));
         for(Rule rule: post){
             rule.execute(this.map,this.inputDirection);
         }
