@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static model.levelEditor.LevelEditor.Mode.BRUSH;
+
 public class LevelEditor {
 
     private int width = 25;
@@ -24,6 +26,8 @@ public class LevelEditor {
     private Token currentToken;
     private Map<Property,Integer> props;
     private List<Rule> pre,post;
+    public enum Mode {BRUSH,SELECT};
+    private Mode mode = BRUSH;
 
     public LevelEditor(){
         this.map = new Feld[height][width];
@@ -71,6 +75,14 @@ public class LevelEditor {
                 map[row][col] = feld;
             }
         }
+    }
+
+    public void setMode(Mode mode){
+        this.mode = mode;
+    }
+
+    public Mode getMode(){
+        return this.mode;
     }
 
     public int getWidth() {

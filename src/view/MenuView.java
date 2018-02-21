@@ -24,7 +24,7 @@ public class MenuView {
     private double width;
     private double height;
 
-    public MenuView(Stage stage, Map<String, MedalStatus> medalStatuses) {
+    public MenuView(Stage stage, Map <String, MedalStatus> medalStatuses) {
         this.stage = stage;
         root = new BorderPane();
         this.sceneMenu = new Scene(root);
