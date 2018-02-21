@@ -80,7 +80,7 @@ public class Controller {
 
         } else{
 
-            gameController.addInGameMenu();
+            gameController.addEscapeGameMenu();
             gameController.setGameView(gameView);
             gameController.setLevel(level);
             gameController.update();

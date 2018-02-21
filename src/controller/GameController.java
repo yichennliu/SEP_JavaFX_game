@@ -41,40 +41,35 @@ public class GameController {
     private Timeline timeline;
     private Timeline timer;
     private EscapeButtonHandler handler;
-    private EventHandler levelButtonHandler;
     private AI robot;
     private boolean robotActive;
-
 
     public GameController(Level level, GameView gameView, Controller controller) {
         this.controller = controller;
         this.gameView = gameView;
         this.level = level;
         this.addDirectionEvents();
-        this.addInGameMenu();
-        this.robot = new Robot(level,5);
-        robotize(false);
-        this.addGameViewComponents();
+        this.addEscapeGameMenu();
+        this.robot = new Robot(level, 5);
+        this.convertGameModus();
+        this.addDragEvent();
         this.countDown();
         this.addPauseResumeGameEvents();
     }
 
-    public void robotize(boolean activate){
+    public void robotize(boolean activate) {
         this.robotActive = activate;
     }
 
     public void update() {
         this.countDown();
-        this.addGameViewComponents();
         this.addDirectionEvents();
-        this.addPauseResumeGameEvents();
-
     }
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
             System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
-            if(robotActive) this.level.setInputDirection(robot.getNextMove());
+            if (robotActive) this.level.setInputDirection(robot.getNextMove());
             boolean killedPre;
             boolean killedMain;
             boolean killedPost;
@@ -162,16 +157,34 @@ public class GameController {
 
     }
 
-    private void addPauseResumeGameEvents(){
+    private void convertGameModus() {
+        Stage gameStage = this.gameView.getStage();
+        gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.K)) {
+                if (event.isShiftDown()) {
+                    this.robotize(false);
+                } else {
+                    this.robot = new Robot(level, 5);
+                    this.robotize(true);
+                }
+            } else {
+                this.robotize(false);
+            }
+        });
+
+    }
+
+    private void addPauseResumeGameEvents() {
         Stage gameStage = this.gameView.getStage();
         gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode().equals(KeyCode.SPACE)) {
-                if(timeline!=null && timeline.getStatus().equals(Animation.Status.RUNNING)){
+                if (timeline != null && timeline.getStatus().equals(Animation.Status.RUNNING)) {
+                    this.gameView.createPauseGameIcon();
                     timeline.stop();
                     timer.stop();
-                }
 
-                else if(timeline!= null && timeline.getStatus()== Animation.Status.STOPPED){
+                } else if (timeline != null && timeline.getStatus() == Animation.Status.STOPPED) {
+                    this.gameView.removePauseGameIcon();
                     timeline.play();
                     timer.play();
                 }
@@ -180,16 +193,15 @@ public class GameController {
     }
 
 
-    public void addInGameMenu() {
+    public void addEscapeGameMenu() {
         Stage gamestage = this.gameView.getStage();
         if (handler == null) {
             handler = new EscapeButtonHandler(gamestage);
         }
 
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, handler);
+
     }
-
-
 
     /**
      * Show end of game dialog
@@ -227,7 +239,7 @@ public class GameController {
     private void addDirectionEvents() {
         Stage gamestage = this.gameView.getStage();
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if(robotActive) return;
+            if (robotActive) return;
             if (event.getCode().equals(KeyCode.UP)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGUP);
@@ -268,7 +280,7 @@ public class GameController {
 
     }
 
-    private void addGameViewComponents() {
+    private void addDragEvent() {
         Stage gamestage = this.gameView.getStage();
 
         gamestage.addEventHandler(ScrollEvent.SCROLL, e -> {
@@ -287,7 +299,7 @@ public class GameController {
     public void saveGame() {
         try {
             String[] originalPath = this.level.getJsonPath().split("/");
-            String originalFileName = originalPath[originalPath.length-1];
+            String originalFileName = originalPath[originalPath.length - 1];
             LevelFactory.exportLevel(this.level, "src/json/savegame/" + originalFileName);
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -337,9 +349,13 @@ public class GameController {
     }
 
 
-    public void setGameView(GameView gameView) { this.gameView = gameView; }
+    public void setGameView(GameView gameView) {
+        this.gameView = gameView;
+    }
 
-    public void setLevel(Level level) { this.level = level; }
+    public void setLevel(Level level) {
+        this.level = level;
+    }
 
     private class EscapeButtonHandler implements EventHandler<KeyEvent> {
 

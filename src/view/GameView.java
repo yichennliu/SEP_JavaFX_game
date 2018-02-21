@@ -43,6 +43,7 @@ public class GameView {
     private Label currentGems;
     private ImageView gemIcon;
     private ImageView currentMedal;
+    private ImageView gamePauseIcon;
 
     public GameView(Stage stage, Level level) {
         root = new Group();
@@ -78,6 +79,7 @@ public class GameView {
         this.timerIcons = new ImageView();
         this.timerIcons.setFitHeight(30);
         this.timerIcons.setFitWidth(30);
+        this.gamePauseIcon = new ImageView();
         this.createHboxStyle();
         this.showMedalInfo();
         this.showCurrentSandUhr();
@@ -293,6 +295,21 @@ public class GameView {
         if (currentsecond / totalSecond >= 0.6) {
             this.setCurrentSandUhr(SandUhr.RED);
         }
+
+    }
+
+    public void createPauseGameIcon() {
+
+        Image pauseIcon = new Image(GameView.class.getResourceAsStream("images/Paused.png"));
+        this.gamePauseIcon.setImage(pauseIcon);
+        this.gamePauseIcon.setFitHeight(30);
+        this.gamePauseIcon.setFitWidth(30);
+        this.timeRewardInfo.getChildren().addAll(gamePauseIcon);
+
+    }
+
+    public void removePauseGameIcon(){
+        this.timeRewardInfo.getChildren().remove(this.gamePauseIcon);
 
     }
 
