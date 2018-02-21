@@ -26,7 +26,6 @@ import org.json.JSONObject;
 import view.EndGameAlert;
 import view.GamePausedAlert;
 import view.GameView;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -57,7 +56,7 @@ public class GameController {
         this.addPauseResumeGameEvents();
     }
 
-    public void robotize(boolean activate) {
+    private void robotize(boolean activate) {
         this.robotActive = activate;
     }
 
@@ -102,7 +101,7 @@ public class GameController {
 
     }
 
-    public void countDown() {
+    private void countDown() {
         Label countDownLabel = this.gameView.getTimerLabel();
         final Integer startSecond = this.level.getTickGoals()[0] / 5;
         this.timer = new Timeline();
@@ -296,7 +295,7 @@ public class GameController {
     /**
      * Levelfortschritt speichern
      */
-    public void saveGame() {
+    private void saveGame() {
         try {
             String[] originalPath = this.level.getJsonPath().split("/");
             String originalFileName = originalPath[originalPath.length - 1];
