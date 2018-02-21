@@ -1,6 +1,5 @@
 package controller;
 
-import javafx.stage.Stage;
 import main.LevelFactory;
 import model.enums.Medal;
 import model.game.Level;
@@ -11,10 +10,6 @@ import org.json.JSONTokener;
 import view.*;
 import view.levelEditor.LevelEditorView;
 import view.themeEditor.ThemeEditorView;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +48,7 @@ public class Controller {
             menuController = new MenuController(menuView, medalStatusMap,this);
         } else {
             menuController.setMenuView(menuView);
+            menuController.update();
         }
 
         this.view.update(View.Mode.MENU,menuView);
@@ -69,7 +65,7 @@ public class Controller {
     }
 
     public void startGame(){
-        this.startLevel("json/level/spiegelgeist.json");
+        this.startLevel("json/level/text.json");
     }
 
 
@@ -84,7 +80,8 @@ public class Controller {
             gameController = new GameController(level,gameView,this);
 
         } else{
-            gameController.addInGameMenu();
+
+            gameController.addEscapeGameMenu();
             gameController.setGameView(gameView);
             gameController.setLevel(level);
             gameController.update();

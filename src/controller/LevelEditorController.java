@@ -32,6 +32,7 @@ public class LevelEditorController {
 
         initInputEvents();
         loadLevel("src/json/level/bewegung.json");
+
     }
 
 
