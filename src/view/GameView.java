@@ -14,6 +14,7 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+import model.enums.Medal;
 import model.enums.Property;
 import model.game.Feld;
 import model.game.Level;
@@ -104,12 +105,14 @@ public class GameView {
     }
 
     public void update(){
+
         scrollToMe();
         board.stopAnimation();
         View.drawBoard(this.board,level.getMap(),this.theme,true);
         showCollectedGems();
         showMedalInfo();
         showCurrentSandUhr();
+
     }
 
     /*if ME is at the edge of the viewport, a new translation will be set (starts indirectly tranlsation transition)*/
@@ -179,7 +182,6 @@ public class GameView {
         this.timeRewardInfo.setPrefWidth(width);     }
 
     public Image[] createMedalIcons(){
-
         final Image goldMedalImage = new Image(GameView.class.getResourceAsStream("images/Gold.png"));
         final Image silverMedalImage = new Image(GameView.class.getResourceAsStream("images/Silver.png"));
         final Image bronzeMedalImage = new Image(GameView.class.getResourceAsStream("images/Bronze.png"));
@@ -243,6 +245,31 @@ public class GameView {
         restGem.setTextFill(Color.WHITE);
     }
 
+    public void updateCurrentMedal(ImageView newMedal){
+        this.currentMedal = newMedal;
+
+    }
+
+    public ImageView createCurrentMedal(Medal medalType){
+        ImageView newMedlaImage = new ImageView();
+
+        switch (medalType) {
+            case GOLD:
+                newMedlaImage = Medal.GOLD.getMedalImage();
+                break;
+            case BRONZE:
+                newMedlaImage = Medal.BRONZE.getMedalImage();
+                break;
+            case SILVER:
+                newMedlaImage = Medal.SILVER.getMedalImage();
+                break;
+
+        }
+
+        return newMedlaImage;
+    }
+
+
     public void showMedalInfo(){
 
         if(level.getPropertyValue(Property.GEMS)<level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS) >= level.getTickGoals()[2]){
@@ -252,6 +279,9 @@ public class GameView {
 
         if(level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS)<=level.getTickGoals()[2]){
             setCountToSilverInfo();
+            ImageView imageView = createCurrentMedal(Medal.BRONZE);
+            updateCurrentMedal(imageView);
+
         }
 
         if (level.getPropertyValue(Property.GEMS)>=level.getGemGoals()[1] && level.getPropertyValue(Property.TICKS)<= level.getTickGoals()[1]){

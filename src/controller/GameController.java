@@ -283,6 +283,7 @@ public class GameController {
 
         this.gameView.getCanvas().heightProperty().bind(gamestage.heightProperty());
         this.gameView.getCanvas().widthProperty().bind(gamestage.widthProperty());
+
     }
 
     /**
