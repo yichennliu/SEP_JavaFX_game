@@ -1,16 +1,32 @@
 package view.levelEditor;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import model.enums.Property;
 import model.enums.Token;
 import model.game.Feld;
 import model.levelEditor.LevelEditor;
 import view.Board;
 import view.View;
+
+import javax.swing.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Observable;
 
 public class LevelEditorView {
 
@@ -29,6 +45,8 @@ public class LevelEditorView {
     private Button saveButton;
     private Button exitButton;
     private TextField nameInput;
+    private TableView<Map.Entry<Property,Integer>> tableView;
+    private ToggleGroup modeButtons;
 
     public LevelEditorView(Stage stage, LevelEditor editor){
         this.editor = editor;
@@ -43,12 +61,15 @@ public class LevelEditorView {
         rootPane = new BorderPane();
         root.getChildren().add(rootPane);
         TilePane header = new TilePane();
-        header.setPrefColumns(11);
+        header.setPrefColumns(12);
         initHeaderButtons(header);
         initInformationBox();
+        initPropertyBox();
         createMap();
         rootPane.setTop(header);
         rootPane.setCenter(canvasGroup);
+        rootPane.setMinSize(stage.getWidth(),stage.getHeight());
+        rootPane.setAlignment(canvasGroup, Pos.CENTER);
         update();
     }
 
@@ -60,6 +81,20 @@ public class LevelEditorView {
             button.setUserData(t);
             button.setToggleGroup(headerButtons);
         }
+
+            modeButtons = new ToggleGroup();
+            HBox buttonBox = new HBox();
+            ToggleButton selectMode = new ToggleButton();
+            selectMode.setGraphic(new ImageView(new Image("/view/levelEditor/select.png")));
+            ToggleButton brushMode = new ToggleButton();
+            brushMode.setGraphic(new ImageView(new Image("/view/levelEditor/brush.png")));
+            brushMode.setUserData(LevelEditor.Mode.BRUSH);
+            buttonBox.getChildren().addAll(selectMode,brushMode);
+            modeButtons.getToggles().addAll(selectMode,brushMode);
+            modeButtons.setUserData(LevelEditor.Mode.SELECT);
+            modeButtons.selectToggle(brushMode);
+            header.getChildren().add(buttonBox);
+
     }
 
     private void createMap(){
@@ -83,10 +118,6 @@ public class LevelEditorView {
         return staticCanvas;
     }
 
-    public Board getBoard() {
-        return board;
-    }
-
     public ToggleGroup getHeaderButtons() {
         return headerButtons;
     }
@@ -104,8 +135,8 @@ public class LevelEditorView {
         HBox timeBox = new HBox();
         timeBox.setSpacing(5);
         initGoalsInput();
-        gemBox.getChildren().add( new Label("Gems "));
-        timeBox.getChildren().add(new Label("Zeit "));
+        gemBox.getChildren().add( new Label("Gems"));
+        timeBox.getChildren().add(new Label("Zeit"));
 
         for(TextField entry: gemInputs){
             gemBox.getChildren().add(entry);
@@ -120,6 +151,52 @@ public class LevelEditorView {
         informationRoot.getChildren().addAll(nameInput, goalLabel, gemBox, timeBox, saveButton,exitButton);
 
         rootPane.setLeft(informationRoot);
+
+    }
+
+    public void selectFeld(int column, int row){
+
+        Map<Property,Integer> map = editor.getLevel().getFeld(column,row).getProperties();
+        ObservableList<Map.Entry<Property,Integer>> list = FXCollections.observableArrayList();
+        for(Map.Entry<Property,Integer> entry:map.entrySet()){
+            list.add(entry);
+        }
+        tableView.setItems(list);
+    }
+
+    private void initPropertyBox(){
+        VBox propertyBoxRoot = new VBox();
+        ObservableList<Map.Entry<Property,Integer>> list = FXCollections.observableArrayList();
+
+        list.addListener((ListChangeListener.Change<? extends Map.Entry<Property,Integer>> e) -> {
+            System.out.println(e);
+        });
+        tableView= new TableView();
+        tableView.setEditable(true);
+        tableView.setItems(list);
+
+        TableColumn<Map.Entry<Property,Integer>,String> propertyName =  new TableColumn<>("Property");
+        propertyName.setCellValueFactory(getCellFactoryProps());
+
+        TableColumn<Map.Entry<Property,Integer>,String> propertyValue = new TableColumn<>("Wert");
+        propertyValue.setCellValueFactory(getCellFactoryValue());
+        propertyValue.setEditable(true);
+
+        propertyValue.setCellFactory(TextFieldTableCell.forTableColumn());
+        propertyValue.setOnEditCommit(e -> {
+            Map.Entry<Property,Integer> entry = e.getTableView().getItems().get(e.getTablePosition().getRow());
+           try {
+               Integer newVal = Integer.parseInt(e.getNewValue());
+               entry.setValue(newVal);
+           }
+           catch(NumberFormatException exception){
+
+           }
+        });
+
+        tableView.getColumns().setAll(propertyName,propertyValue);
+        propertyBoxRoot.getChildren().add(tableView);
+        rootPane.setRight(propertyBoxRoot);
 
     }
 
@@ -160,6 +237,18 @@ public class LevelEditorView {
 
     public double getFieldSize(){
         return  this.fieldSize;
+    }
+
+    public ToggleGroup getModeButtons() {
+        return modeButtons;
+    }
+
+    private Callback<TableColumn.CellDataFeatures<Map.Entry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryProps(){
+       return param-> new SimpleStringProperty(param.getValue().getKey().name());
+    }
+
+    private Callback<TableColumn.CellDataFeatures<Map.Entry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryValue(){
+        return param-> new SimpleStringProperty(param.getValue().getValue().toString());
     }
 
     public void reloadMap() {

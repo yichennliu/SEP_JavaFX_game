@@ -13,6 +13,7 @@ import model.game.Level;
 import model.levelEditor.LevelEditor;
 import view.levelEditor.LevelEditorView;
 import java.io.IOException;
+import java.util.List;
 
 public class LevelEditorController {
 
@@ -30,7 +31,13 @@ public class LevelEditorController {
         this.levelEditorView = levelEditorView;
 
         initInputEvents();
-//        TODO: loadLevel("src/json/level/bewegung.json");
+        loadLevel("src/json/level/bewegung.json");
+    }
+
+
+
+    private void exit(){
+        this.controller.startMenu();
     }
 
     private void loadLevel(String path){
@@ -39,6 +46,14 @@ public class LevelEditorController {
             if(level!=null){
                 setNewMap(level.getMap());
                 this.levelEditorView.getNameInput().textProperty().setValue(level.getName());
+                if(level.whereAmI()!=null) this.meSet = true;
+                TextField[] gemInputs = this.levelEditorView.getGemInputs();
+                TextField[] timeInputs = this.levelEditorView.getTimeInputs();
+                for(int i = 0; i<gemInputs.length; i++){
+                    gemInputs[i].setText(level.getGemGoals()[i]+"");
+                    timeInputs[i].setText(level.getTickGoals()[i]+"");
+                }
+                this.levelEditorView.selectFeld(0,0);
                 this.levelEditorView.update();
                 /*TODO: Level komplett importieren -> GemGoals und so*/
             }
@@ -56,34 +71,60 @@ public class LevelEditorController {
     }
 
     private void initInputEvents() {
+        levelEditorView.getModeButtons().selectedToggleProperty().addListener((a,b,c) -> {
+            if(c!=null) editor.setMode((LevelEditor.Mode) c.getUserData());
+        });
+
        Canvas staticCanvas = this.levelEditorView.getStaticCanvas();
-       staticCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+
+        staticCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
             mouseDown = true;
             int col = (int) (e.getY()/levelEditorView.getFieldSize());
             int row = (int) (e.getX()/levelEditorView.getFieldSize());
-            lastCoordinate = new Point2D(col,row) ;
-            brushFeld(col,row);
-            this.levelEditorView.update();
+            if(editor.getMode()==LevelEditor.Mode.BRUSH){
+                lastCoordinate = new Point2D(col,row) ;
+                brushFeld(col,row);
+                this.levelEditorView.update();
+            }
+            else {
+                this.levelEditorView.selectFeld(col,row);
+            }
         });
         staticCanvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
             if(mouseDown){
-                int col = (int) (e.getY()/levelEditorView.getFieldSize());
-                int row = (int) (e.getX()/levelEditorView.getFieldSize());
-                Point2D newCoord = new Point2D(col,row);
-                if(!lastCoordinate.equals(newCoord)){
-                    lastCoordinate = newCoord;
-                    brushFeld(col,row);
-                    this.levelEditorView.update();
+                int col = (int) (e.getY() / levelEditorView.getFieldSize());
+                int row = (int) (e.getX() / levelEditorView.getFieldSize());
+                if(editor.getMode()==LevelEditor.Mode.BRUSH) {
+                    Point2D newCoord = new Point2D(col, row);
+                    if (!lastCoordinate.equals(newCoord)) {
+                        lastCoordinate = newCoord;
+                        brushFeld(col, row);
+                        this.levelEditorView.update();
+                    }
+                }
+                else {
+                    Point2D newCoord = new Point2D(col, row);
+                    if (lastCoordinate!=null && !lastCoordinate.equals(newCoord)){
+                        this.levelEditorView.selectFeld(col,row);
+                        lastCoordinate = newCoord;
+                    }
+
                 }
             }
         });
         staticCanvas.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
             mouseDown = false;
         });
+
+        levelEditorView.getExitButton().setOnAction(e -> {
+            this.exit();
+        });
+
         ToggleGroup buttons = this.levelEditorView.getHeaderButtons();
         buttons.selectedToggleProperty().addListener((a,b,c) -> {
             this.editor.setCurrentToken((Token) c.getUserData());
         });
+
         buttons.selectToggle(buttons.getToggles().get(0));
 
         this.levelEditorView.getStaticCanvas().setCursor(Cursor.HAND);

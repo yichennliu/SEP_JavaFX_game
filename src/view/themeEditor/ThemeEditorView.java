@@ -44,6 +44,8 @@ private Button exitButton;
 private TextField nameInput;
 private Group ioButtons;
 private HBox header;
+
+
 ComboBox<String> themeChoiceBox;
 
 private ObservableList<String> themes;
@@ -192,6 +194,7 @@ private String stylesheet;
         positionPaneRoot.add(previewGridPane,1,0);
         rootPane.setCenter(positionPaneRoot);
     }
+
 
     public Scene getScene(){
         return this.sceneThemeView;
