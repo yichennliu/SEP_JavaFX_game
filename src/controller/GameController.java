@@ -5,11 +5,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -25,13 +22,10 @@ import model.enums.Property;
 import model.enums.WinningStatus;
 import model.game.Level;
 import model.game.MedalStatus;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import view.EndGameAlert;
 import view.GamePausedAlert;
 import view.GameView;
-import view.MenuView;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -46,40 +40,35 @@ public class GameController {
     private Timeline timeline;
     private Timeline timer;
     private EscapeButtonHandler handler;
-    private EventHandler levelButtonHandler;
     private AI robot;
     private boolean robotActive;
-
 
     public GameController(Level level, GameView gameView, Controller controller) {
         this.controller = controller;
         this.gameView = gameView;
         this.level = level;
         this.addDirectionEvents();
-        this.addInGameMenu();
-        this.robot = new Robot(level,5);
-        robotize(true);
-        this.addGameViewComponents();
+        this.addEscapeGameMenu();
+        this.robot = new Robot(level, 5);
+        this.convertGameModus();
+        this.addDragEvent();
         this.countDown();
         this.addPauseResumeGameEvents();
     }
 
-    public void robotize(boolean activate){
+    private void robotize(boolean activate) {
         this.robotActive = activate;
     }
 
     public void update() {
-        countDown();
-        addGameViewComponents();
-        addDirectionEvents();
-        addPauseResumeGameEvents();
-
+        this.countDown();
+        this.addDirectionEvents();
     }
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
             System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
-            if(robotActive) this.level.setInputDirection(robot.getNextMove());
+            if (robotActive) this.level.setInputDirection(robot.getNextMove());
             boolean killedPre;
             boolean killedMain;
             boolean killedPost;
@@ -112,8 +101,8 @@ public class GameController {
 
     }
 
-    public void countDown() {
-        Label countDownLabel = this.gameView.updateTimerLabel();
+    private void countDown() {
+        Label countDownLabel = this.gameView.getTimerLabel();
         final Integer startSecond = this.level.getTickGoals()[0] / 5;
         this.timer = new Timeline();
         timer.setCycleCount(Timeline.INDEFINITE);
@@ -167,16 +156,34 @@ public class GameController {
 
     }
 
-    private void addPauseResumeGameEvents(){
+    private void convertGameModus() {
+        Stage gameStage = this.gameView.getStage();
+        gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.K)) {
+                if (event.isShiftDown()) {
+                    this.robotize(false);
+                } else {
+                    this.robot = new Robot(level, 5);
+                    this.robotize(true);
+                }
+            } else {
+                this.robotize(false);
+            }
+        });
+
+    }
+
+    private void addPauseResumeGameEvents() {
         Stage gameStage = this.gameView.getStage();
         gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode().equals(KeyCode.SPACE)) {
-                if(timeline!=null && timeline.getStatus().equals(Animation.Status.RUNNING)){
+                if (timeline != null && timeline.getStatus().equals(Animation.Status.RUNNING)) {
+                    this.gameView.createPauseGameIcon();
                     timeline.stop();
                     timer.stop();
-                }
 
-                else if(timeline!= null && timeline.getStatus()== Animation.Status.STOPPED){
+                } else if (timeline != null && timeline.getStatus() == Animation.Status.STOPPED) {
+                    this.gameView.removePauseGameIcon();
                     timeline.play();
                     timer.play();
                 }
@@ -185,17 +192,15 @@ public class GameController {
     }
 
 
-
-    public void addInGameMenu() {
+    public void addEscapeGameMenu() {
         Stage gamestage = this.gameView.getStage();
         if (handler == null) {
             handler = new EscapeButtonHandler(gamestage);
         }
 
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, handler);
+
     }
-
-
 
     /**
      * Show end of game dialog
@@ -233,7 +238,7 @@ public class GameController {
     private void addDirectionEvents() {
         Stage gamestage = this.gameView.getStage();
         gamestage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if(robotActive) return;
+            if (robotActive) return;
             if (event.getCode().equals(KeyCode.UP)) {
                 if (event.isShiftDown()) {
                     this.level.setInputDirection(InputDirection.DIGUP);
@@ -274,7 +279,7 @@ public class GameController {
 
     }
 
-    private void addGameViewComponents() {
+    private void addDragEvent() {
         Stage gamestage = this.gameView.getStage();
 
         gamestage.addEventHandler(ScrollEvent.SCROLL, e -> {
@@ -284,15 +289,16 @@ public class GameController {
 
         this.gameView.getCanvas().heightProperty().bind(gamestage.heightProperty());
         this.gameView.getCanvas().widthProperty().bind(gamestage.widthProperty());
+
     }
 
     /**
      * Levelfortschritt speichern
      */
-    public void saveGame() {
+    private void saveGame() {
         try {
             String[] originalPath = this.level.getJsonPath().split("/");
-            String originalFileName = originalPath[originalPath.length-1];
+            String originalFileName = originalPath[originalPath.length - 1];
             LevelFactory.exportLevel(this.level, "src/json/savegame/" + originalFileName);
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -342,7 +348,9 @@ public class GameController {
     }
 
 
-    public void setGameView(GameView gameView) { this.gameView = gameView; }
+    public void setGameView(GameView gameView) {
+        this.gameView = gameView;
+    }
 
     public void setLevel(Level level) {
         this.level = level;
@@ -366,7 +374,6 @@ public class GameController {
                     timeline.stop();
                     timer.stop();
                 }
-
 
                 GameController.this.addAlertKeyEvent(alert);
                 Optional<ButtonType> result = alert.showAndWait();
