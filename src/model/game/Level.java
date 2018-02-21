@@ -2,6 +2,7 @@ package model.game;
 
 import javafx.util.Pair;
 import model.enums.*;
+import model.levelEditor.ObservableHashMap;
 
 import java.util.*;
 
@@ -18,7 +19,7 @@ public class Level {
     /** optional */
     private Integer maxslime;
     /** globale properties: GEMS, TICKS, X, Y, Z */
-    private Map<Property, Integer> properties = new HashMap<>();
+    private Map<Property, Integer> properties;
     /** Path to this level */
     private String jsonPath;
     /** Derzeitige Anzahl der Felder mit Schleim */
@@ -163,15 +164,7 @@ public class Level {
      * @return existing global properties (!= 0)
      */
     public Map<Property, Integer> getProperties() {
-        Map<Property, Integer> properties = new HashMap<>();
-        for (Map.Entry entry : this.properties.entrySet()) {
-            Integer i = (Integer) entry.getValue();
-            Property p = (Property) entry.getKey();
-            if (i != 0) {
-                properties.put(p, i);
-            }
-        }
-        return properties;
+        return this.properties;
     }
 
     /** @return global value associated to property */

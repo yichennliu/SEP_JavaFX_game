@@ -3,6 +3,7 @@ package main;
 import model.enums.*;
 import model.enums.Property;
 import model.game.*;
+import model.levelEditor.ObservableHashMap;
 import org.json.*;
 import java.io.*;
 import java.util.*;
@@ -66,7 +67,7 @@ public class LevelFactory {
                 } else {
                     // token + properties
                     Token token = Token.valueOf(((JSONObject) jsonFeld).getString("token").toUpperCase());
-                    Map<Property, Integer> values = new HashMap<>();
+                    Map<Property, Integer> values = new ObservableHashMap<>();
                     JSONObject jsonValues = ((JSONObject) jsonFeld).getJSONObject("values");
                     for (Iterator<String> i = jsonValues.keys(); i.hasNext();) {
                         String key = i.next();
@@ -90,7 +91,7 @@ public class LevelFactory {
                 : new ArrayList<>();
 
         // import global properties (non-standard, for savegames)
-        Map<Property, Integer> globalProperties = new HashMap<>();
+        Map<Property, Integer> globalProperties = new ObservableHashMap<>();
         if (jsonLevel.has("values")) {
             JSONObject jsonValues = jsonLevel.getJSONObject("values");
             for (Iterator<String> i = jsonValues.keys(); i.hasNext();) {
@@ -160,7 +161,7 @@ public class LevelFactory {
                     }
 
                     // import values
-                    Map<Property, Integer> values = new HashMap<>();
+                    Map<Property, Integer> values = new ObservableHashMap<>();
                     if (jsonRuleElement.has("values")) {
                         JSONObject jsonValues = jsonRuleElement.getJSONObject("values");
                         for (Iterator<String> i = jsonValues.keys(); i.hasNext(); ) {
@@ -200,7 +201,7 @@ public class LevelFactory {
                     }
 
                     // import values
-                    Map<Property, Integer> values = new HashMap<>();
+                    Map<Property, Integer> values = new ObservableHashMap<>();
                     if (jsonRuleElement.has("values")) {
                         JSONObject jsonValues = jsonRuleElement.getJSONObject("values");
                         for (Iterator<String> i = jsonValues.keys(); i.hasNext(); ) {

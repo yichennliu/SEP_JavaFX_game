@@ -20,6 +20,8 @@ import model.enums.Property;
 import model.enums.Token;
 import model.game.Feld;
 import model.levelEditor.LevelEditor;
+import model.levelEditor.ObservableHashMap;
+import model.levelEditor.ObservableMapEntry;
 import view.Board;
 import view.View;
 
@@ -45,7 +47,7 @@ public class LevelEditorView {
     private Button saveButton;
     private Button exitButton;
     private TextField nameInput;
-    private TableView<Map.Entry<Property,Integer>> tableView;
+    private TableView<ObservableMapEntry<Property,Integer>> tableView;
     private ToggleGroup modeButtons;
 
     public LevelEditorView(Stage stage, LevelEditor editor){
@@ -156,35 +158,37 @@ public class LevelEditorView {
 
     public void selectFeld(int column, int row){
 
-        Map<Property,Integer> map = editor.getLevel().getFeld(column,row).getProperties();
-        ObservableList<Map.Entry<Property,Integer>> list = FXCollections.observableArrayList();
-        for(Map.Entry<Property,Integer> entry:map.entrySet()){
-            list.add(entry);
+        ObservableHashMap<Property,Integer> map;
+        try {
+            map = (ObservableHashMap) editor.getLevel().getFeld(column,row).getProperties();
+            tableView.setItems(map.getObservableList());
         }
-        tableView.setItems(list);
+        catch(ClassCastException e){
+            e.printStackTrace();
+            tableView.setItems(null);
+        }
+
     }
 
     private void initPropertyBox(){
         VBox propertyBoxRoot = new VBox();
-        ObservableList<Map.Entry<Property,Integer>> list = FXCollections.observableArrayList();
+        ObservableList<ObservableMapEntry<Property,Integer>> list = FXCollections.observableArrayList(
+                p -> new javafx.beans.Observable[]{p});
 
-        list.addListener((ListChangeListener.Change<? extends Map.Entry<Property,Integer>> e) -> {
-            System.out.println(e);
-        });
         tableView= new TableView();
         tableView.setEditable(true);
         tableView.setItems(list);
 
-        TableColumn<Map.Entry<Property,Integer>,String> propertyName =  new TableColumn<>("Property");
+        TableColumn<ObservableMapEntry<Property,Integer>,String> propertyName =  new TableColumn<>("Property");
         propertyName.setCellValueFactory(getCellFactoryProps());
 
-        TableColumn<Map.Entry<Property,Integer>,String> propertyValue = new TableColumn<>("Wert");
+        TableColumn<ObservableMapEntry<Property,Integer>,String> propertyValue = new TableColumn<>("Wert");
         propertyValue.setCellValueFactory(getCellFactoryValue());
         propertyValue.setEditable(true);
 
         propertyValue.setCellFactory(TextFieldTableCell.forTableColumn());
         propertyValue.setOnEditCommit(e -> {
-            Map.Entry<Property,Integer> entry = e.getTableView().getItems().get(e.getTablePosition().getRow());
+            ObservableMapEntry<Property,Integer> entry = e.getTableView().getItems().get(e.getTablePosition().getRow());
            try {
                Integer newVal = Integer.parseInt(e.getNewValue());
                entry.setValue(newVal);
@@ -243,11 +247,11 @@ public class LevelEditorView {
         return modeButtons;
     }
 
-    private Callback<TableColumn.CellDataFeatures<Map.Entry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryProps(){
+    private Callback<TableColumn.CellDataFeatures<ObservableMapEntry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryProps(){
        return param-> new SimpleStringProperty(param.getValue().getKey().name());
     }
 
-    private Callback<TableColumn.CellDataFeatures<Map.Entry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryValue(){
+    private Callback<TableColumn.CellDataFeatures<ObservableMapEntry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryValue(){
         return param-> new SimpleStringProperty(param.getValue().getValue().toString());
     }
 

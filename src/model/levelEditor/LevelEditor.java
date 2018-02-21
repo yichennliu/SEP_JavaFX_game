@@ -44,7 +44,7 @@ public class LevelEditor {
         gemGoals = new int[3];
         this.pre = new ArrayList<>();
         this.post = new ArrayList<>();
-        this.props = new HashMap<>();
+        this.props = new ObservableHashMap<>();
         this.level = new Level(null,map,gemGoals,timeGoals,pre,post,null,props,null);
     }
 
@@ -100,7 +100,6 @@ public class LevelEditor {
     public void setMap(Feld[][] map) {
         this.map = map;
         this.level.setMap(map);
-
     }
 
     public Theme getTheme() {
