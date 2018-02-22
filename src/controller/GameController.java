@@ -124,7 +124,7 @@ public class GameController {
             this.gameView.setCurrentSandUhr(SandUhr.GREEN);
         }
 
-        if (currentSec/maxSec >=0.6) {
+        if (timePast >=0.6) {
             this.gameView.setCurrentSandUhr(SandUhr.RED);
         }
 
@@ -136,7 +136,7 @@ public class GameController {
 
     private void addAlertKeyEvent(Alert alert) {
 
-        EventHandler<KeyEvent> fireOnEnter = new EventHandler<KeyEvent>() {
+        EventHandler<KeyEvent> pressEnter = new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if (KeyCode.ENTER.equals(event.getCode()) && event.getTarget() instanceof Button) {
@@ -147,7 +147,7 @@ public class GameController {
 
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button
-                -> button.addEventHandler(KeyEvent.KEY_PRESSED, fireOnEnter));
+                -> button.addEventHandler(KeyEvent.KEY_PRESSED, pressEnter));
 
     }
 
