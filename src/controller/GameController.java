@@ -389,6 +389,7 @@ public class GameController {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     GameController.this.saveGame();
                     GameController.this.controller.startMenu();
+
                 } else if (result.get() == alert.getExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     GameController.this.controller.startMenu();
