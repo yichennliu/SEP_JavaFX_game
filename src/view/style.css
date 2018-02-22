@@ -14,15 +14,26 @@
             -fx-font-family: "Helvetica";
             -fx-font-size: 19px;
             -fx-font-weight: bold;
-            -fx-text-fill: white;
+            -fx-text-fill: #f7d7aa;
             -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);
         }
 
+.button:hover {
+        -fx-background-color:#ffab32;
+        -fx-scale-x: 1.1;
+        -fx-cursor: hand;
+        -fx-text-fill: #020d1e;
 
+}
+
+ .button:pressed {
+        -fx-background-color: #0a7206;
+        -fx-scale-x: 0.9;
+}
 
 
 #vboxLinks{  -fx-background-color: #020d1e;
-                                     -fx-padding: 100;
+                                     -fx-padding:80;
                                      -fx-spacing: 10;
                                        -fx-stroke: green;
                                         -fx-stroke-width: 2;
@@ -35,27 +46,28 @@
 
 
 .levelbox{ -fx-background-color:Transparent;
-       -fx-spacing: 150;
+       -fx-spacing: 10;
             -fx-font-family: "Helvetica";
             -fx-font-size: 19px;
             -fx-font-weight: bold;
-            -fx-text-fill: #e6e8ed;
+            -fx-text-fill:#f7d7aa;
             -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);
                       }
 
 
-.hover {
--fx-background-color:#ffab32;
 
-}
 
 .textColor{
--fx-text-fill: #e6e8ed;
+-fx-text-fill: #f7d7aa;
 }
 .backgorungMenuLevel{
  -fx-background-color: #020d1e;
 }
 
+.vboxlevel{
+-fx-text-fill:#f7d7aa;
+
+}
 
 .scroll-pane > .viewport  { -fx-background-color: #ffab32;
                             -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);}

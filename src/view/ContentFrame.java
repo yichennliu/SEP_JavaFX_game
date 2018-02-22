@@ -67,10 +67,10 @@ public  class ContentFrame extends StackPane {
     }
 
 
-    public ContentFrame(double widthLinks, double heightLinks, MenuView menuView) {
-        this.widthLinks=widthLinks;
-        this.heightLinks=heightLinks;
+    public ContentFrame(double widthLinks,double heightLinks,MenuView menuView) {
         this.menuView = menuView;
+        this.widthLinks=menuView.getWidth();
+        this.heightLinks=menuView.getHeight();
         this.gameButton = createButton("S T A R T");
         this.levelButtons = createButton("L E V E L S");
         this.loadtheme = createButton(" L O A D - T H E M E");
@@ -78,32 +78,17 @@ public  class ContentFrame extends StackPane {
         this.helpbutton = createButton("H E L P");
         this.close = createButton("C L O S E ");
         this.levelEditorButton = createButton("L E V E L - E D I T O R");
-        setAlignment(Pos.CENTER);
-         menuVboxlinks = new VBox(15, gameButton, levelButtons,loadtheme, themeEditorButton, levelEditorButton, helpbutton, close);
-        menuVboxlinks.setMinSize(widthLinks/2,heightLinks);
-        menuVboxlinks.setId("vboxLinks");
         this.saveButton = createButton("S A V E D  G A M E ");
-        this.setAlignment(Pos.CENTER);
-        this.setHover(gameButton);
-        this.setHover(levelButtons);
-        this.setHover(themeEditorButton);
-        this.setHover(helpbutton);
-        this.setHover(close);
-        this.setHover(levelEditorButton);
-        this.setHover(saveButton);
-
-        this.scene= new Scene(menuVboxlinks);
+         menuVboxlinks = new VBox(15, gameButton, levelButtons,loadtheme, themeEditorButton, levelEditorButton, helpbutton, close);
+         menuVboxlinks.setMinSize((widthLinks/2),heightLinks);
+        menuVboxlinks.setMaxSize((widthLinks/2),heightLinks);
+        menuVboxlinks.setAlignment(Pos.TOP_LEFT);
+         menuVboxlinks.setId("vboxLinks");
         this.listSavedGameButtons = new ArrayList<Button>();
         this.listlevelButtons = new ArrayList<LevelItem>();
         this.levelVbox = createLevelMenuItems();
         this.levelVbox.getStyleClass().add("levelbox");
         this.levelItemScrollPane = createscrollPane(levelVbox);
-
-        levelVbox = createLevelMenuItems();
-        levelVbox.getStyleClass().add("levelbox");
-        levelItemScrollPane = createscrollPane(levelVbox);
-
-
         levelButtons.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
              if(levelItemScrollPane.isVisible()){
@@ -113,8 +98,6 @@ public  class ContentFrame extends StackPane {
                 helpVboxScrollPane.setVisible(false);
             }
         });
-
-
         close.setOnAction(e -> Platform.exit());
         helpVbox=createHelpMenuItem();
         helpVboxScrollPane= createscrollPane(helpVbox);
@@ -192,7 +175,7 @@ public  class ContentFrame extends StackPane {
             ImageView snapshotview =  new ImageView(snapshot);
             String levelText = "Medaillen: "+ this.getMedalImage(level.getJsonPath());
 
-            LevelItem levelItem = new LevelItem( level.getName(),levelText,snapshotview,path);
+            LevelItem levelItem = new LevelItem( level.getName(),levelText,snapshotview,path,widthLinks,heightLinks);
             listlevelButtons.add(levelItem);
             levelVbox.getChildren().add(levelItem);
         }
@@ -219,7 +202,7 @@ public  class ContentFrame extends StackPane {
             Image snapShot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/savegame/"+path));
             Level level = LevelFactory.importLevel("src/json/savegame/"+path);
             ImageView snapShotView = new ImageView(snapShot);
-            savedGameVbox.getChildren().add(0, new LevelItem(level.getName(),null,snapShotView,path));
+            savedGameVbox.getChildren().add(0, new LevelItem(level.getName(),null,snapShotView,path,widthLinks,heightLinks));
         }
 
         return levelVbox;
@@ -280,50 +263,6 @@ public  class ContentFrame extends StackPane {
 
         return helpVbox;
     }
-
-
-
-    public void doHover(Button button){
-
-        button.getStyleClass().add("hover");
-        button.setCursor(Cursor.HAND);
-      //  button.setText("hier kannst du "+text);
-    }
-
-    public void unHover(Button button){
-        button.getStyleClass().clear();
-        button.getStyleClass().add("button");
-    }
-
-    public void setHover(Button button){
-
-        button.setOnMouseEntered(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent t) {
-                doHover(button);
-
-            }
-        });
-
-        button.setOnMouseExited(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent t) {
-                unHover(button);
-
-            }
-        });
-
-
-
-
-    }
-
-
-
-
-
 
 
     public Button getGameButton() {
