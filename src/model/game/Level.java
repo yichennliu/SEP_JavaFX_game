@@ -1,8 +1,6 @@
 package model.game;
 
-import javafx.util.Pair;
 import model.enums.*;
-import model.levelEditor.ObservableHashMap;
 
 import java.util.*;
 

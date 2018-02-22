@@ -3,7 +3,6 @@ package view.levelEditor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -14,21 +13,16 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.enums.Property;
 import model.enums.Token;
-import model.game.Feld;
 import model.levelEditor.LevelEditor;
-import model.levelEditor.ObservableHashMap;
-import model.levelEditor.ObservableMapEntry;
 import view.Board;
 import view.View;
 
-import javax.swing.*;
-import java.util.Collections;
 import java.util.Map;
-import java.util.Observable;
 
 public class LevelEditorView {
 
@@ -47,8 +41,11 @@ public class LevelEditorView {
     private Button saveButton;
     private Button exitButton;
     private TextField nameInput;
-    private TableView<ObservableMapEntry<Property,Integer>> tableView;
+    private TableView<Map.Entry<Property,Integer>> tableView;
     private ToggleGroup modeButtons;
+    private  Button addPropertyButton;
+    private TextField propertyValueInput;
+    private ComboBox<Property> selectPropertyBox;
 
     public LevelEditorView(Stage stage, LevelEditor editor){
         this.editor = editor;
@@ -83,7 +80,6 @@ public class LevelEditorView {
             button.setUserData(t);
             button.setToggleGroup(headerButtons);
         }
-
             modeButtons = new ToggleGroup();
             HBox buttonBox = new HBox();
             ToggleButton selectMode = new ToggleButton();
@@ -96,7 +92,6 @@ public class LevelEditorView {
             modeButtons.setUserData(LevelEditor.Mode.SELECT);
             modeButtons.selectToggle(brushMode);
             header.getChildren().add(buttonBox);
-
     }
 
     private void createMap(){
@@ -158,10 +153,14 @@ public class LevelEditorView {
 
     public void selectFeld(int column, int row){
 
-        ObservableHashMap<Property,Integer> map;
+        Map<Property,Integer> map;
         try {
-            map = (ObservableHashMap) editor.getLevel().getFeld(column,row).getProperties();
-            tableView.setItems(map.getObservableList());
+            map = editor.getLevel().getFeld(column,row).getProperties();
+            ObservableList<Map.Entry<Property,Integer>> list = FXCollections.observableArrayList();
+            for(Map.Entry<Property,Integer> entry : map.entrySet()){
+                list.add(entry);
+            }
+            tableView.setItems(list);
         }
         catch(ClassCastException e){
             e.printStackTrace();
@@ -172,23 +171,21 @@ public class LevelEditorView {
 
     private void initPropertyBox(){
         VBox propertyBoxRoot = new VBox();
-        ObservableList<ObservableMapEntry<Property,Integer>> list = FXCollections.observableArrayList(
-                p -> new javafx.beans.Observable[]{p});
-
-        tableView= new TableView();
+        ObservableList<Map.Entry<Property,Integer>> list = FXCollections.observableArrayList();
+        tableView = new TableView();
         tableView.setEditable(true);
         tableView.setItems(list);
 
-        TableColumn<ObservableMapEntry<Property,Integer>,String> propertyName =  new TableColumn<>("Property");
+        TableColumn<Map.Entry<Property,Integer>,String> propertyName =  new TableColumn<>("Property");
         propertyName.setCellValueFactory(getCellFactoryProps());
 
-        TableColumn<ObservableMapEntry<Property,Integer>,String> propertyValue = new TableColumn<>("Wert");
+        TableColumn<Map.Entry<Property,Integer>,String> propertyValue = new TableColumn<>("Wert");
         propertyValue.setCellValueFactory(getCellFactoryValue());
         propertyValue.setEditable(true);
 
         propertyValue.setCellFactory(TextFieldTableCell.forTableColumn());
         propertyValue.setOnEditCommit(e -> {
-            ObservableMapEntry<Property,Integer> entry = e.getTableView().getItems().get(e.getTablePosition().getRow());
+            Map.Entry<Property,Integer> entry = e.getTableView().getItems().get(e.getTablePosition().getRow());
            try {
                Integer newVal = Integer.parseInt(e.getNewValue());
                entry.setValue(newVal);
@@ -200,6 +197,18 @@ public class LevelEditorView {
 
         tableView.getColumns().setAll(propertyName,propertyValue);
         propertyBoxRoot.getChildren().add(tableView);
+
+        HBox addButtons = new HBox();
+        selectPropertyBox = new ComboBox<Property>();
+        ObservableList<Property> propertyList = FXCollections.observableArrayList();
+        for(Property prop: Property.values()) if(!prop.isGlobal()) propertyList.add(prop);
+        selectPropertyBox.setItems(propertyList);
+        selectPropertyBox.setPromptText("Property");
+        propertyValueInput = new TextField();
+        propertyValueInput.setPrefColumnCount(3);
+        addPropertyButton = new Button("Hinzufügen");
+        addButtons.getChildren().addAll(selectPropertyBox,propertyValueInput,addPropertyButton);
+        propertyBoxRoot.getChildren().add(addButtons);
         rootPane.setRight(propertyBoxRoot);
 
     }
@@ -247,11 +256,27 @@ public class LevelEditorView {
         return modeButtons;
     }
 
-    private Callback<TableColumn.CellDataFeatures<ObservableMapEntry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryProps(){
+    public Button getAddPropertyButton() {
+        return addPropertyButton;
+    }
+
+    public TextField getPropertyValueInput() {
+        return propertyValueInput;
+    }
+
+    public ComboBox getSelectPropertyBox() {
+        return selectPropertyBox;
+    }
+
+    public TableView getTableView(){
+        return  this.tableView;
+    }
+
+    private Callback<TableColumn.CellDataFeatures<Map.Entry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryProps(){
        return param-> new SimpleStringProperty(param.getValue().getKey().name());
     }
 
-    private Callback<TableColumn.CellDataFeatures<ObservableMapEntry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryValue(){
+    private Callback<TableColumn.CellDataFeatures<Map.Entry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryValue(){
         return param-> new SimpleStringProperty(param.getValue().getValue().toString());
     }
 

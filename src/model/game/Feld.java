@@ -1,7 +1,6 @@
 package model.game;
 
 import model.enums.*;
-import model.levelEditor.ObservableHashMap;
 
 import java.util.*;
 
@@ -15,7 +14,7 @@ public class Feld {
     private Feld lastTokenWentTo;
 
     public Feld(Token token, int column, int row) {
-        this(token, new ObservableHashMap<Property, Integer>(), column, row);
+        this(token, new HashMap<Property, Integer>(), column, row);
     }
 
     public Feld(Token token, Map<Property, Integer> properties, int column, int row){
@@ -379,7 +378,7 @@ public class Feld {
     }
 
     public Feld clone(){
-        Map<Property,Integer> propertiesClone = new ObservableHashMap<>();
+        Map<Property,Integer> propertiesClone = new HashMap<>();
         for(Map.Entry<Property,Integer> entry: properties.entrySet()){
             propertiesClone.put(entry.getKey(),new Integer(entry.getValue()));
         }
