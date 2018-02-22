@@ -110,6 +110,8 @@ public class LevelEditor {
     }
 
     public void setMap(Feld[][] map) {
+        this.width = map[0].length;
+        this.height = map.length;
         this.map = map;
         this.level.setMap(map);
     }

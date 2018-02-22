@@ -61,6 +61,8 @@ public class LevelEditorController {
                     gemInputs[i].setText(level.getGemGoals()[i]+"");
                     timeInputs[i].setText(level.getTickGoals()[i]+"");
                 }
+                this.levelEditorView.getColInput().setText(level.getWidth()+"");
+                this.levelEditorView.getRowInput().setText(level.getHeight()+"");
                 this.levelEditorView.selectFeld(0,0);
                 this.levelEditorView.update();
             }
@@ -83,6 +85,7 @@ public class LevelEditorController {
             mouseDown = true;
             int col = (int) (e.getY()/levelEditorView.getFieldSize());
             int row = (int) (e.getX()/levelEditorView.getFieldSize());
+            if(col<0||row<0||col>editor.getWidth()-1||row>editor.getHeight()-1) return;
             if(editor.getMode()==LevelEditor.Mode.BRUSH){
                 lastCoordinate = new Point2D(col,row) ;
                 brushFeld(col,row);
@@ -97,6 +100,7 @@ public class LevelEditorController {
             if(mouseDown){
                 int col = (int) (e.getY() / levelEditorView.getFieldSize());
                 int row = (int) (e.getX() / levelEditorView.getFieldSize());
+                if(col<0||row<0||col>editor.getWidth()-1||row>editor.getHeight()-1) return;
                 if(editor.getMode()==LevelEditor.Mode.BRUSH) {
                     Point2D newCoord = new Point2D(col, row);
                     if (!lastCoordinate.equals(newCoord)) {
@@ -123,6 +127,24 @@ public class LevelEditorController {
 
         levelEditorView.getExitButton().setOnAction(e -> {
             this.exit();
+        });
+
+        levelEditorView.getCropButton().setOnAction(e -> {
+            TextField rowInput =levelEditorView.getColInput();
+            TextField colInput = levelEditorView.getRowInput();
+            Integer col = stringToInteger(rowInput.getText());
+            Integer row = stringToInteger(colInput.getText());
+            if(row==null || row<1) {
+                rowInput.setStyle("-fx-color:red");
+                return;
+            }
+            if(col==null || col<1) {
+                rowInput.setStyle("-fx-color:red");
+                return;
+            }
+            cropMap(row,col);
+            this.levelEditorView.update();
+
         });
 
         levelEditorView.getLoadBox().getSelectionModel().selectedItemProperty().addListener( (a,b,c) -> {
@@ -183,6 +205,7 @@ public class LevelEditorController {
                 newMap[row][col] = newFeld;
             }
         }
+        this.editor.setMap(newMap);
     }
 
     private void reloadLevelDir(){

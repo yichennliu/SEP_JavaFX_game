@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -47,6 +48,9 @@ public class LevelEditorView {
     private  Button addPropertyButton;
     private TextField propertyValueInput;
     private ComboBox<Property> selectPropertyBox;
+    private TextField colInput;
+    private TextField rowInput;
+    private Button cropButton;
 
     public LevelEditorView(Stage stage, LevelEditor editor){
         this.editor = editor;
@@ -95,6 +99,23 @@ public class LevelEditorView {
             header.getChildren().add(buttonBox);
     }
 
+    private HBox createAndGetCropInputs(){
+        HBox cropInputRoot = new HBox();
+        colInput = new TextField();
+        rowInput = new TextField();
+        cropButton = new Button();
+        colInput.setPrefColumnCount(3);
+        rowInput.setPrefColumnCount(3);
+        colInput.setPromptText("Breite");
+        rowInput.setPromptText("Höhe");
+        Text x = new Text("x");
+        x.setStyle("-fx-font-weight:bold");
+        cropButton.setGraphic(new ImageView(new Image("/view/levelEditor/crop.png")));
+        cropInputRoot.getChildren().addAll(cropButton,colInput,x,rowInput);
+        cropInputRoot.setSpacing(5.0);
+        return cropInputRoot;
+    }
+
     private void createMap(){
         staticCanvas = new Canvas(editor.getWidth()*fieldSize,editor.getHeight()*fieldSize);
         animationCanvas = new Canvas();
@@ -105,6 +126,7 @@ public class LevelEditorView {
     }
 
     public void update(){
+        reloadMap();
         View.drawBoard(board,editor.getMap(),board.getTheme(),false);
     }
 
@@ -126,8 +148,12 @@ public class LevelEditorView {
         informationRoot.setStyle("-fx-padding:10");
         nameInput = new TextField();
         nameInput.setPromptText("Levelname");
+        HBox cropInputs = createAndGetCropInputs();
         Label goalLabel = new Label("Ziele");
-        goalLabel.setStyle("-fx-font-weight:bold");
+        Label nameLabel = new Label("Levelname");
+        Label sizeLabel = new Label("Levelgröße");
+        Group labels = new Group(goalLabel,nameLabel,sizeLabel);
+        for(Node node : labels.getChildren()) node.setStyle("-fx-font-weight:bold");
         HBox gemBox = new HBox();
         gemBox.setSpacing(5);
         HBox timeBox = new HBox();
@@ -145,11 +171,11 @@ public class LevelEditorView {
         }
 
         loadBox = new ComboBox<String>();
-        loadBox.promptTextProperty().setValue("Level");
+        loadBox.promptTextProperty().setValue("laden...");
         saveButton = new Button("Speichern");
         exitButton = new Button("Zurück zum Menü");
-        informationRoot.getChildren().addAll(nameInput, goalLabel, gemBox, timeBox,loadBox, saveButton,exitButton);
-
+        informationRoot.getChildren().addAll(nameLabel,nameInput, sizeLabel,cropInputs,
+                goalLabel, gemBox, timeBox,loadBox, saveButton,exitButton);
         rootPane.setLeft(informationRoot);
 
     }
@@ -277,6 +303,18 @@ public class LevelEditorView {
 
     public ComboBox<String> getLoadBox() {
         return loadBox;
+    }
+
+    public TextField getColInput() {
+        return colInput;
+    }
+
+    public TextField getRowInput() {
+        return rowInput;
+    }
+
+    public Button getCropButton() {
+        return cropButton;
     }
 
     private Callback<TableColumn.CellDataFeatures<Map.Entry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryProps(){
