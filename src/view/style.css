@@ -18,6 +18,9 @@
             -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);
         }
 
+
+
+
 #vboxLinks{  -fx-background-color: #020d1e;
                                      -fx-padding: 100;
                                      -fx-spacing: 10;
@@ -31,46 +34,57 @@
 }
 
 
-.levelbox{ -fx-background-color:#f4f5f7;
+.levelbox{ -fx-background-color:Transparent;
        -fx-spacing: 150;
             -fx-font-family: "Helvetica";
             -fx-font-size: 19px;
             -fx-font-weight: bold;
-            -fx-text-fill: white;
+            -fx-text-fill: #e6e8ed;
             -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);
                       }
 
 
 .hover {
--fx-background-color:#cca270;
+-fx-background-color:#ffab32;
 
 }
 
-
-.scroll-pane {
-   -fx-background-color: #fcd62a;
+.textColor{
+-fx-text-fill: #e6e8ed;
+}
+.backgorungMenuLevel{
+ -fx-background-color: #020d1e;
 }
 
 
-.dialog-pane:header{
-  -fx-background-color: yellow;
-  -fx-background-radius:10px;
-  -fx-text-fill:black;
-  -fx-font-size:15.0px;
+.scroll-pane > .viewport  { -fx-background-color: #ffab32;
+                            -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);}
+
+
+.tree-view .scroll-bar:vertical{ -fx-background-color: transparent;
+                                                                }
+
+ .tree-view:focused {
+        -fx-background-color: #FF7400;
+        -fx-focus-color : #FFCDA3;
+        -fx-control-inner-background:#FFCDA3;
+        -fx-background-insets: -1.4, 0, 1;
+        -fx-background-radius: 1.4, 0, 0;
+
+        }
+
+
+  .tree-view > .viewport{
+        -fx-background-color: YELLOW;
+
+  }
+
+
+.combo-box .list-cell
+{
+    -fx-background: white;
+    -fx-background-color:#cca270;
+    -fx-text-fill: -fx-text-base-color;
+    -fx-padding: 3 0 2 7;
+    -fx-cell-size: 1.66667em;
 }
-
-
-/**Costumization of Buttons**/
-.dialog-Pane .button{
-   -fx-background-color:black;
-   -fx-text-fill:white;
-   -fx-wrap-text: true;
-   -fx-effect: dropshadow( three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);
-   -fx-cursor:hand;
- }
-
-.dialog-pane .button:hover{
-  -fx-background-color:white;
-  -fx-text-fill:black;
-  -fx-font-weight:bold;
- }

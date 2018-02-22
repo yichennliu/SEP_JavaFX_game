@@ -1,7 +1,9 @@
 package controller;
 
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import model.game.MedalStatus;
+import view.LevelItem;
 import view.MenuView;
 import java.util.ArrayList;
 import java.util.Map;
@@ -57,17 +59,17 @@ public class MenuController {
     }
 
      private void chooseLevel() {
-        ArrayList <Button> levelButtons = menuView.getContentFrame().getListlevelButtons();
-        Button level ;
+        ArrayList <LevelItem> levelButtons = menuView.getContentFrame().getListlevelButtons();
+        LevelItem level ;
 
         for (int i=0; i<levelButtons.size();i++){
             level = levelButtons.get(i);
 
             final String path= (String) level.getUserData();
-                level.setOnAction(e -> {
+                level.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
                     this.controller.startLevel("src/json/level/"+path);
+                });
 
-            });
         }
     }
 }

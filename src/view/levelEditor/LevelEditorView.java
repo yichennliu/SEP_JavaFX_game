@@ -20,8 +20,10 @@ import model.enums.Property;
 import model.enums.Token;
 import model.levelEditor.LevelEditor;
 import view.Board;
+import view.MenuView;
 import view.View;
 
+import java.io.File;
 import java.util.Map;
 
 public class LevelEditorView {
@@ -47,12 +49,16 @@ public class LevelEditorView {
     private  Button addPropertyButton;
     private TextField propertyValueInput;
     private ComboBox<Property> selectPropertyBox;
+    private MenuView menuView;
+    private  String stylesheet;
 
     public LevelEditorView(Stage stage, LevelEditor editor){
         this.editor = editor;
         this.root = new Group();
         this.stage = stage;
         this.scene = new Scene(root);
+        stylesheet = menuView.fileToStylesheetString(new File("src/view/style.css"));
+        scene.getStylesheets().add(stylesheet);
         initContent();
         if(!stage.isShowing()) stage.show();
     }
