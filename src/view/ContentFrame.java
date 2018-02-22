@@ -321,11 +321,6 @@ public  class ContentFrame extends StackPane {
     }
 
 
-
-
-
-
-
     public Button getGameButton() {
         return gameButton;
     }

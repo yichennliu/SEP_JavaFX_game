@@ -1,5 +1,6 @@
 package model.game;
 
+import javafx.util.Pair;
 import model.enums.*;
 
 import java.util.*;
@@ -72,11 +73,23 @@ public class Level {
         }
     }
 
-    public Integer getRemainingGemsToGold() { return this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS); }
+    public Pair<Integer, Integer> getRemainingGoldTicksGems() {
+        Integer remainingTicks =  this.getTickGoals()[2] -this.getPropertyValue(Property.TICKS);
+        Integer remainingGems =  this.getGemGoals()[2]-this.getPropertyValue(Property.GEMS) ;
+        return new Pair<Integer, Integer>(remainingTicks, remainingGems);
+    }
 
-    public Integer getRemainingGemsToSilver(){ return this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS); }
+    public Pair<Integer, Integer> getRemainingSilverTicksGems() {
+        Integer remainingTicks =  this.getTickGoals()[1]- this.getPropertyValue(Property.TICKS);
+        Integer remainingGems = this.getGemGoals()[1]-this.getPropertyValue(Property.GEMS) ;
+        return new Pair<Integer, Integer>(remainingTicks, remainingGems);
+    }
 
-    public Integer getRemainingGemsToBronze(){ return this.getGemGoals()[2]- this.getPropertyValue(Property.GEMS); }
+    public Pair<Integer, Integer> getRemainingBronzeTicksGems() {
+        Integer remainingTicks = this.getTickGoals()[0]-this.getPropertyValue(Property.TICKS);
+        Integer remainingGems =  this.getGemGoals()[0]-this.getPropertyValue(Property.GEMS);
+        return new Pair<Integer, Integer>(remainingTicks, remainingGems);
+    }
 
     /**
      * @return current medal, or null
