@@ -35,9 +35,8 @@ public class MenuView {
         contentFrame = new ContentFrame(width,height,this);
         VBox vMenu= new VBox(contentFrame);
         this.levelButtons = new ArrayList<>();
-        root.getChildren().addAll(Vmenu);
-        //this.sceneMenu = new Scene(root);
         root.getChildren().addAll(vMenu);
+        //this.sceneMenu = new Scene(root);
         if (!stage.isShowing()) stage.show();
         this.stylesheet = fileToStylesheetString(new File("src/view/style.css"));
         sceneMenu.getStylesheets().add(stylesheet);

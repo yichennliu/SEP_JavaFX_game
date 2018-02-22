@@ -45,8 +45,9 @@ public class MenuController {
     public void setMenuView(MenuView menuView) {
         this.menuView = menuView;
         this.addMenuViewComponents();
-
     }
+
+
 
     private void addMenuViewComponents() {
         menuView.getContentFrame().getGameButton().setOnAction(e -> {
@@ -55,7 +56,6 @@ public class MenuController {
 
         menuView.getContentFrame().getLevelEditorButton().setOnAction(e -> {
             this.controller.startLevelEditor();
-
         });
 
         menuView.getContentFrame().getThemeEditorButton().setOnAction(e -> {

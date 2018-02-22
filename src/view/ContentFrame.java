@@ -41,13 +41,12 @@ public  class ContentFrame extends StackPane {
     private Button helpbutton;  private Button close;
     private Button levelEditorButton;
     private Boolean showSavebutton;
-    private VBox levelVbox,helpVbox,saveVbox;
+    private VBox levelVbox,helpVbox,savedGameVbox,menuVboxlinks;
     private ArrayList<LevelItem> listlevelButtons;
+    private ArrayList<Button> listSavedGameButtons;
     private Scene scene;
     private MenuView menuView;
     private ScrollPane levelItemScrollPane,helpVboxScrollPane;
-
-
     private double widthLinks,heightLinks ;
     private int buttonfactor=4;
     private Group root;
@@ -80,22 +79,11 @@ public  class ContentFrame extends StackPane {
         this.close = createButton("C L O S E ");
         this.levelEditorButton = createButton("L E V E L - E D I T O R");
         setAlignment(Pos.CENTER);
-        VBox menuVboxlinks = new VBox(15, gameButton, levelButtons,loadtheme, themeEditorButton, levelEditorButton, helpbutton, close);
+         menuVboxlinks = new VBox(15, gameButton, levelButtons,loadtheme, themeEditorButton, levelEditorButton, helpbutton, close);
         menuVboxlinks.setMinSize(widthLinks/2,heightLinks);
         menuVboxlinks.setId("vboxLinks");
-        setHover(gameButton);
-        setHover(levelButtons);
-        setHover(themeEditorButton);
-        setHover(helpbutton);
-        setHover(close);
-        setHover(loadtheme);
-        setHover(levelEditorButton);
-        this.levelEditorButton = createButton("L E V E L E D I T O R");
         this.saveButton = createButton("S A V E D  G A M E ");
         this.setAlignment(Pos.CENTER);
-        this.menuVboxlinks = new VBox(15, gameButton, levelButtons, themeEditorButton, levelEditorButton, helpbutton, close);
-        this.menuVboxlinks.setMinSize(widthLinks/2,heightLinks);
-        this.menuVboxlinks.setId("vboxLinks");
         this.setHover(gameButton);
         this.setHover(levelButtons);
         this.setHover(themeEditorButton);
@@ -105,12 +93,12 @@ public  class ContentFrame extends StackPane {
         this.setHover(saveButton);
 
         this.scene= new Scene(menuVboxlinks);
-        this.listlevelButtons = new ArrayList<Button>();
         this.listSavedGameButtons = new ArrayList<Button>();
+        this.listlevelButtons = new ArrayList<LevelItem>();
         this.levelVbox = createLevelMenuItems();
         this.levelVbox.getStyleClass().add("levelbox");
         this.levelItemScrollPane = createscrollPane(levelVbox);
-        this.listlevelButtons = new ArrayList<LevelItem>();
+
         levelVbox = createLevelMenuItems();
         levelVbox.getStyleClass().add("levelbox");
         levelItemScrollPane = createscrollPane(levelVbox);
@@ -206,7 +194,7 @@ public  class ContentFrame extends StackPane {
 
             LevelItem levelItem = new LevelItem( level.getName(),levelText,snapshotview,path);
             listlevelButtons.add(levelItem);
-            levelVbox.getChildren().add( levelItem);
+            levelVbox.getChildren().add(levelItem);
         }
 
         return levelVbox;
@@ -286,7 +274,6 @@ public  class ContentFrame extends StackPane {
       //  LevelItem helptest = new LevelItem("shortcut","anhalten",keyboardImg," ");
         helpVbox = new VBox(instruction,keyboardImg,escape);
         helpVbox.setAlignment(Pos.CENTER);
-        helpVbox.setBackground(new Background(new BackgroundFill(Color.BEIGE, CornerRadii.EMPTY, Insets.EMPTY)));
         helpVbox.setTranslateX(widthLinks/8);
         helpVbox.setTranslateY(100);
 
