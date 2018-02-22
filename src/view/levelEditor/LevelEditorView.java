@@ -40,6 +40,7 @@ public class LevelEditorView {
     private double fieldSize = 20.0;
     private Button saveButton;
     private Button exitButton;
+    private ComboBox<String> loadBox;
     private TextField nameInput;
     private TableView<Map.Entry<Property,Integer>> tableView;
     private ToggleGroup modeButtons;
@@ -143,9 +144,11 @@ public class LevelEditorView {
             timeBox.getChildren().add(entry);
         }
 
+        loadBox = new ComboBox<String>();
+        loadBox.promptTextProperty().setValue("Level");
         saveButton = new Button("Speichern");
         exitButton = new Button("Zurück zum Menü");
-        informationRoot.getChildren().addAll(nameInput, goalLabel, gemBox, timeBox, saveButton,exitButton);
+        informationRoot.getChildren().addAll(nameInput, goalLabel, gemBox, timeBox,loadBox, saveButton,exitButton);
 
         rootPane.setLeft(informationRoot);
 
@@ -270,6 +273,10 @@ public class LevelEditorView {
 
     public TableView getTableView(){
         return  this.tableView;
+    }
+
+    public ComboBox<String> getLoadBox() {
+        return loadBox;
     }
 
     private Callback<TableColumn.CellDataFeatures<Map.Entry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryProps(){

@@ -1,11 +1,13 @@
 package controller;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import main.LevelFactory;
 import model.enums.Property;
@@ -14,6 +16,8 @@ import model.game.Feld;
 import model.game.Level;
 import model.levelEditor.LevelEditor;
 import view.levelEditor.LevelEditorView;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,11 +39,9 @@ public class LevelEditorController {
         this.levelEditorView = levelEditorView;
 
         initInputEvents();
-        loadLevel("src/json/level/bewegung.json");
+        reloadLevelDir();
 
     }
-
-
 
     private void exit(){
         this.controller.startMenu();
@@ -123,6 +125,12 @@ public class LevelEditorController {
             this.exit();
         });
 
+        levelEditorView.getLoadBox().getSelectionModel().selectedItemProperty().addListener( (a,b,c) -> {
+            if(c!=null){
+                loadLevel("src/json/level/"+c);
+            }
+        });
+
         ToggleGroup buttons = this.levelEditorView.getHeaderButtons();
         buttons.selectedToggleProperty().addListener((a,b,c) -> {
             this.editor.setCurrentToken((Token) c.getUserData());
@@ -144,8 +152,12 @@ public class LevelEditorController {
         });
         this.levelEditorView.getSaveButton().setOnAction(e-> {
             Level level = this.editor.getLevel();
+            String path = "src/json/level/"+level.getName()+".json";
+            File file = new File(path);
             try {
-                LevelFactory.exportLevel(level,"src/json/level/testExport.json");
+                if(file.exists() && !showAlert()) return;
+                LevelFactory.exportLevel(level,path);
+
             }
             catch(IOException ioException){
                 System.out.println("Fehler beim Export " + ioException.getMessage());
@@ -171,6 +183,20 @@ public class LevelEditorController {
                 newMap[row][col] = newFeld;
             }
         }
+    }
+
+    private void reloadLevelDir(){
+        levelEditorView.getLoadBox().setItems(FXCollections.observableArrayList((new File("src/json/level").list())));
+    }
+
+    private boolean showAlert() {
+        ButtonType yes = new ButtonType("Überschreiben", ButtonBar.ButtonData.YES);
+        ButtonType no = new ButtonType("Abbrechen", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(Alert.AlertType.WARNING,"Soll die bestehende Datei überschrieben werden?",
+                yes,no);
+        alert.setTitle("Überschreiben?");
+        alert.setHeaderText("Datei schon vorhanden");
+        return alert.showAndWait().get().equals(yes);
     }
 
     private void brushFeld(int column, int row){
