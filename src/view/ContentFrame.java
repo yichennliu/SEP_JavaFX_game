@@ -69,19 +69,15 @@ public  class ContentFrame extends StackPane {
         this.menuView = menuView;
         this.gameButton = createButton("S T A R T");
         this.levelButtons = createButton("L E V E L S   ");
-        this.themeEditorButton = createButton("T H E M E ");
+        this.themeEditorButton = createButton(" L O A D T H E M E ");
         this.helpbutton = createButton("H E L P");
         this.close = createButton("C L O S E ");
         this.continueButton = createButton("C O N T I N U E");
-        this.saveButton = createButton("S A V E ");
+        this.saveButton = createButton("S A V E  G A M E ");
         this.levelEditorButton = createButton("L E V E L E D I T O R");
         setAlignment(Pos.CENTER);
 
-        VBox menuGamePause = new VBox(15, saveButton, continueButton); // für einbindung im spiel
-        menuGamePause.setVisible(false); // für einbindung im spiel
-
-        VBox menuGameMain = new VBox(15, gameButton, levelButtons, themeEditorButton, levelEditorButton, helpbutton, close);
-        VBox menuVboxlinks = new VBox(menuGamePause,menuGameMain); // für einbindung im spiel
+        VBox menuVboxlinks = new VBox(15, gameButton, levelButtons,saveButton, themeEditorButton, levelEditorButton, helpbutton, close); // für einbindung im spiel
 
         menuVboxlinks.setMinSize(widthLinks/2,heightLinks);
         menuVboxlinks.setId("vboxLinks");

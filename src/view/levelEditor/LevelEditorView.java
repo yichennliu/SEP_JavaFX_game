@@ -3,7 +3,6 @@ package view.levelEditor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -19,15 +18,11 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.enums.Property;
 import model.enums.Token;
-import model.game.Feld;
 import model.levelEditor.LevelEditor;
 import view.Board;
 import view.View;
 
-import javax.swing.*;
-import java.util.Collections;
 import java.util.Map;
-import java.util.Observable;
 
 public class LevelEditorView {
 
@@ -49,6 +44,9 @@ public class LevelEditorView {
     private TextField nameInput;
     private TableView<Map.Entry<Property,Integer>> tableView;
     private ToggleGroup modeButtons;
+    private  Button addPropertyButton;
+    private TextField propertyValueInput;
+    private ComboBox<Property> selectPropertyBox;
 
     public LevelEditorView(Stage stage, LevelEditor editor){
         this.editor = editor;
@@ -83,7 +81,6 @@ public class LevelEditorView {
             button.setUserData(t);
             button.setToggleGroup(headerButtons);
         }
-
             modeButtons = new ToggleGroup();
             HBox buttonBox = new HBox();
             ToggleButton selectMode = new ToggleButton();
@@ -96,7 +93,6 @@ public class LevelEditorView {
             modeButtons.setUserData(LevelEditor.Mode.SELECT);
             modeButtons.selectToggle(brushMode);
             header.getChildren().add(buttonBox);
-
     }
 
     private void createMap(){
@@ -160,22 +156,26 @@ public class LevelEditorView {
 
     public void selectFeld(int column, int row){
 
-        Map<Property,Integer> map = editor.getLevel().getFeld(column,row).getProperties();
-        ObservableList<Map.Entry<Property,Integer>> list = FXCollections.observableArrayList();
-        for(Map.Entry<Property,Integer> entry:map.entrySet()){
-            list.add(entry);
+        Map<Property,Integer> map;
+        try {
+            map = editor.getLevel().getFeld(column,row).getProperties();
+            ObservableList<Map.Entry<Property,Integer>> list = FXCollections.observableArrayList();
+            for(Map.Entry<Property,Integer> entry : map.entrySet()){
+                list.add(entry);
+            }
+            tableView.setItems(list);
         }
-        tableView.setItems(list);
+        catch(ClassCastException e){
+            e.printStackTrace();
+            tableView.setItems(null);
+        }
+
     }
 
     private void initPropertyBox(){
         VBox propertyBoxRoot = new VBox();
         ObservableList<Map.Entry<Property,Integer>> list = FXCollections.observableArrayList();
-
-        list.addListener((ListChangeListener.Change<? extends Map.Entry<Property,Integer>> e) -> {
-            System.out.println(e);
-        });
-        tableView= new TableView();
+        tableView = new TableView();
         tableView.setEditable(true);
         tableView.setItems(list);
 
@@ -200,6 +200,18 @@ public class LevelEditorView {
 
         tableView.getColumns().setAll(propertyName,propertyValue);
         propertyBoxRoot.getChildren().add(tableView);
+
+        HBox addButtons = new HBox();
+        selectPropertyBox = new ComboBox<Property>();
+        ObservableList<Property> propertyList = FXCollections.observableArrayList();
+        for(Property prop: Property.values()) if(!prop.isGlobal()) propertyList.add(prop);
+        selectPropertyBox.setItems(propertyList);
+        selectPropertyBox.setPromptText("Property");
+        propertyValueInput = new TextField();
+        propertyValueInput.setPrefColumnCount(3);
+        addPropertyButton = new Button("Hinzufügen");
+        addButtons.getChildren().addAll(selectPropertyBox,propertyValueInput,addPropertyButton);
+        propertyBoxRoot.getChildren().add(addButtons);
         rootPane.setRight(propertyBoxRoot);
 
     }
@@ -245,6 +257,22 @@ public class LevelEditorView {
 
     public ToggleGroup getModeButtons() {
         return modeButtons;
+    }
+
+    public Button getAddPropertyButton() {
+        return addPropertyButton;
+    }
+
+    public TextField getPropertyValueInput() {
+        return propertyValueInput;
+    }
+
+    public ComboBox getSelectPropertyBox() {
+        return selectPropertyBox;
+    }
+
+    public TableView getTableView(){
+        return  this.tableView;
     }
 
     public ComboBox<String> getLoadBox() {

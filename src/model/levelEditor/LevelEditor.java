@@ -100,7 +100,6 @@ public class LevelEditor {
     public void setMap(Feld[][] map) {
         this.map = map;
         this.level.setMap(map);
-
     }
 
     public Theme getTheme() {
