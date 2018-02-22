@@ -2,9 +2,8 @@ package model.game;
 
 
 import model.enums.Property;
-
 import java.util.Map;
-import java.util.Set;
+
 
 public class RuleElementOriginal {
     private TokenMatcher token;

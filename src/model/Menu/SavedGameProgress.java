@@ -43,6 +43,35 @@ public class SavedGameProgress {
        return savedGameImgaes;
     }
 
+    public String[] getListofMedalStatus(){
+        File dir = new File("src/json/savegame");
+        return dir.list();
+    }
+
+
+
+    public ArrayList<ImageView> getSavedMedalImages(){
+
+        Theme theme = null;
+
+        ArrayList<ImageView> savedMedalImgaes = new ArrayList<>();
+        for (String path : getListofGameJson()) {
+            Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/savegame/"+path));
+            ImageView snapshotview = new ImageView(snapshot);
+            savedMedalImgaes.add(snapshotview);
+        }
+
+        return savedMedalImgaes;
+
+    }
+
+
+
+
+
+
+
+
 
 
 
