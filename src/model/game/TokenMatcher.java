@@ -13,6 +13,7 @@ public class TokenMatcher {
     public TokenMatcher() {
     }
 
+
     /**
      * Match one of the given tokens
      *
@@ -36,7 +37,10 @@ public class TokenMatcher {
     }
 
     public boolean matches(Token token) {
-        return (tokens==null) ? true : (tokens.contains(token));
+        if (this.tokens == null) {
+            return true;
+        }
+        return this.tokens.contains(token);
     }
 
     /**
