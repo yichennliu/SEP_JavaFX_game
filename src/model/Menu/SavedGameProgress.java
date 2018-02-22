@@ -17,6 +17,7 @@ public class SavedGameProgress {
     private GameController gameController;
     private MenuController meunuController;
     private Level level;
+    private Image savedGameImages;
 
     public SavedGameProgress(Level level, GameController gameController, MenuController menuController){
         this.gameController = gameController;
