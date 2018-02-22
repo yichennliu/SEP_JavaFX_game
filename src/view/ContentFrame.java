@@ -129,15 +129,18 @@ public  class ContentFrame extends StackPane {
             public void handle(ActionEvent event) {
                 if(helpVboxScrollPane.isVisible()){
                     helpVboxScrollPane.setVisible(false);
-
                 }
                 else{ helpVboxScrollPane.setVisible(true);
-                levelItemScrollPane.setVisible(false);}
+                    levelItemScrollPane.setVisible(false);
+                }
             }
 
         });
 
-        this.getChildren().addAll(menuVboxlinks, levelItemScrollPane,helpVboxScrollPane);
+        GamePreview preview = new GamePreview(300,300,10);
+
+        this.getChildren().addAll(menuVboxlinks, preview);
+        preview.playLevel(LevelFactory.importLevel("src/json/level/bewegung.json"));
     }
 
 

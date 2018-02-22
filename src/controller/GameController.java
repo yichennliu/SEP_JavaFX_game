@@ -52,7 +52,6 @@ public class GameController {
         this.robot = new Robot(level, 5);
         this.convertGameModus();
         this.addDragEvent();
-        this.countDown();
         this.addPauseResumeGameEvents();
     }
 
@@ -61,13 +60,12 @@ public class GameController {
     }
 
     public void update() {
-        this.countDown();
         this.addDirectionEvents();
     }
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
-            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
+            gameView.getTimerLabel().setText((level.getPropertyValue(Property.TICKS).doubleValue()/5.0)+"");
             if (robotActive) this.level.setInputDirection(robot.getNextMove());
             boolean killedPre;
             boolean killedMain;
@@ -101,39 +99,6 @@ public class GameController {
 
     }
 
-    private void countDown() {
-        Label countDownLabel = this.gameView.getTimerLabel();
-        final Integer startSecond = this.level.getTickGoals()[0] / 5;
-        this.timer = new Timeline();
-        timer.setCycleCount(Timeline.INDEFINITE);
-        if (timer != null) {
-            timer.stop();
-
-        }
-
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
-            int second = startSecond;
-
-            @Override
-            public void handle(ActionEvent event) {
-                second--;
-                countDownLabel.setText("Time Left: " + second);
-                countDownLabel.setTextFill(Color.WHITE);
-
-                if (second <= 0) {
-                    timer.stop();
-                }
-
-                if (second <= 10) {
-                    countDownLabel.setTextFill(Color.RED);
-                }
-
-            }
-        });
-
-        timer.getKeyFrames().add(keyFrame);
-        timer.playFromStart();
-    }
 
     public GameView getGameView() {
         return gameView;

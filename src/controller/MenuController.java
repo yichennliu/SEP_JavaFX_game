@@ -43,7 +43,6 @@ public class MenuController {
     public void setMenuView(MenuView menuView) {
         this.menuView = menuView;
         this.addMenuViewComponents();
-
     }
 
     private void addMenuViewComponents() {
@@ -80,7 +79,7 @@ public class MenuController {
 
             final String path= (String) standardLevel.getUserData();
                 standardLevel.setOnAction(e -> {
-                    this.controller.startLevel("src/json/standardLevel/"+path);
+                    this.controller.startLevel("src/json/level/"+path);
 
             });
         }

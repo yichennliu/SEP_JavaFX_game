@@ -30,7 +30,7 @@ public class ThemeEditorController {
     private ThemeEditorView themeEditorView;
     private Controller menuController;
     private Theme theme;
-    private File initialDirImage = new File("src/");
+    private File initialDirImage = new File("src/view");
     private boolean changes;
 
     public ThemeEditorController(ThemeEditorView view, Controller menuController) {
