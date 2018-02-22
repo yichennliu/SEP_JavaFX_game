@@ -291,28 +291,26 @@ public  class ContentFrame extends StackPane {
     }
 
 
-    private VBox createSaveGame(boolean show){
-
-       this.showSavebutton= show;
-       Label noSaveInformation = new Label(" TO SAVE YOUR GAME, YOU HAVE TO PLAY FIRST");
+    private VBox createSaveGame(Button button){
+        this.saveButton=button;
         Label SaveInformation = new Label("YOU CAN NOW SAVE YOUR GAME ");
 
+            saveVbox.getChildren().addAll(SaveInformation);
 
 
-        if(show) {
-            this.saveButton = createButton("S A V E  G A M E ");
-            saveVbox.getChildren().addAll(SaveInformation,saveButton);
-
-        }
-
-        else{
-            saveVbox.getChildren().addAll(noSaveInformation);
-
-        }
 
         return saveVbox;
     }
 
+    
+    private Button createSaveGameButton(boolean show){
+
+        this.showSavebutton= show;
+        if(show)
+            this.saveButton = createButton("S A V E  G A M E ");
+
+        return saveButton;
+    }
 
 
     public void doHover(Button button){
