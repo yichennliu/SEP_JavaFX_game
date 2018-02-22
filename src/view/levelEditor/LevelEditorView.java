@@ -97,8 +97,8 @@ public class LevelEditorView {
     private void createMap(){
         staticCanvas = new Canvas(editor.getWidth()*fieldSize,editor.getHeight()*fieldSize);
         animationCanvas = new Canvas();
-        animationCanvas.widthProperty().bindBidirectional(staticCanvas.widthProperty());
-        animationCanvas.heightProperty().bindBidirectional(staticCanvas.heightProperty());
+        animationCanvas.widthProperty().bind(staticCanvas.widthProperty());
+        animationCanvas.heightProperty().bind(staticCanvas.heightProperty());
         this.board = new Board(staticCanvas,animationCanvas,editor.getMap(),editor.getTheme(),fieldSize);
         this.canvasGroup = new Group(animationCanvas,staticCanvas);
     }
@@ -282,5 +282,8 @@ public class LevelEditorView {
 
     public void reloadMap() {
         this.board = new Board(staticCanvas,animationCanvas,editor.getMap(),editor.getTheme(),fieldSize);
+        staticCanvas.setWidth(editor.getWidth()*this.fieldSize);
+        staticCanvas.setHeight(editor.getHeight()*this.fieldSize);
+
     }
 }
