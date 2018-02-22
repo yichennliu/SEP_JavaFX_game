@@ -14,6 +14,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.enums.Property;
@@ -44,6 +45,7 @@ public class LevelEditorView {
     private double fieldSize = 20.0;
     private Button saveButton;
     private Button exitButton;
+    private ComboBox<String> loadBox;
     private TextField nameInput;
     private TableView<Map.Entry<Property,Integer>> tableView;
     private ToggleGroup modeButtons;
@@ -146,9 +148,11 @@ public class LevelEditorView {
             timeBox.getChildren().add(entry);
         }
 
+        loadBox = new ComboBox<String>();
+        loadBox.promptTextProperty().setValue("Level");
         saveButton = new Button("Speichern");
         exitButton = new Button("Zurück zum Menü");
-        informationRoot.getChildren().addAll(nameInput, goalLabel, gemBox, timeBox, saveButton,exitButton);
+        informationRoot.getChildren().addAll(nameInput, goalLabel, gemBox, timeBox,loadBox, saveButton,exitButton);
 
         rootPane.setLeft(informationRoot);
 
@@ -241,6 +245,10 @@ public class LevelEditorView {
 
     public ToggleGroup getModeButtons() {
         return modeButtons;
+    }
+
+    public ComboBox<String> getLoadBox() {
+        return loadBox;
     }
 
     private Callback<TableColumn.CellDataFeatures<Map.Entry<Property,Integer>,String>,ObservableValue<String>> getCellFactoryProps(){
