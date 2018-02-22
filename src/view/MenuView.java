@@ -28,16 +28,16 @@ public class MenuView {
         this.stage = stage;
         root = new BorderPane();
         this.sceneMenu = new Scene(root);
-         width= stage.getWidth();
-         height= stage.getHeight();
+        this.width= stage.getWidth();
+        this.height= stage.getHeight();
         this.medalStatuses = medalStatuses;
         contentFrame = new ContentFrame(width,height,this);
-        VBox Vmenu= new VBox(contentFrame);
+        VBox vMenu= new VBox(contentFrame);
         this.levelButtons = new ArrayList<>();
         //this.sceneMenu = new Scene(root);
-        root.getChildren().addAll(Vmenu);
+        root.getChildren().addAll(vMenu);
         if (!stage.isShowing()) stage.show();
-        stylesheet = fileToStylesheetString(new File("src/view/style.css"));
+        this.stylesheet = fileToStylesheetString(new File("src/view/style.css"));
         sceneMenu.getStylesheets().add(stylesheet);
         root.getStyleClass().add("borderPane");
 
@@ -67,11 +67,6 @@ public class MenuView {
 
 
     }
-
-
-
-
-
 
 }
 

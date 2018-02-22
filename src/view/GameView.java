@@ -85,7 +85,7 @@ public class GameView {
         this.showCurrentSandUhr();
         this.showCollectedGems();
         this.createDiamondIcons();
-        timeRewardInfo.getChildren().addAll(timerIcons, timer, gemIcon, currentGems, currentMedal, restGem);
+        timeRewardInfo.getChildren().addAll(gemIcon, currentGems, currentMedal, restGem, timerIcons, timer);
         root.getChildren().addAll(timeRewardInfo);
         this.board = new Board(staticCanvas, animatedCanvas, level.getMap(), theme, fieldSize);
         this.update();
@@ -240,7 +240,7 @@ public class GameView {
                 level.getPropertyValue(Property.GEMS) < level.getGemGoals()[2] && level.getPropertyValue(Property.TICKS) >= level.getTickGoals()[0]) {
 
             restGem.setTextFill(Color.WHITE);
-            restGem.setText("No chance to get Medals!");
+            restGem.setText("No chance to get a Medal!");
         }
 
         if (level.getPropertyValue(Property.GEMS) >= level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS) <= level.getTickGoals()[2]) {
@@ -300,7 +300,7 @@ public class GameView {
 
     public void createPauseGameIcon() {
 
-        Image pauseIcon = new Image(GameView.class.getResourceAsStream("images/Paused.png"));
+        final Image pauseIcon = new Image(GameView.class.getResourceAsStream("images/Paused.png"));
         this.gamePauseIcon.setImage(pauseIcon);
         this.gamePauseIcon.setFitHeight(30);
         this.gamePauseIcon.setFitWidth(30);
