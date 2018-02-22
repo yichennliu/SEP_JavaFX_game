@@ -265,10 +265,12 @@ public class GameView {
         }
 
         if (this.level.getCurrentMedal() == Medal.GOLD) {
-            restGem.setText("You've got gold!");
+            restGem.setText("You've got gold! Now exit to win!");
+            int currentSec = this.level.getPropertyValue(Property.TICKS)/5;
+            int maxSec = this.level.getTickGoals()[0]/5;
+            restTicks.setText("Time Left to win: "+ (maxSec-currentSec));
             this.setCurrentMedal(Medal.GOLD);
         }
-
 
     }
 

@@ -329,7 +329,6 @@ public  class ContentFrame extends StackPane {
     }
     public Button getLevelEditorButton() {return levelEditorButton;}
 
-
     public Button getSaveButton() {return this.saveButton;}
 
     public VBox getMenuVboxlinks() {return this.menuVboxlinks; }

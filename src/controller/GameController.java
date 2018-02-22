@@ -35,7 +35,6 @@ public class GameController {
     private GameView gameView;
     private Level level;
     private Timeline timeline;
-    private Timeline timer;
     private EscapeButtonHandler handler;
     private AI robot;
     private boolean robotActive;
@@ -105,13 +104,21 @@ public class GameController {
         int currentSec = (currentTick/5);
         int timeLeft = maxSecs - currentSec;
         timer.setText("Time Left: "+timeLeft);
-        timer.setTextFill(Color.WHITE);
+
+        if(timeLeft<=10){
+            timer.setTextFill(Color.RED);
+        } else{
+            timer.setTextFill(Color.WHITE);
+        }
+
     }
 
     private void updateSandUhr(Integer currentTick){
-        Integer maxSec = this.level.getTickGoals()[0]/5;
-        int currentSec = (currentTick/5);
-        if(currentSec/maxSec >=0.3){
+        double maxSec = (double) this.level.getTickGoals()[0]/5;
+        double currentSec = (double) currentTick/5;
+        double timePast = currentSec/maxSec;
+
+        if(timePast >=0.3){
             this.gameView.setCurrentSandUhr(SandUhr.YELLOW);
         } else {
             this.gameView.setCurrentSandUhr(SandUhr.GREEN);
@@ -165,12 +172,10 @@ public class GameController {
                 if (timeline != null && timeline.getStatus().equals(Animation.Status.RUNNING)) {
                     this.gameView.createPauseGameIcon();
                     timeline.stop();
-                    timer.stop();
 
                 } else if (timeline != null && timeline.getStatus() == Animation.Status.STOPPED) {
                     this.gameView.removePauseGameIcon();
                     timeline.play();
-                    timer.play();
                 }
             }
         });
@@ -366,7 +371,6 @@ public class GameController {
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
-                        timer.playFromStart();
                     }
                 } else if (result.get() == alert.getSaveExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
@@ -383,14 +387,12 @@ public class GameController {
                     GameController.this.controller.startLevel(level.getJsonPath());
                     alert.close();
                     timeline.playFromStart();
-                    timer.playFromStart();
 
 
                 } else if (result.get() == alert.getCancelButton()) {
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
-                        timer.play();
                     }
                 }
             }
