@@ -55,6 +55,19 @@ public  class ContentFrame extends StackPane {
     private final Font header = Font.font("", FontWeight.BOLD, 28);
 
 
+    public Button getLevelButtons() {
+        return levelButtons;
+    }
+
+    public Button getClose() {
+        return close;
+    }
+
+    public Boolean getShowSavebutton() {
+        return showSavebutton;
+    }
+
+
     public ContentFrame(double widthLinks, double heightLinks, MenuView menuView) {
         this.widthLinks=widthLinks;
         this.heightLinks=heightLinks;
@@ -77,8 +90,26 @@ public  class ContentFrame extends StackPane {
         setHover(close);
         setHover(loadtheme);
         setHover(levelEditorButton);
+        this.levelEditorButton = createButton("L E V E L E D I T O R");
+        this.saveButton = createButton("S A V E D  G A M E ");
+        this.setAlignment(Pos.CENTER);
+        this.menuVboxlinks = new VBox(15, gameButton, levelButtons, themeEditorButton, levelEditorButton, helpbutton, close);
+        this.menuVboxlinks.setMinSize(widthLinks/2,heightLinks);
+        this.menuVboxlinks.setId("vboxLinks");
+        this.setHover(gameButton);
+        this.setHover(levelButtons);
+        this.setHover(themeEditorButton);
+        this.setHover(helpbutton);
+        this.setHover(close);
+        this.setHover(levelEditorButton);
+        this.setHover(saveButton);
 
         this.scene= new Scene(menuVboxlinks);
+        this.listlevelButtons = new ArrayList<Button>();
+        this.listSavedGameButtons = new ArrayList<Button>();
+        this.levelVbox = createLevelMenuItems();
+        this.levelVbox.getStyleClass().add("levelbox");
+        this.levelItemScrollPane = createscrollPane(levelVbox);
         this.listlevelButtons = new ArrayList<LevelItem>();
         levelVbox = createLevelMenuItems();
         levelVbox.getStyleClass().add("levelbox");
@@ -131,13 +162,15 @@ public  class ContentFrame extends StackPane {
     }
 
 
-
-    /////////////ende konstruktor
     private String[] scanLevelDirectory() {
         File dir = new File("src/json/level");
         return dir.list();
     }
 
+    private String[] scanSavedGameDirectory(){
+        File dir = new File("src/json/savegame");
+        return dir.list();
+    }
 
     public Button createButton(String titel ) {
        Button button= new Button(titel);
@@ -149,6 +182,9 @@ public  class ContentFrame extends StackPane {
         return listlevelButtons;
     }
 
+    public ArrayList getListSavedGameButtons(){
+        return listSavedGameButtons;
+    }
     private VBox createLevelMenuItems(){
 
         levelVbox = new VBox(5 );
@@ -175,7 +211,32 @@ public  class ContentFrame extends StackPane {
 
         return levelVbox;
 
-    }//ende create levele
+    }
+
+
+    private VBox createSavedGameItems(){
+
+        savedGameVbox = new VBox(5);
+        savedGameVbox.setAlignment(Pos.TOP_CENTER);
+        Theme theme = null;
+
+        try {
+            theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+        }
+        catch(Exception e) {
+            System.out.println("Theme not found / corrupt file");
+        }
+
+        for (String path : scanSavedGameDirectory()) {
+            Image snapShot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/savegame/"+path));
+            Level level = LevelFactory.importLevel("src/json/savegame/"+path);
+            ImageView snapShotView = new ImageView(snapShot);
+            savedGameVbox.getChildren().add(0, new LevelItem(level.getName(),null,snapShotView,path));
+        }
+
+        return levelVbox;
+    }
+
 
     /**
      * @param path Level path
@@ -201,7 +262,7 @@ public  class ContentFrame extends StackPane {
     private VBox createHelpMenuItem(){
         Image keyboardImage = new Image ("view/images/tastatur.png");
         ImageView keyboardImg= new ImageView(keyboardImage);
-        LevelItem kasjhd= new LevelItem("lkdj","akd",keyboardImg,"");
+
 
         String instructions =
                 "\nThe official Boulder Dash games started in 1984 with the original home computer title,\n" +
@@ -223,35 +284,16 @@ public  class ContentFrame extends StackPane {
         escape.setFont(header);
         instruction.setFont(FONT);
       //  LevelItem helptest = new LevelItem("shortcut","anhalten",keyboardImg," ");
-//        helpVbox = new VBox(instruction,keyboardImg,escape,kasjhd);
-//        helpVbox.setAlignment(Pos.CENTER);
-     //   helpVbox.setBackground(new Background(new BackgroundFill(Color.CORAL, CornerRadii.EMPTY, Insets.EMPTY)));
-       // helpVbox.setTranslateX(widthLinks/8);
-       // helpVbox.setTranslateY(100);
+        helpVbox = new VBox(instruction,keyboardImg,escape);
+        helpVbox.setAlignment(Pos.CENTER);
+        helpVbox.setBackground(new Background(new BackgroundFill(Color.BEIGE, CornerRadii.EMPTY, Insets.EMPTY)));
+        helpVbox.setTranslateX(widthLinks/8);
+        helpVbox.setTranslateY(100);
 
 
         return helpVbox;
     }
 
-
-    private VBox createSaveGame(Button button){
-        this.saveButton=button;
-        Label SaveInformation = new Label("YOU CAN NOW SAVE YOUR GAME ");
-
-            saveVbox.getChildren().addAll(SaveInformation);
-
-        return saveVbox;
-    }
-
-
-    private Button createSaveGameButton(boolean show){
-
-        this.showSavebutton= show;
-        if(show)
-            this.saveButton = createButton("S A V E  G A M E ");
-
-        return saveButton;
-    }
 
 
     public void doHover(Button button){
@@ -304,6 +346,11 @@ public  class ContentFrame extends StackPane {
         return themeEditorButton;
     }
     public Button getLevelEditorButton() {return levelEditorButton;}
+
+
+    public Button getSaveButton() {return this.saveButton;}
+
+    public VBox getMenuVboxlinks() {return this.menuVboxlinks; }
 
 
 

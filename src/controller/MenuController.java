@@ -1,6 +1,8 @@
 package controller;
 
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import model.Menu.SavedGameProgress;
 import javafx.scene.input.MouseEvent;
 import model.game.MedalStatus;
 import view.LevelItem;
@@ -14,17 +16,21 @@ public class MenuController {
     private Map<String, MedalStatus> medalStatuses;
     private Controller controller;
 
+
     public MenuController(MenuView menuView, Map<String, MedalStatus> medalStatuses, Controller controller){
         this.menuView = menuView;
         this.medalStatuses = medalStatuses;
         this.controller = controller;
         this.addMenuViewComponents();
         this.chooseLevel();
+        this.chooseSavedGame();
 
     }
 
     public void update(){
         this.chooseLevel();
+        this.chooseSavedGame();
+        this.setSavedGameButton();
     }
 
     /**
@@ -58,6 +64,15 @@ public class MenuController {
 
     }
 
+
+    private void setSavedGameButton(){
+        Button savedGameButton = this.menuView.getContentFrame().getSaveButton();
+        VBox menuVbox = this.menuView.getContentFrame().getMenuVboxlinks();
+
+        menuVbox.getChildren().add(savedGameButton);
+
+    }
+
      private void chooseLevel() {
         ArrayList <LevelItem> levelButtons = menuView.getContentFrame().getListlevelButtons();
         LevelItem level ;
@@ -72,4 +87,19 @@ public class MenuController {
 
         }
     }
+
+    private void chooseSavedGame() {
+        ArrayList<Button> savedGames = this.menuView.getContentFrame().getListSavedGameButtons();
+        Button savedLevel;
+
+        for(int i=0; i<savedGames.size();i++){
+            savedLevel = savedGames.get(i);
+
+           final String path = (String) savedLevel.getUserData();
+            savedLevel.setOnAction(e-> {
+                this.controller.startLevel("src/json/savedLevel/"+path);
+            });
+        }
+    }
+
 }

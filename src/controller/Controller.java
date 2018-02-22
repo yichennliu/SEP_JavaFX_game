@@ -49,6 +49,7 @@ public class Controller {
         } else {
             menuController.setMenuView(menuView);
             menuController.update();
+
         }
 
         this.view.update(View.Mode.MENU,menuView);
