@@ -3,17 +3,18 @@ package controller;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import main.LevelFactory;
+import model.enums.Property;
 import model.enums.Token;
 import model.game.Feld;
 import model.game.Level;
 import model.levelEditor.LevelEditor;
 import view.levelEditor.LevelEditorView;
 import java.io.IOException;
-import java.util.List;
 
 public class LevelEditorController {
 
@@ -21,6 +22,7 @@ public class LevelEditorController {
     private LevelEditor editor;
     private LevelEditorView levelEditorView;
     private boolean mouseDown = false;
+    private Feld selectedFeld;
     private Point2D lastCoordinate;
     private boolean meSet;
 
@@ -89,6 +91,7 @@ public class LevelEditorController {
             }
             else {
                 this.levelEditorView.selectFeld(col,row);
+                this.selectedFeld = editor.getLevel().getFeld(col,row);
             }
         });
         staticCanvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
@@ -107,6 +110,7 @@ public class LevelEditorController {
                     Point2D newCoord = new Point2D(col, row);
                     if (lastCoordinate!=null && !lastCoordinate.equals(newCoord)){
                         this.levelEditorView.selectFeld(col,row);
+                        this.selectedFeld = editor.getLevel().getFeld(col,row);
                         lastCoordinate = newCoord;
                     }
 
@@ -116,6 +120,7 @@ public class LevelEditorController {
         staticCanvas.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
             mouseDown = false;
         });
+        staticCanvas.setCursor(Cursor.HAND);
 
         levelEditorView.getExitButton().setOnAction(e -> {
             this.exit();
@@ -125,11 +130,21 @@ public class LevelEditorController {
         buttons.selectedToggleProperty().addListener((a,b,c) -> {
             this.editor.setCurrentToken((Token) c.getUserData());
         });
-
         buttons.selectToggle(buttons.getToggles().get(0));
 
-        this.levelEditorView.getStaticCanvas().setCursor(Cursor.HAND);
-
+        TextField propertyValueInput = levelEditorView.getPropertyValueInput();
+        ComboBox propertySelectionBox = levelEditorView.getSelectPropertyBox();
+        this.levelEditorView.getAddPropertyButton().setOnAction(e -> {
+            Property prop = (Property) propertySelectionBox.getSelectionModel().getSelectedItem();
+            Integer value = stringToInteger(propertyValueInput.getText());
+            if(prop!=null && value!= null){
+                if (value<0) value= 0;
+                selectedFeld.setPropertyValue(prop,value);
+                levelEditorView.selectFeld(selectedFeld.getRow(),selectedFeld.getColumn());
+                propertyValueInput.setStyle("-fx-text-fill:black");
+            }
+            else if(value==null) propertyValueInput.setStyle("-fx-text-fill:red");
+        });
         this.levelEditorView.getSaveButton().setOnAction(e-> {
             Level level = this.editor.getLevel();
             try {
@@ -141,6 +156,14 @@ public class LevelEditorController {
         });
 
         initLevelSettingsInput();
+    }
+
+    private void cropFeld(int rows, int cols) {
+        Feld[][] newMap = new Feld[rows][cols];
+        int oldLength = editor.getMap()[0].length;
+        int oldHeight = editor.getMap().length;
+        int copyLength = (cols >= oldLength) ? oldLength : cols;
+        int copyHeight = (rows >= oldHeight) ? oldHeight : rows;
     }
 
     private void brushFeld(int column, int row){
@@ -168,7 +191,7 @@ public class LevelEditorController {
             TextField gemInput = gemGoals[i];
             TextField timeInput = timeGoals[i];
             gemInput.textProperty().addListener( (a,b,c) -> {
-                Integer value = StringToInteger(c);
+                Integer value = stringToInteger(c);
                 if(value!=null) {
                     System.out.println(value + " " + x);
                     this.editor.setGemGoal(x,value);
@@ -177,7 +200,7 @@ public class LevelEditorController {
                 else gemInput.setStyle("-fx-text-fill:red");
             });
             timeGoals[i].textProperty().addListener( (a,b,c) -> {
-                Integer value = StringToInteger(c);
+                Integer value = stringToInteger(c);
                 if(value!=null) {
                     this.editor.setTimeGoal(x,value);
                     timeInput.setStyle("-fx-color:black");
@@ -189,7 +212,7 @@ public class LevelEditorController {
     }
 
 
-    private Integer StringToInteger(String string){
+    private Integer stringToInteger(String string){
         try {
             return Integer.parseInt(string);
         }
