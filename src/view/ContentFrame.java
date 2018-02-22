@@ -43,19 +43,20 @@ import java.util.Map;
 public  class ContentFrame extends StackPane {
 
     private Button gameButton;
-    private Button continueButton;
     private Button saveButton;
     private Button restartLevel;
     private Button levelButtons;
     private Button themeEditorButton;
     private Button helpbutton;  private Button close;
     private Button levelEditorButton;
-    private VBox menuBox,helpVbox;
+    private Boolean showSavebutton;
+    private VBox levelVbox,helpVbox,saveVbox;
     private ArrayList listlevelButtons;
     private Scene scene;
     private MenuView menuView;
     private ScrollPane levelItemScrollPane,helpVboxScrollPane;
     private ScrollPane helpScrollPane;
+
     private double widthLinks,heightLinks ;
     private int buttonfactor=4;
     private Group root;
@@ -72,8 +73,6 @@ public  class ContentFrame extends StackPane {
         this.themeEditorButton = createButton(" L O A D T H E M E ");
         this.helpbutton = createButton("H E L P");
         this.close = createButton("C L O S E ");
-        this.continueButton = createButton("C O N T I N U E");
-        this.saveButton = createButton("S A V E  G A M E ");
         this.levelEditorButton = createButton("L E V E L E D I T O R");
         setAlignment(Pos.CENTER);
 
@@ -91,9 +90,9 @@ public  class ContentFrame extends StackPane {
 
         this.scene= new Scene(menuVboxlinks);
         this.listlevelButtons = new ArrayList<Button>();
-        menuBox = createLevelMenuItems();
-        menuBox.getStyleClass().add("levelbox");
-        levelItemScrollPane = createscrollPane(menuBox);
+        levelVbox = createLevelMenuItems();
+        levelVbox.getStyleClass().add("levelbox");
+        levelItemScrollPane = createscrollPane(levelVbox);
 
 
         levelButtons.setOnAction(new EventHandler<ActionEvent>() {
@@ -160,7 +159,7 @@ public  class ContentFrame extends StackPane {
 
 
     public LevelItem getMenuItem(int index) {
-        return (LevelItem)menuBox.getChildren().get(index);
+        return (LevelItem) levelVbox.getChildren().get(index);
     }
 
 
@@ -212,8 +211,8 @@ public  class ContentFrame extends StackPane {
 
     private VBox createLevelMenuItems(){
 
-        menuBox = new VBox(5 );
-        menuBox.setAlignment(Pos.TOP_CENTER);
+        levelVbox = new VBox(5 );
+        levelVbox.setAlignment(Pos.TOP_CENTER);
 
         Theme theme = null;
         try {
@@ -229,10 +228,10 @@ public  class ContentFrame extends StackPane {
             ImageView snapshotview =  new ImageView(snapshot);
             String levelText = "Medaillen: "+ this.getMedalImage(level.getJsonPath());
 
-            menuBox.getChildren().add( 0, new LevelItem( level.getName(),levelText,snapshotview,path));
+            levelVbox.getChildren().add( 0, new LevelItem( level.getName(),levelText,snapshotview,path));
         }
 
-        return menuBox;
+        return levelVbox;
 
     }//ende create levele
 
@@ -292,6 +291,27 @@ public  class ContentFrame extends StackPane {
     }
 
 
+    private VBox createSaveGame(boolean show){
+
+       this.showSavebutton= show;
+       Label noSaveInformation = new Label(" TO SAVE YOUR GAME, YOU HAVE TO PLAY FIRST");
+        Label SaveInformation = new Label("YOU CAN NOW SAVE YOUR GAME ");
+
+
+
+        if(show) {
+            this.saveButton = createButton("S A V E  G A M E ");
+            saveVbox.getChildren().addAll(SaveInformation,saveButton);
+
+        }
+
+        else{
+            saveVbox.getChildren().addAll(noSaveInformation);
+
+        }
+
+        return saveVbox;
+    }
 
 
 
@@ -334,26 +354,16 @@ public  class ContentFrame extends StackPane {
 
 
 
-    public Button getContinueButton() {
-        return continueButton;
-    }
 
-    public Button getSaveButton() {
-        return saveButton;
-    }
+
+
 
     public Button getGameButton() {
         return gameButton;
     }
-
-    public Button getHelpButton() {
-        return levelButtons;
-    }
-
     public Button getThemeEditorButton() {
         return themeEditorButton;
     }
-
     public Button getLevelEditorButton() {return levelEditorButton;}
 
 
