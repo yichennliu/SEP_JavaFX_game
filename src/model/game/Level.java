@@ -1,5 +1,6 @@
 package model.game;
 
+import javafx.scene.control.Label;
 import model.enums.*;
 
 import java.util.*;
@@ -59,8 +60,10 @@ public class Level {
         }
     }
 
-    public String getName() {
-        return name;
+    public Label getName() {
+
+        Label nameLabel = new Label(name);
+        return nameLabel;
     }
 
     /** @return Feld, or null */

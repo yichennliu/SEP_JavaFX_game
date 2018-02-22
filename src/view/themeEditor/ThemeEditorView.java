@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import model.enums.Token;
 import model.themeEditor.Theme;
 import model.themeEditor.Theme.FeldType;
+import view.MenuView;
 
 import java.io.File;
 import java.util.Arrays;
@@ -43,7 +44,8 @@ private Button exportButton;
 private Button exitButton;
 private TextField nameInput;
 private Group ioButtons;
-private HBox header;
+private VBox header;
+    private MenuView menuView;
 
 
 ComboBox<String> themeChoiceBox;
@@ -84,14 +86,18 @@ private String stylesheet;
         initExitButton();
         rootPane.setLeft(treeView);
 
+        stylesheet = menuView.fileToStylesheetString(new File("src/view/style.css"));
+        sceneThemeView.getStylesheets().add(stylesheet);
+        rootPane.setTranslateX(stage.getWidth()/3);
+        root.setTranslateY(stage.getHeight()/5);
         root.getChildren().add(rootPane);
         if(!stage.isShowing()) stage.show();
     }
 
     private void initHeader(){
-        header = new HBox();
+        header = new VBox();
         initThemeSelection();
-        rootPane.setTop(header);
+        rootPane.setBottom(header);
     }
 
     private void initThemeSelection(){

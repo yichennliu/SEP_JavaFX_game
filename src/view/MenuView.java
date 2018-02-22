@@ -3,6 +3,7 @@ package view;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.game.MedalStatus;
 
@@ -34,8 +35,8 @@ public class MenuView {
         contentFrame = new ContentFrame(width,height,this);
         VBox vMenu= new VBox(contentFrame);
         this.levelButtons = new ArrayList<>();
-        //this.sceneMenu = new Scene(root);
         root.getChildren().addAll(vMenu);
+        //this.sceneMenu = new Scene(root);
         if (!stage.isShowing()) stage.show();
         this.stylesheet = fileToStylesheetString(new File("src/view/style.css"));
         sceneMenu.getStylesheets().add(stylesheet);
@@ -66,6 +67,17 @@ public class MenuView {
         }
 
 
+    }
+
+
+
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
     }
 
 }

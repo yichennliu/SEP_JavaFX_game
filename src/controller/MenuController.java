@@ -1,9 +1,13 @@
 package controller;
 
+import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import model.Menu.SavedGameProgress;
+import javafx.scene.input.MouseEvent;
 import model.game.MedalStatus;
+import view.LevelItem;
 import view.MenuView;
 import java.util.ArrayList;
 import java.util.Map;
@@ -45,6 +49,8 @@ public class MenuController {
         this.addMenuViewComponents();
     }
 
+
+
     private void addMenuViewComponents() {
         menuView.getContentFrame().getGameButton().setOnAction(e -> {
             this.controller.startGame();
@@ -52,7 +58,6 @@ public class MenuController {
 
         menuView.getContentFrame().getLevelEditorButton().setOnAction(e -> {
             this.controller.startLevelEditor();
-
         });
 
         menuView.getContentFrame().getThemeEditorButton().setOnAction(e -> {
@@ -71,17 +76,17 @@ public class MenuController {
     }
 
      private void chooseLevel() {
-        ArrayList <Button> levelButtons = this.menuView.getContentFrame().getListlevelButtons();
-        Button standardLevel ;
+        ArrayList <LevelItem> levelButtons = menuView.getContentFrame().getListlevelButtons();
+        LevelItem level ;
 
         for (int i=0; i<levelButtons.size();i++){
-            standardLevel = levelButtons.get(i);
+            level = levelButtons.get(i);
 
-            final String path= (String) standardLevel.getUserData();
-                standardLevel.setOnAction(e -> {
+            final String path= (String) level.getUserData();
+                level.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
                     this.controller.startLevel("src/json/level/"+path);
+                });
 
-            });
         }
     }
 
@@ -98,5 +103,7 @@ public class MenuController {
             });
         }
     }
+
+
 
 }

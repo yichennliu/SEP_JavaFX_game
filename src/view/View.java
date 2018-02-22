@@ -32,11 +32,16 @@ public class View {
     private double width;
     private double height;
 
-    // private double windowWidth = 800;
-   // private double windowHeight = 600;
-
 
     public enum Mode {EDITOR, GAME, MENU, THEME,PRIMARY};
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
 
     public View(Stage stage){
         this.stage = stage;
