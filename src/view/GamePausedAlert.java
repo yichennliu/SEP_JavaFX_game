@@ -10,6 +10,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
+import java.io.File;
+
 public class GamePausedAlert extends Alert {
 
     private ButtonType saveButton;
@@ -17,15 +19,17 @@ public class GamePausedAlert extends Alert {
     private ButtonType exitButton;
     private ButtonType retryButton;
     private ButtonType cancelButton;
+    private String stylesheet;
+    private MenuView menuView;
 
     public GamePausedAlert() {
         super(Alert.AlertType.CONFIRMATION);
-
+        this.stylesheet = menuView.fileToStylesheetString(new File("src/view/style.css"));
         this.setTitle("Exit or Save");
         this.setHeaderText("Do you want to save or exit the game?");
         DialogPane dialogPane = this.getDialogPane();
-        dialogPane.setStyle("-fx-background-color: black;");
-        dialogPane.getStyleClass().remove("alert");
+        dialogPane.getStylesheets().add(stylesheet);
+        dialogPane.getStyleClass().add("backgroundcolorBlue");
 
         GridPane grid = (GridPane) dialogPane.lookup(".header-panel");
         grid.setStyle("-fx-background-color: black; "

@@ -16,31 +16,34 @@ import javafx.scene.text.Text;
 public class LevelItem extends HBox {
 
     private View view;
-    private Text information;
-    private Label name;
+    private Label name,information;
     private double width ,height;
 
 
-    public LevelItem(Label menuItemName, String info, ImageView image, String userData, double width, double height) {
+
+
+    public LevelItem(String menuItemName, String info, ImageView image, String userData, double width, double height) {
         super(5);
         this.width=width;
         this.height=height;
         this.setUserData(userData);
         this.setCursor(Cursor.HAND);
-      //  name = new Label(menuItemName);
-        information = new Text(info);
+        name = new Label(menuItemName);
+        information = new Label(info);
         information.setEffect(new GaussianBlur(1));
-  //      name.getStyleClass().add("LabelColor");
-        VBox vboxLevelInformation = new VBox(information, menuItemName);
-        vboxLevelInformation.getStyleClass().add("vboxlevel");
+        VBox vboxLevelInformation = new VBox(name);
         BorderPane rightContainer = new BorderPane();
         rightContainer.setRight(image);
+        rightContainer.setBottom(information);
         rightContainer.setLeft(vboxLevelInformation);
         image.setFitWidth(150);
         image.setFitHeight(150);
-        rightContainer.setMinSize(width/2-100, height/5);
-        rightContainer.setMaxSize(width/2-100, height/5);
-        rightContainer.getStyleClass().add("backgorungMenuLevel");
+        rightContainer.setMinSize(width, height);
+        rightContainer.setMaxSize(width, height);
+        rightContainer.getStyleClass().add("backgroundcolorBlue");
+        vboxLevelInformation.getStyleClass().add("vboxlevel");
+        information.getStyleClass().add("infoOnLevelItem");
+        name.getStyleClass().add("infoOnLevelItem");
 
         rightContainer.setTranslateX(50);
         getChildren().addAll(rightContainer);

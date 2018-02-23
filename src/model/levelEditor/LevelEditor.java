@@ -48,6 +48,18 @@ public class LevelEditor {
         this.level = new Level(null,map,gemGoals,timeGoals,pre,post,null,props,null);
     }
 
+    public void resetLevel(Level level){
+        this.level = level;
+        this.width = level.getWidth();
+        this.height = level.getHeight();
+        gemGoals = level.getGemGoals();
+        timeGoals = level.getTickGoals();
+        this.map = level.getMap();
+        this.props = level.getProperties();
+        this.pre = level.getPre();
+        this.post = level.getPost();
+    }
+
     public void setCurrentToken(Token t){
         this.currentToken = t;
     }
@@ -98,6 +110,8 @@ public class LevelEditor {
     }
 
     public void setMap(Feld[][] map) {
+        this.width = map[0].length;
+        this.height = map.length;
         this.map = map;
         this.level.setMap(map);
     }

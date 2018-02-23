@@ -6,6 +6,9 @@ import model.enums.Token;
 import model.enums.WinningStatus;
 import model.game.Feld;
 import model.game.Level;
+import model.game.Rule;
+import model.misc.UsefullMethods;
+import org.json.JSONObject;
 
 import java.util.*;
 
@@ -30,29 +33,32 @@ public class Robot implements AI {
         passableTokens.add(Token.MUD);
         passableTokens.add(Token.GEM);
         passableTokens.add(Token.EXIT);
+        JSONObject object = new JSONObject();
     }
 
     public InputDirection getNextMove() {
         deadlockPathPossible = false;
-        /*continue way to last Target if avalaible*/
+/*        continue way to last Target if available*/
         Feld me = getMe();
         if(me==null) return null;
         Feld target = (currentTarget!=null) ? (level.getFeld(currentTarget.getRow(),currentTarget.getColumn())) : null;
-        /*reset target, if reached*/
+/*        reset target, if reached*/
         if(me!=null && target!=null &&
                 (target == me ||
                 target.isToken(Token.EXIT) && distance(me,target)<2)){
             currentTarget=null;
         }
 
-        if(currentTarget!=null){
+        List<FeldWithDistance> gemList = (getNearest(getMe(), Token.GEM, (level.getWidth()*level.getHeight())));
+
+        if(currentTarget!=null && gemList.size()>0){
             Feld feld = level.getFeld(currentTarget.getRow(),currentTarget.getColumn());
             Breadcrumb stepTo = findSecurePath(getMe(),feld,(level.getWidth()*level.getHeight()));
             if(stepTo!=null) return stepTo.getInputDirection();
             currentTarget = null;
         }
-        List<FeldWithDistance> gemList = (getNearest(getMe(), Token.GEM, (level.getWidth()*level.getHeight())));
-        /*find Felds with GEMS*/
+
+/*        find Felds with GEMS*/
         if(gemList.size()>0){
             for(int i = 0; i<gemList.size(); i++){
                 Breadcrumb stepTo = findSecurePath(getMe(),gemList.get(i).getFeld(),(level.getWidth()*level.getHeight()));
@@ -61,7 +67,7 @@ public class Robot implements AI {
             }
             currentTarget = null;
         }
-        /*no GEMS left*/
+/*        no GEMS left*/
         List<FeldWithDistance> exitList = getNearest(getMe(),Token.EXIT,level.getWidth()+level.getHeight());
             if(exitList.size()>0) {
                 System.out.println("EXIT gefunden");
@@ -77,6 +83,7 @@ public class Robot implements AI {
             }
                 return goToFreePlace();
     }
+
 
 
     private InputDirection goToFreePlace(){
@@ -113,7 +120,6 @@ public class Robot implements AI {
 
         return null;
     }
-
 
     private Feld getMe(){
         return this.level.whereAmI();
@@ -167,7 +173,7 @@ public class Robot implements AI {
                 }
                return path;
             }
-            Set<Map.Entry<InputDirection,Feld>> neighbours = getNeighboursToVisit(currentBreadcrumb);
+            Set<Map.Entry<InputDirection,Feld>> neighbours = getNeighboursToVisit(currentBreadcrumb.getCurrentFeld());
             removeUnpassable(neighbours);
             if(currentStep==0) {
                 removeUnsafe(neighbours,currentLevel);
@@ -216,18 +222,24 @@ public class Robot implements AI {
     }
 
     private void removeUnsafe(Set<Map.Entry<InputDirection, Feld>> neighbours,Level level) {
+        System.out.println("\nRemove unsafe gestartet");
         Iterator<Map.Entry<InputDirection,Feld>> it = neighbours.iterator();
+        System.out.println(" - - - - - ");
         while(it.hasNext()){
             Map.Entry<InputDirection,Feld> entry = it.next();
             Level levelCopy = level.clone();
+            System.out.println("Levelkopie hat den Winningstatus vor dem Tick: " + levelCopy.getWinningStatus());
             levelCopy.setInputDirection(entry.getKey());
             tick(levelCopy);
-            levelCopy.setInputDirection(null);
             tick(levelCopy);
             if(levelCopy.getWinningStatus()==WinningStatus.LOST){
-                System.out.println("Going " +entry.getKey()+" would kill");
+                System.out.println("Levelkopie hat den Winningstatus nach dem Tick: " + levelCopy.getWinningStatus());
                 it.remove();
             }
+        }
+
+        for(Map.Entry<InputDirection,Feld> entry: neighbours){
+            System.out.println(entry.getKey() + " ist sicher");
         }
     }
 
@@ -244,8 +256,7 @@ public class Robot implements AI {
     }
 
     /*gets set of felds linked with their InputDirection*/
-    private Set<Map.Entry<InputDirection,Feld>> getNeighboursToVisit(Breadcrumb breadcrumb){
-        Feld feld = breadcrumb.getCurrentFeld();
+    private Set<Map.Entry<InputDirection,Feld>> getNeighboursToVisit(Feld feld){
         Set<Map.Entry<InputDirection,Feld>> neighbours = new HashSet<>();
         for(InputDirection id : inputDirections){
             Feld neighbour = feld.getNeighbour(id);
@@ -313,11 +324,9 @@ public class Robot implements AI {
     private WinningStatus tick(Level levelToTick){
         /* Compute a tick */
         levelToTick.resetProperties();
-        //levelToTick.executePre();
+        levelToTick.execPreRules();
         levelToTick.executeMainRules();
-        //levelToTick.executePost();
-
-        levelToTick.tick();
+        levelToTick.execPostRules();
         levelToTick.setInputDirection(null);
         return levelToTick.getWinningStatus();
     }

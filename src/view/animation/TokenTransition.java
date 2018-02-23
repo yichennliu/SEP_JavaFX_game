@@ -49,7 +49,6 @@ public class TokenTransition extends javafx.animation.Transition {
             gc.drawImage(image,posX,posY,fieldSize,fieldSize);
         }
         else{
-            System.out.println("No Image!!!!");
             gc.setFill(Color.WHITE);
             gc.fillText('■'+"",posX+fieldSize/2,posY+fieldSize/2);
             gc.setFill(Color.BLACK);
@@ -107,7 +106,6 @@ public class TokenTransition extends javafx.animation.Transition {
                     posX = (fromX + (toX - fromX) * frac) * fieldSize;
                     posY = (fromY +(toY-fromY) * frac) * fieldSize;
                 }
-
 
                 if(image!=null){
                     gc.drawImage(image,posX,posY,fieldSize,fieldSize);

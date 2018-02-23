@@ -1,6 +1,8 @@
 package controller;
 
+
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.scene.input.MouseEvent;
 import model.game.Level;
 import model.game.MedalStatus;

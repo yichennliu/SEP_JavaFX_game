@@ -507,11 +507,9 @@ public class Level {
        for(Rule rule: pre){
            rule.execute(this.map,this.inputDirection);
        }
-        System.out.println("Pre\nX: " + getPropertyValue(Property.X) + " Y: " + getPropertyValue(Property.Y));
     }
 
     public void execPostRules(){
-        System.out.println("VOr Post\nX: " + getPropertyValue(Property.X) + " Y: " + getPropertyValue(Property.Y));
         for(Rule rule: post){
             rule.execute(this.map,this.inputDirection);
         }
@@ -588,14 +586,14 @@ public class Level {
     /*ATTENTION: returns a fake-clone (only map and properties are really cloned, rules,goals, jsonPath and other unchangable vars are the same)*/
     public Level clone(){
         Feld[][] copyOfMap = copyMap();
-        Map<Property, Integer> globalPropsClone = copyGlobalProps();
+        Map<Property, Integer> globalPropsClone = copyProps(this.properties);
         return new Level(new String(name),copyOfMap,gemGoals,tickGoals,pre,post,maxslime,globalPropsClone, jsonPath);
     }
 
-    /*copies global properties*/
-    private Map<Property,Integer> copyGlobalProps() {
+    /*copies property Maps*/
+    private Map<Property,Integer> copyProps(Map<Property,Integer> mapToCopy) {
         Map<Property,Integer> propertyClone= new HashMap<>();
-        for(Map.Entry<Property,Integer> entry:properties.entrySet()){
+        for(Map.Entry<Property,Integer> entry:mapToCopy.entrySet()){
             propertyClone.put(entry.getKey(),new Integer(entry.getValue()));
         }
         return propertyClone;

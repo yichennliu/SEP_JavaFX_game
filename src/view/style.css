@@ -2,23 +2,32 @@
 
 
 
-.button {
-            -fx-background-color:
-              linear-gradient(#000000 0%, #232723 25%, #373837 75%, #191d23 100%),
-              linear-gradient(#9d9e9d 0%, #6b6a6b 20%, #343534 80%, #191d23 100%),
-             linear-gradient(#000000 0%, #606060 0%, #505250 3%,#191d23 100%);
-            -fx-background-insets: 0,1,4,5,6;
-            -fx-background-radius: 9,8,5,4,3;
+ #menuLeftButtons  {
+
             -fx-padding: 15 30 15 30;
             -fx-spacing: 150;
-            -fx-font-family: "Helvetica";
-            -fx-font-size: 19px;
+            -fx-font-size: 17px;
             -fx-font-weight: bold;
-            -fx-text-fill: #f7d7aa;
-            -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);
+            -fx-background-insets: 0,1,4,5,6;
+             -fx-background-radius: 9,8,5,4,3;
+
         }
 
-.button:hover {
+
+.button , .toggle-button{
+
+  -fx-background-color:
+               linear-gradient(#000000 0%, #232723 25%, #373837 75%, #262d38 100%),
+               linear-gradient(#9d9e9d 0%, #6b6a6b 20%, #343534 80%, #00102b 100%), //in der mitte
+              linear-gradient(#000000 0%, #606060 0%, #505250 3%,#010711 100%);
+              -fx-text-fill: #f7d7aa;
+               -fx-font-family: "Helvetica";
+                -fx-font-size: 12px;
+               -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);
+
+
+}
+ .button:hover ,.toggle-button:hover {
         -fx-background-color:#ffab32;
         -fx-scale-x: 1.1;
         -fx-cursor: hand;
@@ -26,60 +35,52 @@
 
 }
 
- .button:pressed {
-        -fx-background-color: #0a7206;
+ .button:pressed , .toggle-button:pressed ,.toggle-button:selected {
+        -fx-background-color: #ffab32;
+        -fx-text-fill: #020d1e;
         -fx-scale-x: 0.9;
 }
 
 
-#vboxLinks{  -fx-background-color: #020d1e;
-                                     -fx-padding:80;
-                                     -fx-spacing: 10;
-                                       -fx-stroke: green;
-                                        -fx-stroke-width: 2;
-                                        -fx-stroke-dash-array: 12 2 4 2;
-                                       -fx-stroke-dash-offset: 1;
-                                         -fx-stroke-line-cap: butt;
-
+#vboxLinks{ -fx-background-color: #020d1e;
+                  -fx-spacing: 10;
 
 }
 
+.backgroundcolorBlue{
+-fx-background-color: #020d1e;
+
+}
 
 .levelbox{ -fx-background-color:Transparent;
-       -fx-spacing: 10;
+            -fx-spacing: 10;
             -fx-font-family: "Helvetica";
             -fx-font-size: 19px;
             -fx-font-weight: bold;
             -fx-text-fill:#f7d7aa;
-            -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);
-                      }
+            -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1); }
 
 
+.infoOnLevelItem{-fx-text-fill:#f7d7aa;}
 
-
-.textColor{
--fx-text-fill: #f7d7aa;
-}
-.backgorungMenuLevel{
- -fx-background-color: #020d1e;
-}
-
-.vboxlevel{
--fx-text-fill:#f7d7aa;
-
-}
 
 .scroll-pane > .viewport  { -fx-background-color: #ffab32;
                             -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);}
 
+.scroll-pane .scroll-bar:vertical {
+    -fx-unit-increment: 10 ;
+    -fx-block-increment: 50 ;
+}
 
 .tree-view .scroll-bar:vertical{ -fx-background-color: transparent;
+                                -fx-background-color: #ffab32;
                                                                 }
 
  .tree-view:focused {
-        -fx-background-color: #FF7400;
-        -fx-focus-color : #FFCDA3;
-        -fx-control-inner-background:#FFCDA3;
+        -fx-background-color: #ffab32;
+        -fx-focus-color :#ffab32;
+        -fx-control-inner-background:#020d1e;
+         -fx-text-fill:  #ffab32;
         -fx-background-insets: -1.4, 0, 1;
         -fx-background-radius: 1.4, 0, 0;
 
@@ -87,16 +88,27 @@
 
 
   .tree-view > .viewport{
-        -fx-background-color: YELLOW;
+   -fx-control-inner-background:#ffab32;
+        -fx-background-color: #ffab32;
+                -fx-text-fill: #020d1e;
 
   }
 
 
 .combo-box .list-cell
 {
-    -fx-background: white;
-    -fx-background-color:#cca270;
-    -fx-text-fill: -fx-text-base-color;
+
+   -fx-background-color: #020d1e;
+    -fx-text-fill:#ffab32 ;
+    -fx-padding: 3 0 2 7;
+    -fx-cell-size: 1.66667em;
+}
+
+.combo-box .list-cell:selected
+{
+
+   -fx-background-color: #ffab32;;
+    -fx-text-fill:#020d1e;
     -fx-padding: 3 0 2 7;
     -fx-cell-size: 1.66667em;
 }
