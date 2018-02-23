@@ -101,7 +101,8 @@ public class ContentFrame extends StackPane {
 
         });
 
-       getChildren().addAll(menuVboxlinks, levelItemScrollPane,helpVboxScrollPane);
+   welcomeVbox=createWelcomeItem();
+       getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane);
     }
 
 
