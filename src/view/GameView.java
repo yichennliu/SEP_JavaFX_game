@@ -40,6 +40,7 @@ public class GameView {
     private Label timer;
     private HBox timeRewardInfo;
     private Label restGem;
+    private Label restTicks;
     private Label currentGems;
     private ImageView gemIcon;
     private ImageView currentMedal;
@@ -73,6 +74,7 @@ public class GameView {
         this.gemIcon = new ImageView();
         this.timer = new Label();
         this.restGem = new Label();
+        this.restTicks = new Label();
         this.currentMedal = new ImageView();
         this.currentMedal.setFitHeight(30);
         this.currentMedal.setFitWidth(30);
@@ -82,10 +84,9 @@ public class GameView {
         this.gamePauseIcon = new ImageView();
         this.createHboxStyle();
         this.showMedalInfo();
-        this.showCurrentSandUhr();
         this.showCollectedGems();
         this.createDiamondIcons();
-        timeRewardInfo.getChildren().addAll(gemIcon, currentGems, currentMedal, restGem, timerIcons, timer);
+        this.timeRewardInfo.getChildren().addAll(timerIcons, timer, gemIcon, currentGems, currentMedal, restGem, restTicks);
         root.getChildren().addAll(timeRewardInfo);
         this.board = new Board(staticCanvas, animatedCanvas, level.getMap(), theme, fieldSize);
         this.update();
@@ -112,7 +113,6 @@ public class GameView {
         View.drawBoard(this.board, level.getMap(), this.theme, true);
         this.showCollectedGems();
         this.showMedalInfo();
-        this.showCurrentSandUhr();
 
     }
 
@@ -203,19 +203,33 @@ public class GameView {
     }
 
     private void setCountToGoldInfo() {
-        int showRemainingGemsGoldInfo = this.level.getRemainingGemsToGold();
+        int showRemainingTicksGoldInfo = this.level.getRemainingGoldTicksGems().getKey()/5;
+        int showRemainingGemsGoldInfo = this.level.getRemainingGoldTicksGems().getValue();
         restGem.setText("Needed Gems to Gold Medal: " + showRemainingGemsGoldInfo);
+        restTicks.setText("Time Left to Gold Medal: "+ showRemainingTicksGoldInfo);
         restGem.setTextFill(Color.WHITE);
 
     }
 
     private void setCountToSilverInfo() {
-        int showRemainingGemsSilverInfo = this.level.getRemainingGemsToSilver();
+        int showRemainingTicksSilverInfo = this.level.getRemainingSilverTicksGems().getKey()/5;
+        int showRemainingGemsSilverInfo = this.level.getRemainingSilverTicksGems().getValue();
         restGem.setText("Needed Gems to Silver Medal: " + showRemainingGemsSilverInfo);
+        restTicks.setText("Time left to Silver Medal: "+ showRemainingTicksSilverInfo);
         restGem.setTextFill(Color.WHITE);
+        restTicks.setTextFill(Color.WHITE);
 
     }
 
+    private void setCountToBronzeInfo(){
+        int showRemainingTicksBronzeInfo = this.level.getRemainingBronzeTicksGems().getKey()/5;
+        int showRemainingGemsBronzeInfo = this.level.getRemainingBronzeTicksGems().getValue();
+        restGem.setText("Needed Gems to Bronze Medal: " + showRemainingGemsBronzeInfo);
+        restTicks.setText("Time left to Bronze Medal: "+ showRemainingTicksBronzeInfo);
+        restGem.setTextFill(Color.WHITE);
+        restTicks.setTextFill(Color.WHITE);
+
+    }
 
     private void setCurrentMedal(Medal medalType) {
 
@@ -230,41 +244,37 @@ public class GameView {
                 currentMedal.setImage(Medal.SILVER.getMedalImage());
                 break;
         }
-
     }
 
     private void showMedalInfo() {
 
-        if (level.getPropertyValue(Property.GEMS) < level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS) >= level.getTickGoals()[2] ||
-                level.getPropertyValue(Property.GEMS) < level.getGemGoals()[1] && level.getPropertyValue(Property.TICKS) >= level.getTickGoals()[1] ||
-                level.getPropertyValue(Property.GEMS) < level.getGemGoals()[2] && level.getPropertyValue(Property.TICKS) >= level.getTickGoals()[0]) {
-
-            restGem.setTextFill(Color.WHITE);
-            restGem.setText("No chance to get a Medal!");
+        if (this.level.getCurrentMedal() == null) {
+            this.setCountToBronzeInfo();
         }
 
-        if (level.getPropertyValue(Property.GEMS) >= level.getGemGoals()[0] && level.getPropertyValue(Property.TICKS) <= level.getTickGoals()[2]) {
+        if (this.level.getCurrentMedal() == Medal.BRONZE) {
             this.setCountToSilverInfo();
             this.setCurrentMedal(Medal.BRONZE);
 
         }
 
-        if (level.getPropertyValue(Property.GEMS) >= level.getGemGoals()[1] && level.getPropertyValue(Property.TICKS) <= level.getTickGoals()[1]) {
+        if (this.level.getCurrentMedal() == Medal.SILVER) {
             this.setCountToGoldInfo();
             this.setCurrentMedal(Medal.SILVER);
 
         }
 
-        if (level.getPropertyValue(Property.GEMS) >= level.getGemGoals()[2] && level.getPropertyValue(Property.TICKS) <= level.getTickGoals()[0]) {
-            restGem.setText("You've got gold!");
+        if (this.level.getCurrentMedal() == Medal.GOLD) {
+            restGem.setText("You've got gold! Now exit to win!");
+            int currentSec = this.level.getPropertyValue(Property.TICKS)/5;
+            int maxSec = this.level.getTickGoals()[0]/5;
+            restTicks.setText("Time Left to win: "+ (maxSec-currentSec));
             this.setCurrentMedal(Medal.GOLD);
         }
 
-
     }
 
-
-    private void setCurrentSandUhr(SandUhr sandUhrType) {
+    public void setCurrentSandUhr(SandUhr sandUhrType) {
 
         switch (sandUhrType) {
             case RED:
@@ -276,24 +286,6 @@ public class GameView {
             case YELLOW:
                 this.timerIcons.setImage(SandUhr.YELLOW.getSandUhrImage());
                 break;
-        }
-
-    }
-
-    private void showCurrentSandUhr() {
-
-        double currentsecond = this.level.getPropertyValue(Property.TICKS) / 5;
-        double totalSecond = this.level.getTickGoals()[0] / 5;
-
-        if (currentsecond / totalSecond >= 0.3) {
-            this.setCurrentSandUhr(SandUhr.YELLOW);
-
-        } else {
-            this.setCurrentSandUhr(SandUhr.GREEN);
-
-        }
-        if (currentsecond / totalSecond >= 0.6) {
-            this.setCurrentSandUhr(SandUhr.RED);
         }
 
     }

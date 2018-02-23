@@ -16,10 +16,7 @@ import javafx.util.Duration;
 import main.LevelFactory;
 import model.ai.AI;
 import model.ai.Robot;
-import model.enums.InputDirection;
-import model.enums.Medal;
-import model.enums.Property;
-import model.enums.WinningStatus;
+import model.enums.*;
 import model.game.Level;
 import model.game.MedalStatus;
 import org.json.JSONObject;
@@ -64,8 +61,13 @@ public class GameController {
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
-            gameView.getTimerLabel().setText((level.getPropertyValue(Property.TICKS).doubleValue()/5.0)+"");
+            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
+            this.updateTimerLabel(this.level.getPropertyValue(Property.TICKS));
+            this.updateSandUhr(this.level.getPropertyValue(Property.TICKS));
             if (robotActive) this.level.setInputDirection(robot.getNextMove());
+            boolean killedPre;
+            boolean killedMain;
+            boolean killedPost;
 
             /* Compute a tick */
             this.level.resetProperties();
@@ -96,6 +98,38 @@ public class GameController {
     }
 
 
+    private void updateTimerLabel(Integer currentTick){
+        Label timer = this.gameView.getTimerLabel();
+        Integer maxSecs = this.level.getTickGoals()[0]/5;
+        int currentSec = (currentTick/5);
+        int timeLeft = maxSecs - currentSec;
+        timer.setText("Time Left: "+timeLeft);
+
+        if(timeLeft<=10){
+            timer.setTextFill(Color.RED);
+        } else{
+            timer.setTextFill(Color.WHITE);
+        }
+
+    }
+
+    private void updateSandUhr(Integer currentTick){
+        double maxSec = (double) this.level.getTickGoals()[0]/5;
+        double currentSec = (double) currentTick/5;
+        double timePast = currentSec/maxSec;
+
+        if(timePast >=0.3){
+            this.gameView.setCurrentSandUhr(SandUhr.YELLOW);
+        } else {
+            this.gameView.setCurrentSandUhr(SandUhr.GREEN);
+        }
+
+        if (currentSec/maxSec >=0.6) {
+            this.gameView.setCurrentSandUhr(SandUhr.RED);
+        }
+
+    }
+
     public GameView getGameView() {
         return gameView;
     }
@@ -121,12 +155,9 @@ public class GameController {
         Stage gameStage = this.gameView.getStage();
         gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode().equals(KeyCode.K)) {
-                if (event.isShiftDown()) {
-                    this.robotize(false);
-                } else {
-                    this.robot = new Robot(level, 5);
-                    this.robotize(true);
-                }
+                this.robot = new Robot(level, 5);
+                this.robotize(true);
+
             } else {
                 this.robotize(false);
             }
@@ -166,6 +197,7 @@ public class GameController {
      */
     private void endOfGameDialog() {
         this.timeline.stop();
+
         EndGameAlert endGameAlert = new EndGameAlert();
 
         if (this.level.getWinningStatus() == WinningStatus.WON) {
