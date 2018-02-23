@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.scene.media.AudioClip;
 import main.LevelFactory;
 import model.enums.Medal;
 import model.game.Level;
@@ -10,7 +11,10 @@ import org.json.JSONTokener;
 import view.*;
 import view.levelEditor.LevelEditorView;
 import view.themeEditor.ThemeEditorView;
+
+import java.io.File;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +30,7 @@ public class Controller {
         this.view = view;
         this.currentMode = View.Mode.GAME;
       }
+
 
     public MenuController getMenuController() {
         return this.menuController;

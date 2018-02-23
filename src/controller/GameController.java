@@ -10,6 +10,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -23,9 +26,14 @@ import org.json.JSONObject;
 import view.EndGameAlert;
 import view.GamePausedAlert;
 import view.GameView;
+
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -38,6 +46,9 @@ public class GameController {
     private EscapeButtonHandler handler;
     private AI robot;
     private boolean robotActive;
+    private List<Media> audios;
+    private int audioIndex =-1;
+    private MediaPlayer player;
 
     public GameController(Level level, GameView gameView, Controller controller) {
         this.controller = controller;
@@ -49,13 +60,55 @@ public class GameController {
         this.convertGameModus();
         this.addDragEvent();
         this.addPauseResumeGameEvents();
+        initAudios();
+        startAudio();
     }
 
     private void robotize(boolean activate) {
         this.robotActive = activate;
     }
 
+    private void initAudios(){
+        audios = new ArrayList<>();
+        for(String path : new File("src/audio").list()){
+            audios.add(new Media(new File("src/audio/"+path).toURI().toString()));
+        }
+    }
+
+    private Media getNextClip(){
+        if(audios==null||audios.size()==0) return null;
+        audioIndex = (audios.size()-1==audioIndex) ? 0 : audioIndex+1;
+        return audios.get(audioIndex);
+    }
+
+    private void startAudio(){
+        Media audio = getNextClip();
+        if(audio!=null){
+            stopAudio();
+            player = new MediaPlayer(audio);
+            player.onEndOfMediaProperty().setValue(() -> {
+                System.out.println("Zu Ende!");
+                startAudio();
+            });
+            player.play();
+        }
+    }
+
+    private void stopAudio(){
+        if(player!=null) player.stop();
+    }
+
+    private void pauseAudio(){
+        if(player!=null) player.pause();
+    }
+
+    private void resumeAudio(){
+        if(player!=null) player.play();
+    }
+
+
     public void update() {
+        startAudio();
         this.addDirectionEvents();
     }
 
@@ -97,7 +150,6 @@ public class GameController {
 
     }
 
-
     private void updateTimerLabel(Integer currentTick){
         Label timer = this.gameView.getTimerLabel();
         Integer maxSecs = this.level.getTickGoals()[0]/5;
@@ -112,6 +164,8 @@ public class GameController {
         }
 
     }
+
+
 
     private void updateSandUhr(Integer currentTick){
         double maxSec = (double) this.level.getTickGoals()[0]/5;
@@ -374,11 +428,13 @@ public class GameController {
                     }
                 } else if (result.get() == alert.getSaveExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                    stopAudio();
                     GameController.this.saveGame();
                     GameController.this.controller.startMenu();
 
                 } else if (result.get() == alert.getExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                    stopAudio();
                     GameController.this.controller.startMenu();
 
 
