@@ -55,8 +55,8 @@ public class ContentFrame extends StackPane {
 
     public ContentFrame(double widthLinks, double heightLinks, MenuView menuView) {
         this.menuView = menuView;
-        this.widthLinks = menuView.getWidth();
-        this.heightLinks = menuView.getHeight();
+        this.widthLinks=menuView.getWidth();
+        this.heightLinks=menuView.getHeight();
         this.gameButton = createButton("S T A R T");
         this.levelButtons = createButton("L E V E L S");
         this.loadtheme = createButton(" L O A D - T H E M E");
@@ -71,27 +71,26 @@ public class ContentFrame extends StackPane {
         menuVboxlinks.setAlignment(Pos.CENTER);
         menuVboxlinks.setId("vboxLinks");
         this.listSavedGameButtons = new ArrayList<Button>();
-
         this.listlevelButtons = new ArrayList<LevelItem>();
         this.levelVbox = createLevelMenuItems();
         this.levelVbox.getStyleClass().add("levelbox");
         this.levelItemScrollPane = createscrollPane(levelVbox);
         levelButtons.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                if (levelItemScrollPane.isVisible()) {
-                    levelItemScrollPane.setVisible(false);
-                } else levelItemScrollPane.setVisible(true);
+            @Override public void handle(ActionEvent e) {
+             if(levelItemScrollPane.isVisible()){
+                 levelItemScrollPane.setVisible(false);
+             }
+             else levelItemScrollPane.setVisible(true);
                 helpVboxScrollPane.setVisible(false);
             }
         });
         close.setOnAction(e -> Platform.exit());
-        helpVbox = createHelpMenuItem();
-        helpVboxScrollPane = createscrollPane(helpVbox);
+        helpVbox=createHelpMenuItem();
+        helpVboxScrollPane= createscrollPane(helpVbox);
         helpbutton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (helpVboxScrollPane.isVisible()) {
+                if(helpVboxScrollPane.isVisible()){
                     helpVboxScrollPane.setVisible(false);
 
                 } else {
@@ -102,10 +101,11 @@ public class ContentFrame extends StackPane {
 
         });
 
-        welcomeVbox= createWelcomeItem();
-
-        getChildren().addAll(menuVboxlinks,welcomeVbox, levelItemScrollPane, helpVboxScrollPane);
+       getChildren().addAll(menuVboxlinks, levelItemScrollPane,helpVboxScrollPane);
     }
+
+
+
 
 
     public ScrollPane createscrollPane(VBox scrollVbox) {

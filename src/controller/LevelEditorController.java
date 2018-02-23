@@ -19,6 +19,8 @@ import view.levelEditor.LevelEditorView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LevelEditorController {
 
@@ -49,7 +51,8 @@ public class LevelEditorController {
         try{
             Level level  = LevelFactory.importLevel(path);
             if(level!=null){
-                setNewMap(level.getMap());
+                this.editor.resetLevel(level);
+                this.levelEditorView.reloadMap();
                 this.levelEditorView.getNameInput().textProperty().setValue(level.getName());
                 if(level.whereAmI()!=null) this.meSet = true;
                 TextField[] gemInputs = this.levelEditorView.getGemInputs();
@@ -58,9 +61,10 @@ public class LevelEditorController {
                     gemInputs[i].setText(level.getGemGoals()[i]+"");
                     timeInputs[i].setText(level.getTickGoals()[i]+"");
                 }
+                this.levelEditorView.getColInput().setText(level.getWidth()+"");
+                this.levelEditorView.getRowInput().setText(level.getHeight()+"");
                 this.levelEditorView.selectFeld(0,0);
                 this.levelEditorView.update();
-                /*TODO: Level komplett importieren -> GemGoals und so*/
             }
             else System.out.println("Importfehler");
             /*TODO: import von REgeln etc..*/
@@ -68,11 +72,6 @@ public class LevelEditorController {
         catch(Exception e){
             System.out.println(e);
         }
-    }
-
-    private void setNewMap(Feld[][] map){
-        this.editor.setMap(map);
-        this.levelEditorView.reloadMap();
     }
 
     private void initInputEvents() {
@@ -86,6 +85,7 @@ public class LevelEditorController {
             mouseDown = true;
             int col = (int) (e.getY()/levelEditorView.getFieldSize());
             int row = (int) (e.getX()/levelEditorView.getFieldSize());
+            if(col<0||row<0||col>editor.getWidth()-1||row>editor.getHeight()-1) return;
             if(editor.getMode()==LevelEditor.Mode.BRUSH){
                 lastCoordinate = new Point2D(col,row) ;
                 brushFeld(col,row);
@@ -100,6 +100,7 @@ public class LevelEditorController {
             if(mouseDown){
                 int col = (int) (e.getY() / levelEditorView.getFieldSize());
                 int row = (int) (e.getX() / levelEditorView.getFieldSize());
+                if(col<0||row<0||col>editor.getWidth()-1||row>editor.getHeight()-1) return;
                 if(editor.getMode()==LevelEditor.Mode.BRUSH) {
                     Point2D newCoord = new Point2D(col, row);
                     if (!lastCoordinate.equals(newCoord)) {
@@ -126,6 +127,24 @@ public class LevelEditorController {
 
         levelEditorView.getExitButton().setOnAction(e -> {
             this.exit();
+        });
+
+        levelEditorView.getCropButton().setOnAction(e -> {
+            TextField rowInput =levelEditorView.getColInput();
+            TextField colInput = levelEditorView.getRowInput();
+            Integer col = stringToInteger(rowInput.getText());
+            Integer row = stringToInteger(colInput.getText());
+            if(row==null || row<1) {
+                rowInput.setStyle("-fx-color:red");
+                return;
+            }
+            if(col==null || col<1) {
+                rowInput.setStyle("-fx-color:red");
+                return;
+            }
+            cropMap(row,col);
+            this.levelEditorView.update();
+
         });
 
         levelEditorView.getLoadBox().getSelectionModel().selectedItemProperty().addListener( (a,b,c) -> {
@@ -170,12 +189,23 @@ public class LevelEditorController {
         initLevelSettingsInput();
     }
 
-    private void cropFeld(int rows, int cols) {
+    private void cropMap(int rows, int cols) {
         Feld[][] newMap = new Feld[rows][cols];
         int oldLength = editor.getMap()[0].length;
         int oldHeight = editor.getMap().length;
-        int copyLength = (cols >= oldLength) ? oldLength : cols;
-        int copyHeight = (rows >= oldHeight) ? oldHeight : rows;
+
+        for(int row = 0; row<rows; row++){
+            for(int col = 0; col<cols; col++){
+                boolean isInOldRange = (col<oldLength && row < oldHeight);
+                Feld oldFeld = isInOldRange ? editor.getMap()[row][col] : null;
+                Token token  = isInOldRange ? oldFeld.getToken() : Token.MUD;
+                Map<Property,Integer> map = isInOldRange ? oldFeld.getProperties() : new HashMap<>();
+                Feld newFeld = new Feld(token,map,col,row);
+                newFeld.setLevel(editor.getLevel());
+                newMap[row][col] = newFeld;
+            }
+        }
+        this.editor.setMap(newMap);
     }
 
     private void reloadLevelDir(){

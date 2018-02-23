@@ -1,6 +1,6 @@
 package model.game;
 
-import javafx.scene.control.Label;
+import javafx.util.Pair;
 import model.enums.*;
 
 import java.util.*;
@@ -61,7 +61,6 @@ public class Level {
     }
 
     public String getName() {
-
         return name;
     }
 
@@ -74,11 +73,23 @@ public class Level {
         }
     }
 
-    public Integer getRemainingGemsToGold() { return this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS); }
+    public Pair<Integer, Integer> getRemainingGoldTicksGems() {
+        Integer remainingTicks =  this.getTickGoals()[2] -this.getPropertyValue(Property.TICKS);
+        Integer remainingGems =  this.getGemGoals()[2]-this.getPropertyValue(Property.GEMS) ;
+        return new Pair<Integer, Integer>(remainingTicks, remainingGems);
+    }
 
-    public Integer getRemainingGemsToSilver(){ return this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS); }
+    public Pair<Integer, Integer> getRemainingSilverTicksGems() {
+        Integer remainingTicks =  this.getTickGoals()[1]- this.getPropertyValue(Property.TICKS);
+        Integer remainingGems = this.getGemGoals()[1]-this.getPropertyValue(Property.GEMS) ;
+        return new Pair<Integer, Integer>(remainingTicks, remainingGems);
+    }
 
-    public Integer getRemainingGemsToBronze(){ return this.getGemGoals()[2]- this.getPropertyValue(Property.GEMS); }
+    public Pair<Integer, Integer> getRemainingBronzeTicksGems() {
+        Integer remainingTicks = this.getTickGoals()[0]-this.getPropertyValue(Property.TICKS);
+        Integer remainingGems =  this.getGemGoals()[0]-this.getPropertyValue(Property.GEMS);
+        return new Pair<Integer, Integer>(remainingTicks, remainingGems);
+    }
 
     /**
      * @return current medal, or null
@@ -494,11 +505,9 @@ public class Level {
        for(Rule rule: pre){
            rule.execute(this.map,this.inputDirection);
        }
-        System.out.println("Pre\nX: " + getPropertyValue(Property.X) + " Y: " + getPropertyValue(Property.Y));
     }
 
     public void execPostRules(){
-        System.out.println("VOr Post\nX: " + getPropertyValue(Property.X) + " Y: " + getPropertyValue(Property.Y));
         for(Rule rule: post){
             rule.execute(this.map,this.inputDirection);
         }
@@ -575,14 +584,14 @@ public class Level {
     /*ATTENTION: returns a fake-clone (only map and properties are really cloned, rules,goals, jsonPath and other unchangable vars are the same)*/
     public Level clone(){
         Feld[][] copyOfMap = copyMap();
-        Map<Property, Integer> globalPropsClone = copyGlobalProps();
+        Map<Property, Integer> globalPropsClone = copyProps(this.properties);
         return new Level(new String(name),copyOfMap,gemGoals,tickGoals,pre,post,maxslime,globalPropsClone, jsonPath);
     }
 
-    /*copies global properties*/
-    private Map<Property,Integer> copyGlobalProps() {
+    /*copies property Maps*/
+    private Map<Property,Integer> copyProps(Map<Property,Integer> mapToCopy) {
         Map<Property,Integer> propertyClone= new HashMap<>();
-        for(Map.Entry<Property,Integer> entry:properties.entrySet()){
+        for(Map.Entry<Property,Integer> entry:mapToCopy.entrySet()){
             propertyClone.put(entry.getKey(),new Integer(entry.getValue()));
         }
         return propertyClone;

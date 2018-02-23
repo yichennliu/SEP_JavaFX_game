@@ -16,10 +16,7 @@ import javafx.util.Duration;
 import main.LevelFactory;
 import model.ai.AI;
 import model.ai.Robot;
-import model.enums.InputDirection;
-import model.enums.Medal;
-import model.enums.Property;
-import model.enums.WinningStatus;
+import model.enums.*;
 import model.game.Level;
 import model.game.MedalStatus;
 import org.json.JSONObject;
@@ -38,7 +35,6 @@ public class GameController {
     private GameView gameView;
     private Level level;
     private Timeline timeline;
-    private Timeline timer;
     private EscapeButtonHandler handler;
     private AI robot;
     private boolean robotActive;
@@ -52,7 +48,6 @@ public class GameController {
         this.robot = new Robot(level, 5);
         this.convertGameModus();
         this.addDragEvent();
-        this.countDown();
         this.addPauseResumeGameEvents();
     }
 
@@ -61,13 +56,14 @@ public class GameController {
     }
 
     public void update() {
-        this.countDown();
         this.addDirectionEvents();
     }
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
             System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
+            this.updateTimerLabel(this.level.getPropertyValue(Property.TICKS));
+            this.updateSandUhr(this.level.getPropertyValue(Property.TICKS));
             if (robotActive) this.level.setInputDirection(robot.getNextMove());
             boolean killedPre;
             boolean killedMain;
@@ -101,38 +97,37 @@ public class GameController {
 
     }
 
-    private void countDown() {
-        Label countDownLabel = this.gameView.getTimerLabel();
-        final Integer startSecond = this.level.getTickGoals()[0] / 5;
-        this.timer = new Timeline();
-        timer.setCycleCount(Timeline.INDEFINITE);
-        if (timer != null) {
-            timer.stop();
 
+    private void updateTimerLabel(Integer currentTick){
+        Label timer = this.gameView.getTimerLabel();
+        Integer maxSecs = this.level.getTickGoals()[0]/5;
+        int currentSec = (currentTick/5);
+        int timeLeft = maxSecs - currentSec;
+        timer.setText("Time Left: "+timeLeft);
+
+        if(timeLeft<=10){
+            timer.setTextFill(Color.RED);
+        } else{
+            timer.setTextFill(Color.WHITE);
         }
 
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
-            int second = startSecond;
+    }
 
-            @Override
-            public void handle(ActionEvent event) {
-                second--;
-                countDownLabel.setText("Time Left: " + second);
-                countDownLabel.setTextFill(Color.WHITE);
+    private void updateSandUhr(Integer currentTick){
+        double maxSec = (double) this.level.getTickGoals()[0]/5;
+        double currentSec = (double) currentTick/5;
+        double timePast = currentSec/maxSec;
 
-                if (second <= 0) {
-                    timer.stop();
-                }
+        if(timePast >=0.3){
+            this.gameView.setCurrentSandUhr(SandUhr.YELLOW);
+        } else {
+            this.gameView.setCurrentSandUhr(SandUhr.GREEN);
+        }
 
-                if (second <= 10) {
-                    countDownLabel.setTextFill(Color.RED);
-                }
+        if (currentSec/maxSec >=0.6) {
+            this.gameView.setCurrentSandUhr(SandUhr.RED);
+        }
 
-            }
-        });
-
-        timer.getKeyFrames().add(keyFrame);
-        timer.playFromStart();
     }
 
     public GameView getGameView() {
@@ -160,12 +155,9 @@ public class GameController {
         Stage gameStage = this.gameView.getStage();
         gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode().equals(KeyCode.K)) {
-                if (event.isShiftDown()) {
-                    this.robotize(false);
-                } else {
-                    this.robot = new Robot(level, 5);
-                    this.robotize(true);
-                }
+                this.robot = new Robot(level, 5);
+                this.robotize(true);
+
             } else {
                 this.robotize(false);
             }
@@ -180,12 +172,10 @@ public class GameController {
                 if (timeline != null && timeline.getStatus().equals(Animation.Status.RUNNING)) {
                     this.gameView.createPauseGameIcon();
                     timeline.stop();
-                    timer.stop();
 
                 } else if (timeline != null && timeline.getStatus() == Animation.Status.STOPPED) {
                     this.gameView.removePauseGameIcon();
                     timeline.play();
-                    timer.play();
                 }
             }
         });
@@ -207,7 +197,6 @@ public class GameController {
      */
     private void endOfGameDialog() {
         this.timeline.stop();
-        this.timer.stop();
 
         EndGameAlert endGameAlert = new EndGameAlert();
 
@@ -372,7 +361,6 @@ public class GameController {
 
                 if (timeline != null) {
                     timeline.stop();
-                    timer.stop();
                 }
 
                 GameController.this.addAlertKeyEvent(alert);
@@ -383,7 +371,6 @@ public class GameController {
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
-                        timer.playFromStart();
                     }
                 } else if (result.get() == alert.getSaveExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
@@ -400,14 +387,12 @@ public class GameController {
                     GameController.this.controller.startLevel(level.getJsonPath());
                     alert.close();
                     timeline.playFromStart();
-                    timer.playFromStart();
 
 
                 } else if (result.get() == alert.getCancelButton()) {
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
-                        timer.play();
                     }
                 }
             }
