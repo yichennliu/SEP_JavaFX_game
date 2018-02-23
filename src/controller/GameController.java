@@ -38,7 +38,6 @@ public class GameController {
     private GameView gameView;
     private Level level;
     private Timeline timeline;
-    private Timeline timer;
     private EscapeButtonHandler handler;
     private AI robot;
     private boolean robotActive;
@@ -67,9 +66,6 @@ public class GameController {
         EventHandler<ActionEvent> loop = e -> {
             gameView.getTimerLabel().setText((level.getPropertyValue(Property.TICKS).doubleValue()/5.0)+"");
             if (robotActive) this.level.setInputDirection(robot.getNextMove());
-            boolean killedPre;
-            boolean killedMain;
-            boolean killedPost;
 
             /* Compute a tick */
             this.level.resetProperties();
@@ -145,12 +141,10 @@ public class GameController {
                 if (timeline != null && timeline.getStatus().equals(Animation.Status.RUNNING)) {
                     this.gameView.createPauseGameIcon();
                     timeline.stop();
-                    timer.stop();
 
                 } else if (timeline != null && timeline.getStatus() == Animation.Status.STOPPED) {
                     this.gameView.removePauseGameIcon();
                     timeline.play();
-                    timer.play();
                 }
             }
         });
@@ -172,8 +166,6 @@ public class GameController {
      */
     private void endOfGameDialog() {
         this.timeline.stop();
-        this.timer.stop();
-
         EndGameAlert endGameAlert = new EndGameAlert();
 
         if (this.level.getWinningStatus() == WinningStatus.WON) {
@@ -337,7 +329,6 @@ public class GameController {
 
                 if (timeline != null) {
                     timeline.stop();
-                    timer.stop();
                 }
 
                 GameController.this.addAlertKeyEvent(alert);
@@ -348,7 +339,6 @@ public class GameController {
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
-                        timer.playFromStart();
                     }
                 } else if (result.get() == alert.getSaveExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
@@ -365,14 +355,12 @@ public class GameController {
                     GameController.this.controller.startLevel(level.getJsonPath());
                     alert.close();
                     timeline.playFromStart();
-                    timer.playFromStart();
 
 
                 } else if (result.get() == alert.getCancelButton()) {
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
-                        timer.play();
                     }
                 }
             }

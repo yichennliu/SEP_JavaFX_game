@@ -82,7 +82,7 @@ public  class ContentFrame extends StackPane {
          menuVboxlinks = new VBox(15, gameButton, levelButtons,loadtheme, themeEditorButton, levelEditorButton, helpbutton, close);
          menuVboxlinks.setMinSize((widthLinks/2),heightLinks);
         menuVboxlinks.setMaxSize((widthLinks/2),heightLinks);
-        menuVboxlinks.setAlignment(Pos.TOP_LEFT);
+        menuVboxlinks.setAlignment(Pos.CENTER);
          menuVboxlinks.setId("vboxLinks");
         this.listSavedGameButtons = new ArrayList<Button>();
         this.listlevelButtons = new ArrayList<LevelItem>();
@@ -175,7 +175,7 @@ public  class ContentFrame extends StackPane {
             ImageView snapshotview =  new ImageView(snapshot);
             String levelText = "Medaillen: "+ this.getMedalImage(level.getJsonPath());
 
-            LevelItem levelItem = new LevelItem( level.getName(),levelText,snapshotview,path,widthLinks,heightLinks);
+            LevelItem levelItem = new LevelItem(new Label(level.getName()),levelText,snapshotview,path,widthLinks,heightLinks);
             listlevelButtons.add(levelItem);
             levelVbox.getChildren().add(levelItem);
         }
@@ -202,7 +202,7 @@ public  class ContentFrame extends StackPane {
             Image snapShot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/savegame/"+path));
             Level level = LevelFactory.importLevel("src/json/savegame/"+path);
             ImageView snapShotView = new ImageView(snapShot);
-            savedGameVbox.getChildren().add(0, new LevelItem(level.getName(),null,snapShotView,path,widthLinks,heightLinks));
+            savedGameVbox.getChildren().add(0, new LevelItem(new Label(level.getName()),null,snapShotView,path,widthLinks,heightLinks));
         }
 
         return levelVbox;

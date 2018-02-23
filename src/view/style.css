@@ -9,10 +9,8 @@
              linear-gradient(#000000 0%, #606060 0%, #505250 3%,#191d23 100%);
             -fx-background-insets: 0,1,4,5,6;
             -fx-background-radius: 9,8,5,4,3;
-            -fx-padding: 15 30 15 30;
-            -fx-spacing: 150;
             -fx-font-family: "Helvetica";
-            -fx-font-size: 19px;
+            -fx-font-size: 17px;
             -fx-font-weight: bold;
             -fx-text-fill: #f7d7aa;
             -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);
@@ -33,7 +31,7 @@
 
 
 #vboxLinks{  -fx-background-color: #020d1e;
-                                     -fx-padding:80;
+                                     -fx-padding:5;
                                      -fx-spacing: 10;
                                        -fx-stroke: green;
                                         -fx-stroke-width: 2;
