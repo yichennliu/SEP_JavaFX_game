@@ -1,10 +1,8 @@
 package controller;
 
-import javafx.event.EventHandler;
-import javafx.scene.Cursor;
+
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import model.Menu.SavedGameProgress;
 import javafx.scene.input.MouseEvent;
 import model.game.MedalStatus;
 import view.LevelItem;

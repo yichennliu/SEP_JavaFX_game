@@ -40,7 +40,7 @@ public class LevelItem extends HBox {
         image.setFitHeight(150);
         rightContainer.setMinSize(width, height);
         rightContainer.setMaxSize(width, height);
-        rightContainer.getStyleClass().add("backgorungMenuLevel");
+        rightContainer.getStyleClass().add("backgroundcolorBlue");
         vboxLevelInformation.getStyleClass().add("vboxlevel");
         information.getStyleClass().add("infoOnLevelItem");
         name.getStyleClass().add("infoOnLevelItem");

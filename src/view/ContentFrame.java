@@ -40,7 +40,7 @@ public class ContentFrame extends StackPane {
     private Button close;
     private Button levelEditorButton;
     private Boolean showSavebutton;
-    private VBox levelVbox, helpVbox, savedGameVbox, menuVboxlinks;
+    private VBox levelVbox, helpVbox, welcomeVbox, menuVboxlinks;
     private ArrayList<LevelItem> listlevelButtons;
     private ArrayList<Button> listSavedGameButtons;
     private Scene scene;
@@ -102,19 +102,21 @@ public class ContentFrame extends StackPane {
 
         });
 
-        getChildren().addAll(menuVboxlinks, levelItemScrollPane, helpVboxScrollPane);
+        welcomeVbox= createWelcomeItem();
+
+        getChildren().addAll(menuVboxlinks,welcomeVbox, levelItemScrollPane, helpVboxScrollPane);
     }
 
 
     public ScrollPane createscrollPane(VBox scrollVbox) {
-        ScrollPane ScrollPane = new ScrollPane(scrollVbox);
-        ScrollPane.setId("scroll");
-        ScrollPane.setTranslateX(widthLinks / 2);
-        ScrollPane.setMinSize(widthLinks / 2, heightLinks);
-        ScrollPane.setMaxSize(widthLinks / 2, heightLinks);
-        ScrollPane.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
-        ScrollPane.setVisible(false);
-        return ScrollPane;
+        ScrollPane scrollPane = new ScrollPane(scrollVbox);
+        scrollPane.setId("scroll");
+        scrollPane.setTranslateX(widthLinks / 2);
+        scrollPane.setMinSize(widthLinks / 2, heightLinks);
+        scrollPane.setMaxSize(widthLinks / 2, heightLinks);
+        scrollPane.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVisible(false);
+        return scrollPane;
     }
 
 
@@ -131,6 +133,7 @@ public class ContentFrame extends StackPane {
     public Button createButton(String titel) {
         Button button = new Button(titel);
         button.setMinWidth(widthLinks / buttonfactor);
+       button.setId("menuLeftButtons");
         return button;
     }
 
@@ -170,28 +173,14 @@ public class ContentFrame extends StackPane {
     }
 
 
-    private VBox createSavedGameItems() {
-
-        savedGameVbox = new VBox(5);
-        savedGameVbox.setAlignment(Pos.TOP_CENTER);
-        Theme theme = null;
-
-        try {
-            theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
-        } catch (Exception e) {
-            System.out.println("Theme not found / corrupt file");
-        }
-
-        for (String path : scanSavedGameDirectory()) {
-            Image snapShot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/savegame/" + path));
-            Level level = LevelFactory.importLevel("src/json/savegame/" + path);
-            ImageView snapShotView = new ImageView(snapShot);
-            savedGameVbox.getChildren().add(0, new LevelItem(level.getName(), null, snapShotView, path, widthLinks, heightLinks));
-        }
-
-        return levelVbox;
+    private VBox createWelcomeItem(){
+        welcomeVbox= new VBox();
+        welcomeVbox.setTranslateX(widthLinks / 2);
+        welcomeVbox.setMinSize(widthLinks / 2, heightLinks);
+        welcomeVbox.setMaxSize(widthLinks / 2, heightLinks);
+        welcomeVbox.getStyleClass().add("backgroundcolorBlue");
+        return welcomeVbox;
     }
-
 
     /**
      * @param path Level path

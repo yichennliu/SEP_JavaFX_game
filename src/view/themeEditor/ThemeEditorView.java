@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import model.enums.Token;
 import model.themeEditor.Theme;
@@ -45,7 +46,8 @@ private Button exitButton;
 private TextField nameInput;
 private Group ioButtons;
 private VBox header;
-    private MenuView menuView;
+private MenuView menuView;
+private double width,height;
 
 
 ComboBox<String> themeChoiceBox;
@@ -54,13 +56,15 @@ private ObservableList<String> themes;
 private String stylesheet;
 
     public ThemeEditorView(Stage stage){
+        Rectangle background = new Rectangle(width,height);
         root = new Group();
         this.sceneThemeView = new Scene(root);
         this.stage = stage;
-
+        this.width=stage.getWidth();
+        this.height=stage.getHeight();
         rootPane = new BorderPane();
-
-
+        rootPane.setPrefSize(width/3,height-100);
+        rootPane.getStyleClass().add("backgroundcolorBlue");
         /* TreeView */
         TreeItem<view.themeEditor.Cell> treeRoot = new TreeItem<view.themeEditor.Cell> (null);
         treeRoot.setExpanded(true);
@@ -85,11 +89,13 @@ private String stylesheet;
         initIOButtons();
         initExitButton();
         rootPane.setLeft(treeView);
+        rootPane.setTranslateX(width/4);
+        rootPane.setTranslateY(50);
+
 
         stylesheet = menuView.fileToStylesheetString(new File("src/view/style.css"));
         sceneThemeView.getStylesheets().add(stylesheet);
-        rootPane.setTranslateX(stage.getWidth()/3);
-        root.setTranslateY(stage.getHeight()/5);
+
         root.getChildren().add(rootPane);
         if(!stage.isShowing()) stage.show();
     }
@@ -142,20 +148,22 @@ private String stylesheet;
     }
 
     private void initPositionPaneRoot(){
-        double maxWidth = 150;
+        double maxWidth =width;
 
         GridPane positionPaneRoot = new GridPane();
         positionPaneRoot.setGridLinesVisible(true);
         GridPane buttonGridPane = new GridPane();
         this.previewGridPane = new GridPane();
 
-        buttonGridPane.setMinWidth(150);
+        buttonGridPane.setMinWidth(width/3);
+        buttonGridPane.setMinSize(width/3,height/2);
         previewGridPane.setDisable(true);
 
         this.nextFrame = new Button(); nextFrame.setGraphic(new ImageView("model/themeEditor/thumbnails/next.png"));
         this.previousFrame = new Button(); previousFrame.setGraphic(new ImageView("model/themeEditor/thumbnails/previous.png"));
         this.frameNumberField = new TextField("0");
         frameNumberField.setMaxWidth(30);
+        frameNumberField.setMinWidth(30);
         frameNumberField.setEditable(false);
         TilePane frameControllers = new TilePane();
         frameControllers.setAlignment(Pos.CENTER);
