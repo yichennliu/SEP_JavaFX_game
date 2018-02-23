@@ -50,7 +50,7 @@ public class LevelEditorController {
             Level level  = LevelFactory.importLevel(path);
             if(level!=null){
                 setNewMap(level.getMap());
-                this.levelEditorView.getNameInput().textProperty().setValue(level.getName().getText());
+                this.levelEditorView.getNameInput().textProperty().setValue(level.getName());
                 if(level.whereAmI()!=null) this.meSet = true;
                 TextField[] gemInputs = this.levelEditorView.getGemInputs();
                 TextField[] timeInputs = this.levelEditorView.getTimeInputs();

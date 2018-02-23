@@ -33,7 +33,7 @@
 
 
 #vboxLinks{  -fx-background-color: #020d1e;
-                                     -fx-padding:80;
+
                                      -fx-spacing: 10;
                                        -fx-stroke: green;
                                         -fx-stroke-width: 2;
@@ -55,7 +55,7 @@
                       }
 
 
-
+.infoOnLevelItem{-fx-text-fill:#f7d7aa;}
 
 .textColor{
 -fx-text-fill: #f7d7aa;

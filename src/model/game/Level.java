@@ -60,10 +60,9 @@ public class Level {
         }
     }
 
-    public Label getName() {
+    public String getName() {
 
-        Label nameLabel = new Label(name);
-        return nameLabel;
+        return name;
     }
 
     /** @return Feld, or null */
