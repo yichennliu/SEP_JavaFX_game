@@ -20,8 +20,6 @@ public class LevelItem extends HBox {
     private double width ,height;
 
 
-
-
     public LevelItem(String menuItemName, String info, ImageView image, String userData, double width, double height) {
         super(5);
         this.width=width;

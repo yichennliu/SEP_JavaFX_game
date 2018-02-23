@@ -7,9 +7,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import model.game.Level;
+
+import java.io.File;
 
 public class EndGameAlert extends Alert {
 
@@ -17,33 +18,24 @@ public class EndGameAlert extends Alert {
     private ButtonType cancelExitButton;
     private ButtonType nextLevelButton;
     private Level level;
-    private ImageView endGameImage = new ImageView();
+    private String stylesheet;
+    private MenuView menuView;
 
     public EndGameAlert (){
         super(AlertType.INFORMATION);
-        this.level = level;
+        this.stylesheet = menuView.fileToStylesheetString(new File("src/view/style.css"));
         this.setTitle("Exit or Save");
         this.setHeaderText("Do you want to save or exit the game?");
         DialogPane dialogPane = this.getDialogPane();
-        dialogPane.setStyle("-fx-background-color: black;"+"-fx-text-fill: white;");
-        dialogPane.getStyleClass().remove("alert");
+        dialogPane.getStylesheets().add(stylesheet);
+        dialogPane.getStyleClass().add(".dialog-pane");
 
-        GridPane grid = (GridPane)dialogPane.lookup(".header-panel");
-        grid.setStyle("-fx-background-color: black; "
-                + "-fx-font: bold normal 20pt \"Arial\";"+"-fx-text-fill: white;");
+        ButtonBar buttonBar = (ButtonBar) this.getDialogPane().lookup(".button-bar");
+        buttonBar.getStyleClass().add(".button");
 
-        dialogPane.lookup(".content.label").setStyle("-fx-font-size: 30px; "
-                + "-fx-font-weight: bold;" + "-fx-text-fill: white;");
-
-        ButtonBar buttonBar = (ButtonBar)this.getDialogPane().lookup(".button-bar");
-        buttonBar.setStyle("-fx-background-color:black;"+
-                "-fx-text-fill: white;"+ "-fx-wrap-text: true;"+
-                "-fx-effect: dropshadow(three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);"+
-                "-fx-cursor:hand;");
-
-        StackPane stackPane = new StackPane(this.endGameImage);
-
-        stackPane.setPrefSize(24, 24);
+        StackPane stackPane = new StackPane(new ImageView(
+                new Image(getClass().getResourceAsStream("images/EndGame.png"))));
+        stackPane.setPrefSize(15, 15);
         stackPane.setAlignment(Pos.CENTER);
         dialogPane.setGraphic(stackPane);
 
@@ -54,17 +46,9 @@ public class EndGameAlert extends Alert {
         this.getButtonTypes().setAll(
 
                 retryButton,
-                cancelExitButton,
-                nextLevelButton
-
+                cancelExitButton
         );
     }
-
-    public void setEndGameImage(Image endGameImage){
-
-        this.endGameImage.setImage(endGameImage);
-    }
-
 
 
     public ButtonType getRetryButton() {

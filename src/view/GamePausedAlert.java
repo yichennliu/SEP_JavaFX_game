@@ -27,22 +27,13 @@ public class GamePausedAlert extends Alert {
         this.stylesheet = menuView.fileToStylesheetString(new File("src/view/style.css"));
         this.setTitle("Exit or Save");
         this.setHeaderText("Do you want to save or exit the game?");
+
         DialogPane dialogPane = this.getDialogPane();
         dialogPane.getStylesheets().add(stylesheet);
-        dialogPane.getStyleClass().add("backgroundcolorBlue");
-
-        GridPane grid = (GridPane) dialogPane.lookup(".header-panel");
-        grid.setStyle("-fx-background-color: black; "
-                + "-fx-font: bold normal 20pt \"Arial\";"+"-fx-text-fill: red;");
-
-        dialogPane.lookup(".content.label").setStyle("-fx-font-size: 30px; "
-                + "-fx-font-weight: bold;" + "-fx-fill: white;");
+        dialogPane.getStyleClass().add(".dialog-pane");
 
         ButtonBar buttonBar = (ButtonBar) this.getDialogPane().lookup(".button-bar");
-        buttonBar.setStyle("-fx-background-color:black;"+
-                "-fx-text-fill:white;"+ "-fx-wrap-text: true;"+
-                "-fx-effect: dropshadow(three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);"+
-                "-fx-cursor:hand;");
+        buttonBar.getStyleClass().add(".button");
 
         StackPane stackPane = new StackPane(new ImageView(
                 new Image(getClass().getResourceAsStream("images/Exit.png"))));
@@ -53,7 +44,7 @@ public class GamePausedAlert extends Alert {
         saveButton = new ButtonType("Save", ButtonBar.ButtonData.OTHER);
         saveExitButton = new ButtonType("Save & Exit", ButtonBar.ButtonData.OTHER);
         exitButton = new ButtonType("Exit", ButtonBar.ButtonData.OTHER);
-        retryButton = new ButtonType("Restart level", ButtonBar.ButtonData.OTHER);
+        retryButton = new ButtonType("Restart", ButtonBar.ButtonData.OTHER);
         cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
         this.getButtonTypes().setAll(
