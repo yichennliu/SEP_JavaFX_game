@@ -62,7 +62,7 @@ public class GameController {
         this.convertGameModus();
         this.addDragEvent();
         this.addPauseResumeGameEvents();
-//        initAudios();
+        initAudios();
         startAudio();
     }
 
@@ -70,12 +70,12 @@ public class GameController {
         this.robotActive = activate;
     }
 
-//    private void initAudios(){
-//        audios = new ArrayList<>();
-//        for(String path : new File("src/audio").list()){
-//            audios.add(new Media(new File("src/audio/"+path).toURI().toString()));
-//        }
-//    }
+    private void initAudios(){
+        audios = new ArrayList<>();
+        for(String path : new File("src/audio").list()){
+            audios.add(new Media(new File("src/audio/"+path).toURI().toString()));
+        }
+    }
 
     private Media getNextClip(){
         if(audios==null||audios.size()==0) return null;
