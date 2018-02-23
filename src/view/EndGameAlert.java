@@ -9,15 +9,19 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import model.game.Level;
 
 public class EndGameAlert extends Alert {
 
     private ButtonType retryButton;
     private ButtonType cancelExitButton;
+    private ButtonType nextLevelButton;
+    private Level level;
+    private ImageView endGameImage = new ImageView();
 
     public EndGameAlert (){
         super(AlertType.INFORMATION);
-
+        this.level = level;
         this.setTitle("Exit or Save");
         this.setHeaderText("Do you want to save or exit the game?");
         DialogPane dialogPane = this.getDialogPane();
@@ -37,22 +41,31 @@ public class EndGameAlert extends Alert {
                 "-fx-effect: dropshadow(three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);"+
                 "-fx-cursor:hand;");
 
-        StackPane stackPane = new StackPane(new ImageView(
-                new Image(getClass().getResourceAsStream("images/fire.png"))));
+        StackPane stackPane = new StackPane(this.endGameImage);
+
         stackPane.setPrefSize(24, 24);
         stackPane.setAlignment(Pos.CENTER);
         dialogPane.setGraphic(stackPane);
 
         retryButton = new ButtonType("Restart level", ButtonBar.ButtonData.OTHER);
         cancelExitButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        nextLevelButton = new ButtonType("Next Level", ButtonBar.ButtonData.OTHER);
 
         this.getButtonTypes().setAll(
 
                 retryButton,
-                cancelExitButton
+                cancelExitButton,
+                nextLevelButton
 
         );
     }
+
+    public void setEndGameImage(Image endGameImage){
+
+        this.endGameImage.setImage(endGameImage);
+    }
+
+
 
     public ButtonType getRetryButton() {
         return retryButton;
@@ -61,5 +74,7 @@ public class EndGameAlert extends Alert {
     public ButtonType getCancelExitButton() {
         return cancelExitButton;
     }
+
+    public ButtonType getNextLevelButton() { return nextLevelButton; }
 
 }

@@ -7,6 +7,8 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -202,8 +204,10 @@ public class GameController {
 
         if (this.level.getWinningStatus() == WinningStatus.WON) {
             endGameAlert.setHeaderText("You successfully completed the level \"" + this.level.getName() + "\". Hooray!");
-        } else {
+            endGameAlert.setEndGameImage(new Image(getClass().getResourceAsStream("images/EndGameWin.png")));
+        } else if(this.level.getWinningStatus() == WinningStatus.LOST) {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");
+            endGameAlert.setEndGameImage(new Image(getClass().getResourceAsStream("images/EndGameLose.png")));
         }
 
         GameController.this.addAlertKeyEvent(endGameAlert);
@@ -221,6 +225,12 @@ public class GameController {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
                 this.controller.startMenu();
             }
+
+            if( result.get() == endGameAlert.getNextLevelButton()) {
+                gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
+                this.controller.startNextLevel();
+            }
+
         });
     }
 

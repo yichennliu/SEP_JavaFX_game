@@ -5,13 +5,18 @@ import model.enums.Medal;
 import model.game.Level;
 import model.game.MedalStatus;
 import model.levelEditor.LevelEditor;
+import model.misc.UsefulMethods;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import view.*;
 import view.levelEditor.LevelEditorView;
 import view.themeEditor.ThemeEditorView;
+
+import java.io.File;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Controller {
@@ -21,10 +26,14 @@ public class Controller {
     private MenuController menuController;
     private ThemeEditorController themeEditorController;
     private GameController gameController;
+    private List<String> levelList;
+    private int currentLevelIndex =0;
+
 
     public Controller(View view, Object model) { // Todo: ControllerModel
         this.view = view;
         this.currentMode = View.Mode.GAME;
+        this.levelList = UsefulMethods.scanLevelDirectory();
       }
 
     public MenuController getMenuController() {
@@ -66,7 +75,7 @@ public class Controller {
     }
 
     public void startGame(){
-        this.startLevel("json/level/text.json");
+        this.startLevel("src/json/level/"+levelList.get(currentLevelIndex));
     }
 
 
@@ -94,6 +103,13 @@ public class Controller {
 
     }
 
+
+    public void startNextLevel(){
+        currentLevelIndex = (currentLevelIndex==levelList.size()-1) ? 0 : currentLevelIndex+1;
+        this.startLevel("src/json/level/"+levelList.get(currentLevelIndex));
+
+    }
+
     /**
      * @return saved Medal statuses, an empty map otherwise
      */
@@ -118,7 +134,6 @@ public class Controller {
                 medalStatuses.put(path, medalStatus);
             }
         }
-
         return medalStatuses;
     }
 }

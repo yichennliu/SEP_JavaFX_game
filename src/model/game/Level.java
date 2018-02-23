@@ -61,10 +61,8 @@ public class Level {
         }
     }
 
-    public Label getName() {
-
-        Label nameLabel = new Label(name);
-        return nameLabel;
+    public String getName() {
+        return name;
     }
 
 

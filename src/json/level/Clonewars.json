@@ -1,8 +1,9 @@
 {
     "gems": [
-        2,
-        4,
-        6
+        12,
+        23,
+        20
+
     ],
     "ticks": [
         30030,
@@ -10,7 +11,7 @@
         50
     ],
     "values": {},
-    "name": "Hallo",
+    "name": "Clonewars",
     "width": 25,
     "map": [
         [
@@ -686,7 +687,7 @@
             "mud",
             "mud",
             "mud",
-            "mud"
+            "exit"
         ]
     ],
     "height": 25

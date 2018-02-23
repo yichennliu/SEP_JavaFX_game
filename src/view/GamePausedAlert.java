@@ -41,7 +41,7 @@ public class GamePausedAlert extends Alert {
                 "-fx-cursor:hand;");
 
         StackPane stackPane = new StackPane(new ImageView(
-                new Image(getClass().getResourceAsStream("images/end.gif"))));
+                new Image(getClass().getResourceAsStream("images/Exit.png"))));
         stackPane.setPrefSize(24, 24);
         stackPane.setAlignment(Pos.CENTER);
         dialogPane.setGraphic(stackPane);

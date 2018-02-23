@@ -25,6 +25,7 @@ import model.enums.Medal;
 import model.game.Level;
 import model.game.MedalStatus;
 import model.misc.LevelSnapshot;
+import model.misc.UsefulMethods;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 import java.io.File;
@@ -79,7 +80,7 @@ public  class ContentFrame extends StackPane {
         this.close = createButton("C L O S E ");
         this.levelEditorButton = createButton("L E V E L - E D I T O R");
         this.saveButton = createButton("S A V E D  G A M E ");
-         menuVboxlinks = new VBox(15, gameButton, levelButtons,loadtheme, themeEditorButton, levelEditorButton, helpbutton, close);
+         menuVboxlinks = new VBox(15, gameButton, levelButtons, saveButton, loadtheme, themeEditorButton, levelEditorButton, helpbutton, close);
          menuVboxlinks.setMinSize((widthLinks/2),heightLinks);
         menuVboxlinks.setMaxSize((widthLinks/2),heightLinks);
         menuVboxlinks.setAlignment(Pos.TOP_LEFT);
@@ -133,16 +134,6 @@ public  class ContentFrame extends StackPane {
     }
 
 
-    private String[] scanLevelDirectory() {
-        File dir = new File("src/json/level");
-        return dir.list();
-    }
-
-    private String[] scanSavedGameDirectory(){
-        File dir = new File("src/json/savegame");
-        return dir.list();
-    }
-
     public Button createButton(String titel ) {
        Button button= new Button(titel);
         button.setMinWidth(widthLinks/buttonfactor);
@@ -156,6 +147,7 @@ public  class ContentFrame extends StackPane {
     public ArrayList getListSavedGameButtons(){
         return listSavedGameButtons;
     }
+
     private VBox createLevelMenuItems(){
 
         levelVbox = new VBox(5 );
@@ -169,13 +161,13 @@ public  class ContentFrame extends StackPane {
             System.out.println("Theme not found / corrupt file");
         }
 
-        for (String path : scanLevelDirectory()) {
+        for (String path : UsefulMethods.scanLevelDirectory()) {
             Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/level/"+path));
             Level level = LevelFactory.importLevel("src/json/level/"+path);
             ImageView snapshotview =  new ImageView(snapshot);
             String levelText = "Medaillen: "+ this.getMedalImage(level.getJsonPath());
 
-            LevelItem levelItem = new LevelItem( level.getName(),levelText,snapshotview,path,widthLinks,heightLinks);
+            LevelItem levelItem = new LevelItem( new Label(level.getName()),levelText,snapshotview,path,widthLinks,heightLinks);
             listlevelButtons.add(levelItem);
             levelVbox.getChildren().add(levelItem);
         }
@@ -183,7 +175,6 @@ public  class ContentFrame extends StackPane {
         return levelVbox;
 
     }
-
 
     private VBox createSavedGameItems(){
 
@@ -198,11 +189,11 @@ public  class ContentFrame extends StackPane {
             System.out.println("Theme not found / corrupt file");
         }
 
-        for (String path : scanSavedGameDirectory()) {
+        for (String path : UsefulMethods.scanSavegameDirectory()) {
             Image snapShot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/savegame/"+path));
             Level level = LevelFactory.importLevel("src/json/savegame/"+path);
             ImageView snapShotView = new ImageView(snapShot);
-            savedGameVbox.getChildren().add(0, new LevelItem(level.getName(),null,snapShotView,path,widthLinks,heightLinks));
+            savedGameVbox.getChildren().add(0, new LevelItem(new Label(level.getName()),null,snapShotView,path,widthLinks,heightLinks));
         }
 
         return levelVbox;
@@ -264,15 +255,15 @@ public  class ContentFrame extends StackPane {
         return helpVbox;
     }
 
-
     public Button getGameButton() {
         return gameButton;
     }
+
     public Button getThemeEditorButton() {
         return themeEditorButton;
     }
-    public Button getLevelEditorButton() {return levelEditorButton;}
 
+    public Button getLevelEditorButton() {return levelEditorButton;}
 
     public Button getSaveButton() {return this.saveButton;}
 
