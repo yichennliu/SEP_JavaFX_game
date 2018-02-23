@@ -86,12 +86,10 @@ public class Controller {
             gameController = new GameController(level,gameView,this);
 
         } else{
-
             gameController.addEscapeGameMenu();
             gameController.setGameView(gameView);
             gameController.setLevel(level);
             gameController.update();
-
         }
 
         this.view.update(View.Mode.GAME, gameController.getGameView());
