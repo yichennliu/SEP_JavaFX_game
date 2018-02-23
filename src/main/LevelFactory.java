@@ -24,7 +24,13 @@ public class LevelFactory {
                 is = new FileInputStream(jsonPath);
             }
             catch(FileNotFoundException e) {
-                throw new JSONException("File not found");
+                File file = new File(jsonPath);
+                    try {
+                        is = new FileInputStream(file);
+                    } catch (FileNotFoundException e1) {
+                        throw new JSONException("File not found: " + jsonPath);
+                    }
+
             }
         }
         JSONObject jsonLevel = new JSONObject(new JSONTokener(is));

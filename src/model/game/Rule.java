@@ -2,7 +2,7 @@ package model.game;
 import model.enums.Direction;
 import model.enums.InputDirection;
 import model.enums.Situation;
-import model.misc.UsefullMethods;
+import model.misc.UsefulMethods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +43,11 @@ public class Rule {
             return;
         }
 
-        while (UsefullMethods.between(startI, i, endI)) {
+        while (UsefulMethods.between(startI, i, endI)) {
 
             int j = initJSE(map);
 
-            while (UsefullMethods.between(startJ, j, endJ)) {
+            while (UsefulMethods.between(startJ, j, endJ)) {
                 List<Feld> feldList = new ArrayList();
                 try {
                     int y = initY(i, j);
@@ -60,7 +60,7 @@ public class Rule {
                             this.result.get(z).replace(feldList.get(z), feldList);
                         }
                         j = hoverOverRulelengthJNW(ruleLength, j);
-                        if (!UsefullMethods.between(startJ, j, endJ))
+                        if (!UsefulMethods.between(startJ, j, endJ))
                             throw new IndexOutOfBoundsException();
                     } else {
                         j = incOrDecJNW(j);

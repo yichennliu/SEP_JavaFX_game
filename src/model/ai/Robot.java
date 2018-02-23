@@ -7,7 +7,7 @@ import model.enums.WinningStatus;
 import model.game.Feld;
 import model.game.Level;
 import model.game.Rule;
-import model.misc.UsefullMethods;
+import model.misc.UsefulMethods;
 import org.json.JSONObject;
 
 import java.util.*;
