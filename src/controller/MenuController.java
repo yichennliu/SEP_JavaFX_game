@@ -37,7 +37,7 @@ public class MenuController {
 
     /**
      * @return Status der Medaillen. Key ist der Pfad des Levels (level.getJsonPath()),
-     * Value is ein Objekt in dem steht welche Medaillen für dieses Level erreicht wurden
+     * Value ist ein Objekt in dem steht, welche Medaillen für dieses Level erreicht wurden
      */
     public Map<String, MedalStatus> getMedalStatuses() {
         return this.medalStatuses;
