@@ -187,6 +187,7 @@ private String stylesheet;
 
         positionButtonGroup = new ToggleGroup();
         positionButtons = new VBox();
+        positionPaneRoot.getStyleClass().add("backgroundcolorOrange");
 
         preview = new ImageView("model/themeEditor/thumbnails/defaultPreview.png");
         preview.setPreserveRatio(true);
