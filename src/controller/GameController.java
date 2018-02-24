@@ -73,7 +73,13 @@ public class GameController {
     private void initAudios(){
         audios = new ArrayList<>();
         for(String path : new File("src/audio").list()){
-            audios.add(new Media(new File("src/audio/"+path).toURI().toString()));
+            try {
+                audios.add(new Media(new File("src/audio/"+path).toURI().toString()));
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -129,6 +135,7 @@ public class GameController {
             this.level.execPreRules();
             this.level.executeMainRules();
             this.level.execPostRules();
+            this.level.checkLosing();
 
             this.level.setInputDirection(null);
             this.gameView.update();
