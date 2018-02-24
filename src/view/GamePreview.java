@@ -6,9 +6,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import model.ai.Robot;
@@ -18,7 +20,7 @@ import model.game.Level;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 
-public class GamePreview extends Group{
+public class GamePreview extends HBox{
 
     private Canvas staticCanvas;
     private Canvas animatedCanvas;
@@ -27,18 +29,18 @@ public class GamePreview extends Group{
     private Board board;
     private Timeline timeline;
     private Theme theme;
-    private double speed = 1.0/5.0;
+    private double speed =0.2;
 
     public GamePreview(double width, double height, double fieldSize){
         super();
         try {
-
             this.fieldSize = fieldSize;
             this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
             staticCanvas = new Canvas(width,height);
             animatedCanvas = new Canvas(width,height);
-            Group canvasGroup = new Group(staticCanvas,animatedCanvas);
-            super.getChildren().addAll(canvasGroup);
+            Group canvasgroup  = new Group(staticCanvas,animatedCanvas);
+            super.getChildren().addAll(canvasgroup,new Label("HAAAALLO"));
+            staticCanvas.setCursor(Cursor.CLOSED_HAND);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -48,7 +50,7 @@ public class GamePreview extends Group{
 
     public void playLevel(Level level){
         Level levelCopy = level.clone();
-        this.robot = new Robot(level,5);
+        this.robot = new Robot(levelCopy,5);
         this.board = new Board(staticCanvas,animatedCanvas,levelCopy.getMap(),theme,fieldSize);
 
         EventHandler<ActionEvent> loop = e -> {
@@ -87,7 +89,7 @@ public class GamePreview extends Group{
 
     @Override
     public ObservableList<Node> getChildren(){
-        return FXCollections.observableArrayList();
+        return super.getChildren();
     }
 
 }

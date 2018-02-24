@@ -30,6 +30,7 @@ public class LevelItem extends HBox {
         information = new Label(info);
         information.setEffect(new GaussianBlur(1));
         VBox vboxLevelInformation = new VBox(name);
+
         BorderPane rightContainer = new BorderPane();
         rightContainer.setRight(image);
         rightContainer.setBottom(information);
@@ -42,7 +43,6 @@ public class LevelItem extends HBox {
         vboxLevelInformation.getStyleClass().add("vboxlevel");
         information.getStyleClass().add("infoOnLevelItem");
         name.getStyleClass().add("infoOnLevelItem");
-
         rightContainer.setTranslateX(50);
         getChildren().addAll(rightContainer);
 

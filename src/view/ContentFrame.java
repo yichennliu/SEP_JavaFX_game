@@ -125,7 +125,7 @@ public class ContentFrame extends StackPane {
                if(visible) children.setVisible(false);
                else children.setVisible(true);
            }
-           else if(children!=menuVboxlinks) children.setVisible(false);
+           else if(children!=menuVboxlinks && children!=welcomeVbox) children.setVisible(false);
        }
     }
 
@@ -179,11 +179,20 @@ public class ContentFrame extends StackPane {
     }
 
     private VBox createWelcomeItem(){
+        Level previewLevel = LevelFactory.importLevel("src/json/level/menu.json");
+        double size = widthLinks/2.5;
+        double fieldSize = size/previewLevel.getWidth();
+
+        GamePreview previewNode = new GamePreview(size,size,fieldSize);
+        previewNode.playLevel(previewLevel);
+
         welcomeVbox= new VBox();
         welcomeVbox.setTranslateX(widthLinks / 2);
         welcomeVbox.setMinSize(widthLinks / 2, heightLinks);
         welcomeVbox.setMaxSize(widthLinks / 2, heightLinks);
         welcomeVbox.getStyleClass().add("backgroundcolorBlue");
+        welcomeVbox.getChildren().add(previewNode);
+        welcomeVbox.setAlignment(Pos.CENTER);
         return welcomeVbox;
     }
     /**
