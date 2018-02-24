@@ -333,8 +333,5 @@ public class LevelEditorView {
 
     public void reloadMap() {
         this.board = new Board(staticCanvas,animationCanvas,editor.getMap(),editor.getTheme(),fieldSize);
-        staticCanvas.setWidth(editor.getWidth()*this.fieldSize);
-        staticCanvas.setHeight(editor.getHeight()*this.fieldSize);
-
     }
 }
