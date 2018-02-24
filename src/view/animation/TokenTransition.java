@@ -66,7 +66,7 @@ public class TokenTransition extends javafx.animation.Transition {
         this.active = true;
         setInterpolator(Interpolator.LINEAR);
         setCycleCount(1);
-        setDuration(1.0/5.0);
+        setDuration(0.2);
     }
 
     public void setDuration(double seconds){

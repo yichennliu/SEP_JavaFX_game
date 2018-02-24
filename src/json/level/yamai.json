@@ -1,0 +1,1307 @@
+{
+    "pre": [
+        {
+            "result": [{
+                "values": {"SLIPPERY": 0},
+                "token": "stone"
+            }],
+            "original": [{
+                "values": {"B": 1},
+                "token": "stone"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{"token": "gem"}],
+            "original": [{
+                "values": {"GEMS": 3},
+                "token": "sand"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        }
+    ],
+    "gems": [
+        3,
+        3,
+        40
+    ],
+    "ticks": [
+        500,
+        300,
+        1000
+    ],
+    "values": {},
+    "name": "yamai",
+    "width": 25,
+    "jsonPath": "src/json/level/special.json",
+    "map": [
+        [
+            "me",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud"
+        ],
+        [
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 0},
+                "token": "stone"
+            }
+        ],
+        [
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            }
+        ],
+        [
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            }
+        ],
+        [
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud"
+        ],
+        [
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            }
+        ],
+        [
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "exit",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 0},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"b": 1},
+                "token": "stone"
+            },
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud"
+        ],
+        [
+            "mud",
+            "path",
+            "path",
+            {
+                "values": {"direction": 1},
+                "token": "swapling"
+            },
+            "gem",
+            {
+                "values": {"direction": 3},
+                "token": "swapling"
+            },
+            "path",
+            "path",
+            "mud",
+            "path",
+            "path",
+            {
+                "values": {"direction": 2},
+                "token": "blockling"
+            },
+            "gem",
+            {
+                "values": {"direction": 4},
+                "token": "blockling"
+            },
+            "path",
+            "path",
+            "mud",
+            "path",
+            "path",
+            {
+                "values": {"direction": 1},
+                "token": "xling"
+            },
+            "gem",
+            {
+                "values": {"direction": 3},
+                "token": "xling"
+            },
+            "path",
+            "path",
+            "mud"
+        ],
+        [
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {
+                    "c": 1,
+                    "direction": 1
+                },
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {
+                    "c": 1,
+                    "direction": 2
+                },
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {
+                    "c": 1,
+                    "direction": 3
+                },
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            },
+            {
+                "values": {"c": 1},
+                "token": "bricks"
+            }
+        ],
+        [
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud"
+        ],
+        [
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            "mud",
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud"
+        ],
+        [
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud"
+        ]
+    ],
+    "height": 25
+}
