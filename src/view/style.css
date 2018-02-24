@@ -56,9 +56,15 @@
             -fx-text-fill:#f7d7aa;
             -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1); }
 
+.vboxlevel {
+    -fx-padding: 5 10 5 10;
+}
 
-.infoOnLevelItem{-fx-text-fill:#f7d7aa;}
+.infoOnLevelItem{-fx-text-fill:white;}
 
+.infoOnLevelItemBig {
+    -fx-text-fill: #f7d7aa;
+}
 
 .scroll-pane > .viewport  { -fx-background-color: #ffab32;
                             -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);}
