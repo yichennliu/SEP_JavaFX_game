@@ -59,7 +59,7 @@ public class GameController {
         this.addDragEvent();
         this.addPauseResumeGameEvents();
         this.addStopAudioEvent();
-//        this.initAudios();
+        this.initAudios();
         this.startAudio();
 
     }
