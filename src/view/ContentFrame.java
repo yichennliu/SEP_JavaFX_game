@@ -268,7 +268,7 @@ public class ContentFrame extends StackPane {
         Image moveImg = new Image("view/images/tastatur/move.png");
         Image scapeImg = new Image("view/images/tastatur/scape.png");
         Image spaceImg = new Image("view/images/tastatur/space.png");
-        Image muteImg = new Image("view/images/tastatur/mute.png");
+        //Image muteImg = new Image("view/images/tastatur/mute.png");
         ImageView keyboardImgAll2 = new ImageView();
         String instructions =
                 "\nThe official Boulder Dash games started in 1984 with the original home computer \n" +
@@ -288,10 +288,10 @@ public class ContentFrame extends StackPane {
                 null, new ImageView(digImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
         LevelItem ki = new LevelItem(" ", " \n  press   "+"                K  / ANY OTHER KEY  \n"+"   For activating  "+"    A I "+" \n  press   "+"                A N Y  O T H E R  K E Y   "+"  For activating / deactivating  ",
                 null, new ImageView(kiImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
-        LevelItem mute = new LevelItem("", " \n  press   "+"             M  / N  \n"+"   to  "+"      M U T E / P L A Y "+" \n  press   "+"      N  to  P L A Y\n",
-                null, new ImageView(muteImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
+        //LevelItem mute = new LevelItem("", " \n  press   "+"             M  / N  \n"+"   to  "+"      M U T E / P L A Y "+" \n  press   "+"      N  to  P L A Y\n",
+        //        null, new ImageView(muteImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
 
-        helpVbox = new VBox(15,instruction,escape, move,pause,shift,ki,mute);
+        helpVbox = new VBox(15,instruction,escape, move,pause,shift,ki/*,mute*/);
         helpVbox.setAlignment(Pos.CENTER);
         return helpVbox;
     }
