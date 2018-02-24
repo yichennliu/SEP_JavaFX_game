@@ -33,7 +33,6 @@ public class Controller {
 
     public Controller(View view, Object model) { // Todo: ControllerModel
         Image icon = null;
-        System.out.println(view.getStage().getIcons().add(new Image("view/images/PixelME/IDLE.png")));
         this.view = view;
         this.currentMode = View.Mode.GAME;
         this.levelList = UsefulMethods.scanLevelDirectory();

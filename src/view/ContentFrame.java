@@ -109,7 +109,6 @@ public class ContentFrame extends StackPane {
                 setVisible(savedGameScrollPane);
             }
         });
-
     }
 
     private void addLevelVisibleButton(){
