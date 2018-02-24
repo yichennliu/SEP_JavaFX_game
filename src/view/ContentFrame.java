@@ -79,7 +79,6 @@ public class ContentFrame extends StackPane {
         this.addSavedGameVisibleButton();
         this.addHelpVisibleButton();
         this.addLevelVisibleButton();
-        close.setOnAction(e -> Platform.exit());
 
         this.welcomeVbox = createWelcomeItem();
         this.getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane, savedGameScrollPane);
@@ -119,7 +118,7 @@ public class ContentFrame extends StackPane {
     }
 
     private void addLevelVisibleButton(){
-        chooseLevelButton.setOnAction(new EventHandler<ActionEvent>() {
+        this.chooseLevelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
                 if(levelItemScrollPane.isVisible()){
                     levelItemScrollPane.setVisible(false);
@@ -236,9 +235,6 @@ public class ContentFrame extends StackPane {
         return medals;
     }
 
-
-
-
     private Text createGemInfo(){
 
 
@@ -275,15 +271,15 @@ public class ContentFrame extends StackPane {
 
 
     public Button getGameButton() {
-        return gameButton;
+        return this.gameButton;
     }
     public Button getThemeEditorButton() {
-        return themeEditorButton;
+        return this.themeEditorButton;
     }
     public Button getLevelEditorButton() {
-        return levelEditorButton;
+        return this.levelEditorButton;
     }
     public Button getClose() {
-        return close;
+        return this.close;
     }
 }

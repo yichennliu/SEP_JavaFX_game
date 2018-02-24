@@ -1,6 +1,7 @@
 package controller;
 
 
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import model.game.Level;
@@ -27,6 +28,7 @@ public class MenuController {
         this.addMenuViewComponents();
         this.chooseLevel();
         this.chooseSavedGame();
+        this.closePlatform();
 
     }
 
@@ -92,6 +94,12 @@ public class MenuController {
                 this.controller.startLevel("src/json/savegame/" + path);
             });
         }
+    }
+
+    private void closePlatform(){
+        Button closePlatform = this.menuView.getContentFrame().getClose();
+        closePlatform.setOnAction(e -> Platform.exit());
+
     }
 
 
