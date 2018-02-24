@@ -7,12 +7,9 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -33,7 +30,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +58,10 @@ public class GameController {
         this.convertGameModus();
         this.addDragEvent();
         this.addPauseResumeGameEvents();
-        initAudios();
-        startAudio();
+        this.addStopAudioEvent();
+        this.initAudios();
+        this.startAudio();
+
     }
 
     private void robotize(boolean activate) {
@@ -92,11 +90,11 @@ public class GameController {
     private void startAudio(){
         Media audio = getNextClip();
         if(audio!=null){
-            stopAudio();
+            this.stopAudio();
             player = new MediaPlayer(audio);
             player.onEndOfMediaProperty().setValue(() -> {
                 System.out.println("Zu Ende!");
-                startAudio();
+                this.startAudio();
             });
             player.play();
         }
@@ -116,7 +114,7 @@ public class GameController {
 
 
     public void update() {
-        startAudio();
+        this.startAudio();
         this.addDirectionEvents();
     }
 
@@ -145,10 +143,11 @@ public class GameController {
                 // save medal
                 if (this.level.getWinningStatus() == WinningStatus.WON) {
                     this.saveMedal();
+                    this.endOfGameDialog();
+                } else if(this.level.getWinningStatus() == WinningStatus.LOST){
+                    this.endOfGameDialog();
                 }
 
-                // show end game dialog
-                this.endOfGameDialog();
             }
         };
 
@@ -173,7 +172,6 @@ public class GameController {
         }
 
     }
-
 
 
     private void updateSandUhr(Integer currentTick){
@@ -228,16 +226,30 @@ public class GameController {
 
     }
 
+    private void addStopAudioEvent(){
+        Stage gameStage = this.gameView.getStage();
+        gameStage.addEventHandler(KeyEvent.KEY_PRESSED,event ->{
+            if(event.getCode().equals(KeyCode.M)) {
+                stopAudio();
+            } else if(event.getCode().equals(KeyCode.N)) {
+                startAudio();
+            }
+        });
+    }
+
+
     private void addPauseResumeGameEvents() {
         Stage gameStage = this.gameView.getStage();
         gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode().equals(KeyCode.SPACE)) {
                 if (timeline != null && timeline.getStatus().equals(Animation.Status.RUNNING)) {
                     this.gameView.createPauseGameIcon();
+                    this.pauseAudio();
                     timeline.stop();
 
                 } else if (timeline != null && timeline.getStatus() == Animation.Status.STOPPED) {
                     this.gameView.removePauseGameIcon();
+                    this.resumeAudio();
                     timeline.play();
                 }
             }
@@ -260,16 +272,16 @@ public class GameController {
      */
     private void endOfGameDialog() {
         this.timeline.stop();
+        this.pauseAudio();
 
         EndGameAlert endGameAlert = new EndGameAlert();
 
         if (this.level.getWinningStatus() == WinningStatus.WON) {
             endGameAlert.setHeaderText("You successfully completed the level \"" + this.level.getName() + "\". Hooray!");
-            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton());
+            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton(), endGameAlert.getCancelExitButton());
 
         } else if(this.level.getWinningStatus() == WinningStatus.LOST) {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");
-
 
         }
 
@@ -287,6 +299,7 @@ public class GameController {
             if (result.get() == endGameAlert.getCancelExitButton()) {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
                 this.controller.startMenu();
+                this.stopAudio();
             }
 
             if( result.get() == endGameAlert.getNextLevelButton()) {
@@ -436,11 +449,14 @@ public class GameController {
                     timeline.stop();
                 }
 
+                pauseAudio();
+
                 GameController.this.addAlertKeyEvent(alert);
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if (result.get() == alert.getSaveButton()) {
                     GameController.this.saveGame();
+                    resumeAudio();
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
@@ -458,7 +474,6 @@ public class GameController {
 
 
                 } else if (result.get() == alert.getRetryButton()) {
-
                     GameController.this.controller.startLevel(level.getJsonPath());
                     alert.close();
                     timeline.playFromStart();
@@ -466,6 +481,7 @@ public class GameController {
 
                 } else if (result.get() == alert.getCancelButton()) {
                     alert.close();
+                    resumeAudio();
                     if (timeline != null) {
                         timeline.play();
                     }
