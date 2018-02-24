@@ -170,11 +170,8 @@ public class ContentFrame extends StackPane {
             System.out.println("Theme not found / corrupt file");
         }
         for (String path : UsefulMethods.scanSavegameDirectory()) {
-
-            Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/savegame/" + path));
-            System.out.println(snapshot);
             Level level = LevelFactory.importLevel("src/json/savegame/" + path);
-            System.out.println(level);
+            Image snapshot = LevelSnapshot.snap(theme, level);
             ImageView snapshotview = new ImageView(snapshot);
             String levelText = "Medaillen: " + this.getMedalImage(level.getJsonPath());
             LevelItem savedLevelItem = new LevelItem(level.getName(),levelText, snapshotview, path, widthLinks/2-100, heightLinks/5);
