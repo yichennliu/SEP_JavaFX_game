@@ -1,7 +1,7 @@
 package controller;
 
 
-import javafx.application.Platform;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import model.game.Level;
 import model.game.MedalStatus;
@@ -51,20 +51,16 @@ public class MenuController {
 
 
     private void addMenuViewComponents() {
-        this.menuView.getContentFrame().getGameButton().setOnAction(e -> {
+        menuView.getContentFrame().getGameButton().setOnAction(e -> {
             this.controller.startGame();
         });
 
-        this.menuView.getContentFrame().getLevelEditorButton().setOnAction(e -> {
+        menuView.getContentFrame().getLevelEditorButton().setOnAction(e -> {
             this.controller.startLevelEditor();
         });
 
-        this.menuView.getContentFrame().getThemeEditorButton().setOnAction(e -> {
+        menuView.getContentFrame().getThemeEditorButton().setOnAction(e -> {
             this.controller.startThemeEditor();
-        });
-
-        this.menuView.getContentFrame().getClose().setOnAction(e->{
-            Platform.exit();
         });
 
     }
@@ -97,7 +93,6 @@ public class MenuController {
             });
         }
     }
-
 
 
 }
