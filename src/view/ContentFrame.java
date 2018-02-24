@@ -81,39 +81,19 @@ public class ContentFrame extends StackPane {
         this.addLevelVisibleButton();
 
         this.welcomeVbox = createWelcomeItem();
-        //this.getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane, savedGameScrollPane);
+        this.getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane, savedGameScrollPane);
     }
 
     private void addHelpVisibleButton(){
-
-        this.helpbutton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(helpVboxScrollPane.isVisible()){
-                    helpVboxScrollPane.setVisible(false);
-                } else {
-                    helpVboxScrollPane.setVisible(true);
-                    levelItemScrollPane.setVisible(false);
-                    savedGameScrollPane.setVisible(false);
-                }
-            }
-        });
+        this.helpbutton.setOnAction(e ->setVisible(helpVboxScrollPane));
     }
-
-
+    private void addLevelVisibleButton(){
+        this.chooseLevelButton.setOnAction(e -> setVisible(levelItemScrollPane));
+    }
     private void addSavedGameVisibleButton(){
-        this.savedGameButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                setVisible(savedGameScrollPane);
-            }
-        });
+        this.savedGameButton.setOnAction(event -> setVisible(savedGameScrollPane));
 
-        chooseLevelButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                setVisible(levelItemScrollPane);
-            }
-        });
+        chooseLevelButton.setOnAction(e -> setVisible(levelItemScrollPane));
 
         close.setOnAction(e -> Platform.exit());
         helpVbox= createHelpMenuItem();
@@ -123,7 +103,6 @@ public class ContentFrame extends StackPane {
         });
 
         welcomeVbox=createWelcomeItem();
-        this.getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane, savedGameScrollPane);
     }
 
     public ScrollPane createScrollPane(VBox scrollVbox) {
