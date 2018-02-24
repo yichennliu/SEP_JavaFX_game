@@ -71,10 +71,11 @@ public class ContentFrame extends StackPane {
         this.levelItemScrollPane = createScrollPane(levelVbox);
 
         this.savedGameVbox = createSavedGameMenuItems();
+        this.savedGameVbox.getStyleClass().add("levelbox");
         this.savedGameScrollPane = createScrollPane(savedGameVbox);
 
-        this.helpVbox= createHelpMenuItem();
-        this.helpVboxScrollPane= createScrollPane(helpVbox);
+        this.helpVbox = createHelpMenuItem();
+        this.helpVboxScrollPane = createScrollPane(helpVbox);
 
         this.addSavedGameVisibleButton();
         this.addHelpVisibleButton();
@@ -82,27 +83,25 @@ public class ContentFrame extends StackPane {
 
         this.welcomeVbox = createWelcomeItem();
         this.getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane, savedGameScrollPane);
+
     }
 
     private void addHelpVisibleButton(){
         this.helpbutton.setOnAction(e ->setVisible(helpVboxScrollPane));
     }
+
+
+    private void addSavedGameVisibleButton(){
+        this.savedGameButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                setVisible(savedGameScrollPane);
+            }
+        });
+    }
+
     private void addLevelVisibleButton(){
         this.chooseLevelButton.setOnAction(e -> setVisible(levelItemScrollPane));
-    }
-    private void addSavedGameVisibleButton(){
-        this.savedGameButton.setOnAction(event -> setVisible(savedGameScrollPane));
-
-        chooseLevelButton.setOnAction(e -> setVisible(levelItemScrollPane));
-
-        close.setOnAction(e -> Platform.exit());
-        helpVbox= createHelpMenuItem();
-        helpVboxScrollPane= createScrollPane(helpVbox);
-        helpbutton.setOnAction( e ->{
-               setVisible(helpVboxScrollPane);
-        });
-
-        welcomeVbox=createWelcomeItem();
     }
 
     public ScrollPane createScrollPane(VBox scrollVbox) {
@@ -279,8 +278,9 @@ public class ContentFrame extends StackPane {
         return this.themeEditorButton;
     }
     public Button getLevelEditorButton() {
-        return levelEditorButton;
+        return this.levelEditorButton;
     }
-
-
+    public Button getClose() {
+        return this.close;
+    }
 }

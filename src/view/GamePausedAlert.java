@@ -14,7 +14,6 @@ import java.io.File;
 public class GamePausedAlert extends Alert {
 
     private ButtonType saveButton;
-    private ButtonType saveExitButton;
     private ButtonType exitButton;
     private ButtonType retryButton;
     private ButtonType cancelButton;
@@ -41,14 +40,12 @@ public class GamePausedAlert extends Alert {
         dialogPane.setGraphic(stackPane);
 
         saveButton = new ButtonType("Save", ButtonBar.ButtonData.OTHER);
-        saveExitButton = new ButtonType("Save & Exit", ButtonBar.ButtonData.OTHER);
-        exitButton = new ButtonType("Exit", ButtonBar.ButtonData.OTHER);
+        exitButton = new ButtonType("Menu", ButtonBar.ButtonData.OTHER);
         retryButton = new ButtonType("Restart", ButtonBar.ButtonData.OTHER);
         cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
         this.getButtonTypes().setAll(
                 saveButton,
-                saveExitButton,
                 exitButton,
                 retryButton,
                 cancelButton
@@ -57,10 +54,6 @@ public class GamePausedAlert extends Alert {
 
     public ButtonType getSaveButton() {
         return saveButton;
-    }
-
-    public ButtonType getSaveExitButton() {
-        return saveExitButton;
     }
 
     public ButtonType getExitButton() {
