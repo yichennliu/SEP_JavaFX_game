@@ -244,32 +244,6 @@ public class GameView {
         }
     }
 
-    public void showMedalInfo() {
-
-        if (this.level.getCurrentMedal() == null) {
-            this.setCountToBronzeInfo();
-        }
-
-        if (this.level.getCurrentMedal() == Medal.BRONZE) {
-            this.setCountToSilverInfo();
-            this.setCurrentMedal(Medal.BRONZE);
-
-        }
-
-        if (this.level.getCurrentMedal() == Medal.SILVER) {
-            this.setCountToGoldInfo();
-            this.setCurrentMedal(Medal.SILVER);
-
-        }
-
-        if (this.level.getCurrentMedal() == Medal.GOLD) {
-            restGem.setText("You've got gold! Now exit to win!");
-            restTicks.setTextFill(Color.BLACK);
-            this.setCurrentMedal(Medal.GOLD);
-        }
-
-    }
-
     public void setCurrentSandUhr(SandUhr sandUhrType) {
 
         switch (sandUhrType) {

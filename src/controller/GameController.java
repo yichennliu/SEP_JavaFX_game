@@ -177,7 +177,7 @@ public class GameController {
 
     }
 
-    public void showMedalInfo() {
+    private void showMedalInfo() {
 
         if (this.level.getCurrentMedal() == null) {
             this.gameView.setCountToBronzeInfo();
