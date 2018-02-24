@@ -7,12 +7,9 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -33,7 +30,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +58,10 @@ public class GameController {
         this.convertGameModus();
         this.addDragEvent();
         this.addPauseResumeGameEvents();
-        initAudios();
-        startAudio();
+        this.addStopAudioEvent();
+//        this.initAudios();
+        this.startAudio();
+
     }
 
     private void robotize(boolean activate) {
@@ -168,7 +166,6 @@ public class GameController {
     }
 
 
-
     private void updateSandUhr(Integer currentTick){
         double maxSec = (double) this.level.getTickGoals()[0]/5;
         double currentSec = (double) currentTick/5;
@@ -221,16 +218,30 @@ public class GameController {
 
     }
 
+    private void addStopAudioEvent(){
+        Stage gameStage = this.gameView.getStage();
+        gameStage.addEventHandler(KeyEvent.KEY_PRESSED,event ->{
+            if(event.getCode().equals(KeyCode.CAPS)) {
+                stopAudio();
+            } else if(event.getCode().equals(KeyCode.TAB)) {
+                startAudio();
+            }
+        });
+    }
+
+
     private void addPauseResumeGameEvents() {
         Stage gameStage = this.gameView.getStage();
         gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode().equals(KeyCode.SPACE)) {
                 if (timeline != null && timeline.getStatus().equals(Animation.Status.RUNNING)) {
                     this.gameView.createPauseGameIcon();
+                    this.pauseAudio();
                     timeline.stop();
 
                 } else if (timeline != null && timeline.getStatus() == Animation.Status.STOPPED) {
                     this.gameView.removePauseGameIcon();
+                    this.resumeAudio();
                     timeline.play();
                 }
             }
@@ -253,6 +264,7 @@ public class GameController {
      */
     private void endOfGameDialog() {
         this.timeline.stop();
+        this.pauseAudio();
 
         EndGameAlert endGameAlert = new EndGameAlert();
 
@@ -280,10 +292,12 @@ public class GameController {
             if (result.get() == endGameAlert.getCancelExitButton()) {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
                 this.controller.startMenu();
+                this.stopAudio();
             }
 
             if( result.get() == endGameAlert.getNextLevelButton()) {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
+                startAudio();
                 this.controller.startNextLevel();
             }
 
@@ -429,11 +443,14 @@ public class GameController {
                     timeline.stop();
                 }
 
+                pauseAudio();
+
                 GameController.this.addAlertKeyEvent(alert);
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if (result.get() == alert.getSaveButton()) {
                     GameController.this.saveGame();
+                    resumeAudio();
                     alert.close();
                     if (timeline != null) {
                         timeline.play();
@@ -459,6 +476,7 @@ public class GameController {
 
                 } else if (result.get() == alert.getCancelButton()) {
                     alert.close();
+                    resumeAudio();
                     if (timeline != null) {
                         timeline.play();
                     }
