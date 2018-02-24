@@ -228,9 +228,9 @@ public class GameController {
     private void addStopAudioEvent(){
         Stage gameStage = this.gameView.getStage();
         gameStage.addEventHandler(KeyEvent.KEY_PRESSED,event ->{
-            if(event.getCode().equals(KeyCode.CAPS)) {
+            if(event.getCode().equals(KeyCode.M)) {
                 stopAudio();
-            } else if(event.getCode().equals(KeyCode.TAB)) {
+            } else if(event.getCode().equals(KeyCode.N)) {
                 startAudio();
             }
         });
