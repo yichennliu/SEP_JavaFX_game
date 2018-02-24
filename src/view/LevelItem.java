@@ -61,4 +61,29 @@ public class LevelItem extends HBox {
     }
 
 
+    public LevelItem(String menuItemName, ImageView image, double width, double height) {
+        super(5);
+        this.width=width;
+        this.height=height;
+
+        name = new Label(menuItemName);
+
+        BorderPane rightContainer = new BorderPane();
+        rightContainer.setRight(image);
+        rightContainer.setLeft(name);
+        image.setFitWidth(200);
+        image.setFitHeight(150);
+        rightContainer.setMinSize(width, height);
+        rightContainer.setMaxSize(width, height);
+
+        rightContainer.getStyleClass().add("backgroundcolorBlue");
+        name.getStyleClass().add("infoOnLevelItemBig");
+
+        rightContainer.setTranslateX(50);
+        getChildren().addAll(rightContainer);
+
+
+    }
+
+
 }
