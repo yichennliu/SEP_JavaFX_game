@@ -264,7 +264,7 @@ public class GameController {
         gameStage.addEventHandler(KeyEvent.KEY_PRESSED,event ->{
             if(event.getCode().equals(KeyCode.M)) {
                 stopAudio();
-            } else if(event.getCode().equals(KeyCode.N)) {
+            } else if(player==null && event.getCode().equals(KeyCode.M)) {
                 System.out.println("Audio an!");
                 startAudio();
             }

@@ -109,7 +109,6 @@ public class GameView {
         this.scrollToMe();
         board.stopAnimation();
         View.drawBoard(this.board, level.getMap(), this.theme, true);
-
     }
 
     /*if ME is at the edge of the viewport, a new translation will be set (starts indirectly tranlsation transition)*/
