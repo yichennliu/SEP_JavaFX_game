@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -105,13 +106,7 @@ public class ContentFrame extends StackPane {
         this.savedGameButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(savedGameScrollPane.isVisible()){
-                    savedGameScrollPane.setVisible(false);
-                }
-                else savedGameScrollPane.setVisible(true);
-                helpVboxScrollPane.setVisible(false);
-                levelItemScrollPane.setVisible(false);
-
+                setVisible(savedGameScrollPane);
             }
         });
 
@@ -120,14 +115,19 @@ public class ContentFrame extends StackPane {
     private void addLevelVisibleButton(){
         this.chooseLevelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                if(levelItemScrollPane.isVisible()){
-                    levelItemScrollPane.setVisible(false);
-                }
-                else levelItemScrollPane.setVisible(true);
-                helpVboxScrollPane.setVisible(false);
-                savedGameScrollPane.setVisible(false);
+                setVisible(levelItemScrollPane);
             }
         });
+
+        close.setOnAction(e -> Platform.exit());
+        helpVbox= createHelpMenuItem();
+        helpVboxScrollPane= createScrollPane(helpVbox);
+        helpbutton.setOnAction( e ->{
+               setVisible(helpVboxScrollPane);
+        });
+
+        welcomeVbox=createWelcomeItem();
+        this.getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane, savedGameScrollPane);
     }
 
     private ScrollPane createScrollPane(VBox scrollVbox) {
@@ -148,6 +148,20 @@ public class ContentFrame extends StackPane {
         button.setId("menuLeftButtons");
         return button;
     }
+
+
+    private void setVisible(ScrollPane pane){
+       if(pane.getParent()!=this) return;
+       boolean visible = pane.isVisible();
+       for(Node children:this.getChildren()){
+           if(children==pane){
+               if(visible) children.setVisible(false);
+               else children.setVisible(true);
+           }
+           else if(children!=menuVboxlinks && children!=welcomeVbox) children.setVisible(false);
+       }
+    }
+
 
     public ArrayList<LevelItem> getListLevelButtons() {
         return listLevelButtons;
@@ -211,11 +225,20 @@ public class ContentFrame extends StackPane {
     }
 
     private VBox createWelcomeItem(){
+        Level previewLevel = LevelFactory.importLevel("src/json/level/menu.json");
+        double size = widthLinks/2.5;
+        double fieldSize = size/previewLevel.getWidth();
+
+        GamePreview previewNode = new GamePreview(size,size,fieldSize);
+        previewNode.playLevel(previewLevel);
+
         welcomeVbox= new VBox();
         welcomeVbox.setTranslateX(widthLinks / 2);
         welcomeVbox.setMinSize(widthLinks / 2, heightLinks);
         welcomeVbox.setMaxSize(widthLinks / 2, heightLinks);
         welcomeVbox.getStyleClass().add("backgroundcolorBlue");
+        welcomeVbox.getChildren().add(previewNode);
+        welcomeVbox.setAlignment(Pos.CENTER);
         return welcomeVbox;
     }
     /**

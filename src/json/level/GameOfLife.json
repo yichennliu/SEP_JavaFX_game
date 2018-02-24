@@ -701,6 +701,8 @@
             "original":[{"token":"*","values":{"d":1}},{"token":"mud"}],
             "result":[{"token":"0","values":{"c":1, "a":1,"d":0}},{"token":"mud"}]
         },
+
+
         { "situation":"any",
             "direction":"east",
             "original":[{"token":"*"},{"token":"mud"}],
@@ -711,6 +713,8 @@
             "original":[{"token":"*","values":{"d":1}},{"token":"mud"}],
             "result":[{"token":"0","values":{"c":1, "a":1,"d":0}},{"token":"mud"}]
         },
+
+
 
         { "situation":"any",
             "direction":"south",

@@ -70,7 +70,6 @@ public class Robot implements AI {
 /*        no GEMS left*/
         List<FeldWithDistance> exitList = getNearest(getMe(),Token.EXIT,level.getWidth()+level.getHeight());
             if(exitList.size()>0) {
-                System.out.println("EXIT gefunden");
                 Breadcrumb goTo = findSecurePath(getMe(),exitList.get(0).getFeld(),50);
                 if(goTo!=null){
                     return goTo.getInputDirection();
@@ -127,23 +126,19 @@ public class Robot implements AI {
 
     /*seeks for save (no death) shortest Path to specified Feld, returns null, if no path found*/
     private Breadcrumb findSecurePath(Feld start, Feld end, int maxSteps){
-        System.out.println("Wegsuche gestartet (von " + start.getColumn() + " | " + start.getRow() + " Nach " + end.getColumn() + " | " + end.getRow() + ")");
         Level levelClone = level.clone();
         Feld levelCloneStart = level.getFeld(start.getRow(),start.getColumn());
         Breadcrumb startBreadcrumb = new Breadcrumb(levelCloneStart,null, null,levelClone,0,0);
         List<Breadcrumb> path = breadthFirstSearch(startBreadcrumb,end.getRow(),end.getColumn(),maxSteps);
         if(path!=null) {
-            printPath(path);
             this.currentTarget = new Target(path.get(path.size()-1).getCurrentFeld());
         }
-        if(path!=null) System.out.println("Erster schritt nach: " + path.get(1).getCurrentFeld().getColumn() + " " + path.get(1).getCurrentFeld().getRow());
         return (path!=null) ? path.get(1) : null;
     }
 
     private void printPath(List<Breadcrumb> path) {
         System.out.println();
         for(Breadcrumb b : path) {
-            System.out.print(" - " + b.getCurrentFeld().getColumn() + " " + b.getCurrentFeld().getRow());
         }
     }
 
@@ -202,10 +197,8 @@ public class Robot implements AI {
         Feld lastFeld = getMe().getCurrentTokenCameFrom();
         if(firstStep!=null && lastFeld!=null){
             if(firstStep.getRow()==lastFeld.getRow() && firstStep.getColumn() == lastFeld.getColumn()){
-                System.out.println("Deadlock: " +firstStep.getColumn()+"|" +firstStep.getRow() + " == " + lastFeld.getColumn()+"|"+lastFeld.getRow());
                 return true;
             }
-            System.out.println(firstStep.getColumn()+"|" +firstStep.getRow() + " != " + lastFeld.getColumn()+"|"+lastFeld.getRow());
         }
         return false;
     }
@@ -222,24 +215,17 @@ public class Robot implements AI {
     }
 
     private void removeUnsafe(Set<Map.Entry<InputDirection, Feld>> neighbours,Level level) {
-        System.out.println("\nRemove unsafe gestartet");
         Iterator<Map.Entry<InputDirection,Feld>> it = neighbours.iterator();
-        System.out.println(" - - - - - ");
+
         while(it.hasNext()){
             Map.Entry<InputDirection,Feld> entry = it.next();
             Level levelCopy = level.clone();
-            System.out.println("Levelkopie hat den Winningstatus vor dem Tick: " + levelCopy.getWinningStatus());
             levelCopy.setInputDirection(entry.getKey());
             tick(levelCopy);
             tick(levelCopy);
             if(levelCopy.getWinningStatus()==WinningStatus.LOST){
-                System.out.println("Levelkopie hat den Winningstatus nach dem Tick: " + levelCopy.getWinningStatus());
                 it.remove();
             }
-        }
-
-        for(Map.Entry<InputDirection,Feld> entry: neighbours){
-            System.out.println(entry.getKey() + " ist sicher");
         }
     }
 
