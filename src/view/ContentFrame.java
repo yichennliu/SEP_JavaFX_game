@@ -262,7 +262,7 @@ public class ContentFrame extends StackPane {
         LevelItem pause = new LevelItem(" \n  press   "+"      S P A C E \n"+"     to  "+"              P A U S E", " ",null, new ImageView(spaceImg), " ", widthLinks/2-100, heightLinks/7);
         LevelItem shift = new LevelItem(" \n  press   "+"      S H I F T  + A R R O W \n"+"    to  "+"             D I G  ","  ",null, new ImageView(digImg), " ", widthLinks/2-100, heightLinks/7);
         LevelItem ki = new LevelItem(" \n  press   "+"             K   \n"+"   For activating  "+"      A I "+" \n  press   "+"                A N Y  O T H E R  K E Y   "+"  For deactivating  ", " ",null, new ImageView(kiImg), " ", widthLinks/2-100, heightLinks/7);
-        LevelItem mute = new LevelItem(" \n  press   "+"             M   \n"+"   to  "+"      M U T E  "+" \n  press   "+"             n  \n"+"   to  "+"      P L A Y  ", " ",null, new ImageView(muteImg), " ", widthLinks/2-100, heightLinks/7);
+        LevelItem mute = new LevelItem(" \n  press   "+"             M   \n"+"   to  "+"      M U T E  "+" \n  press   "+"      N  to  P L A Y\n", " ",null, new ImageView(muteImg), " ", widthLinks/2-100, heightLinks/7);
 
         helpVbox = new VBox(15,instruction,escape, move,pause,shift,ki,mute);
         helpVbox.setAlignment(Pos.CENTER);

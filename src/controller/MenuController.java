@@ -2,7 +2,6 @@ package controller;
 
 
 import javafx.application.Platform;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import model.game.Level;
 import model.game.MedalStatus;
@@ -28,7 +27,6 @@ public class MenuController {
         this.addMenuViewComponents();
         this.chooseLevel();
         this.chooseSavedGame();
-        this.closePlatform();
 
     }
 
@@ -53,16 +51,20 @@ public class MenuController {
 
 
     private void addMenuViewComponents() {
-        menuView.getContentFrame().getGameButton().setOnAction(e -> {
+        this.menuView.getContentFrame().getGameButton().setOnAction(e -> {
             this.controller.startGame();
         });
 
-        menuView.getContentFrame().getLevelEditorButton().setOnAction(e -> {
+        this.menuView.getContentFrame().getLevelEditorButton().setOnAction(e -> {
             this.controller.startLevelEditor();
         });
 
-        menuView.getContentFrame().getThemeEditorButton().setOnAction(e -> {
+        this.menuView.getContentFrame().getThemeEditorButton().setOnAction(e -> {
             this.controller.startThemeEditor();
+        });
+
+        this.menuView.getContentFrame().getClose().setOnAction(e->{
+            Platform.exit();
         });
 
     }
@@ -96,11 +98,6 @@ public class MenuController {
         }
     }
 
-    private void closePlatform(){
-        Button closePlatform = this.menuView.getContentFrame().getClose();
-        closePlatform.setOnAction(e -> Platform.exit());
-
-    }
 
 
 }

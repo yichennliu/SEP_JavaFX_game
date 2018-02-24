@@ -90,11 +90,11 @@ public class GameController {
     private void startAudio(){
         Media audio = getNextClip();
         if(audio!=null){
-            stopAudio();
+            this.stopAudio();
             player = new MediaPlayer(audio);
             player.onEndOfMediaProperty().setValue(() -> {
                 System.out.println("Zu Ende!");
-                startAudio();
+                this.startAudio();
             });
             player.play();
         }
@@ -114,7 +114,7 @@ public class GameController {
 
 
     public void update() {
-        startAudio();
+        this.startAudio();
         this.addDirectionEvents();
     }
 
@@ -143,10 +143,11 @@ public class GameController {
                 // save medal
                 if (this.level.getWinningStatus() == WinningStatus.WON) {
                     this.saveMedal();
+                    this.endOfGameDialog();
+                } else if(this.level.getWinningStatus() == WinningStatus.LOST){
+                    this.endOfGameDialog();
                 }
 
-                // show end game dialog
-                this.endOfGameDialog();
             }
         };
 
@@ -277,7 +278,7 @@ public class GameController {
 
         if (this.level.getWinningStatus() == WinningStatus.WON) {
             endGameAlert.setHeaderText("You successfully completed the level \"" + this.level.getName() + "\". Hooray!");
-            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton());
+            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton(), endGameAlert.getCancelExitButton());
 
         } else if(this.level.getWinningStatus() == WinningStatus.LOST) {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");
