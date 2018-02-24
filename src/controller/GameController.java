@@ -303,7 +303,6 @@ public class GameController {
 
             if( result.get() == endGameAlert.getNextLevelButton()) {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-                this.startAudio();
                 this.controller.startNextLevel();
             }
 
@@ -474,7 +473,6 @@ public class GameController {
 
 
                 } else if (result.get() == alert.getRetryButton()) {
-
                     GameController.this.controller.startLevel(level.getJsonPath());
                     alert.close();
                     timeline.playFromStart();

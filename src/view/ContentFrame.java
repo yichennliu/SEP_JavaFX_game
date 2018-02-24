@@ -70,9 +70,40 @@ public class ContentFrame extends StackPane {
         this.levelItemScrollPane = createScrollPane(levelVbox);
 
         this.savedGameVbox = createSavedGameMenuItems();
+        this.savedGameVbox.getStyleClass().add("levelbox");
         this.savedGameScrollPane = createScrollPane(savedGameVbox);
 
-        savedGameButton.setOnAction(new EventHandler<ActionEvent>() {
+        this.helpVbox= createHelpMenuItem();
+        this.helpVboxScrollPane= createScrollPane(helpVbox);
+
+        this.addSavedGameVisibleButton();
+        this.addHelpVisibleButton();
+        this.addLevelVisibleButton();
+        close.setOnAction(e -> Platform.exit());
+
+        this.welcomeVbox = createWelcomeItem();
+        this.getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane, savedGameScrollPane);
+    }
+
+    private void addHelpVisibleButton(){
+
+        this.helpbutton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(helpVboxScrollPane.isVisible()){
+                    helpVboxScrollPane.setVisible(false);
+                } else {
+                    helpVboxScrollPane.setVisible(true);
+                    levelItemScrollPane.setVisible(false);
+                    savedGameScrollPane.setVisible(false);
+                }
+            }
+        });
+    }
+
+
+    private void addSavedGameVisibleButton(){
+        this.savedGameButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if(savedGameScrollPane.isVisible()){
@@ -85,6 +116,9 @@ public class ContentFrame extends StackPane {
             }
         });
 
+    }
+
+    private void addLevelVisibleButton(){
         chooseLevelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
                 if(levelItemScrollPane.isVisible()){
@@ -95,29 +129,9 @@ public class ContentFrame extends StackPane {
                 savedGameScrollPane.setVisible(false);
             }
         });
-
-        close.setOnAction(e -> Platform.exit());
-        helpVbox= createHelpMenuItem();
-        helpVboxScrollPane= createScrollPane(helpVbox);
-
-        helpbutton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(helpVboxScrollPane.isVisible()){
-                    helpVboxScrollPane.setVisible(false);
-                } else {
-                    helpVboxScrollPane.setVisible(true);
-                    levelItemScrollPane.setVisible(false);
-                    savedGameScrollPane.setVisible(false);
-                }
-            }
-        });
-
-        welcomeVbox=createWelcomeItem();
-        this.getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane, savedGameScrollPane);
     }
 
-    public ScrollPane createScrollPane(VBox scrollVbox) {
+    private ScrollPane createScrollPane(VBox scrollVbox) {
         ScrollPane scrollPane = new ScrollPane(scrollVbox);
         scrollPane.setId("scroll");
         scrollPane.setTranslateX(widthLinks / 2);
@@ -128,18 +142,22 @@ public class ContentFrame extends StackPane {
         return scrollPane;
     }
 
-    public Button createButton(String titel) {
+
+    private Button createButton(String titel) {
         Button button = new Button(titel);
         button.setMinWidth(widthLinks / buttonfactor);
         button.setId("menuLeftButtons");
         return button;
     }
+
     public ArrayList<LevelItem> getListLevelButtons() {
         return listLevelButtons;
     }
+
     public ArrayList<LevelItem> getListSavedGameButtons() {
         return listSavedGameButtons;
     }
+
     private VBox createLevelMenuItems() {
         levelVbox = new VBox(5);
         levelVbox.setAlignment(Pos.TOP_CENTER);
@@ -264,15 +282,6 @@ public class ContentFrame extends StackPane {
     }
     public Button getLevelEditorButton() {
         return levelEditorButton;
-    }
-    public Button getSavedGameButton() {
-        return this.savedGameButton;
-    }
-    public VBox getMenuVboxlinks() {
-        return this.menuVboxlinks;
-    }
-    public Button getChooseLevelButton() {
-        return chooseLevelButton;
     }
     public Button getClose() {
         return close;
