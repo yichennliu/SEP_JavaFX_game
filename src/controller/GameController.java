@@ -122,6 +122,7 @@ public class GameController {
         EventHandler<ActionEvent> loop = e -> {
             System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
             this.updateTimerLabel(this.level.getPropertyValue(Property.TICKS));
+            this.gameView.showMedalInfo();
             this.updateSandUhr(this.level.getPropertyValue(Property.TICKS));
             if (robotActive) this.level.setInputDirection(robot.getNextMove());
             boolean killedPre;
@@ -165,6 +166,9 @@ public class GameController {
         int timeLeft = maxSecs - currentSec;
         timer.setText("Time Left: "+timeLeft);
 
+        if(timeLeft == 0 && this.level.getWinningStatus() == WinningStatus.LOST){
+            this.endOfGameDialog();
+        }
         if(timeLeft<=10){
             timer.setTextFill(Color.RED);
         } else{
@@ -172,7 +176,6 @@ public class GameController {
         }
 
     }
-
 
     private void updateSandUhr(Integer currentTick){
         double maxSec = (double) this.level.getTickGoals()[0]/5;
@@ -298,8 +301,9 @@ public class GameController {
 
             if (result.get() == endGameAlert.getCancelExitButton()) {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-                this.controller.startMenu();
                 this.stopAudio();
+                this.controller.startMenu();
+
             }
 
             if( result.get() == endGameAlert.getNextLevelButton()) {
@@ -461,12 +465,6 @@ public class GameController {
                     if (timeline != null) {
                         timeline.play();
                     }
-                } else if (result.get() == alert.getSaveExitButton()) {
-                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                    stopAudio();
-                    GameController.this.saveGame();
-                    GameController.this.controller.startMenu();
-
                 } else if (result.get() == alert.getExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     stopAudio();

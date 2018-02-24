@@ -83,7 +83,6 @@ public class GameView {
         this.timerIcons.setFitWidth(30);
         this.gamePauseIcon = new ImageView();
         this.createHboxStyle();
-        this.showMedalInfo();
         this.showCollectedGems();
         this.createDiamondIcons();
         this.timeRewardInfo.getChildren().addAll(timerIcons, timer, gemIcon, currentGems, currentMedal, restGem, restTicks);
@@ -112,7 +111,6 @@ public class GameView {
         board.stopAnimation();
         View.drawBoard(this.board, level.getMap(), this.theme, true);
         this.showCollectedGems();
-        this.showMedalInfo();
 
     }
 
@@ -246,7 +244,7 @@ public class GameView {
         }
     }
 
-    private void showMedalInfo() {
+    public void showMedalInfo() {
 
         if (this.level.getCurrentMedal() == null) {
             this.setCountToBronzeInfo();
@@ -266,9 +264,7 @@ public class GameView {
 
         if (this.level.getCurrentMedal() == Medal.GOLD) {
             restGem.setText("You've got gold! Now exit to win!");
-            int currentSec = this.level.getPropertyValue(Property.TICKS)/5;
-            int maxSec = this.level.getTickGoals()[0]/5;
-            restTicks.setText("Time Left to win: "+ (maxSec-currentSec));
+            restTicks.setTextFill(Color.BLACK);
             this.setCurrentMedal(Medal.GOLD);
         }
 
