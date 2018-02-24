@@ -122,7 +122,7 @@ public class GameController {
         EventHandler<ActionEvent> loop = e -> {
             System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
             this.updateTimerLabel(this.level.getPropertyValue(Property.TICKS));
-            this.gameView.showMedalInfo();
+            this.showMedalInfo();
             this.updateSandUhr(this.level.getPropertyValue(Property.TICKS));
             if (robotActive) this.level.setInputDirection(robot.getNextMove());
             boolean killedPre;
@@ -173,6 +173,32 @@ public class GameController {
             timer.setTextFill(Color.RED);
         } else{
             timer.setTextFill(Color.WHITE);
+        }
+
+    }
+
+    public void showMedalInfo() {
+
+        if (this.level.getCurrentMedal() == null) {
+            this.gameView.setCountToBronzeInfo();
+        }
+
+        if (this.level.getCurrentMedal() == Medal.BRONZE) {
+            this.gameView.setCountToSilverInfo();
+            this.gameView.setCurrentMedal(Medal.BRONZE);
+
+        }
+
+        if (this.level.getCurrentMedal() == Medal.SILVER) {
+            this.gameView.setCountToGoldInfo();
+            this.gameView.setCurrentMedal(Medal.SILVER);
+
+        }
+
+        if (this.level.getCurrentMedal() == Medal.GOLD) {
+            this.gameView.getRestGem().setText("You've got gold! Now exit to win!");
+            this.gameView.getRestTicks().setTextFill(Color.BLACK);
+            this.gameView.setCurrentMedal(Medal.GOLD);
         }
 
     }

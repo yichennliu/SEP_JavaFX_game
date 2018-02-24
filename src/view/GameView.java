@@ -39,8 +39,8 @@ public class GameView {
     private ImageView timerIcons;
     private Label timer;
     private HBox timeRewardInfo;
-    private Label restGem;
-    private Label restTicks;
+    public Label restGem;
+    public Label restTicks;
     private Label currentGems;
     private ImageView gemIcon;
     private ImageView currentMedal;
@@ -200,7 +200,7 @@ public class GameView {
         currentGems.setTextFill(Color.WHITE);
     }
 
-    private void setCountToGoldInfo() {
+    public void setCountToGoldInfo() {
         int showRemainingTicksGoldInfo = this.level.getRemainingGoldTicksGems().getKey()/5;
         int showRemainingGemsGoldInfo = this.level.getRemainingGoldTicksGems().getValue();
         restGem.setText("Needed Gems to Gold Medal: " + showRemainingGemsGoldInfo);
@@ -209,7 +209,7 @@ public class GameView {
 
     }
 
-    private void setCountToSilverInfo() {
+    public void setCountToSilverInfo() {
         int showRemainingTicksSilverInfo = this.level.getRemainingSilverTicksGems().getKey()/5;
         int showRemainingGemsSilverInfo = this.level.getRemainingSilverTicksGems().getValue();
         restGem.setText("Needed Gems to Silver Medal: " + showRemainingGemsSilverInfo);
@@ -219,7 +219,7 @@ public class GameView {
 
     }
 
-    private void setCountToBronzeInfo(){
+    public void setCountToBronzeInfo(){
         int showRemainingTicksBronzeInfo = this.level.getRemainingBronzeTicksGems().getKey()/5;
         int showRemainingGemsBronzeInfo = this.level.getRemainingBronzeTicksGems().getValue();
         restGem.setText("Needed Gems to Bronze Medal: " + showRemainingGemsBronzeInfo);
@@ -229,7 +229,7 @@ public class GameView {
 
     }
 
-    private void setCurrentMedal(Medal medalType) {
+    public void setCurrentMedal(Medal medalType) {
 
         switch (medalType) {
             case GOLD:
@@ -300,6 +300,16 @@ public class GameView {
         this.timeRewardInfo.getChildren().remove(this.gamePauseIcon);
 
     }
+
+    public Label getRestGem(){
+        return this.restGem;
+    }
+
+    public Label getRestTicks(){
+        return this.restTicks;
+    }
+
+
 
 }
 
