@@ -31,9 +31,6 @@ public class GamePausedAlert extends Alert {
         dialogPane.getStylesheets().add(stylesheet);
         dialogPane.getStyleClass().add(".dialog-pane");
 
-        ButtonBar buttonBar = (ButtonBar) this.getDialogPane().lookup(".button-bar");
-        buttonBar.getStyleClass().add(".button");
-
         StackPane stackPane = new StackPane(new ImageView(
                 new Image(getClass().getResourceAsStream("images/Exit.png"))));
         stackPane.setPrefSize(24, 24);
