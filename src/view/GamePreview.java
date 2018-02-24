@@ -29,7 +29,7 @@ public class GamePreview extends HBox{
     private Board board;
     private Timeline timeline;
     private Theme theme;
-    private double speed =0.2;
+    private double speed = 0.2;
 
     public GamePreview(double width, double height, double fieldSize){
         super();
@@ -39,7 +39,7 @@ public class GamePreview extends HBox{
             staticCanvas = new Canvas(width,height);
             animatedCanvas = new Canvas(width,height);
             Group canvasgroup  = new Group(staticCanvas,animatedCanvas);
-            super.getChildren().addAll(canvasgroup,new Label("HAAAALLO"));
+            super.getChildren().add(canvasgroup);
             staticCanvas.setCursor(Cursor.CLOSED_HAND);
         }
         catch (Exception e) {
@@ -63,6 +63,7 @@ public class GamePreview extends HBox{
             levelCopy.execPostRules();
 
             levelCopy.setInputDirection(null);
+            board.stopAnimation();
             View.drawBoard(board,levelCopy.getMap(),theme,true);
             levelCopy.tick();
 
@@ -73,7 +74,7 @@ public class GamePreview extends HBox{
             }
         };
 
-        KeyFrame frame = new KeyFrame(Duration.seconds(speed), loop);
+        KeyFrame frame = new KeyFrame(Duration.seconds(1.0 / 5.0), loop);
         this.timeline = new Timeline(frame);
         this.timeline.setCycleCount(Timeline.INDEFINITE);
         this.timeline.play();

@@ -90,7 +90,7 @@ public class GameController {
     private void startAudio(){
         Media audio = getNextClip();
         if(audio!=null){
-            this.stopAudio();
+            stopAudio();
             player = new MediaPlayer(audio);
             player.onEndOfMediaProperty().setValue(() -> {
                 this.startAudio();
@@ -300,7 +300,7 @@ public class GameController {
 
         if (this.level.getWinningStatus() == WinningStatus.WON) {
             endGameAlert.setHeaderText("You successfully completed the level \"" + this.level.getName() + "\". Hooray!");
-            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton(), endGameAlert.getCancelExitButton());
+            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton());
 
         } else if(this.level.getWinningStatus() == WinningStatus.LOST) {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");
@@ -327,6 +327,7 @@ public class GameController {
 
             if( result.get() == endGameAlert.getNextLevelButton()) {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
+                startAudio();
                 this.controller.startNextLevel();
             }
 

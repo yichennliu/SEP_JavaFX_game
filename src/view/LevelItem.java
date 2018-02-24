@@ -1,5 +1,6 @@
 package view;
 
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;

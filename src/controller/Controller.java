@@ -33,6 +33,7 @@ public class Controller {
 
     public Controller(View view, Object model) { // Todo: ControllerModel
         Image icon = null;
+        view.getStage().getIcons().add(new Image("main/icon.png"));
         this.view = view;
         this.currentMode = View.Mode.GAME;
         this.levelList = UsefulMethods.scanLevelDirectory();

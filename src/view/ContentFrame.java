@@ -87,19 +87,7 @@ public class ContentFrame extends StackPane {
     }
 
     private void addHelpVisibleButton(){
-
-        this.helpbutton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(helpVboxScrollPane.isVisible()){
-                    helpVboxScrollPane.setVisible(false);
-                } else {
-                    helpVboxScrollPane.setVisible(true);
-                    levelItemScrollPane.setVisible(false);
-                    savedGameScrollPane.setVisible(false);
-                }
-            }
-        });
+        this.helpbutton.setOnAction(e ->setVisible(helpVboxScrollPane));
     }
 
 
@@ -113,15 +101,10 @@ public class ContentFrame extends StackPane {
     }
 
     private void addLevelVisibleButton(){
-        this.chooseLevelButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                setVisible(levelItemScrollPane);
-            }
-        });
-
+        this.chooseLevelButton.setOnAction(e -> setVisible(levelItemScrollPane));
     }
 
-    private ScrollPane createScrollPane(VBox scrollVbox) {
+    public ScrollPane createScrollPane(VBox scrollVbox) {
         ScrollPane scrollPane = new ScrollPane(scrollVbox);
         scrollPane.setId("scroll");
         scrollPane.setTranslateX(widthLinks / 2);
