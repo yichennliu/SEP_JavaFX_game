@@ -2,7 +2,6 @@ package controller;
 
 
 import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
 import javafx.scene.input.MouseEvent;
 import model.game.Level;
 import model.game.MedalStatus;
@@ -67,7 +66,7 @@ public class MenuController {
     }
 
     private void chooseLevel() {
-        ArrayList<LevelItem> levelButtons = menuView.getContentFrame().getListlevelButtons();
+        ArrayList<LevelItem> levelButtons = menuView.getContentFrame().getListLevelButtons();
         LevelItem level;
 
         for (int i = 0; i < levelButtons.size(); i++) {
@@ -82,15 +81,15 @@ public class MenuController {
     }
 
     private void chooseSavedGame() {
-        ArrayList<Button> savedGames = this.menuView.getContentFrame().getListSavedGameButtons();
-        Button savedLevel;
+        ArrayList<LevelItem> savedGames = menuView.getContentFrame().getListSavedGameButtons();
+        LevelItem savedLevel;
 
         for (int i = 0; i < savedGames.size(); i++) {
             savedLevel = savedGames.get(i);
 
             final String path = (String) savedLevel.getUserData();
-            savedLevel.setOnAction(e -> {
-                this.controller.startLevel("src/json/savedLevel/" + path);
+            savedLevel.addEventHandler(MouseEvent.MOUSE_CLICKED, ev ->{
+                this.controller.startLevel("src/json/savegame/" + path);
             });
         }
     }

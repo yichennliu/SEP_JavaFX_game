@@ -135,6 +135,7 @@ public class GameController {
             this.level.execPreRules();
             this.level.executeMainRules();
             this.level.execPostRules();
+            this.level.checkLosing();
 
             this.level.setInputDirection(null);
             this.gameView.update();
@@ -264,10 +265,12 @@ public class GameController {
 
         if (this.level.getWinningStatus() == WinningStatus.WON) {
             endGameAlert.setHeaderText("You successfully completed the level \"" + this.level.getName() + "\". Hooray!");
-            endGameAlert.setEndGameImage(new Image(getClass().getResourceAsStream("images/EndGameWin.png")));
+            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton());
+
         } else if(this.level.getWinningStatus() == WinningStatus.LOST) {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");
-            endGameAlert.setEndGameImage(new Image(getClass().getResourceAsStream("images/EndGameLose.png")));
+
+
         }
 
         GameController.this.addAlertKeyEvent(endGameAlert);

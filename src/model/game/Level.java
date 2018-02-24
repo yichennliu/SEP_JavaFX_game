@@ -583,6 +583,16 @@ public class Level {
         return null;
     }
 
+    /**
+     * sets the game status to lost of ME is missing
+     */
+    public void checkLosing() {
+        if (this.whereAmI() == null) {
+            this.setWinningStatus(WinningStatus.LOST);
+        }
+
+    }
+
     /*ATTENTION: returns a fake-clone (only map and properties are really cloned, rules,goals, jsonPath and other unchangable vars are the same)*/
     public Level clone(){
         Feld[][] copyOfMap = copyMap();
