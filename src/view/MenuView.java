@@ -4,8 +4,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import main.LevelFactory;
-import model.game.Level;
 import model.game.MedalStatus;
 
 import java.io.File;
