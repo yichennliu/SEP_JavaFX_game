@@ -70,11 +70,10 @@ public class ContentFrame extends StackPane {
         this.levelItemScrollPane = createScrollPane(levelVbox);
 
         this.savedGameVbox = createSavedGameMenuItems();
-        this.savedGameVbox.getStyleClass().add("levelbox");
         this.savedGameScrollPane = createScrollPane(savedGameVbox);
 
-        this.helpVbox= createHelpMenuItem();
-        this.helpVboxScrollPane= createScrollPane(helpVbox);
+        this.helpVbox = createHelpMenuItem();
+        this.helpVboxScrollPane = createScrollPane(helpVbox);
 
         this.addSavedGameVisibleButton();
         this.addHelpVisibleButton();
@@ -82,6 +81,7 @@ public class ContentFrame extends StackPane {
 
         this.welcomeVbox = createWelcomeItem();
         this.getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane, savedGameScrollPane);
+
     }
 
     private void addHelpVisibleButton(){
