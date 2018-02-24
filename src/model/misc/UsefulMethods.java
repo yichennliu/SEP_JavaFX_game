@@ -22,6 +22,7 @@ public class UsefulMethods {
         return scanDir("src/json/level/");
     }
 
+
     public static List<String> scanSavegameDirectory(){
         return scanDir("src/json/savegame/");
     }

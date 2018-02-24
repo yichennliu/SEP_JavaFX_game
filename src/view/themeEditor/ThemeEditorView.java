@@ -56,15 +56,18 @@ private ObservableList<String> themes;
 private String stylesheet;
 
     public ThemeEditorView(Stage stage){
-        Rectangle background = new Rectangle(width,height);
+
         root = new Group();
-        this.sceneThemeView = new Scene(root);
+        HBox background = new HBox(root);
+        this.sceneThemeView = new Scene(background);
         this.stage = stage;
         this.width=stage.getWidth();
         this.height=stage.getHeight();
         rootPane = new BorderPane();
         rootPane.setPrefSize(width/3,height-100);
-        rootPane.getStyleClass().add("backgroundcolorBlue");
+        background.setPrefSize(width,height);
+        background.getStyleClass().add("backgroundcolorBlue");
+        background.setAlignment(Pos.CENTER);
         /* TreeView */
         TreeItem<view.themeEditor.Cell> treeRoot = new TreeItem<view.themeEditor.Cell> (null);
         treeRoot.setExpanded(true);

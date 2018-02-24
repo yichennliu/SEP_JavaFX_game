@@ -43,7 +43,7 @@ public class GamePausedAlert extends Alert {
 
         saveButton = new ButtonType("Save", ButtonBar.ButtonData.OTHER);
         saveExitButton = new ButtonType("Save & Exit", ButtonBar.ButtonData.OTHER);
-        exitButton = new ButtonType("Exit", ButtonBar.ButtonData.OTHER);
+        exitButton = new ButtonType("Menu", ButtonBar.ButtonData.OTHER);
         retryButton = new ButtonType("Restart", ButtonBar.ButtonData.OTHER);
         cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
