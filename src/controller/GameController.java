@@ -122,6 +122,7 @@ public class GameController {
             System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
             this.updateTimerLabel(this.level.getPropertyValue(Property.TICKS));
             this.updateSandUhr(this.level.getPropertyValue(Property.TICKS));
+            this.updateMedalInfo();
             if (robotActive) this.level.setInputDirection(robot.getNextMove());
             boolean killedPre;
             boolean killedMain;
@@ -327,7 +328,7 @@ public class GameController {
 
             if( result.get() == endGameAlert.getNextLevelButton()) {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-                startAudio();
+                this.startAudio();
                 this.controller.startNextLevel();
             }
 
@@ -493,6 +494,7 @@ public class GameController {
 
                 } else if (result.get() == alert.getRetryButton()) {
                     GameController.this.controller.startLevel(level.getJsonPath());
+                    startAudio();
                     alert.close();
                     timeline.playFromStart();
 
