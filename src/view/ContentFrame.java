@@ -71,10 +71,20 @@ public class ContentFrame extends StackPane {
         this.levelItemScrollPane = createScrollPane(levelVbox);
 
         this.savedGameVbox = createSavedGameMenuItems();
-        this.savedGameVbox.getStyleClass().add("levelbox");
         this.savedGameScrollPane = createScrollPane(savedGameVbox);
 
+        savedGameButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(savedGameScrollPane.isVisible()){
+                    savedGameScrollPane.setVisible(false);
+                }
+                else savedGameScrollPane.setVisible(true);
+                helpVboxScrollPane.setVisible(false);
+                levelItemScrollPane.setVisible(false);
 
+            }
+        });
 
         chooseLevelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
@@ -83,8 +93,10 @@ public class ContentFrame extends StackPane {
                 }
                 else levelItemScrollPane.setVisible(true);
                 helpVboxScrollPane.setVisible(false);
+                savedGameScrollPane.setVisible(false);
             }
         });
+
         close.setOnAction(e -> Platform.exit());
         helpVbox= createHelpMenuItem();
         helpVboxScrollPane= createScrollPane(helpVbox);
@@ -97,12 +109,13 @@ public class ContentFrame extends StackPane {
                 } else {
                     helpVboxScrollPane.setVisible(true);
                     levelItemScrollPane.setVisible(false);
+                    savedGameScrollPane.setVisible(false);
                 }
             }
         });
 
         welcomeVbox=createWelcomeItem();
-        getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane);
+        this.getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane, savedGameScrollPane);
     }
 
     public ScrollPane createScrollPane(VBox scrollVbox) {
@@ -163,10 +176,11 @@ public class ContentFrame extends StackPane {
         } catch (Exception e) {
             System.out.println("Theme not found / corrupt file");
         }
-        for (String path : UsefulMethods.scanLevelDirectory()) {
-            Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/level/" + path));
+        for (String path : UsefulMethods.scanSavegameDirectory()) {
+
+            Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/savegame/" + path));
             System.out.println(snapshot);
-            Level level = LevelFactory.importLevel("src/json/level/" + path);
+            Level level = LevelFactory.importLevel("src/json/savegame/" + path);
             System.out.println(level);
             ImageView snapshotview = new ImageView(snapshot);
             String levelText = "Medaillen: " + this.getMedalImage(level.getJsonPath());
@@ -177,7 +191,6 @@ public class ContentFrame extends StackPane {
 
         return savedGameVbox;
     }
-
 
     private VBox createWelcomeItem(){
         welcomeVbox= new VBox();
@@ -267,4 +280,4 @@ public class ContentFrame extends StackPane {
     public Boolean getShowSavebutton() {
         return showSavebutton;
     }
-} // ende class content frame
+}
