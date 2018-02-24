@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import main.LevelFactory;
 import model.enums.Medal;
 import model.game.Level;
@@ -179,7 +180,11 @@ public class ContentFrame extends StackPane {
             Image snapshot = LevelSnapshot.snap(theme, level);
             ImageView snapshotview = new ImageView(snapshot);
             String levelText = "Medaillen: " + this.getMedalImage(level.getJsonPath());
-            LevelItem savedLevelItem = new LevelItem(level.getName(),levelText,"", snapshotview, path, widthLinks/2-100, heightLinks/5);
+            String description ="benötigte      Edelsteine / Zeit(Sekunden)\n" +
+                    "Bronze:         "+level.getGemGoals()[0]+" / "+level.getTickGoals()[0]/5 +
+                    "\nSilber:           "+level.getGemGoals()[1]+" / "+level.getTickGoals()[1]/5
+                    +"\nGold:              "+level.getGemGoals()[2]+" /"+level.getTickGoals()[2]/5;
+            LevelItem savedLevelItem = new LevelItem(level.getName(),levelText,description, snapshotview, path, widthLinks/2-100, heightLinks/5);
             listSavedGameButtons.add(savedLevelItem);
             savedGameVbox.getChildren().add(savedLevelItem);
         }
@@ -271,8 +276,5 @@ public class ContentFrame extends StackPane {
     }
     public Button getClose() {
         return close;
-    }
-    public Boolean getShowSavebutton() {
-        return showSavebutton;
     }
 }
