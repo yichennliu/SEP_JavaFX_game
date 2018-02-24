@@ -49,9 +49,11 @@ public class LevelItem extends HBox {
         image.setFitWidth(150);
         image.setFitHeight(150);
         rootBox.setRight(image);
+        rootBox.setMinSize(width, height);
         rootBox.getStyleClass().add("backgroundcolorBlue");
         levelInformation.getStyleClass().add("vboxlevel");
         information.getStyleClass().add("infoOnLevelItem");
+        gems.getStyleClass().add("infoOnLevelItem");
         name.getStyleClass().add("infoOnLevelItemBig");
         gems.getStyleClass().addAll("infoOnLevelItemSmall");
 

@@ -1,6 +1,7 @@
 package controller;
 
 
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import model.game.Level;
@@ -61,6 +62,10 @@ public class MenuController {
 
         menuView.getContentFrame().getThemeEditorButton().setOnAction(e -> {
             this.controller.startThemeEditor();
+        });
+
+        menuView.getContentFrame().getClose().setOnAction(e ->{
+            Platform.exit();
         });
 
     }
