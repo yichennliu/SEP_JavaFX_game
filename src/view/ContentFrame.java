@@ -119,15 +119,6 @@ public class ContentFrame extends StackPane {
             }
         });
 
-        close.setOnAction(e -> Platform.exit());
-        helpVbox= createHelpMenuItem();
-        helpVboxScrollPane= createScrollPane(helpVbox);
-        helpbutton.setOnAction( e ->{
-               setVisible(helpVboxScrollPane);
-        });
-
-        welcomeVbox=createWelcomeItem();
-        this.getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane, savedGameScrollPane);
     }
 
     private ScrollPane createScrollPane(VBox scrollVbox) {
