@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.scene.image.Image;
 import main.LevelFactory;
 import model.enums.Medal;
 import model.game.Level;
@@ -12,7 +13,9 @@ import view.*;
 import view.levelEditor.LevelEditorView;
 import view.themeEditor.ThemeEditorView;
 
+import java.io.File;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +32,7 @@ public class Controller {
 
 
     public Controller(View view, Object model) { // Todo: ControllerModel
+        Image icon = null;
         this.view = view;
         this.currentMode = View.Mode.GAME;
         this.levelList = UsefulMethods.scanLevelDirectory();
@@ -40,6 +44,7 @@ public class Controller {
     }
 
     public void startLevelEditor(){
+        this.view.getStage().setTitle("Level-Editor");
         this.currentMode = View.Mode.EDITOR;
         LevelEditor levelEditor = new LevelEditor();
         LevelEditorView levelEditorView = new LevelEditorView(this.view.getStage(), levelEditor);
@@ -51,6 +56,7 @@ public class Controller {
         this.currentMode = View.Mode.MENU;
         Map<String, MedalStatus> medalStatusMap = this.importMedalStatuses();
         MenuView menuView = new MenuView(this.view.getStage(),medalStatusMap);
+        view.getStage().setTitle("Boulderdash");
 
         if (menuController == null) {
             menuController = new MenuController(menuView, medalStatusMap,this);
@@ -64,6 +70,7 @@ public class Controller {
     }
 
     public void startThemeEditor(){
+        this.view.getStage().setTitle("Theme-Editor");
         this.currentMode = View.Mode.THEME;
 
         ThemeEditorView themeEditorView = new ThemeEditorView(this.view.getStage());
