@@ -79,9 +79,9 @@ public class LevelEditorController {
             if(c!=null) editor.setMode((LevelEditor.Mode) c.getUserData());
         });
 
-       Canvas staticCanvas = this.levelEditorView.getStaticCanvas();
+       Canvas selectionCanvas = this.levelEditorView.getSelectionCanvas();
 
-        staticCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+        selectionCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
             mouseDown = true;
             int col = (int) (e.getY()/levelEditorView.getFieldSize());
             int row = (int) (e.getX()/levelEditorView.getFieldSize());
@@ -96,7 +96,7 @@ public class LevelEditorController {
                 this.selectedFeld = editor.getLevel().getFeld(col,row);
             }
         });
-        staticCanvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
+        selectionCanvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
             if(mouseDown){
                 int col = (int) (e.getY() / levelEditorView.getFieldSize());
                 int row = (int) (e.getX() / levelEditorView.getFieldSize());
@@ -120,10 +120,10 @@ public class LevelEditorController {
                 }
             }
         });
-        staticCanvas.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
+        selectionCanvas.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
             mouseDown = false;
         });
-        staticCanvas.setCursor(Cursor.HAND);
+        selectionCanvas.setCursor(Cursor.HAND);
 
         levelEditorView.getExitButton().setOnAction(e -> {
             this.exit();
