@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import main.LevelFactory;
 import model.enums.Medal;
 import model.game.Level;
@@ -28,11 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 public class ContentFrame extends StackPane {
-    private Button themeEditorButton, loadtheme, chooseLevelButton, savedGameButton, gameButton;
-    private Button helpbutton;
-    private Button close;
-    private Button levelEditorButton;
-    private Boolean showSavebutton;
+    private Button themeEditorButton, loadtheme, chooseLevelButton, savedGameButton, gameButton,helpbutton,close,levelEditorButton;
     private VBox levelVbox, helpVbox, welcomeVbox, menuVboxlinks, savedGameVbox;
     private ArrayList<LevelItem> listLevelButtons;
     private ArrayList<LevelItem> listSavedGameButtons;
@@ -43,6 +40,9 @@ public class ContentFrame extends StackPane {
     private Group root;
     private final Font FONT = Font.font("", FontWeight.BOLD, 18);
     private final Font header = Font.font("", FontWeight.BOLD, 28);
+    private Text gemInfo;
+
+
     public ContentFrame(double widthLinks, double heightLinks, MenuView menuView) {
         this.menuView = menuView;
         this.widthLinks=menuView.getWidth();
@@ -54,7 +54,7 @@ public class ContentFrame extends StackPane {
         this.helpbutton = createButton("H E L P");
         this.close = createButton("C L O S E ");
         this.levelEditorButton = createButton("L E V E L - E D I T O R");
-        this.savedGameButton = createButton("S A V E D  G A M E ");
+        this.savedGameButton = createButton("L O A D  G A M E ");
 
         menuVboxlinks = new VBox(15, gameButton, chooseLevelButton, savedGameButton, loadtheme, themeEditorButton, levelEditorButton, helpbutton, close);
         menuVboxlinks.setMinSize((widthLinks / 2), heightLinks);
@@ -73,21 +73,20 @@ public class ContentFrame extends StackPane {
         this.savedGameVbox.getStyleClass().add("levelbox");
         this.savedGameScrollPane = createScrollPane(savedGameVbox);
 
+        this.helpVbox= createHelpMenuItem();
+        this.helpVboxScrollPane= createScrollPane(helpVbox);
 
+        this.addSavedGameVisibleButton();
+        this.addHelpVisibleButton();
+        this.addLevelVisibleButton();
 
-        chooseLevelButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                if(levelItemScrollPane.isVisible()){
-                    levelItemScrollPane.setVisible(false);
-                }
-                else levelItemScrollPane.setVisible(true);
-                helpVboxScrollPane.setVisible(false);
-            }
-        });
-        close.setOnAction(e -> Platform.exit());
-        helpVbox= createHelpMenuItem();
-        helpVboxScrollPane= createScrollPane(helpVbox);
-        helpbutton.setOnAction(new EventHandler<ActionEvent>() {
+        this.welcomeVbox = createWelcomeItem();
+        this.getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane, savedGameScrollPane);
+    }
+
+    private void addHelpVisibleButton(){
+
+        this.helpbutton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if(helpVboxScrollPane.isVisible()){
@@ -95,15 +94,43 @@ public class ContentFrame extends StackPane {
                 } else {
                     helpVboxScrollPane.setVisible(true);
                     levelItemScrollPane.setVisible(false);
+                    savedGameScrollPane.setVisible(false);
                 }
             }
         });
-
-        welcomeVbox=createWelcomeItem();
-        getChildren().addAll(menuVboxlinks, welcomeVbox,levelItemScrollPane,helpVboxScrollPane);
     }
 
-    public ScrollPane createScrollPane(VBox scrollVbox) {
+
+    private void addSavedGameVisibleButton(){
+        this.savedGameButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(savedGameScrollPane.isVisible()){
+                    savedGameScrollPane.setVisible(false);
+                }
+                else savedGameScrollPane.setVisible(true);
+                helpVboxScrollPane.setVisible(false);
+                levelItemScrollPane.setVisible(false);
+
+            }
+        });
+
+    }
+
+    private void addLevelVisibleButton(){
+        this.chooseLevelButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                if(levelItemScrollPane.isVisible()){
+                    levelItemScrollPane.setVisible(false);
+                }
+                else levelItemScrollPane.setVisible(true);
+                helpVboxScrollPane.setVisible(false);
+                savedGameScrollPane.setVisible(false);
+            }
+        });
+    }
+
+    private ScrollPane createScrollPane(VBox scrollVbox) {
         ScrollPane scrollPane = new ScrollPane(scrollVbox);
         scrollPane.setId("scroll");
         scrollPane.setTranslateX(widthLinks / 2);
@@ -114,18 +141,22 @@ public class ContentFrame extends StackPane {
         return scrollPane;
     }
 
-    public Button createButton(String titel) {
+
+    private Button createButton(String titel) {
         Button button = new Button(titel);
         button.setMinWidth(widthLinks / buttonfactor);
         button.setId("menuLeftButtons");
         return button;
     }
+
     public ArrayList<LevelItem> getListLevelButtons() {
         return listLevelButtons;
     }
+
     public ArrayList<LevelItem> getListSavedGameButtons() {
         return listSavedGameButtons;
     }
+
     private VBox createLevelMenuItems() {
         levelVbox = new VBox(5);
         levelVbox.setAlignment(Pos.TOP_CENTER);
@@ -139,8 +170,14 @@ public class ContentFrame extends StackPane {
             Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/level/" + path));
             Level level = LevelFactory.importLevel("src/json/level/" + path);
             ImageView snapshotview = new ImageView(snapshot);
-            LevelItem levelItem = new LevelItem(level.getName(), "", snapshotview, path,
-                    widthLinks/2-100, heightLinks/5, this.getMedalImage(level.getJsonPath()));
+            String levelText = "Medaillen: " + this.getMedalImage(level.getJsonPath());
+            String description ="benötigte      Edelsteine / Zeit(Sekunden)\n" +
+                        "Bronze:         "+level.getGemGoals()[0]+" / "+level.getTickGoals()[0]/5 +
+                          "\nSilber:           "+level.getGemGoals()[1]+" / "+level.getTickGoals()[1]/5
+                    +"\nGold:              "+level.getGemGoals()[2]+" /"+level.getTickGoals()[2]/5;
+
+            LevelItem levelItem = new LevelItem(level.getName(), levelText,description, snapshotview, path, widthLinks/2-100,
+                    heightLinks/5, this.getMedalImage(level.getJsonPath()));
             listLevelButtons.add(levelItem);
             levelVbox.getChildren().add(levelItem);
         }
@@ -156,13 +193,16 @@ public class ContentFrame extends StackPane {
         } catch (Exception e) {
             System.out.println("Theme not found / corrupt file");
         }
-        for (String path : UsefulMethods.scanLevelDirectory()) {
-            Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/level/" + path));
-            System.out.println(snapshot);
-            Level level = LevelFactory.importLevel("src/json/level/" + path);
-            System.out.println(level);
+        for (String path : UsefulMethods.scanSavegameDirectory()) {
+            Level level = LevelFactory.importLevel("src/json/savegame/" + path);
+            Image snapshot = LevelSnapshot.snap(theme, level);
             ImageView snapshotview = new ImageView(snapshot);
-            LevelItem savedLevelItem = new LevelItem(level.getName(), "", snapshotview, path,
+            String levelText = "Medaillen: " + this.getMedalImage(level.getJsonPath());
+            String description ="benötigte      Edelsteine / Zeit(Sekunden)\n" +
+                    "Bronze:         "+level.getGemGoals()[0]+" / "+level.getTickGoals()[0]/5 +
+                    "\nSilber:           "+level.getGemGoals()[1]+" / "+level.getTickGoals()[1]/5
+                    +"\nGold:              "+level.getGemGoals()[2]+" /"+level.getTickGoals()[2]/5;
+            LevelItem savedLevelItem = new LevelItem(level.getName(),levelText,description, snapshotview, path,
                     widthLinks/2-100, heightLinks/5, new ArrayList<>());
             listSavedGameButtons.add(savedLevelItem);
             savedGameVbox.getChildren().add(savedLevelItem);
@@ -170,7 +210,6 @@ public class ContentFrame extends StackPane {
 
         return savedGameVbox;
     }
-
 
     private VBox createWelcomeItem(){
         welcomeVbox= new VBox();
@@ -196,12 +235,18 @@ public class ContentFrame extends StackPane {
         }
         return medalsList;
     }
+
+    private Text createGemInfo(){
+        return gemInfo;
+    }
+
     private VBox createHelpMenuItem() {
         Image digImg = new Image("view/images/tastatur/dig.png");
         Image kiImg = new Image("view/images/tastatur/ki.png");
         Image moveImg = new Image("view/images/tastatur/move.png");
         Image scapeImg = new Image("view/images/tastatur/scape.png");
         Image spaceImg = new Image("view/images/tastatur/space.png");
+        Image muteImg = new Image("view/images/tastatur/mute.png");
         ImageView keyboardImgAll2 = new ImageView();
         String instructions =
                 "\nThe official Boulder Dash games started in 1984 with the original home computer \n" +
@@ -212,43 +257,34 @@ public class ContentFrame extends StackPane {
         Label instruction = new Label(instructions);
         instruction.setFont(FONT);
         LevelItem move = new LevelItem("", " \n  press   "+ "       U P , R I G H T , D O W N , L E F T   \n"+"     to  "+"           M O V E  ",
-                new ImageView(moveImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
+                null, new ImageView(moveImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
         LevelItem escape = new LevelItem("", " \n  press   "+"      E S C  \n"+"    to  "+"         M E N U",
-                new ImageView(scapeImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
+                null, new ImageView(scapeImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
         LevelItem pause = new LevelItem(" ", " \n  press   "+"      S P A C E \n"+"     to  "+"              P A U S E",
-                new ImageView(digImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
+                null, new ImageView(digImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
         LevelItem shift = new LevelItem(" ", " \n  press   "+"      S H I F T  + A R R O W \n"+"    to  "+"             D I G  ",
-                new ImageView(spaceImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
+                null, new ImageView(spaceImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
         LevelItem ki = new LevelItem(" ", " \n  press   "+"                K   \n"+"   For activating  "+"    A I "+" \n  press   "+"                A N Y  O T H E R  K E Y   "+"  For deactivating  ",
-                new ImageView(kiImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
-        helpVbox = new VBox(15,instruction,escape, move,pause,shift,ki);
+                null, new ImageView(kiImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
+        LevelItem mute = new LevelItem("", " \n  press   "+"             M   \n"+"   to  "+"      M U T E  "+" \n  press   "+"      N  to  P L A Y\n",
+                null, new ImageView(muteImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
+
+        helpVbox = new VBox(15,instruction,escape, move,pause,shift,ki,mute);
         helpVbox.setAlignment(Pos.CENTER);
         return helpVbox;
     }
 
 
     public Button getGameButton() {
-        return gameButton;
+        return this.gameButton;
     }
     public Button getThemeEditorButton() {
-        return themeEditorButton;
+        return this.themeEditorButton;
     }
     public Button getLevelEditorButton() {
-        return levelEditorButton;
-    }
-    public Button getSavedGameButton() {
-        return this.savedGameButton;
-    }
-    public VBox getMenuVboxlinks() {
-        return this.menuVboxlinks;
-    }
-    public Button getChooseLevelButton() {
-        return chooseLevelButton;
+        return this.levelEditorButton;
     }
     public Button getClose() {
-        return close;
+        return this.close;
     }
-    public Boolean getShowSavebutton() {
-        return showSavebutton;
-    }
-} // ende class content frame
+}

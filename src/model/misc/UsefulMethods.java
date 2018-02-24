@@ -1,7 +1,8 @@
 package model.misc;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class UsefulMethods {
@@ -22,11 +23,23 @@ public class UsefulMethods {
         return scanDir("src/json/level/");
     }
 
+
     public static List<String> scanSavegameDirectory(){
-        return scanDir("src/json/savegame/");
+        List<String> savegameDir = scanDir("src/json/savegame");
+        Iterator<String> it = savegameDir.iterator();
+        while(it.hasNext()){
+            String path = it.next();
+            String extension = path.substring(path.lastIndexOf("."));
+            if(!extension.equals(".json")) it.remove();
+        }
+        return savegameDir;
     }
 
     private static List<String> scanDir(String path){
-        return Arrays.asList(new File(path).list());
+        List<String> returnList = new ArrayList<>();
+        for(String filename : (new File(path)).list()){
+            returnList.add(filename);
+        }
+        return returnList;
     }
 }

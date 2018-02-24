@@ -1,6 +1,5 @@
 package view;
 
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
@@ -18,16 +17,19 @@ import java.util.List;
 public class LevelItem extends HBox {
 
     private View view;
-    private Label name, information;
+    private Label name, information,gems;
     private HBox medalBox;
     private double width ,height;
 
 
-    public LevelItem(String menuItemName, String info, ImageView image, String userData, double width, double height, List<ImageView> medals) {
+    public LevelItem(String menuItemName, String info, String gemsInfo, ImageView image, String userData, double width, double height, List<ImageView> medals) {
         super(5);
         this.setUserData(userData);
         this.setCursor(Cursor.HAND);
         name = new Label(menuItemName);
+        gems = new Label(gemsInfo);
+        gems.setTranslateX(50);
+        gems.setTranslateY(10);
         information = new Label(info);
         information.setEffect(new GaussianBlur(1));
         medalBox = new HBox();
@@ -41,7 +43,8 @@ public class LevelItem extends HBox {
         levelInformation.setSpacing(10);
         BorderPane rootBox = new BorderPane();
         rootBox.setTop(levelInformation);
-        rootBox.setLeft(information);
+        HBox leftBox = new HBox(information, gems);
+        rootBox.setLeft(leftBox);
         image.setFitWidth(150);
         image.setFitHeight(150);
         rootBox.setRight(image);
@@ -50,7 +53,8 @@ public class LevelItem extends HBox {
         rootBox.getStyleClass().add("backgroundcolorBlue");
         levelInformation.getStyleClass().add("vboxlevel");
         information.getStyleClass().add("infoOnLevelItem");
-        name.getStyleClass().add("infoOnLevelItem");
+        name.getStyleClass().add("infoOnLevelItemBig");
+        gems.getStyleClass().addAll("infoOnLevelItemSmall");
 
         rootBox.setTranslateX(50);
         getChildren().addAll(rootBox);

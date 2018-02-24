@@ -9,12 +9,16 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.enums.Property;
@@ -36,7 +40,7 @@ public class LevelEditorView {
     private Board board;
     private BorderPane rootPane;
     private ToggleGroup headerButtons;
-    private Canvas staticCanvas, animationCanvas;
+    private Canvas staticCanvas, animationCanvas, selectionCanvas;
     private Group canvasGroup;
     private TextField[] gemInputs;
     private TextField[] timeInputs;
@@ -80,6 +84,7 @@ public class LevelEditorView {
         rootPane.setCenter(canvasGroup);
         rootPane.setMinSize(stage.getWidth(),stage.getHeight());
         rootPane.setAlignment(canvasGroup, Pos.CENTER);
+        rootPane.getStyleClass().addAll("backgroundcolorOrange");
         update();
     }
 
@@ -125,10 +130,13 @@ public class LevelEditorView {
     private void createMap(){
         staticCanvas = new Canvas(editor.getWidth()*fieldSize,editor.getHeight()*fieldSize);
         animationCanvas = new Canvas();
+        selectionCanvas = new Canvas();
         animationCanvas.widthProperty().bind(staticCanvas.widthProperty());
         animationCanvas.heightProperty().bind(staticCanvas.heightProperty());
+        selectionCanvas.widthProperty().bind(staticCanvas.widthProperty());
+        selectionCanvas.heightProperty().bind(staticCanvas.heightProperty());
         this.board = new Board(staticCanvas,animationCanvas,editor.getMap(),editor.getTheme(),fieldSize);
-        this.canvasGroup = new Group(animationCanvas,staticCanvas);
+        this.canvasGroup = new Group(animationCanvas,staticCanvas,selectionCanvas);
     }
 
     public void update(){
@@ -192,6 +200,7 @@ public class LevelEditorView {
         try {
             map = editor.getLevel().getFeld(column,row).getProperties();
             ObservableList<Map.Entry<Property,Integer>> list = FXCollections.observableArrayList();
+            selectFeldOnSelectionCanvas(row,column);
             for(Map.Entry<Property,Integer> entry : map.entrySet()){
                 list.add(entry);
             }
@@ -202,6 +211,21 @@ public class LevelEditorView {
             tableView.setItems(null);
         }
 
+    }
+
+    private void selectFeldOnSelectionCanvas(int column, int row) {
+        GraphicsContext gc = selectionCanvas.getGraphicsContext2D();
+        gc.setTransform(new Affine());
+        gc.clearRect(0,0,selectionCanvas.getWidth(),selectionCanvas.getHeight());
+        gc.setTransform(staticCanvas.getGraphicsContext2D().getTransform());
+
+        double startX = column * fieldSize;
+        double startY = row * fieldSize;
+        gc.setFill(new Color(0.43, 0.43,0.36,0.6));
+        gc.setStroke(Color.web("ffab32"));
+        gc.setLineWidth(2);
+        gc.fillRect(startX,startY,fieldSize,fieldSize);
+        gc.strokeRect(startX,startY,fieldSize,fieldSize);
     }
 
     private void initPropertyBox(){
@@ -336,5 +360,9 @@ public class LevelEditorView {
         staticCanvas.setWidth(editor.getWidth()*this.fieldSize);
         staticCanvas.setHeight(editor.getHeight()*this.fieldSize);
 
+    }
+
+    public Canvas getSelectionCanvas() {
+        return selectionCanvas;
     }
 }

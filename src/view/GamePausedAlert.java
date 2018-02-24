@@ -7,7 +7,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
@@ -32,9 +31,6 @@ public class GamePausedAlert extends Alert {
         dialogPane.getStylesheets().add(stylesheet);
         dialogPane.getStyleClass().add(".dialog-pane");
 
-        ButtonBar buttonBar = (ButtonBar) this.getDialogPane().lookup(".button-bar");
-        buttonBar.getStyleClass().add(".button");
-
         StackPane stackPane = new StackPane(new ImageView(
                 new Image(getClass().getResourceAsStream("images/Exit.png"))));
         stackPane.setPrefSize(24, 24);
@@ -43,7 +39,7 @@ public class GamePausedAlert extends Alert {
 
         saveButton = new ButtonType("Save", ButtonBar.ButtonData.OTHER);
         saveExitButton = new ButtonType("Save & Exit", ButtonBar.ButtonData.OTHER);
-        exitButton = new ButtonType("Exit", ButtonBar.ButtonData.OTHER);
+        exitButton = new ButtonType("Menu", ButtonBar.ButtonData.OTHER);
         retryButton = new ButtonType("Restart", ButtonBar.ButtonData.OTHER);
         cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
