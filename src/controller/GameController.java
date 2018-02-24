@@ -282,7 +282,6 @@ public class GameController {
         } else if(this.level.getWinningStatus() == WinningStatus.LOST) {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");
 
-
         }
 
         GameController.this.addAlertKeyEvent(endGameAlert);
@@ -304,7 +303,7 @@ public class GameController {
 
             if( result.get() == endGameAlert.getNextLevelButton()) {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-                startAudio();
+                this.startAudio();
                 this.controller.startNextLevel();
             }
 

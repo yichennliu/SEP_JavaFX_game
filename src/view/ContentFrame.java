@@ -172,9 +172,7 @@ public class ContentFrame extends StackPane {
         for (String path : UsefulMethods.scanSavegameDirectory()) {
 
             Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/savegame/" + path));
-            System.out.println(snapshot);
             Level level = LevelFactory.importLevel("src/json/savegame/" + path);
-            System.out.println(level);
             ImageView snapshotview = new ImageView(snapshot);
             String levelText = "Medaillen: " + this.getMedalImage(level.getJsonPath());
             LevelItem savedLevelItem = new LevelItem(level.getName(),levelText, snapshotview, path, widthLinks/2-100, heightLinks/5);
