@@ -265,6 +265,7 @@ public class GameController {
             if(event.getCode().equals(KeyCode.M)) {
                 stopAudio();
             } else if(event.getCode().equals(KeyCode.N)) {
+                System.out.println("Audio an!");
                 startAudio();
             }
         });
