@@ -129,6 +129,7 @@ public class GameController {
             this.level.execPreRules();
             this.level.executeMainRules();
             this.level.execPostRules();
+            this.level.checkLosing();
 
             this.level.setInputDirection(null);
             this.gameView.update();

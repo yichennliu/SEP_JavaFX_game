@@ -327,6 +327,7 @@ public class Robot implements AI {
         levelToTick.execPreRules();
         levelToTick.executeMainRules();
         levelToTick.execPostRules();
+        levelToTick.checkLosing();
         levelToTick.setInputDirection(null);
         return levelToTick.getWinningStatus();
     }
