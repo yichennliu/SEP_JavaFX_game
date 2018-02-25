@@ -82,7 +82,6 @@ public class GameView {
         this.timerIcons.setFitWidth(30);
         this.gamePauseIcon = new ImageView();
         this.createHboxStyle();
-        this.showCollectedGems();
         this.createDiamondIcons();
         this.timeRewardInfo.getChildren().addAll(timerIcons, timer, gemIcon, currentGems, currentMedal, restGem, restTicks);
         root.getChildren().addAll(timeRewardInfo);
@@ -109,7 +108,6 @@ public class GameView {
         this.scrollToMe();
         board.stopAnimation();
         View.drawBoard(this.board, level.getMap(), this.theme, true);
-        this.showCollectedGems();
     }
 
     public void setNewTheme(Theme theme){
@@ -198,12 +196,6 @@ public class GameView {
         return this.timer;
     }
 
-    private void showCollectedGems() {
-        Integer result = this.level.getPropertyValue(Property.GEMS);
-        currentGems.setText(result.toString());
-        currentGems.setTextFill(Color.WHITE);
-    }
-
     public void setCountToGoldInfo() {
         int showRemainingTicksGoldInfo = this.level.getRemainingGoldTicksGems().getKey()/5;
         int showRemainingGemsGoldInfo = this.level.getRemainingGoldTicksGems().getValue();
@@ -281,4 +273,11 @@ public class GameView {
     public Label getRestTicks(){
         return this.restTicks;
     }
+
+    public Label getCurrentGems(){
+        return this.currentGems;
+    }
+
+
+
 }

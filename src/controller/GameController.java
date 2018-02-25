@@ -143,6 +143,7 @@ public class GameController {
             this.updateTimerLabel(this.level.getPropertyValue(Property.TICKS));
             this.updateSandUhr(this.level.getPropertyValue(Property.TICKS));
             this.updateMedalInfo();
+            this.updateCollectedGems();
             if (robotActive) this.level.setInputDirection(robot.getNextMove());
             boolean killedPre;
             boolean killedMain;
@@ -195,6 +196,15 @@ public class GameController {
         }
 
     }
+
+
+    private void updateCollectedGems() {
+        Integer result = this.level.getPropertyValue(Property.GEMS);
+        this.gameView.getCurrentGems().setText(result.toString());
+        this.gameView.getCurrentGems().setTextFill(Color.WHITE);
+
+    }
+
 
     private void updateMedalInfo() {
 
@@ -274,7 +284,7 @@ public class GameController {
         gameStage.addEventHandler(KeyEvent.KEY_PRESSED,event ->{
             if(event.getCode().equals(KeyCode.M)) {
                 stopAudio();
-            } else if(event.getCode().equals(KeyCode.N)) {
+            } else if(player==null && event.getCode().equals(KeyCode.M)) {
                 System.out.println("Audio an!");
                 startAudio();
             }
