@@ -17,7 +17,6 @@ public class EndGameAlert extends Alert {
     private ButtonType retryButton;
     private ButtonType cancelExitButton;
     private ButtonType nextLevelButton;
-    private Level level;
     private String stylesheet;
     private MenuView menuView;
 
