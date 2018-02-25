@@ -50,6 +50,7 @@ public class GameController {
     private int themeIndex = 0;
     private int audioIndex =-1;
     private MediaPlayer player;
+    private boolean audioPaused;
 
     public GameController(Level level, GameView gameView, Controller controller) {
         this.controller = controller;
@@ -61,7 +62,7 @@ public class GameController {
         this.convertGameModus();
         this.addDragEvent();
         this.addPauseResumeGameEvents();
-        this.addStopAudioEvent();
+        this.addPauseAudioEvent();
         this.addThemeChangeEvent();
         this.initAudios();
         this.startAudio();
@@ -116,19 +117,30 @@ public class GameController {
                 this.startAudio();
             });
             player.play();
+            audioPaused = false;
         }
     }
 
     private void stopAudio(){
-        if(player!=null) player.stop();
+        if(player!=null) {
+            audioPaused = true;
+            player.stop();
+        }
     }
 
     private void pauseAudio(){
-        if(player!=null) player.pause();
+        if(player!=null) {
+            audioPaused = true;
+            player.pause();
+        }
     }
 
     private void resumeAudio(){
-        if(player!=null) player.play();
+        if(player!=null) {
+            audioPaused = false;
+            player.play();
+        }
+
     }
 
 
@@ -281,14 +293,13 @@ public class GameController {
 
     }
 
-    private void addStopAudioEvent(){
+    private void addPauseAudioEvent() {
         Stage gameStage = this.gameView.getStage();
-        gameStage.addEventHandler(KeyEvent.KEY_PRESSED,event ->{
-            if(event.getCode().equals(KeyCode.M)) {
-                stopAudio();
-            } else if(player==null && event.getCode().equals(KeyCode.M)) {
-                System.out.println("Audio an!");
-                startAudio();
+        gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.M)) {
+                if (player != null && audioPaused) {
+                    resumeAudio();
+                } else pauseAudio();
             }
         });
     }
