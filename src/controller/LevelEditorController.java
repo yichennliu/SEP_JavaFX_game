@@ -53,6 +53,7 @@ public class LevelEditorController {
             if(level!=null){
                 this.editor.resetLevel(level);
                 this.levelEditorView.reloadMap();
+                this.levelEditorView.getDifficultInputField().setText(Integer.toString(level.getDifficulty()));
                 this.levelEditorView.getNameInput().textProperty().setValue(level.getName());
                 if(level.whereAmI()!=null) this.meSet = true;
                 TextField[] gemInputs = this.levelEditorView.getGemInputs();

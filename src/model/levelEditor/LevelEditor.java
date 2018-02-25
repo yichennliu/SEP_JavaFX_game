@@ -127,5 +127,6 @@ public class LevelEditor {
 
     public void setName(String name) {
         this.level.setName(name);
+        this.level.setJSONPath("src/json/level"+level.getName()+".json");
     }
 }

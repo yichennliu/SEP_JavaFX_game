@@ -17,8 +17,6 @@ public class Level {
      * laut Doku genau 3 Einträge
      */
 
-    private int[] difficult;
-
     /** laut Doku genau 3 Einträge */
     private int[] gemGoals;
     /**
@@ -153,8 +151,6 @@ public class Level {
     public int getHeight() {
         return this.map.length;
     }
-
-    public int[] getDifficult(){return difficult;}
 
     public int[] getGemGoals() {
         return gemGoals;
@@ -681,5 +677,9 @@ public class Level {
     public void setDifficulty(int difficulty) {
         if(difficulty<0) difficulty=0;
         this.difficulty = difficulty;
+    }
+
+    public void setJSONPath(String JSONPath) {
+        this.jsonPath = JSONPath;
     }
 }
