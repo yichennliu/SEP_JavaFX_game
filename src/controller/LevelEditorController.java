@@ -179,7 +179,7 @@ public class LevelEditorController {
         this.levelEditorView.getAddPropertyButton().setOnAction(e -> {
             Property prop = (Property) propertySelectionBox.getSelectionModel().getSelectedItem();
             Integer value = stringToInteger(propertyValueInput.getText());
-            if(prop!=null && value!= null){
+            if(prop!=null && value!= null && selectedFeld!=null){
                 if (value<0) value= 0;
                 selectedFeld.setPropertyValue(prop,value);
                 levelEditorView.selectFeld(selectedFeld.getRow(),selectedFeld.getColumn());
