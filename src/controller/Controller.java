@@ -117,8 +117,7 @@ public class Controller {
 
     }
 
-    /**
-     * @return saved Medal statuses, an empty map otherwise
+    /**     * @return saved Medal statuses, an empty map otherwise
      */
     private Map<String, MedalStatus> importMedalStatuses() {
         Map<String, MedalStatus> medalStatuses = new HashMap<>();
