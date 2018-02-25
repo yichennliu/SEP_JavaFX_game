@@ -12,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import model.enums.Token;
 import model.themeEditor.Theme;
@@ -165,8 +164,6 @@ private String stylesheet;
 
         this.nextFrame = new Button(); nextFrame.setGraphic(new ImageView("model/themeEditor/thumbnails/next.png"));
         this.previousFrame = new Button(); previousFrame.setGraphic(new ImageView("model/themeEditor/thumbnails/previous1.png"));
-      // this.nextFrame.setMaxSize(30,30);
-       // this.previousFrame.setMaxSize(30,30);
         this.frameNumberField = new TextField("0");
         frameNumberField.setMaxWidth(30);
         frameNumberField.setMinWidth(30);

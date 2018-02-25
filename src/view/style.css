@@ -8,7 +8,7 @@
      -fx-background-radius: 9,8,5,4,3;
         }
 
-.button , .toggle-button{
+.button , .toggle-button, .dialog-pane .button{
 
   -fx-background-color:
        linear-gradient(#000000 0%, #232723 25%, #373837 75%, #262d38 100%),
@@ -21,7 +21,7 @@
 }
 
 
- .button:hover ,.toggle-button:hover {
+ .button:hover ,.toggle-button:hover ,.dialog-pane .button:hover{
         -fx-background-color:#ffab32;
         -fx-scale-x: 1.1;
         -fx-cursor: hand;
@@ -128,7 +128,7 @@
 
 
 .text-field.error {
- -fx-border-color: red ;
+ -fx-border-color: #020d1e;
  -fx-border-width: 2px ;
 }
 
@@ -172,26 +172,26 @@
 }
 
 .dialog-pane{
-  -fx-border-color:black;
+  -fx-border-color:#020d1e;
   -fx-border-width:5.0px;
-  -fx-background-color: black;
+  -fx-background-color: #020d1e;
  }
 
 
 .dialog-pane > .content.label {
    -fx-padding: 0.5em 0.5em 0.5em 0.5em;
-   -fx-background-color: black;
+   -fx-background-color: #020d1e;
    -fx-text-fill: white;
    -fx-font-size:20.0px;
    -fx-font-weight: bold;
 }
 
 .dialog-pane:header .header-panel {
-  -fx-background-color: black;
+  -fx-background-color: #020d1e;;
 }
 
 .dialog-pane:header .header-panel .label{
-  -fx-background-color: black;
+  -fx-background-color: #020d1e;
   -fx-background-radius:10px;
   -fx-text-fill:white;
   -fx-font-size:20.0px;
@@ -199,17 +199,3 @@
 }
 
 
-.dialog-pane .button{
-   -fx-background-color:black;
-   -fx-text-fill:white;
-   -fx-wrap-text: true;
-   -fx-effect: dropshadow( three-pass-box, orange, 10.0, 0.0, 0.0, 0.0);
-   -fx-cursor:hand;
- }
-
-.dialog-pane .button:hover{
-  -fx-background-color:orange;
-  -fx-text-fill:black;
-  -fx-font-weight:bold;
-  -fx-font-weight: bold
- }
