@@ -3,34 +3,57 @@ package model.game;
 import javafx.scene.control.Label;
 import javafx.util.Pair;
 import model.enums.*;
+
 import java.util.*;
 import java.util.List;
 
 public class Level {
     private String name;
-    /** Aufbau von oben links: map[rowNum][colNum] */
+    /**
+     * Aufbau von oben links: map[rowNum][colNum]
+     */
     private Feld[][] map;
-    /** laut Doku genau 3 Einträge */
+    /**
+     * laut Doku genau 3 Einträge
+     */
     private int[] gemGoals;
-    /** laut Doku genau 3 Einträge */
+    /**
+     * laut Doku genau 3 Einträge
+     */
     private int[] tickGoals;
     private List<Rule> pre;
     private List<Rule> post;
-    /** optional */
+    /**
+     * optional
+     */
     private Integer maxslime;
-    /** globale properties: GEMS, TICKS, X, Y, Z */
+    /**
+     * globale properties: GEMS, TICKS, X, Y, Z
+     */
     private Map<Property, Integer> properties;
-    /** Path to this level */
+    /**
+     * Path to this level
+     */
     private String jsonPath;
-    /** Derzeitige Anzahl der Felder mit Schleim */
+    /**
+     * Derzeitige Anzahl der Felder mit Schleim
+     */
     public int slimeCount;
-    /** vorbereitete Änderungen */
+    /**
+     * vorbereitete Änderungen
+     */
     private Map<Feld, Token> tokensToChange = new HashMap<>();
-    /** vorbereitete Änderungen */
+    /**
+     * vorbereitete Änderungen
+     */
     private Map<Feld, Map<Property, Integer>> propertiesToChange = new HashMap<>();
-    /** buffer for control keys */
+    /**
+     * buffer for control keys
+     */
     private InputDirection inputDirection = null;
-    /** whether the game is ongoing, lost, or won */
+    /**
+     * whether the game is ongoing, lost, or won
+     */
     private WinningStatus winningStatus = WinningStatus.PLAYING;
 
 
@@ -50,8 +73,8 @@ public class Level {
 
     /*sets level property on all fields*/
     private void setNeighbours() {
-        for(int row = 0; row < this.getHeight();  row++){
-            for (int column = 0; column < this.getWidth(); column++){
+        for (int row = 0; row < this.getHeight(); row++) {
+            for (int column = 0; column < this.getWidth(); column++) {
                 Feld feld = this.getFeld(row, column);
                 // set backlink to level
                 feld.setLevel(this);
@@ -66,7 +89,9 @@ public class Level {
     }
 
 
-    /** @return Feld, or null */
+    /**
+     * @return Feld, or null
+     */
     public Feld getFeld(int row, int col) {
         if (row >= 0 && row < this.getHeight() && col >= 0 && col < this.getWidth()) {
             return this.map[row][col];
@@ -76,32 +101,30 @@ public class Level {
     }
 
     public Pair<Integer, Integer> getRemainingGoldTicksGems() {
-        Integer remainingTicks =  this.getTickGoals()[2] -this.getPropertyValue(Property.TICKS);
-        Integer remainingGems =  this.getGemGoals()[2]-this.getPropertyValue(Property.GEMS) ;
+        Integer remainingTicks = this.getTickGoals()[2] - this.getPropertyValue(Property.TICKS);
+        Integer remainingGems = this.getGemGoals()[2] - this.getPropertyValue(Property.GEMS);
         return new Pair<Integer, Integer>(remainingTicks, remainingGems);
     }
 
     public Pair<Integer, Integer> getRemainingSilverTicksGems() {
-        Integer remainingTicks =  this.getTickGoals()[1]- this.getPropertyValue(Property.TICKS);
-        Integer remainingGems = this.getGemGoals()[1]-this.getPropertyValue(Property.GEMS) ;
+        Integer remainingTicks = this.getTickGoals()[1] - this.getPropertyValue(Property.TICKS);
+        Integer remainingGems = this.getGemGoals()[1] - this.getPropertyValue(Property.GEMS);
         return new Pair<Integer, Integer>(remainingTicks, remainingGems);
     }
 
     public Pair<Integer, Integer> getRemainingBronzeTicksGems() {
-        Integer remainingTicks = this.getTickGoals()[0]-this.getPropertyValue(Property.TICKS);
-        Integer remainingGems =  this.getGemGoals()[0]-this.getPropertyValue(Property.GEMS);
+        Integer remainingTicks = this.getTickGoals()[0] - this.getPropertyValue(Property.TICKS);
+        Integer remainingGems = this.getGemGoals()[0] - this.getPropertyValue(Property.GEMS);
         return new Pair<Integer, Integer>(remainingTicks, remainingGems);
     }
 
     /**
      * @return current medal, or null
      */
+
     public Medal getCurrentMedal() {
         if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[2]
                 && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[2]) {
-            return Medal.GOLD;
-        } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[2]
-                && this.getPropertyValue(Property.TICKS) > this.getTickGoals()[2]) {
             return Medal.GOLD;
         } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[1]
                 && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[1]) {
@@ -109,15 +132,14 @@ public class Level {
         } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[0]
                 && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[0]) {
             return Medal.BRONZE;
-        } else if (this.getPropertyValue(Property.GEMS) < this.getGemGoals()[0]
-                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[0]) {
+        } else {
             return null;
         }
 
-        return null;
     }
 
-    public Feld[][] getMap(){
+
+    public Feld[][] getMap() {
         return this.map;
     }
 
@@ -166,7 +188,9 @@ public class Level {
         this.inputDirection = inputDirection;
     }
 
-    /** get path to json soruce for this level */
+    /**
+     * get path to json soruce for this level
+     */
     public String getJsonPath() {
         return this.jsonPath;
     }
@@ -186,8 +210,10 @@ public class Level {
         return this.properties;
     }
 
-    /** @return global value associated to property */
-    public Integer getPropertyValue(Property property){
+    /**
+     * @return global value associated to property
+     */
+    public Integer getPropertyValue(Property property) {
         return this.properties.get(property) == null
                 ? 0
                 : this.properties.get(property);
@@ -195,9 +221,9 @@ public class Level {
 
     /**
      * @param property Global property
-     * @param value value
+     * @param value    value
      */
-    public void setPropertyValue(Property property, int value){
+    public void setPropertyValue(Property property, int value) {
         if (property.isGlobal()) {
             this.properties.put(property, value);
         } else {
@@ -205,12 +231,16 @@ public class Level {
         }
     }
 
-    /** Buffer a token change on a field, but do not apply it yet */
+    /**
+     * Buffer a token change on a field, but do not apply it yet
+     */
     public void bufferChangeToken(Feld field, Token newToken) {
         this.tokensToChange.put(field, newToken);
     }
 
-    /** Buffer a property change on a field, but do not apply it yet */
+    /**
+     * Buffer a property change on a field, but do not apply it yet
+     */
     public void bufferChangeProperty(Feld field, Property property, int newValue) {
         Map<Property, Integer> properties = this.propertiesToChange.get(field);
         if (properties != null) {
@@ -231,7 +261,7 @@ public class Level {
         if (propMap != null) {
             Integer intVal = propMap.get(property);
             if (intVal != null) {
-                this.bufferChangeProperty(field, property, intVal+by);
+                this.bufferChangeProperty(field, property, intVal + by);
                 return;
             }
         }
@@ -290,7 +320,8 @@ public class Level {
                     }
 
                     // keine Eingabe: nichts tun
-                    if (this.getInputDirection() == null) {}
+                    if (this.getInputDirection() == null) {
+                    }
 
                     // nur graben
                     else if (this.getInputDirection().isDigOnly()) {
@@ -321,16 +352,16 @@ public class Level {
                             if (next.isToken(Token.EXIT)) {
                                 for (int goalNo = 2; goalNo >= 0; goalNo--) {
                                     if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[goalNo] &&
-                                        this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[goalNo]) {
-                                            current.moveTo(next);
-                                            this.setWinningStatus(WinningStatus.WON);
+                                            this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[goalNo]) {
+                                        current.moveTo(next);
+                                        this.setWinningStatus(WinningStatus.WON);
                                     }
                                 }
                             }
 
                             // schieben
                             if ((this.getInputDirection() == InputDirection.GOLEFT
-                                        || this.getInputDirection() == InputDirection.GORIGHT)
+                                    || this.getInputDirection() == InputDirection.GORIGHT)
                                     && next.hasProperty(Property.PUSHABLE)) {
 
                                 Feld behindNext = next.getNeighbour(this.getInputDirection());
@@ -392,12 +423,12 @@ public class Level {
                         FieldDirection curDirection = FieldDirection.getFromDirection(curDirInt);
 
                         // Felder aus Sicht des Gegners
-                        Feld forward        = current.getNeighbourRelative(curDirection, FieldDirection.TOP);
-                        Feld rightSide      = current.getNeighbourRelative(curDirection, FieldDirection.RIGHT);
-                        Feld leftSide       = current.getNeighbourRelative(curDirection, FieldDirection.LEFT);
-                        Feld backwards      = current.getNeighbourRelative(curDirection, FieldDirection.BOTTOM);
+                        Feld forward = current.getNeighbourRelative(curDirection, FieldDirection.TOP);
+                        Feld rightSide = current.getNeighbourRelative(curDirection, FieldDirection.RIGHT);
+                        Feld leftSide = current.getNeighbourRelative(curDirection, FieldDirection.LEFT);
+                        Feld backwards = current.getNeighbourRelative(curDirection, FieldDirection.BOTTOM);
                         Feld backwardsRight = current.getNeighbourRelative(curDirection, FieldDirection.RIGHTBOTTOM);
-                        Feld backwardsLeft  = current.getNeighbourRelative(curDirection, FieldDirection.LEFTBOTTOM);
+                        Feld backwardsLeft = current.getNeighbourRelative(curDirection, FieldDirection.LEFTBOTTOM);
 
                         // horizontale / vertikale Bewegungen für Swapling
                         if (current.isToken(Token.SWAPLING)) {
@@ -410,52 +441,52 @@ public class Level {
                             } else {
                                 // eingeklemmt
                             }
-                        // Rechte-Hand-Regel für Xling
+                            // Rechte-Hand-Regel für Xling
                         } else if (current.isToken(Token.XLING)) {
                             // Rechts frei und hinten rechts nicht frei
                             if (rightSide != null && rightSide.isFree(true) &&
                                     (backwardsRight == null || !backwardsRight.isFree(true))) {
                                 // nach rechts gehen
                                 current.moveEnemyTo(FieldDirection.RIGHT);
-                            // Sonst wenn voraus frei
+                                // Sonst wenn voraus frei
                             } else if (forward != null && forward.isFree(true)) {
                                 // geradeaus gehen
                                 current.moveEnemyTo(FieldDirection.TOP);
-                            // sonst wenn links frei
+                                // sonst wenn links frei
                             } else if (leftSide != null && leftSide.isFree(true)) {
                                 // nach links gehen
                                 current.moveEnemyTo(FieldDirection.LEFT);
-                            // sonst wenn hinten frei
+                                // sonst wenn hinten frei
                             } else if (backwards != null && backwards.isFree(true)) {
                                 // umkehren
                                 current.moveEnemyTo(FieldDirection.BOTTOM);
-                            // sonst wenn rechts frei
+                                // sonst wenn rechts frei
                             } else if (rightSide != null && rightSide.isFree(true)) {
                                 // nach rechts gehen
                                 current.moveEnemyTo(FieldDirection.RIGHT);
                             } else {
                                 // eingeschlossen
                             }
-                        // Linke-Hand-Regel für Blockling
+                            // Linke-Hand-Regel für Blockling
                         } else if (current.isToken(Token.BLOCKLING)) {
                             // Links frei und hinten links nicht frei
                             if (leftSide != null && leftSide.isFree(true) &&
                                     (backwardsLeft == null || !backwardsLeft.isFree(true))) {
                                 // nach links gehen
                                 current.moveEnemyTo(FieldDirection.LEFT);
-                            // Sonst wenn voraus frei
+                                // Sonst wenn voraus frei
                             } else if (forward != null && forward.isFree(true)) {
                                 // geradeaus gehen
                                 current.moveEnemyTo(FieldDirection.TOP);
-                            // sonst wenn rechts frei
+                                // sonst wenn rechts frei
                             } else if (rightSide != null && rightSide.isFree(true)) {
                                 // nach rechts gehen
                                 current.moveEnemyTo(FieldDirection.RIGHT);
-                            // sonst wenn hinten frei
+                                // sonst wenn hinten frei
                             } else if (backwards != null && backwards.isFree(true)) {
                                 // umkehren
                                 current.moveEnemyTo(FieldDirection.BOTTOM);
-                            // sonst wenn links frei
+                                // sonst wenn links frei
                             } else if (leftSide != null && leftSide.isFree(true)) {
                                 // nach links gehen
                                 current.moveEnemyTo(FieldDirection.LEFT);
@@ -509,15 +540,15 @@ public class Level {
         this.applyBufferedChanges();
     }
 
-    public void execPreRules(){
-       for(Rule rule: pre){
-           rule.execute(this.map,this.inputDirection);
-       }
+    public void execPreRules() {
+        for (Rule rule : pre) {
+            rule.execute(this.map, this.inputDirection);
+        }
     }
 
-    public void execPostRules(){
-        for(Rule rule: post){
-            rule.execute(this.map,this.inputDirection);
+    public void execPostRules() {
+        for (Rule rule : post) {
+            rule.execute(this.map, this.inputDirection);
         }
     }
 
@@ -565,7 +596,7 @@ public class Level {
      */
     public void tick() {
         Integer ticks = this.getPropertyValue(Property.TICKS);
-        this.setPropertyValue(Property.TICKS, ticks == null ? 1 : ticks+1);
+        this.setPropertyValue(Property.TICKS, ticks == null ? 1 : ticks + 1);
 
         //  lose if time ran out
         if (this.getPropertyValue(Property.TICKS) > this.getTickGoals()[0]) {
@@ -600,26 +631,26 @@ public class Level {
     }
 
     /*ATTENTION: returns a fake-clone (only map and properties are really cloned, rules,goals, jsonPath and other unchangable vars are the same)*/
-    public Level clone(){
+    public Level clone() {
         Feld[][] copyOfMap = copyMap();
         Map<Property, Integer> globalPropsClone = copyProps(this.properties);
-        return new Level(new String(name),copyOfMap,gemGoals,tickGoals,pre,post,maxslime,globalPropsClone, jsonPath);
+        return new Level(new String(name), copyOfMap, gemGoals, tickGoals, pre, post, maxslime, globalPropsClone, jsonPath);
     }
 
     /*copies property Maps*/
-    private Map<Property,Integer> copyProps(Map<Property,Integer> mapToCopy) {
-        Map<Property,Integer> propertyClone= new HashMap<>();
-        for(Map.Entry<Property,Integer> entry:mapToCopy.entrySet()){
-            propertyClone.put(entry.getKey(),new Integer(entry.getValue()));
+    private Map<Property, Integer> copyProps(Map<Property, Integer> mapToCopy) {
+        Map<Property, Integer> propertyClone = new HashMap<>();
+        for (Map.Entry<Property, Integer> entry : mapToCopy.entrySet()) {
+            propertyClone.put(entry.getKey(), new Integer(entry.getValue()));
         }
         return propertyClone;
     }
 
     /*copies map by copying every Feld*/
-    public Feld[][] copyMap(){
+    public Feld[][] copyMap() {
         Feld[][] copy = new Feld[map.length][map[0].length];
-        for(int y = 0; y<copy.length;y++){
-            for(int x =0; x<copy[0].length;x++){
+        for (int y = 0; y < copy.length; y++) {
+            for (int x = 0; x < copy[0].length; x++) {
                 copy[y][x] = map[y][x].clone();
             }
         }
@@ -630,7 +661,7 @@ public class Level {
         this.name = name;
     }
 
-    public void setMap(Feld[][] map){
+    public void setMap(Feld[][] map) {
         this.map = map;
         setNeighbours();
     }

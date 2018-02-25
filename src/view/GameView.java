@@ -15,7 +15,6 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import model.enums.Medal;
-import model.enums.Property;
 import model.enums.SandUhr;
 import model.game.Feld;
 import model.game.Level;

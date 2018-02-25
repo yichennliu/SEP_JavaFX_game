@@ -45,7 +45,7 @@ public class GameController {
     private AI robot;
     private boolean robotActive;
     private List<Media> audios;
-    private int audioIndex =-1;
+    private int audioIndex = -1;
     private MediaPlayer player;
 
     public GameController(Level level, GameView gameView, Controller controller) {
@@ -68,28 +68,27 @@ public class GameController {
         this.robotActive = activate;
     }
 
-    private void initAudios(){
+    private void initAudios() {
         audios = new ArrayList<>();
-        for(String path : new File("src/audio").list()){
+        for (String path : new File("src/audio").list()) {
             try {
-                audios.add(new Media(new File("src/audio/"+path).toURI().toString()));
-            }
-            catch(Exception e){
+                audios.add(new Media(new File("src/audio/" + path).toURI().toString()));
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
     }
 
-    private Media getNextClip(){
-        if(audios==null||audios.size()==0) return null;
-        audioIndex = (audios.size()-1==audioIndex) ? 0 : audioIndex+1;
+    private Media getNextClip() {
+        if (audios == null || audios.size() == 0) return null;
+        audioIndex = (audios.size() - 1 == audioIndex) ? 0 : audioIndex + 1;
         return audios.get(audioIndex);
     }
 
-    private void startAudio(){
+    private void startAudio() {
         Media audio = getNextClip();
-        if(audio!=null){
+        if (audio != null) {
             stopAudio();
             player = new MediaPlayer(audio);
             player.onEndOfMediaProperty().setValue(() -> {
@@ -99,16 +98,16 @@ public class GameController {
         }
     }
 
-    private void stopAudio(){
-        if(player!=null) player.stop();
+    private void stopAudio() {
+        if (player != null) player.stop();
     }
 
-    private void pauseAudio(){
-        if(player!=null) player.pause();
+    private void pauseAudio() {
+        if (player != null) player.pause();
     }
 
-    private void resumeAudio(){
-        if(player!=null) player.play();
+    private void resumeAudio() {
+        if (player != null) player.play();
     }
 
 
@@ -145,7 +144,7 @@ public class GameController {
                 if (this.level.getWinningStatus() == WinningStatus.WON) {
                     this.saveMedal();
                     this.endOfGameDialog();
-                } else if(this.level.getWinningStatus() == WinningStatus.LOST){
+                } else if (this.level.getWinningStatus() == WinningStatus.LOST) {
                     this.endOfGameDialog();
                 }
 
@@ -159,19 +158,19 @@ public class GameController {
 
     }
 
-    private void updateTimerLabel(Integer currentTick){
+    private void updateTimerLabel(Integer currentTick) {
         Label timer = this.gameView.getTimerLabel();
-        Integer maxSecs = this.level.getTickGoals()[0]/5;
-        int currentSec = (currentTick/5);
+        Integer maxSecs = this.level.getTickGoals()[0] / 5;
+        int currentSec = (currentTick / 5);
         int timeLeft = maxSecs - currentSec;
-        timer.setText("Time Left: "+timeLeft);
+        timer.setText("Time Left: " + timeLeft);
 
-        if(timeLeft == 0 && this.level.getWinningStatus() == WinningStatus.LOST){
+        if (timeLeft == 0 && this.level.getWinningStatus() == WinningStatus.LOST) {
             this.endOfGameDialog();
         }
-        if(timeLeft<=10){
+        if (timeLeft <= 10) {
             timer.setTextFill(Color.RED);
-        } else{
+        } else {
             timer.setTextFill(Color.WHITE);
         }
 
@@ -187,10 +186,8 @@ public class GameController {
 
 
     private void updateMedalInfo() {
-
         if (this.level.getCurrentMedal() == null) {
             this.gameView.setCountToBronzeInfo();
-
         } else if (this.level.getCurrentMedal() == Medal.BRONZE) {
             this.gameView.setCountToSilverInfo();
             this.gameView.setCurrentMedal(Medal.BRONZE);
@@ -207,18 +204,18 @@ public class GameController {
 
     }
 
-    private void updateSandUhr(Integer currentTick){
-        double maxSec = (double) this.level.getTickGoals()[0]/5;
-        double currentSec = (double) currentTick/5;
-        double timePast = currentSec/maxSec;
+    private void updateSandUhr(Integer currentTick) {
+        double maxSec = (double) this.level.getTickGoals()[0] / 5;
+        double currentSec = (double) currentTick / 5;
+        double timePast = currentSec / maxSec;
 
-        if(timePast >=0.3){
+        if (timePast >= 0.3) {
             this.gameView.setCurrentSandUhr(SandUhr.YELLOW);
         } else {
             this.gameView.setCurrentSandUhr(SandUhr.GREEN);
         }
 
-        if (timePast >=0.6) {
+        if (timePast >= 0.6) {
             this.gameView.setCurrentSandUhr(SandUhr.RED);
         }
 
@@ -259,14 +256,14 @@ public class GameController {
 
     }
 
-    private void addStopAudioEvent(){
+    private void addStopAudioEvent() {
         Stage gameStage = this.gameView.getStage();
-        gameStage.addEventHandler(KeyEvent.KEY_PRESSED,event ->{
-            if(event.getCode().equals(KeyCode.M)) {
-                stopAudio();
-            } else if(player==null && event.getCode().equals(KeyCode.M)) {
+        gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.M)) {
+                this.stopAudio();
+            } else if (player == null && event.getCode().equals(KeyCode.M)) {
                 System.out.println("Audio an!");
-                startAudio();
+                this.startAudio();
             }
         });
     }
@@ -314,7 +311,7 @@ public class GameController {
             endGameAlert.setHeaderText("You successfully completed the level \"" + this.level.getName() + "\". Hooray!");
             endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton());
 
-        } else if(this.level.getWinningStatus() == WinningStatus.LOST) {
+        } else if (this.level.getWinningStatus() == WinningStatus.LOST) {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");
 
         }
@@ -337,7 +334,7 @@ public class GameController {
 
             }
 
-            if( result.get() == endGameAlert.getNextLevelButton()) {
+            if (result.get() == endGameAlert.getNextLevelButton()) {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
                 this.startAudio();
                 this.controller.startNextLevel();
