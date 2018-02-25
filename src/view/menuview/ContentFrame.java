@@ -2,6 +2,7 @@ package view;
 /**
  * Created by aidabakhtiari on 09.02.18.
  */
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -24,6 +25,8 @@ import model.misc.LevelSnapshot;
 import model.misc.UsefulMethods;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
+import view.GamePreview;
+import view.MenuView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +44,7 @@ public class ContentFrame extends StackPane {
     private final Font FONT = Font.font("", FontWeight.BOLD, 18);
     private final Font header = Font.font("", FontWeight.BOLD, 28);
     private Text gemInfo;
+    private GamePreview previewNode;
 
 
     public ContentFrame(double widthLinks, double heightLinks, MenuView menuView) {
@@ -128,10 +132,18 @@ public class ContentFrame extends StackPane {
        boolean visible = pane.isVisible();
        for(Node children:this.getChildren()){
            if(children==pane){
-               if(visible) children.setVisible(false);
-               else children.setVisible(true);
+               if(visible) {
+                   children.setVisible(false);
+                   previewNode.resumeGame();
+               }
+               else {
+                   children.setVisible(true);
+                   previewNode.pauseGame();
+               }
            }
-           else if(children!=menuVboxlinks && children!=welcomeVbox) children.setVisible(false);
+           else if(children!=menuVboxlinks && children!=welcomeVbox) {
+               children.setVisible(false);
+           }
        }
     }
 
@@ -158,9 +170,9 @@ public class ContentFrame extends StackPane {
             Level level = LevelFactory.importLevel("src/json/level/" + path);
             ImageView snapshotview = new ImageView(snapshot);
             String description ="benötigte      Edelsteine / Zeit (Sekunden)\n" +
-                        "Bronze:         "+level.getGemGoals()[0]+" / "+level.getTickGoals()[0]/5 +
-                          "\nSilber:           "+level.getGemGoals()[1]+" / "+level.getTickGoals()[1]/5
-                    +"\nGold:             "+level.getGemGoals()[2]+" / "+level.getTickGoals()[2]/5;
+                        "Bronze:         "+level.getGemGoals()[0]+" / "+(int) (level.getTickGoals()[0]*GameController.tickDuration) +
+                          "\nSilber:           "+level.getGemGoals()[1]+" / "+(int) (level.getTickGoals()[1]*GameController.tickDuration)
+                    +"\nGold:             "+level.getGemGoals()[2]+" / "+(int) (level.getTickGoals()[2]*GameController.tickDuration);
 
             LevelItem levelItem = new LevelItem(level.getName(), "",description, snapshotview, path, widthLinks/2-100,
                     heightLinks/5, this.getMedalImage(level.getJsonPath()));
@@ -189,6 +201,11 @@ public class ContentFrame extends StackPane {
                     +"\nGold:              "+level.getGemGoals()[2]+" /"+level.getTickGoals()[2]/5;
             LevelItem savedLevelItem = new LevelItem(level.getName(),"",description, snapshotview, path,
                     widthLinks/2-100, heightLinks/5, this.getMedalImage(level.getJsonPath()));
+            String description ="Fortschritt:\n" +
+                    "Edelsteine: "+level.getPropertyValue(Property.GEMS) +
+                    "\nZeit: "+(level.getPropertyValue(Property.TICKS)/5) + " Sekunden";
+            LevelItem savedLevelItem = new LevelItem(level.getName(),"",description, snapshotview, path,
+                    widthLinks/2-100, heightLinks/5, new ArrayList<>());
             listSavedGameButtons.add(savedLevelItem);
             savedGameVbox.getChildren().add(savedLevelItem);
         }
@@ -201,7 +218,7 @@ public class ContentFrame extends StackPane {
         double size = widthLinks/2.5;
         double fieldSize = size/previewLevel.getWidth();
 
-        GamePreview previewNode = new GamePreview(size,size,fieldSize);
+        previewNode = new GamePreview(size,size,fieldSize);
         previewNode.playLevel(previewLevel);
 
         welcomeVbox= new VBox();
@@ -240,8 +257,8 @@ public class ContentFrame extends StackPane {
         Image moveImg = new Image("view/images/tastatur/move.png");
         Image scapeImg = new Image("view/images/tastatur/scape.png");
         Image spaceImg = new Image("view/images/tastatur/space.png");
-        //Image muteImg = new Image("view/images/tastatur/mute.png");
-        ImageView keyboardImgAll2 = new ImageView();
+        Image muteImg = new Image("view/images/tastatur/mute.png");
+        Image themeImg = new Image("view/images/tastatur/theme.png");
         String instructions =
                 "\nThe official Boulder Dash games started in 1984 with the original home computer \n" +
                         "\nThe game's protagonist is called 'Rockford' \n" +
@@ -250,20 +267,17 @@ public class ContentFrame extends StackPane {
                         "\n\n";
         Label instruction = new Label(instructions);
         instruction.setFont(FONT);
-        LevelItem move = new LevelItem("", " \n  press   "+ "       U P , R I G H T , D O W N , L E F T   \n"+"     to  "+"           M O V E  ",
-                null, new ImageView(moveImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
-        LevelItem escape = new LevelItem("", " \n  press   "+"      E S C  \n"+"    to  "+"         M E N U",
-                null, new ImageView(scapeImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
-        LevelItem pause = new LevelItem(" ", " \n  press   "+"      S P A C E \n"+"     to  "+"              P A U S E",
-                null, new ImageView(spaceImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
-        LevelItem shift = new LevelItem(" ", " \n  press   "+"      S H I F T  + A R R O W \n"+"    to  "+"             D I G  ",
-                null, new ImageView(digImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
-        LevelItem ki = new LevelItem(" ", " \n  press   "+"                K  / ANY OTHER KEY  \n"+"   For activating  "+"    A I "+" \n  press   "+"                A N Y  O T H E R  K E Y   "+"  For activating / deactivating  ",
-                null, new ImageView(kiImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
-        //LevelItem mute = new LevelItem("", " \n  press   "+"             M  / N  \n"+"   to  "+"      M U T E / P L A Y "+" \n  press   "+"      N  to  P L A Y\n",
-        //        null, new ImageView(muteImg), " ", widthLinks/2-100, heightLinks/7, new ArrayList<>());
 
-        helpVbox = new VBox(15,instruction,escape, move,pause,shift,ki/*,mute*/);
+        LevelItem move = new LevelItem( " \n  press   "+ "       U P , R I G H T , D O W N , L E F T   \n"+"     to  "+"           M O V E  ", new ImageView(moveImg), widthLinks/2-100, heightLinks/7);
+        LevelItem escape = new LevelItem( " \n  press   "+"      E S C  \n"+"    to  "+"         M E N U",new ImageView(scapeImg), widthLinks/2-100, heightLinks/7);
+        LevelItem pause = new LevelItem( " \n  press   "+"      S P A C E \n"+"     to  "+"              P A U S E", new ImageView(spaceImg), widthLinks/2-100, heightLinks/7);
+        LevelItem shift = new LevelItem( " \n  press   "+"      S H I F T  + A R R O W \n"+"    to  "+"             D I G  ", new ImageView(digImg), widthLinks/2-100, heightLinks/7);
+        LevelItem ki = new LevelItem( " \n  press   "+"                K  / ANY OTHER KEY  \n"+"   For activating  "+"    A I "+" \n  press   "+"                A N Y  O T H E R  K E Y   "+"  For activating / deactivating  ",new ImageView(kiImg), widthLinks/2-100, heightLinks/7);
+        LevelItem mute = new LevelItem(" \n  press   "+"             M  / N  \n"+"   to  "+"      M U T E / P L A Y "+" \n  press   "+"      N  to  P L A Y\n", new ImageView(muteImg), widthLinks/2-100, heightLinks/7);
+        LevelItem theme = new LevelItem( " \n  press   "+"            T   \n"+"   to  "+"      change theme ", new ImageView(themeImg), widthLinks/2-100, heightLinks/7);
+
+
+        helpVbox = new VBox(15,instruction,theme,ki,mute,escape,shift, move,pause);
         helpVbox.setAlignment(Pos.CENTER);
         return helpVbox;
     }

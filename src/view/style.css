@@ -43,6 +43,16 @@
 
 }
 
+.backgroundcolorOrange{ -fx-background-color:#f7c679;
+}
+
+.clickedbutton{
+   -fx-background-color:#ffab32;
+        -fx-scale-x: 1.1;
+        -fx-cursor: hand;
+        -fx-text-fill: #020d1e;
+}
+
 .backgroundcolorBlue{
 -fx-background-color: #020d1e;
 
@@ -63,7 +73,13 @@
 .infoOnLevelItem{-fx-text-fill:white;}
 
 .infoOnLevelItemBig {
+ -fx-font-size: 17px;
     -fx-text-fill: #f7d7aa;
+}
+.infoOnLevelItemSmall {
+ -fx-font-size: 12px;
+    -fx-text-fill: #ddc39d;
+    -fx-font-weight: lighter;
 }
 
 .scroll-pane > .viewport  { -fx-background-color: #ffab32;
@@ -73,6 +89,7 @@
     -fx-unit-increment: 10 ;
     -fx-block-increment: 50 ;
 }
+
 
 .tree-view .scroll-bar:vertical{ -fx-background-color: transparent;
                                 -fx-background-color: #ffab32;
@@ -87,12 +104,47 @@
         -fx-background-radius: 1.4, 0, 0;
 
         }
+.tree-view .tree-cell{-fx-background-color: #ffab32; }
+.text-field{  -fx-background-color:#2e353f;
+
+}
+
+.text-field:focused {
+-fx-background-color: #ffab32;
+        -fx-focus-color :#020d1e;
+        -fx-control-inner-background:#ffab32;
+         -fx-text-fill:  #020d1e;
+        -fx-background-insets: -1.4, 0, 1;
+        -fx-background-radius: 1.4, 0, 0;
 
 
-  .tree-view > .viewport{
-   -fx-control-inner-background:#ffab32;
-        -fx-background-color: #ffab32;
-                -fx-text-fill: #020d1e;
+}
+
+.text-field.error {
+ -fx-border-color: red ;
+ -fx-border-width: 2px ;
+}
+
+
+
+
+.table-view{
+   -fx-background-color: #ffab32;
+             -fx-focus-color :#ffab32;
+             -fx-control-inner-background:#020d1e;
+              -fx-text-fill:  #ffab32;
+             -fx-background-insets: -1.4, 0, 1;
+             -fx-background-radius: 1.4, 0, 0;
+
+}
+
+.table-view:focused{
+   -fx-background-color: #ffab32;
+           -fx-focus-color :#020d1e;
+           -fx-control-inner-background:#ffab32;
+            -fx-text-fill:  #020d1e;
+           -fx-background-insets: -1.4, 0, 1;
+           -fx-background-radius: 1.4, 0, 0;
 
   }
 

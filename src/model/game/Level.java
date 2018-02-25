@@ -16,6 +16,10 @@ public class Level {
     /**
      * laut Doku genau 3 Einträge
      */
+
+    private int[] difficult;
+
+    /** laut Doku genau 3 Einträge */
     private int[] gemGoals;
     /**
      * laut Doku genau 3 Einträge
@@ -23,9 +27,7 @@ public class Level {
     private int[] tickGoals;
     private List<Rule> pre;
     private List<Rule> post;
-    /**
-     * optional
-     */
+    /** optional */
     private Integer maxslime;
     /**
      * globale properties: GEMS, TICKS, X, Y, Z
@@ -55,10 +57,11 @@ public class Level {
      * whether the game is ongoing, lost, or won
      */
     private WinningStatus winningStatus = WinningStatus.PLAYING;
+    private int difficulty;
 
 
     public Level(String name, Feld[][] map, int[] gemGoals, int[] tickGoals, List<Rule> pre, List<Rule> post,
-                 Integer maxslime, Map<Property, Integer> globalProperties, String jsonPath) {
+                 Integer maxslime, Map<Property, Integer> globalProperties, int difficulty, String jsonPath) {
         this.name = name;
         this.map = map;
         this.gemGoals = gemGoals;
@@ -68,6 +71,7 @@ public class Level {
         this.maxslime = maxslime;
         this.properties = globalProperties;
         this.jsonPath = jsonPath;
+        this.difficulty = difficulty;
         setNeighbours();
     }
 
@@ -150,6 +154,8 @@ public class Level {
         return this.map.length;
     }
 
+    public int[] getDifficult(){return difficult;}
+
     public int[] getGemGoals() {
         return gemGoals;
     }
@@ -164,6 +170,10 @@ public class Level {
 
     public List<Rule> getPost() {
         return post;
+    }
+
+    public int getDifficulty() {
+        return this.difficulty;
     }
 
     public Integer getMaxslime() {
@@ -629,10 +639,14 @@ public class Level {
 
     }
 
-    /*ATTENTION: returns a fake-clone (only map and properties are really cloned, rules,goals, jsonPath and other unchangable vars are the same)*/
+    /**
+     * ATTENTION: returns a fake-clone (only map and properties are really cloned, rules,goals, jsonPath and other unchangable vars are the same)
+     */
+
     public Level clone() {
         Feld[][] copyOfMap = copyMap();
         Map<Property, Integer> globalPropsClone = copyProps(this.properties);
+        return new Level(new String(name),copyOfMap,gemGoals,tickGoals,pre,post,maxslime, globalPropsClone, difficulty, jsonPath);
         return new Level(new String(name), copyOfMap, gemGoals, tickGoals, pre, post, maxslime, globalPropsClone, jsonPath);
     }
 

@@ -2,11 +2,10 @@ package controller;
 
 
 import javafx.application.Platform;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import model.game.Level;
 import model.game.MedalStatus;
-import view.LevelItem;
+import view.menuview.LevelItem;
 import view.MenuView;
 
 import java.util.ArrayList;

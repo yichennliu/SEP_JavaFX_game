@@ -45,7 +45,7 @@ public class LevelEditor {
         this.pre = new ArrayList<>();
         this.post = new ArrayList<>();
         this.props = new HashMap<>();
-        this.level = new Level(null,map,gemGoals,timeGoals,pre,post,null,props,null);
+        this.level = new Level(null,map,gemGoals,timeGoals,pre,post,null,props, 0,null);
     }
 
     public void resetLevel(Level level){

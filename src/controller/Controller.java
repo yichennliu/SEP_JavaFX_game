@@ -7,12 +7,14 @@ import model.game.Level;
 import model.game.MedalStatus;
 import model.levelEditor.LevelEditor;
 import model.misc.UsefulMethods;
+import model.themeEditor.Theme;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import view.*;
 import view.levelEditor.LevelEditorView;
 import view.themeEditor.ThemeEditorView;
 
+import javax.jws.soap.SOAPBinding;
 import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -28,6 +30,7 @@ public class Controller {
     private ThemeEditorController themeEditorController;
     private GameController gameController;
     private List<String> levelList;
+    private List<Theme> themeList;
     private int currentLevelIndex =0;
 
 
@@ -37,6 +40,7 @@ public class Controller {
         this.view = view;
         this.currentMode = View.Mode.GAME;
         this.levelList = UsefulMethods.scanLevelDirectory();
+        this.themeList = UsefulMethods.scanThemeDirectory();
       }
 
 
@@ -55,13 +59,14 @@ public class Controller {
 
     public void startMenu(){
         this.currentMode = View.Mode.MENU;
-        Map<String, MedalStatus> medalStatusMap = this.importMedalStatuses();
-        MenuView menuView = new MenuView(this.view.getStage(),medalStatusMap);
         view.getStage().setTitle("Boulderdash");
-
+        MenuView menuView = null;
         if (menuController == null) {
+            Map<String, MedalStatus> medalStatusMap = this.importMedalStatuses();
+            menuView = new MenuView(this.view.getStage(),medalStatusMap);
             menuController = new MenuController(menuView, medalStatusMap,this);
         } else {
+            menuView = new MenuView(this.view.getStage(),menuController.getMedalStatuses());
             menuController.setMenuView(menuView);
             menuController.update();
 
@@ -90,7 +95,6 @@ public class Controller {
         this.currentMode = View.Mode.GAME;
 
         Level level = LevelFactory.importLevel(levelPath);
-
         GameView gameView = new GameView(this.view.getStage(),level);
 
         if(gameController == null){
@@ -141,6 +145,10 @@ public class Controller {
             }
         }
         return medalStatuses;
+    }
+
+    public List<Theme> getThemes() {
+        return themeList;
     }
 }
 
