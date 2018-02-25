@@ -139,7 +139,6 @@ public class GameController {
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
-            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
             this.updateTimerLabel(this.level.getPropertyValue(Property.TICKS));
             this.updateSandUhr(this.level.getPropertyValue(Property.TICKS));
             this.updateMedalInfo();
@@ -343,7 +342,7 @@ public class GameController {
 
         if (this.level.getWinningStatus() == WinningStatus.WON) {
             endGameAlert.setHeaderText("You successfully completed the level \"" + this.level.getName() + "\". Hooray!");
-            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton());
+            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton(),endGameAlert.getCancelExitButton());
 
         } else if(this.level.getWinningStatus() == WinningStatus.LOST) {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");
