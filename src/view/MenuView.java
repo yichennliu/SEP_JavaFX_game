@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import model.game.MedalStatus;
+import view.menuview.ContentFrame;
 
 import java.io.File;
 import java.net.MalformedURLException;

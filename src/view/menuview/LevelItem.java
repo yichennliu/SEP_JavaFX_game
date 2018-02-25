@@ -1,4 +1,4 @@
-package view;
+package view.menuview;
 
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import view.View;
 
 import java.util.List;
 
@@ -72,8 +73,8 @@ public class LevelItem extends HBox {
         BorderPane rightContainer = new BorderPane();
         rightContainer.setRight(image);
         rightContainer.setLeft(name);
-        image.setFitWidth(200);
-        image.setFitHeight(150);
+        image.setFitWidth(100);
+        image.setFitHeight(100);
         rightContainer.setMinSize(width, height);
         rightContainer.setMaxSize(width, height);
 

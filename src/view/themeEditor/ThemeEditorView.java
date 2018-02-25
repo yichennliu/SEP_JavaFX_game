@@ -56,15 +56,18 @@ private ObservableList<String> themes;
 private String stylesheet;
 
     public ThemeEditorView(Stage stage){
-        Rectangle background = new Rectangle(width,height);
         root = new Group();
-        this.sceneThemeView = new Scene(root);
+        HBox backgroundHbox= new HBox(root);
+        backgroundHbox.setAlignment(Pos.CENTER);
+        this.sceneThemeView = new Scene(backgroundHbox);
+
         this.stage = stage;
         this.width=stage.getWidth();
         this.height=stage.getHeight();
         rootPane = new BorderPane();
         rootPane.setPrefSize(width/3,height-100);
-        rootPane.getStyleClass().add("backgroundcolorBlue");
+        backgroundHbox.setPrefSize(width,height);
+        backgroundHbox.getStyleClass().add("backgroundcolorBlue");
         /* TreeView */
         TreeItem<view.themeEditor.Cell> treeRoot = new TreeItem<view.themeEditor.Cell> (null);
         treeRoot.setExpanded(true);
@@ -91,7 +94,7 @@ private String stylesheet;
         rootPane.setLeft(treeView);
         rootPane.setTranslateX(width/4);
         rootPane.setTranslateY(50);
-
+        treeView.getStyleClass().add("backgroundcolorOrange");
 
         stylesheet = menuView.fileToStylesheetString(new File("src/view/style.css"));
         sceneThemeView.getStylesheets().add(stylesheet);
@@ -140,6 +143,7 @@ private String stylesheet;
         ioButtons = new Group();
         ioButtons.getChildren().addAll(exportButton);
         this.header.getChildren().add(exportButton);
+        this.header.getStyleClass().add("backgroundcolorOrange");
     }
 
     private void initExitButton(){
@@ -207,6 +211,7 @@ private String stylesheet;
         positionPaneRoot.add(buttonGridPane,0,0);
         positionPaneRoot.add(previewGridPane,1,0);
         rootPane.setCenter(positionPaneRoot);
+        positionPaneRoot.getStyleClass().add("backgroundcolorOrange");
     }
 
 
