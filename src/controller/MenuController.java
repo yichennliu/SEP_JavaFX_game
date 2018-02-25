@@ -16,7 +16,6 @@ public class MenuController {
 
     private MenuView menuView;
     private Map<String, MedalStatus> medalStatuses;
-    private List<Level> levelList;
     private Controller controller;
 
 

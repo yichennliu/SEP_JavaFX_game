@@ -39,6 +39,7 @@ public class MenuView {
         if (!stage.isShowing()) stage.show();
         this.stylesheet = fileToStylesheetString(new File("src/view/style.css"));
         sceneMenu.getStylesheets().add(stylesheet);
+        System.out.println("Neue MEnuView, Größe der Map: " + medalStatuses.size() + " " + medalStatuses);
         root.getStyleClass().add("borderPane");
     }
 

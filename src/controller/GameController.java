@@ -542,7 +542,7 @@ public class GameController {
                 } else if (result.get() == alert.getExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     stopAudio();
-                    GameController.this.controller.startMenu();
+                    controller.startMenu();
 
 
                 } else if (result.get() == alert.getRetryButton()) {
