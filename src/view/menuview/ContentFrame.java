@@ -2,6 +2,7 @@ package view.menuview;
 /**
  * Created by aidabakhtiari on 09.02.18.
  */
+import controller.GameController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -170,9 +171,9 @@ public class ContentFrame extends StackPane {
             Level level = LevelFactory.importLevel("src/json/level/" + path);
             ImageView snapshotview = new ImageView(snapshot);
             String description ="benötigte      Edelsteine / Zeit (Sekunden)\n" +
-                        "Bronze:         "+level.getGemGoals()[0]+" / "+level.getTickGoals()[0]/5 +
-                          "\nSilber:           "+level.getGemGoals()[1]+" / "+level.getTickGoals()[1]/5
-                    +"\nGold:             "+level.getGemGoals()[2]+" / "+level.getTickGoals()[2]/5;
+                        "Bronze:         "+level.getGemGoals()[0]+" / "+(int) (level.getTickGoals()[0]*GameController.tickDuration) +
+                          "\nSilber:           "+level.getGemGoals()[1]+" / "+(int) (level.getTickGoals()[1]*GameController.tickDuration)
+                    +"\nGold:             "+level.getGemGoals()[2]+" / "+(int) (level.getTickGoals()[2]*GameController.tickDuration);
 
             LevelItem levelItem = new LevelItem(level.getName(), "",description, snapshotview, path, widthLinks/2-100,
                     heightLinks/5, this.getMedalImage(level.getJsonPath()));

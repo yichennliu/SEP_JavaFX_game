@@ -1,5 +1,6 @@
 package view;
 
+import controller.GameController;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -197,7 +198,7 @@ public class GameView {
     }
 
     public void setCountToGoldInfo() {
-        int showRemainingTicksGoldInfo = this.level.getRemainingGoldTicksGems().getKey()/5;
+        int showRemainingTicksGoldInfo = (int) (this.level.getRemainingGoldTicksGems().getKey()*GameController.tickDuration);
         int showRemainingGemsGoldInfo = this.level.getRemainingGoldTicksGems().getValue();
         restGem.setText("Needed Gems to Gold Medal: " + showRemainingGemsGoldInfo);
         restTicks.setText("Time Left to Gold Medal: "+ showRemainingTicksGoldInfo);
@@ -206,7 +207,7 @@ public class GameView {
     }
 
     public void setCountToSilverInfo() {
-        int showRemainingTicksSilverInfo = this.level.getRemainingSilverTicksGems().getKey()/5;
+        int showRemainingTicksSilverInfo = (int) (this.level.getRemainingSilverTicksGems().getKey()*GameController.tickDuration);
         int showRemainingGemsSilverInfo = this.level.getRemainingSilverTicksGems().getValue();
         restGem.setText("Needed Gems to Silver Medal: " + showRemainingGemsSilverInfo);
         restTicks.setText("Time left to Silver Medal: "+ showRemainingTicksSilverInfo);
@@ -216,7 +217,7 @@ public class GameView {
     }
 
     public void setCountToBronzeInfo(){
-        int showRemainingTicksBronzeInfo = this.level.getRemainingBronzeTicksGems().getKey()/5;
+        int showRemainingTicksBronzeInfo = (int) (this.level.getRemainingBronzeTicksGems().getKey()*GameController.tickDuration);
         int showRemainingGemsBronzeInfo = this.level.getRemainingBronzeTicksGems().getValue();
         restGem.setText("Needed Gems to Bronze Medal: " + showRemainingGemsBronzeInfo);
         restTicks.setText("Time left to Bronze Medal: "+ showRemainingTicksBronzeInfo);
