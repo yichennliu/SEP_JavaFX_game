@@ -1,226 +1,1055 @@
 {
-  "gems":[4,8,16],
-  "name":"Snake",
-  "ticks":[50,30,20],
-  "width":15,
-  "height":15,
-  "pre":[
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit", "values":{"X":0}}],
-      "result":[{"token":"0", "values":{"X":3}}]
-    },
-    { "situation":"right",
-      "direction":"east",
-      "original":[{"token":"exit"}],
-      "result":[{"token":"0", "values":{"X":0}}]
-    },
-    { "situation":"left",
-      "direction":"east",
-      "original":[{"token":"exit"}],
-      "result":[{"token":"0", "values":{"X":0}}]
-    },
-    { "situation":"up",
-      "direction":"east",
-      "original":[{"token":"exit"}],
-      "result":[{"token":"0", "values":{"X":0}}]
-    },
-    { "situation":"down",
-      "direction":"east",
-      "original":[{"token":"exit"}],
-      "result":[{"token":"0", "values":{"X":0}}]
-    },
-    { "situation":"right",
-      "direction":"east",
-      "original":[{"token":"exit"}],
-      "result":[{"token":"0", "values":{"X":1}}]
-    },
-    { "situation":"left",
-      "direction":"east",
-      "original":[{"token":"exit"}],
-      "result":[{"token":"0", "values":{"X":3}}]
-    },
-    { "situation":"up",
-      "direction":"east",
-      "original":[{"token":"exit"}],
-      "result":[{"token":"0", "values":{"X":2}}]
-    },
-    { "situation":"down",
-      "direction":"east",
-      "original":[{"token":"exit"}],
-      "result":[{"token":"0", "values":{"X":4}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit"}],
-      "result":[{"token":"0", "values":{"Y":0, "Z":0}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit", "values":{"X":4}}],
-      "result":[{"token":"0", "values":{"Y":1}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit", "values":{"X":5}}],
-      "result":[{"token":"0", "values":{"Y":0}}]
-    },
-    { "situation":"any",
-      "direction":"north",
-      "original":[{"token":"sand", "values":{"Y":1}},{"token":"me", "values":{"moved":0}}],
-      "result":[{"token":"me", "values":{"moved":1}},{"token":"souththing"}]
-    },
-    { "situation":"any",
-      "direction":"north",
-      "original":[{"token":"pot", "values":{"Y":1}},{"token":"me", "values":{"moved":0}}],
-      "result":[{"token":"me", "values":{"moved":1, "gems":1, "Z":1, "ticks":0}},{"token":"souththing"}]
-    },
-    { "situation":"any",
-      "direction":"north",
-      "original":[{"token":["wall", "norththing", "eastthing", "westthing", "souththing"], "values":{"Y":1}},{"token":"me", "values":{"moved":0}}],
-      "result":[{"token":"me", "values":{"bamrich":1}},{"token":"souththing", "values":{"bamrich":1}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit"}],
-      "result":[{"token":"0", "values":{"Y":0}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit", "values":{"X":3}}],
-      "result":[{"token":"0", "values":{"Y":1}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit", "values":{"X":4}}],
-      "result":[{"token":"0", "values":{"Y":0}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"sand", "values":{"Y":1}},{"token":"me", "values":{"moved":0}}],
-      "result":[{"token":"me", "values":{"moved":1}},{"token":"westthing"}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"pot", "values":{"Y":1}},{"token":"me", "values":{"moved":0}}],
-      "result":[{"token":"me", "values":{"moved":1, "gems":1, "Z":1, "ticks":0}},{"token":"westthing"}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":["wall", "norththing", "eastthing", "westthing", "souththing"], "values":{"Y":1}},{"token":"me", "values":{"moved":0}}],
-      "result":[{"token":"me", "values":{"bamrich":1}},{"token":"westthing", "values":{"bamrich":1}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit"}],
-      "result":[{"token":"0", "values":{"Y":0}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit", "values":{"X":2}}],
-      "result":[{"token":"0", "values":{"Y":1}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit", "values":{"X":3}}],
-      "result":[{"token":"0", "values":{"Y":0}}]
-    },
-    { "situation":"any",
-      "direction":"south",
-      "original":[{"token":"sand", "values":{"Y":1}},{"token":"me", "values":{"moved":0}}],
-      "result":[{"token":"me", "values":{"moved":1}},{"token":"norththing"}]
-    },
-    { "situation":"any",
-      "direction":"south",
-      "original":[{"token":"pot", "values":{"Y":1}},{"token":"me", "values":{"moved":0}}],
-      "result":[{"token":"me", "values":{"moved":1, "gems":1, "Z":1, "ticks":0}},{"token":"norththing"}]
-    },
-    { "situation":"any",
-      "direction":"south",
-      "original":[{"token":["wall", "norththing", "eastthing", "westthing", "souththing"], "values":{"Y":1}},{"token":"me", "values":{"moved":0}}],
-      "result":[{"token":"me", "values":{"bamrich":1}},{"token":"norththing", "values":{"bamrich":1}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit"}],
-      "result":[{"token":"0", "values":{"Y":0}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit", "values":{"X":1}}],
-      "result":[{"token":"0", "values":{"Y":1}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"exit", "values":{"X":2}}],
-      "result":[{"token":"0", "values":{"Y":0}}]
-    },
-    { "situation":"any",
-      "direction":"west",
-      "original":[{"token":"sand", "values":{"Y":1}},{"token":"me", "values":{"moved":0}}],
-      "result":[{"token":"me", "values":{"moved":1}},{"token":"eastthing"}]
-    },
-    { "situation":"any",
-      "direction":"west",
-      "original":[{"token":"pot", "values":{"Y":1}},{"token":"me", "values":{"moved":0}}],
-      "result":[{"token":"me", "values":{"moved":1, "gems":1, "Z":1, "ticks":0}},{"token":"eastthing"}]
-    },
-    { "situation":"any",
-      "direction":"west",
-      "original":[{"token":["wall", "norththing", "eastthing", "westthing", "souththing"], "values":{"Y":1}},{"token":"me", "values":{"moved":0}}],
-      "result":[{"token":"me", "values":{"bamrich":1}},{"token":"eastthing", "values":{"bamrich":1}}]
-    },
-    { "situation":"any",
-      "direction":"west",
-      "original":[{"token":"westthing", "values":{"A":1, "Z":0}},{"token":["norththing", "eastthing", "westthing", "souththing"]}],
-      "result":[{"token":"sand", "values":{"A":0}},{"token":"1", "values":{"Z":1, "A":1}}]
-    },
-    { "situation":"any",
-      "direction":"south",
-      "original":[{"token":"souththing", "values":{"A":1, "Z":0}},{"token":["norththing", "eastthing", "westthing", "souththing"]}],
-      "result":[{"token":"sand", "values":{"A":0}},{"token":"1", "values":{"Z":1, "A":1}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"eastthing", "values":{"A":1, "Z":0}},{"token":["norththing", "eastthing", "westthing", "souththing"]}],
-      "result":[{"token":"sand", "values":{"A":0}},{"token":"1", "values":{"Z":1, "A":1}}]
-    },
-    { "situation":"any",
-      "direction":"north",
-      "original":[{"token":"norththing", "values":{"A":1, "Z":0}},{"token":["norththing", "eastthing", "westthing", "souththing"]}],
-      "result":[{"token":"sand", "values":{"A":0}},{"token":"1", "values":{"Z":1, "A":1}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"sand", "values":{"gems":4, "B":1}}],
-      "result":[{"token":"pot", "values":{"B":0}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"sand", "values":{"gems":8, "C":1}}],
-      "result":[{"token":"pot", "values":{"C":0}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"sand", "values":{"gems":12, "D":1}}],
-      "result":[{"token":"pot", "values":{"D":0}}]
-    }
+    "pre": [
+        {
+            "result": [{
+                "values": {"X": 3},
+                "token": "0"
+            }],
+            "original": [{
+                "values": {"X": 0},
+                "token": "exit"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"X": 0},
+                "token": "0"
+            }],
+            "original": [{"token": "exit"}],
+            "sparsity": 0,
+            "situation": "right",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"X": 0},
+                "token": "0"
+            }],
+            "original": [{"token": "exit"}],
+            "sparsity": 0,
+            "situation": "left",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"X": 0},
+                "token": "0"
+            }],
+            "original": [{"token": "exit"}],
+            "sparsity": 0,
+            "situation": "up",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"X": 0},
+                "token": "0"
+            }],
+            "original": [{"token": "exit"}],
+            "sparsity": 0,
+            "situation": "down",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"X": 1},
+                "token": "0"
+            }],
+            "original": [{"token": "exit"}],
+            "sparsity": 0,
+            "situation": "right",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"X": 3},
+                "token": "0"
+            }],
+            "original": [{"token": "exit"}],
+            "sparsity": 0,
+            "situation": "left",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"X": 2},
+                "token": "0"
+            }],
+            "original": [{"token": "exit"}],
+            "sparsity": 0,
+            "situation": "up",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"X": 4},
+                "token": "0"
+            }],
+            "original": [{"token": "exit"}],
+            "sparsity": 0,
+            "situation": "down",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {
+                    "Y": 0,
+                    "Z": 0
+                },
+                "token": "0"
+            }],
+            "original": [{"token": "exit"}],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"Y": 1},
+                "token": "0"
+            }],
+            "original": [{
+                "values": {"X": 4},
+                "token": "exit"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"Y": 0},
+                "token": "0"
+            }],
+            "original": [{
+                "values": {"X": 5},
+                "token": "exit"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [
+                {
+                    "values": {"MOVED": 1},
+                    "token": "me"
+                },
+                {"token": "souththing"}
+            ],
+            "original": [
+                {
+                    "values": {"Y": 1},
+                    "token": "sand"
+                },
+                {
+                    "values": {"MOVED": 0},
+                    "token": "me"
+                }
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "north"
+        },
+        {
+            "result": [
+                {
+                    "values": {
+                        "MOVED": 1,
+                        "Z": 1,
+                        "GEMS": 1,
+                        "TICKS": 0
+                    },
+                    "token": "me"
+                },
+                {"token": "souththing"}
+            ],
+            "original": [
+                {
+                    "values": {"Y": 1},
+                    "token": "pot"
+                },
+                {
+                    "values": {"MOVED": 0},
+                    "token": "me"
+                }
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "north"
+        },
+        {
+            "result": [
+                {
+                    "values": {"BAMRICH": 1},
+                    "token": "me"
+                },
+                {
+                    "values": {"BAMRICH": 1},
+                    "token": "souththing"
+                }
+            ],
+            "original": [
+                {
+                    "values": {"Y": 1},
+                    "token": [
+                        "wall",
+                        "norththing",
+                        "eastthing",
+                        "westthing",
+                        "souththing"
+                    ]
+                },
+                {
+                    "values": {"MOVED": 0},
+                    "token": "me"
+                }
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "north"
+        },
+        {
+            "result": [{
+                "values": {"Y": 0},
+                "token": "0"
+            }],
+            "original": [{"token": "exit"}],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"Y": 1},
+                "token": "0"
+            }],
+            "original": [{
+                "values": {"X": 3},
+                "token": "exit"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"Y": 0},
+                "token": "0"
+            }],
+            "original": [{
+                "values": {"X": 4},
+                "token": "exit"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [
+                {
+                    "values": {"MOVED": 1},
+                    "token": "me"
+                },
+                {"token": "westthing"}
+            ],
+            "original": [
+                {
+                    "values": {"Y": 1},
+                    "token": "sand"
+                },
+                {
+                    "values": {"MOVED": 0},
+                    "token": "me"
+                }
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [
+                {
+                    "values": {
+                        "MOVED": 1,
+                        "Z": 1,
+                        "GEMS": 1,
+                        "TICKS": 0
+                    },
+                    "token": "me"
+                },
+                {"token": "westthing"}
+            ],
+            "original": [
+                {
+                    "values": {"Y": 1},
+                    "token": "pot"
+                },
+                {
+                    "values": {"MOVED": 0},
+                    "token": "me"
+                }
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [
+                {
+                    "values": {"BAMRICH": 1},
+                    "token": "me"
+                },
+                {
+                    "values": {"BAMRICH": 1},
+                    "token": "westthing"
+                }
+            ],
+            "original": [
+                {
+                    "values": {"Y": 1},
+                    "token": [
+                        "wall",
+                        "norththing",
+                        "eastthing",
+                        "westthing",
+                        "souththing"
+                    ]
+                },
+                {
+                    "values": {"MOVED": 0},
+                    "token": "me"
+                }
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"Y": 0},
+                "token": "0"
+            }],
+            "original": [{"token": "exit"}],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"Y": 1},
+                "token": "0"
+            }],
+            "original": [{
+                "values": {"X": 2},
+                "token": "exit"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"Y": 0},
+                "token": "0"
+            }],
+            "original": [{
+                "values": {"X": 3},
+                "token": "exit"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [
+                {
+                    "values": {"MOVED": 1},
+                    "token": "me"
+                },
+                {"token": "norththing"}
+            ],
+            "original": [
+                {
+                    "values": {"Y": 1},
+                    "token": "sand"
+                },
+                {
+                    "values": {"MOVED": 0},
+                    "token": "me"
+                }
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "south"
+        },
+        {
+            "result": [
+                {
+                    "values": {
+                        "MOVED": 1,
+                        "Z": 1,
+                        "GEMS": 1,
+                        "TICKS": 0
+                    },
+                    "token": "me"
+                },
+                {"token": "norththing"}
+            ],
+            "original": [
+                {
+                    "values": {"Y": 1},
+                    "token": "pot"
+                },
+                {
+                    "values": {"MOVED": 0},
+                    "token": "me"
+                }
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "south"
+        },
+        {
+            "result": [
+                {
+                    "values": {"BAMRICH": 1},
+                    "token": "me"
+                },
+                {
+                    "values": {"BAMRICH": 1},
+                    "token": "norththing"
+                }
+            ],
+            "original": [
+                {
+                    "values": {"Y": 1},
+                    "token": [
+                        "wall",
+                        "norththing",
+                        "eastthing",
+                        "westthing",
+                        "souththing"
+                    ]
+                },
+                {
+                    "values": {"MOVED": 0},
+                    "token": "me"
+                }
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "south"
+        },
+        {
+            "result": [{
+                "values": {"Y": 0},
+                "token": "0"
+            }],
+            "original": [{"token": "exit"}],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"Y": 1},
+                "token": "0"
+            }],
+            "original": [{
+                "values": {"X": 1},
+                "token": "exit"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"Y": 0},
+                "token": "0"
+            }],
+            "original": [{
+                "values": {"X": 2},
+                "token": "exit"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [
+                {
+                    "values": {"MOVED": 1},
+                    "token": "me"
+                },
+                {"token": "eastthing"}
+            ],
+            "original": [
+                {
+                    "values": {"Y": 1},
+                    "token": "sand"
+                },
+                {
+                    "values": {"MOVED": 0},
+                    "token": "me"
+                }
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "west"
+        },
+        {
+            "result": [
+                {
+                    "values": {
+                        "MOVED": 1,
+                        "Z": 1,
+                        "GEMS": 1,
+                        "TICKS": 0
+                    },
+                    "token": "me"
+                },
+                {"token": "eastthing"}
+            ],
+            "original": [
+                {
+                    "values": {"Y": 1},
+                    "token": "pot"
+                },
+                {
+                    "values": {"MOVED": 0},
+                    "token": "me"
+                }
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "west"
+        },
+        {
+            "result": [
+                {
+                    "values": {"BAMRICH": 1},
+                    "token": "me"
+                },
+                {
+                    "values": {"BAMRICH": 1},
+                    "token": "eastthing"
+                }
+            ],
+            "original": [
+                {
+                    "values": {"Y": 1},
+                    "token": [
+                        "wall",
+                        "norththing",
+                        "eastthing",
+                        "westthing",
+                        "souththing"
+                    ]
+                },
+                {
+                    "values": {"MOVED": 0},
+                    "token": "me"
+                }
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "west"
+        },
+        {
+            "result": [
+                {
+                    "values": {"A": 0},
+                    "token": "sand"
+                },
+                {
+                    "values": {
+                        "A": 1,
+                        "Z": 1
+                    },
+                    "token": "1"
+                }
+            ],
+            "original": [
+                {
+                    "values": {
+                        "A": 1,
+                        "Z": 0
+                    },
+                    "token": "westthing"
+                },
+                {"token": [
+                    "norththing",
+                    "eastthing",
+                    "westthing",
+                    "souththing"
+                ]}
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "west"
+        },
+        {
+            "result": [
+                {
+                    "values": {"A": 0},
+                    "token": "sand"
+                },
+                {
+                    "values": {
+                        "A": 1,
+                        "Z": 1
+                    },
+                    "token": "1"
+                }
+            ],
+            "original": [
+                {
+                    "values": {
+                        "A": 1,
+                        "Z": 0
+                    },
+                    "token": "souththing"
+                },
+                {"token": [
+                    "norththing",
+                    "eastthing",
+                    "westthing",
+                    "souththing"
+                ]}
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "south"
+        },
+        {
+            "result": [
+                {
+                    "values": {"A": 0},
+                    "token": "sand"
+                },
+                {
+                    "values": {
+                        "A": 1,
+                        "Z": 1
+                    },
+                    "token": "1"
+                }
+            ],
+            "original": [
+                {
+                    "values": {
+                        "A": 1,
+                        "Z": 0
+                    },
+                    "token": "eastthing"
+                },
+                {"token": [
+                    "norththing",
+                    "eastthing",
+                    "westthing",
+                    "souththing"
+                ]}
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [
+                {
+                    "values": {"A": 0},
+                    "token": "sand"
+                },
+                {
+                    "values": {
+                        "A": 1,
+                        "Z": 1
+                    },
+                    "token": "1"
+                }
+            ],
+            "original": [
+                {
+                    "values": {
+                        "A": 1,
+                        "Z": 0
+                    },
+                    "token": "norththing"
+                },
+                {"token": [
+                    "norththing",
+                    "eastthing",
+                    "westthing",
+                    "souththing"
+                ]}
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "north"
+        },
+        {
+            "result": [{
+                "values": {"B": 0},
+                "token": "pot"
+            }],
+            "original": [{
+                "values": {
+                    "GEMS": 4,
+                    "B": 1
+                },
+                "token": "sand"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"C": 0},
+                "token": "pot"
+            }],
+            "original": [{
+                "values": {
+                    "GEMS": 8,
+                    "C": 1
+                },
+                "token": "sand"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"D": 0},
+                "token": "pot"
+            }],
+            "original": [{
+                "values": {
+                    "D": 1,
+                    "GEMS": 12
+                },
+                "token": "sand"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        }
     ],
-  "map":[
-    ["wall", "wall", "wall", "wall", "wall", "wall", "exit", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"],
-    ["wall", "sand", "sand", "sand", "pot", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "wall"],
-    ["wall", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", {"token":"sand", "values":{"D":1}}, "wall"],
-    ["wall", "sand", "sand", {"token":"sand", "values":{"C":1}}, "sand", "sand", "sand", {"token":"sand", "values":{"B":1}}, "sand", "sand", "sand", "sand", "sand", "sand", "wall"],
-    ["wall", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "pot", "sand", "sand", "wall"],
-    ["wall", "sand", "sand", "sand", {"token":"sand", "values":{"C":1}}, "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "wall"],
-    ["wall", {"token":"sand", "values":{"D":1}}, "sand", "sand", "sand", "sand", "me", "westthing", "westthing", {"token":"westthing", "values":{"A":1}}, "sand", "sand", {"token":"sand", "values":{"B":1}}, "sand", "wall"],
-    ["wall", "sand", "sand", "sand", "sand", "sand", "sand", "sand", {"token":"sand", "values":{"D":1}}, "sand", "sand", "sand", "sand", "sand", "wall"],
-    ["wall", "sand", "sand", "sand", "sand", {"token":"sand", "values":{"C":1}}, "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "wall"],
-    ["wall", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "pot", "sand", "sand", "sand", "sand", "sand", "wall"],
-    ["wall", "sand", "sand", "sand", "sand", {"token":"sand", "values":{"B":1}}, "sand", "sand", "sand", "sand", "sand", "sand", {"token":"sand", "values":{"C":1}}, "sand", "wall"],
-    ["wall", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", {"token":"sand", "values":{"B":1}}, "sand", "sand", "sand", "wall"],
-    ["wall", "sand", "sand", "sand", "pot", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "sand", "wall"],
-    ["wall", "sand", "sand", "sand", "sand", "sand", "sand", "sand", {"token":"sand", "values":{"D":1}}, "sand", "sand", "sand", "sand", "sand", "wall"],
-    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"]
-    ]
+    "gems": [
+        4,
+        8,
+        16
+    ],
+    "ticks": [
+        50,
+        30,
+        20
+    ],
+    "values": {},
+    "name": "Snake",
+    "width": 15,
+    "jsonPath": "src/json/level/snake.json",
+    "map": [
+        [
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "exit",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall"
+        ],
+        [
+            "wall",
+            "sand",
+            "sand",
+            "sand",
+            "pot",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "wall"
+        ],
+        [
+            "wall",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            {
+                "values": {"d": 1},
+                "token": "sand"
+            },
+            "wall"
+        ],
+        [
+            "wall",
+            "sand",
+            "sand",
+            {
+                "values": {"c": 1},
+                "token": "sand"
+            },
+            "sand",
+            "sand",
+            "sand",
+            {
+                "values": {"b": 1},
+                "token": "sand"
+            },
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "wall"
+        ],
+        [
+            "wall",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "pot",
+            "sand",
+            "sand",
+            "wall"
+        ],
+        [
+            "wall",
+            "sand",
+            "sand",
+            "sand",
+            {
+                "values": {"c": 1},
+                "token": "sand"
+            },
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "wall"
+        ],
+        [
+            "wall",
+            {
+                "values": {"d": 1},
+                "token": "sand"
+            },
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "me",
+            "westthing",
+            "westthing",
+            {
+                "values": {"a": 1},
+                "token": "westthing"
+            },
+            "sand",
+            "sand",
+            {
+                "values": {"b": 1},
+                "token": "sand"
+            },
+            "sand",
+            "wall"
+        ],
+        [
+            "wall",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            {
+                "values": {"d": 1},
+                "token": "sand"
+            },
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "wall"
+        ],
+        [
+            "wall",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            {
+                "values": {"c": 1},
+                "token": "sand"
+            },
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "wall"
+        ],
+        [
+            "wall",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "pot",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "wall"
+        ],
+        [
+            "wall",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            {
+                "values": {"b": 1},
+                "token": "sand"
+            },
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            {
+                "values": {"c": 1},
+                "token": "sand"
+            },
+            "sand",
+            "wall"
+        ],
+        [
+            "wall",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            {
+                "values": {"b": 1},
+                "token": "sand"
+            },
+            "sand",
+            "sand",
+            "sand",
+            "wall"
+        ],
+        [
+            "wall",
+            "sand",
+            "sand",
+            "sand",
+            "pot",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "wall"
+        ],
+        [
+            "wall",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            {
+                "values": {"d": 1},
+                "token": "sand"
+            },
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "sand",
+            "wall"
+        ],
+        [
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall"
+        ]
+    ],
+    "height": 15
 }

@@ -166,9 +166,14 @@ public class ContentFrame extends StackPane {
         } catch (Exception e) {
             System.out.println("Theme not found / corrupt file");
         }
+        int points = UsefulMethods.getPoints(menuView.getMedalStatuses());
+
         for (String path : UsefulMethods.scanLevelDirectory()) {
-            Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/level/" + path));
             Level level = LevelFactory.importLevel("src/json/level/" + path);
+            if(points<level.getDifficulty()) continue;
+
+            Image snapshot = LevelSnapshot.snap(theme, level);
+
             ImageView snapshotview = new ImageView(snapshot);
             String description ="benötigte      Edelsteine / Zeit (Sekunden)\n" +
                         "Bronze:         "+level.getGemGoals()[0]+" / "+(int) (level.getTickGoals()[0]*GameController.tickDuration) +

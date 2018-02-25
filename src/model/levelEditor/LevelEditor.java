@@ -26,6 +26,7 @@ public class LevelEditor {
     private Token currentToken;
     private Map<Property,Integer> props;
     private List<Rule> pre,post;
+
     public enum Mode {BRUSH,SELECT};
     private Mode mode = BRUSH;
 
@@ -87,6 +88,10 @@ public class LevelEditor {
                 map[row][col] = feld;
             }
         }
+    }
+
+    public void setDifficulty(int difficulty) {
+        this.level.setDifficulty(difficulty);
     }
 
     public void setMode(Mode mode){

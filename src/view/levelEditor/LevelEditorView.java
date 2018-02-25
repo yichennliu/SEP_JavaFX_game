@@ -61,16 +61,14 @@ public class LevelEditorView {
     private TextField colInput;
     private TextField rowInput;
     private Button cropButton;
-    private MenuView menuView;
     private  String stylesheet;
-    private TextField diffField;
 
     public LevelEditorView(Stage stage, LevelEditor editor){
         this.editor = editor;
         this.root = new Group();
         this.stage = stage;
         this.scene = new Scene(root);
-        stylesheet = menuView.fileToStylesheetString(new File("src/view/style.css"));
+        stylesheet = MenuView.fileToStylesheetString(new File("src/view/style.css"));
         scene.getStylesheets().add(stylesheet);
         initContent();
         if(!stage.isShowing()) stage.show();
