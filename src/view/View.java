@@ -78,10 +78,7 @@ public class View {
         this.currentScene = scene;
         switch (mode) {
             case GAME:
-
                     showGame();
-//                    Canvas gameCanvas = gameScene.getCanvas();
-//                    drawBoard(gameCanvas,gameCanvas.getGraphicsContext2D());
                     break;
             case EDITOR:
                     showLevelEditor();

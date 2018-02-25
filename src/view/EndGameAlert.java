@@ -30,6 +30,9 @@ public class EndGameAlert extends Alert {
         dialogPane.getStylesheets().add(stylesheet);
         dialogPane.getStyleClass().add(".dialog-pane");
 
+        ButtonBar buttonBar = (ButtonBar) this.getDialogPane().lookup(".button-bar");
+        buttonBar.getStyleClass().add(".button");
+
         StackPane stackPane = new StackPane(new ImageView(
                 new Image(getClass().getResourceAsStream("images/EndGame.png"))));
         stackPane.setPrefSize(15, 15);

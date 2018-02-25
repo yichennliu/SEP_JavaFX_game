@@ -1,7 +1,3 @@
-
-
-
-
  #menuLeftButtons  {
 
             -fx-padding: 15 30 15 30;
@@ -47,11 +43,6 @@
 
 }
 
-.backgroundcolorOrange{ -fx-background-color:#f7c679;
-}
-
-
-
 .backgroundcolorBlue{
 -fx-background-color: #020d1e;
 
@@ -65,16 +56,15 @@
             -fx-text-fill:#f7d7aa;
             -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1); }
 
+.vboxlevel {
+    -fx-padding: 5 10 5 10;
+}
 
-.infoOnLevelItemBig{-fx-text-fill:#fca620;
-                     -fx-effect: dropshadow( three-pass-box , rgba(96,85,68,0.2) , 1, 0.0 , 0 , 1);
-                                -fx-font-size: 16px;
-                                    -fx-font-weight: bold;}
+.infoOnLevelItem{-fx-text-fill:white;}
 
-.infoOnLevelItemSmall{-fx-text-fill:#c6ae8b;
-                                -fx-font-size: 14px;
-                                    -fx-font-weight: lighter;}
-
+.infoOnLevelItemBig {
+    -fx-text-fill: #f7d7aa;
+}
 
 .scroll-pane > .viewport  { -fx-background-color: #ffab32;
                             -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);}
@@ -90,69 +80,21 @@
 
  .tree-view:focused {
         -fx-background-color: #ffab32;
-        -fx-focus-color :#020d1e;
-        -fx-control-inner-background:#ffab32;
-         -fx-text-fill:  #020d1e;
+        -fx-focus-color :#ffab32;
+        -fx-control-inner-background:#020d1e;
+         -fx-text-fill:  #ffab32;
         -fx-background-insets: -1.4, 0, 1;
         -fx-background-radius: 1.4, 0, 0;
 
         }
 
 
-  .tree-view {
-  -fx-background-color: #ffab32;
-          -fx-focus-color :#ffab32;
-          -fx-control-inner-background:#020d1e;
-           -fx-text-fill:  #ffab32;
-          -fx-background-insets: -1.4, 0, 1;
-          -fx-background-radius: 1.4, 0, 0;
+  .tree-view > .viewport{
+   -fx-control-inner-background:#ffab32;
+        -fx-background-color: #ffab32;
+                -fx-text-fill: #020d1e;
 
   }
-
-.text-field{  -fx-background-color:#2e353f;
-
-}
-
-.text-field:focused {
--fx-background-color: #ffab32;
-        -fx-focus-color :#020d1e;
-        -fx-control-inner-background:#ffab32;
-         -fx-text-fill:  #020d1e;
-        -fx-background-insets: -1.4, 0, 1;
-        -fx-background-radius: 1.4, 0, 0;
-
-
-}
-
-.text-field.error {
- -fx-border-color: red ;
- -fx-border-width: 2px ;
-}
-
-
-
-
-.table-view{
-   -fx-background-color: #ffab32;
-             -fx-focus-color :#ffab32;
-             -fx-control-inner-background:#020d1e;
-              -fx-text-fill:  #ffab32;
-             -fx-background-insets: -1.4, 0, 1;
-             -fx-background-radius: 1.4, 0, 0;
-
-}
-
-.table-view:focused{
-   -fx-background-color: #ffab32;
-           -fx-focus-color :#020d1e;
-           -fx-control-inner-background:#ffab32;
-            -fx-text-fill:  #020d1e;
-           -fx-background-insets: -1.4, 0, 1;
-           -fx-background-radius: 1.4, 0, 0;
-
-}
-
-
 
 
 .combo-box .list-cell

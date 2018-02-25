@@ -21,10 +21,13 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import main.LevelFactory;
 import model.enums.Property;
 import model.enums.Token;
+import model.game.Level;
 import model.levelEditor.LevelEditor;
 import view.Board;
+import view.GamePreview;
 import view.View;
 import view.MenuView;
 
@@ -84,7 +87,6 @@ public class LevelEditorView {
         rootPane.setCenter(canvasGroup);
         rootPane.setMinSize(stage.getWidth(),stage.getHeight());
         rootPane.setAlignment(canvasGroup, Pos.CENTER);
-        rootPane.getStyleClass().addAll("backgroundcolorOrange");
         update();
     }
 
@@ -143,7 +145,6 @@ public class LevelEditorView {
         reloadMap();
         View.drawBoard(board,editor.getMap(),board.getTheme(),false);
     }
-
     public Scene getScene() {
         return scene;
     }

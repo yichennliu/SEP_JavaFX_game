@@ -90,10 +90,9 @@ public class GameController {
     private void startAudio(){
         Media audio = getNextClip();
         if(audio!=null){
-            this.stopAudio();
+            stopAudio();
             player = new MediaPlayer(audio);
             player.onEndOfMediaProperty().setValue(() -> {
-                System.out.println("Zu Ende!");
                 this.startAudio();
             });
             player.play();
@@ -123,6 +122,8 @@ public class GameController {
             System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
             this.updateTimerLabel(this.level.getPropertyValue(Property.TICKS));
             this.updateSandUhr(this.level.getPropertyValue(Property.TICKS));
+            this.updateMedalInfo();
+            this.updateCollectedGems();
             if (robotActive) this.level.setInputDirection(robot.getNextMove());
             boolean killedPre;
             boolean killedMain;
@@ -165,6 +166,9 @@ public class GameController {
         int timeLeft = maxSecs - currentSec;
         timer.setText("Time Left: "+timeLeft);
 
+        if(timeLeft == 0 && this.level.getWinningStatus() == WinningStatus.LOST){
+            this.endOfGameDialog();
+        }
         if(timeLeft<=10){
             timer.setTextFill(Color.RED);
         } else{
@@ -173,6 +177,35 @@ public class GameController {
 
     }
 
+
+    private void updateCollectedGems() {
+        Integer result = this.level.getPropertyValue(Property.GEMS);
+        this.gameView.getCurrentGems().setText(result.toString());
+        this.gameView.getCurrentGems().setTextFill(Color.WHITE);
+
+    }
+
+
+    private void updateMedalInfo() {
+
+        if (this.level.getCurrentMedal() == null) {
+            this.gameView.setCountToBronzeInfo();
+
+        } else if (this.level.getCurrentMedal() == Medal.BRONZE) {
+            this.gameView.setCountToSilverInfo();
+            this.gameView.setCurrentMedal(Medal.BRONZE);
+
+        } else if (this.level.getCurrentMedal() == Medal.SILVER) {
+            this.gameView.setCountToGoldInfo();
+            this.gameView.setCurrentMedal(Medal.SILVER);
+
+        } else if (this.level.getCurrentMedal() == Medal.GOLD) {
+            this.gameView.getRestGem().setText("You've got gold! Now exit to win!");
+            this.gameView.getRestTicks().setTextFill(Color.BLACK);
+            this.gameView.setCurrentMedal(Medal.GOLD);
+        }
+
+    }
 
     private void updateSandUhr(Integer currentTick){
         double maxSec = (double) this.level.getTickGoals()[0]/5;
@@ -231,7 +264,8 @@ public class GameController {
         gameStage.addEventHandler(KeyEvent.KEY_PRESSED,event ->{
             if(event.getCode().equals(KeyCode.M)) {
                 stopAudio();
-            } else if(event.getCode().equals(KeyCode.N)) {
+            } else if(player==null && event.getCode().equals(KeyCode.M)) {
+                System.out.println("Audio an!");
                 startAudio();
             }
         });
@@ -278,7 +312,7 @@ public class GameController {
 
         if (this.level.getWinningStatus() == WinningStatus.WON) {
             endGameAlert.setHeaderText("You successfully completed the level \"" + this.level.getName() + "\". Hooray!");
-            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton(), endGameAlert.getCancelExitButton());
+            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton());
 
         } else if(this.level.getWinningStatus() == WinningStatus.LOST) {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");
@@ -298,12 +332,14 @@ public class GameController {
 
             if (result.get() == endGameAlert.getCancelExitButton()) {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-                this.controller.startMenu();
                 this.stopAudio();
+                this.controller.startMenu();
+
             }
 
             if( result.get() == endGameAlert.getNextLevelButton()) {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
+                this.startAudio();
                 this.controller.startNextLevel();
             }
 
@@ -461,12 +497,6 @@ public class GameController {
                     if (timeline != null) {
                         timeline.play();
                     }
-                } else if (result.get() == alert.getSaveExitButton()) {
-                    gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                    stopAudio();
-                    GameController.this.saveGame();
-                    GameController.this.controller.startMenu();
-
                 } else if (result.get() == alert.getExitButton()) {
                     gamestage.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                     stopAudio();
@@ -475,6 +505,7 @@ public class GameController {
 
                 } else if (result.get() == alert.getRetryButton()) {
                     GameController.this.controller.startLevel(level.getJsonPath());
+                    startAudio();
                     alert.close();
                     timeline.playFromStart();
 

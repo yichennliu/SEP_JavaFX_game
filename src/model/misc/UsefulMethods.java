@@ -23,7 +23,6 @@ public class UsefulMethods {
         return scanDir("src/json/level/");
     }
 
-
     public static List<String> scanSavegameDirectory(){
         List<String> savegameDir = scanDir("src/json/savegame");
         Iterator<String> it = savegameDir.iterator();

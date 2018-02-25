@@ -39,8 +39,8 @@ public class GameView {
     private ImageView timerIcons;
     private Label timer;
     private HBox timeRewardInfo;
-    private Label restGem;
-    private Label restTicks;
+    public Label restGem;
+    public Label restTicks;
     private Label currentGems;
     private ImageView gemIcon;
     private ImageView currentMedal;
@@ -83,8 +83,6 @@ public class GameView {
         this.timerIcons.setFitWidth(30);
         this.gamePauseIcon = new ImageView();
         this.createHboxStyle();
-        this.showMedalInfo();
-        this.showCollectedGems();
         this.createDiamondIcons();
         this.timeRewardInfo.getChildren().addAll(timerIcons, timer, gemIcon, currentGems, currentMedal, restGem, restTicks);
         root.getChildren().addAll(timeRewardInfo);
@@ -111,9 +109,6 @@ public class GameView {
         this.scrollToMe();
         board.stopAnimation();
         View.drawBoard(this.board, level.getMap(), this.theme, true);
-        this.showCollectedGems();
-        this.showMedalInfo();
-
     }
 
     /*if ME is at the edge of the viewport, a new translation will be set (starts indirectly tranlsation transition)*/
@@ -196,13 +191,7 @@ public class GameView {
         return this.timer;
     }
 
-    private void showCollectedGems() {
-        Integer result = this.level.getPropertyValue(Property.GEMS);
-        currentGems.setText(result.toString());
-        currentGems.setTextFill(Color.WHITE);
-    }
-
-    private void setCountToGoldInfo() {
+    public void setCountToGoldInfo() {
         int showRemainingTicksGoldInfo = this.level.getRemainingGoldTicksGems().getKey()/5;
         int showRemainingGemsGoldInfo = this.level.getRemainingGoldTicksGems().getValue();
         restGem.setText("Needed Gems to Gold Medal: " + showRemainingGemsGoldInfo);
@@ -211,7 +200,7 @@ public class GameView {
 
     }
 
-    private void setCountToSilverInfo() {
+    public void setCountToSilverInfo() {
         int showRemainingTicksSilverInfo = this.level.getRemainingSilverTicksGems().getKey()/5;
         int showRemainingGemsSilverInfo = this.level.getRemainingSilverTicksGems().getValue();
         restGem.setText("Needed Gems to Silver Medal: " + showRemainingGemsSilverInfo);
@@ -221,7 +210,7 @@ public class GameView {
 
     }
 
-    private void setCountToBronzeInfo(){
+    public void setCountToBronzeInfo(){
         int showRemainingTicksBronzeInfo = this.level.getRemainingBronzeTicksGems().getKey()/5;
         int showRemainingGemsBronzeInfo = this.level.getRemainingBronzeTicksGems().getValue();
         restGem.setText("Needed Gems to Bronze Medal: " + showRemainingGemsBronzeInfo);
@@ -231,7 +220,7 @@ public class GameView {
 
     }
 
-    private void setCurrentMedal(Medal medalType) {
+    public void setCurrentMedal(Medal medalType) {
 
         switch (medalType) {
             case GOLD:
@@ -244,34 +233,6 @@ public class GameView {
                 currentMedal.setImage(Medal.SILVER.getMedalImage());
                 break;
         }
-    }
-
-    private void showMedalInfo() {
-
-        if (this.level.getCurrentMedal() == null) {
-            this.setCountToBronzeInfo();
-        }
-
-        if (this.level.getCurrentMedal() == Medal.BRONZE) {
-            this.setCountToSilverInfo();
-            this.setCurrentMedal(Medal.BRONZE);
-
-        }
-
-        if (this.level.getCurrentMedal() == Medal.SILVER) {
-            this.setCountToGoldInfo();
-            this.setCurrentMedal(Medal.SILVER);
-
-        }
-
-        if (this.level.getCurrentMedal() == Medal.GOLD) {
-            restGem.setText("You've got gold! Now exit to win!");
-            int currentSec = this.level.getPropertyValue(Property.TICKS)/5;
-            int maxSec = this.level.getTickGoals()[0]/5;
-            restTicks.setText("Time Left to win: "+ (maxSec-currentSec));
-            this.setCurrentMedal(Medal.GOLD);
-        }
-
     }
 
     public void setCurrentSandUhr(SandUhr sandUhrType) {
@@ -304,6 +265,20 @@ public class GameView {
         this.timeRewardInfo.getChildren().remove(this.gamePauseIcon);
 
     }
+
+    public Label getRestGem(){
+        return this.restGem;
+    }
+
+    public Label getRestTicks(){
+        return this.restTicks;
+    }
+
+    public Label getCurrentGems(){
+        return this.currentGems;
+    }
+
+
 
 }
 
