@@ -34,7 +34,7 @@ public class LevelEditor {
         this.map = new Feld[height][width];
 
         try {
-            this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+            this.theme = ThemeIO.importTheme("src/json/theme/BoulderdashDefault.zip");
         }
         catch(Exception e){
             this.theme = null;

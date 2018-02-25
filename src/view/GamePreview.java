@@ -35,7 +35,7 @@ public class GamePreview extends HBox{
         super();
         try {
             this.fieldSize = fieldSize;
-            this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+            this.theme = ThemeIO.importTheme("src/json/theme/BoulderdashDefault.zip");
             staticCanvas = new Canvas(width,height);
             animatedCanvas = new Canvas(width,height);
             Group canvasgroup  = new Group(staticCanvas,animatedCanvas);

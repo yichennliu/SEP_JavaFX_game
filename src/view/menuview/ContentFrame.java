@@ -163,7 +163,7 @@ public class ContentFrame extends StackPane {
         levelVbox.setAlignment(Pos.TOP_CENTER);
         Theme theme = null;
         try {
-            theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+            theme = ThemeIO.importTheme("src/json/theme/BoulderdashDefault.zip");
         } catch (Exception e) {
             System.out.println("Theme not found / corrupt file");
         }
@@ -194,7 +194,7 @@ public class ContentFrame extends StackPane {
         savedGameVbox.setAlignment(Pos.TOP_CENTER);
         Theme theme = null;
         try {
-            theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+            theme = ThemeIO.importTheme("src/json/theme/BoulderdashDefault.zip");
         } catch (Exception e) {
             System.out.println("Theme not found / corrupt file");
         }

@@ -63,7 +63,7 @@ public class GameView {
         root.getChildren().addAll(canvasGroup);
         stage.setTitle("BoulderDash - " + this.level.getName());
         try {
-            this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+            this.theme = ThemeIO.importTheme("src/json/theme/BoulderdashDefault.zip");
         } catch (Exception e) {
             System.out.println("Theme-Import-Fail: " + e.getMessage());
         }
