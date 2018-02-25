@@ -1,6 +1,5 @@
 package model.ai;
 
-import jdk.internal.util.xml.impl.Input;
 import model.enums.InputDirection;
 import model.game.Feld;
 import model.game.Level;

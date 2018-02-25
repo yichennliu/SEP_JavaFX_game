@@ -1,6 +1,5 @@
 package model.game;
 
-import javafx.scene.control.Label;
 import javafx.util.Pair;
 import model.enums.*;
 

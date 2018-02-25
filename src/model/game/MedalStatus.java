@@ -2,8 +2,6 @@ package model.game;
 
 import model.enums.Medal;
 
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Achieved medals for a level

@@ -1,14 +1,11 @@
 package view.menuview;
 
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import view.View;
 
 import java.util.List;
@@ -18,7 +15,6 @@ import java.util.List;
  */
 public class LevelItem extends HBox {
 
-    private View view;
     private Label name, information,gems;
     private HBox medalBox;
     private double width ,height;

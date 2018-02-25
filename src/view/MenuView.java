@@ -14,10 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 public class MenuView {
-    private Scene sceneMenu, sceneHelp;
+    private Scene sceneMenu;
     private Stage stage;
     private Map<String, MedalStatus> medalStatuses;
-    private ToggleGroup group;
     private String stylesheet;
     private List<ToggleButton> levelButtons;
     private BorderPane root;

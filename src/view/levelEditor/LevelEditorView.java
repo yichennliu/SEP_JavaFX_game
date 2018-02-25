@@ -16,18 +16,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import main.LevelFactory;
 import model.enums.Property;
 import model.enums.Token;
-import model.game.Level;
 import model.levelEditor.LevelEditor;
 import view.Board;
-import view.GamePreview;
 import view.View;
 import view.MenuView;
 
