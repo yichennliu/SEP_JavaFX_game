@@ -26,7 +26,6 @@ import org.json.JSONObject;
 import view.EndGameAlert;
 import view.GamePausedAlert;
 import view.GameView;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -116,7 +115,7 @@ public class GameController {
             stopAudio();
             player = new MediaPlayer(audio);
             player.onEndOfMediaProperty().setValue(() -> {
-                this.startAudio();
+                startAudio();
             });
             player.play();
             audioPaused = false;
@@ -235,7 +234,7 @@ public class GameController {
             this.gameView.setCurrentMedal(Medal.SILVER);
 
         } else if (this.level.getCurrentMedal() == Medal.GOLD) {
-            this.gameView.getRestGem().setText("You've got gold! Now exit to win!");
+            this.gameView.getRestGem().setText("You've got gold!");
             this.gameView.getRestTicks().setTextFill(Color.BLACK);
             this.gameView.setCurrentMedal(Medal.GOLD);
         }
@@ -247,13 +246,13 @@ public class GameController {
         double currentSec = currentTick*GameController.tickDuration;
         double timePast = currentSec/maxSec;
 
-        if(timePast >=0.3){
+        if (timePast >= 0.3) {
             this.gameView.setCurrentSandUhr(SandUhr.YELLOW);
         } else {
             this.gameView.setCurrentSandUhr(SandUhr.GREEN);
         }
 
-        if (timePast >=0.6) {
+        if (timePast >= 0.6) {
             this.gameView.setCurrentSandUhr(SandUhr.RED);
         }
 
@@ -382,7 +381,6 @@ public class GameController {
 
             if( result.get() == endGameAlert.getNextLevelButton()) {
                 gameView.getStage().removeEventHandler(KeyEvent.KEY_PRESSED, handler);
-                this.startAudio();
                 this.controller.startNextLevel();
             }
 
@@ -545,13 +543,9 @@ public class GameController {
                     stopAudio();
                     controller.startMenu();
 
-
                 } else if (result.get() == alert.getRetryButton()) {
                     GameController.this.controller.startLevel(level.getJsonPath());
-                    startAudio();
                     alert.close();
-                    timeline.playFromStart();
-
 
                 } else if (result.get() == alert.getCancelButton()) {
                     alert.close();

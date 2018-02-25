@@ -4,21 +4,16 @@ import javafx.scene.image.Image;
 import view.GameView;
 
 public enum Medal {
-    BRONZE(new Image(GameView.class.getResourceAsStream("images/Bronze.png")),"Bronze"),
-    SILVER(new Image(GameView.class.getResourceAsStream("images/Silver.png")),"Silber"),
-    GOLD(new Image(GameView.class.getResourceAsStream("images/Gold.png")),"Gold");
+    BRONZE(new Image(GameView.class.getResourceAsStream("images/BRONZE.png"))),
+    SILVER(new Image(GameView.class.getResourceAsStream("images/SILVER.png"))),
+    GOLD(new Image(GameView.class.getResourceAsStream("images/gold.png")));
 
-    private String displayName;
     private final Image medalimage;
 
-    Medal (Image medalimage, String displayName) {
-        this.displayName = displayName;
+    Medal (Image medalimage) {
         this.medalimage = medalimage;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
 
     public Image getMedalImage() { return this.medalimage; }
 

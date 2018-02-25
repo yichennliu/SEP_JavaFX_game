@@ -1,8 +1,9 @@
-package view.menuview;
+package view;
 /**
  * Created by aidabakhtiari on 09.02.18.
  */
 import controller.GameController;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -28,6 +29,7 @@ import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 import view.GamePreview;
 import view.MenuView;
+import view.menuview.LevelItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,7 +178,7 @@ public class ContentFrame extends StackPane {
 
             ImageView snapshotview = new ImageView(snapshot);
             String description ="benötigte      Edelsteine / Zeit (Sekunden)\n" +
-                        "Bronze:         "+level.getGemGoals()[0]+" / "+(int) (level.getTickGoals()[0]*GameController.tickDuration) +
+                        "Bronze:         "+level.getGemGoals()[0]+" / "+(int) (level.getTickGoals()[0]* GameController.tickDuration) +
                           "\nSilber:           "+level.getGemGoals()[1]+" / "+(int) (level.getTickGoals()[1]*GameController.tickDuration)
                     +"\nGold:             "+level.getGemGoals()[2]+" / "+(int) (level.getTickGoals()[2]*GameController.tickDuration);
 
@@ -201,11 +203,12 @@ public class ContentFrame extends StackPane {
             Level level = LevelFactory.importLevel("src/json/savegame/" + path);
             Image snapshot = LevelSnapshot.snap(theme, level);
             ImageView snapshotview = new ImageView(snapshot);
-            String description ="Fortschritt:\n" +
-                    "Edelsteine: "+level.getPropertyValue(Property.GEMS) +
-                    "\nZeit: "+(level.getPropertyValue(Property.TICKS)/5) + " Sekunden";
+            String description ="benötigte      Edelsteine / Zeit(Sekunden)\n" +
+                    "Bronze:         "+level.getGemGoals()[0]+" / "+level.getTickGoals()[0]/5 +
+                    "\nSilber:           "+level.getGemGoals()[1]+" / "+level.getTickGoals()[1]/5
+                    +"\nGold:              "+level.getGemGoals()[2]+" /"+level.getTickGoals()[2]/5;
             LevelItem savedLevelItem = new LevelItem(level.getName(),"",description, snapshotview, path,
-                    widthLinks/2-100, heightLinks/5, new ArrayList<>());
+                    widthLinks/2-100, heightLinks/5, this.getMedalImage(level.getJsonPath()));
             listSavedGameButtons.add(savedLevelItem);
             savedGameVbox.getChildren().add(savedLevelItem);
         }

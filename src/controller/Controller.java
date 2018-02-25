@@ -13,11 +13,7 @@ import org.json.JSONTokener;
 import view.*;
 import view.levelEditor.LevelEditorView;
 import view.themeEditor.ThemeEditorView;
-
-import javax.jws.soap.SOAPBinding;
-import java.io.File;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +30,7 @@ public class Controller {
     private int currentLevelIndex =0;
 
 
-    public Controller(View view, Object model) { // Todo: ControllerModel
+    public Controller(View view, Object model) {
         Image icon = null;
         view.getStage().getIcons().add(new Image("main/icon.png"));
         this.view = view;
