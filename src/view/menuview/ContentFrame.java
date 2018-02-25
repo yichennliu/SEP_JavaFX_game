@@ -27,6 +27,7 @@ import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 import view.GamePreview;
 import view.MenuView;
+import view.menuview.LevelItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,14 +54,13 @@ public class ContentFrame extends StackPane {
         this.heightLinks=menuView.getHeight();
         this.gameButton = createButton("S T A R T");
         this.chooseLevelButton = createButton("L E V E L S");
-        this.loadtheme = createButton(" L O A D - T H E M E");
         this.themeEditorButton = createButton(" T H E M E - E D I T O R");
         this.helpbutton = createButton("H E L P");
         this.close = createButton("C L O S E ");
         this.levelEditorButton = createButton("L E V E L - E D I T O R");
         this.savedGameButton = createButton("L O A D  G A M E ");
 
-        menuVboxlinks = new VBox(15, gameButton, chooseLevelButton, savedGameButton, loadtheme, themeEditorButton, levelEditorButton, helpbutton, close);
+        menuVboxlinks = new VBox(15, gameButton, chooseLevelButton, savedGameButton, themeEditorButton, levelEditorButton, helpbutton, close);
         menuVboxlinks.setMinSize((widthLinks / 2), heightLinks);
         menuVboxlinks.setMaxSize((widthLinks / 2), heightLinks);
         menuVboxlinks.setAlignment(Pos.CENTER);

@@ -164,15 +164,19 @@ private String stylesheet;
         previewGridPane.setDisable(true);
 
         this.nextFrame = new Button(); nextFrame.setGraphic(new ImageView("model/themeEditor/thumbnails/next.png"));
-        this.previousFrame = new Button(); previousFrame.setGraphic(new ImageView("model/themeEditor/thumbnails/previous.png"));
+        this.previousFrame = new Button(); previousFrame.setGraphic(new ImageView("model/themeEditor/thumbnails/previous1.png"));
+      // this.nextFrame.setMaxSize(30,30);
+       // this.previousFrame.setMaxSize(30,30);
         this.frameNumberField = new TextField("0");
         frameNumberField.setMaxWidth(30);
         frameNumberField.setMinWidth(30);
         frameNumberField.setEditable(false);
+        HBox frameInfo = new HBox(nextFrame,frameNumberField,previousFrame);
+
         TilePane frameControllers = new TilePane();
         frameControllers.setAlignment(Pos.CENTER);
         frameControllers.setMaxWidth(maxWidth);
-        frameControllers.getChildren().addAll(previousFrame,frameNumberField,nextFrame);
+        frameControllers.getChildren().addAll(frameInfo);
 
         frameCount = new TextField();
         spriteSize = new TextField();

@@ -86,6 +86,7 @@ public class LevelEditorView {
         rootPane.setTop(header);
         rootPane.setCenter(canvasGroup);
         rootPane.setMinSize(stage.getWidth(),stage.getHeight());
+        rootPane.getStyleClass().addAll("backgroundcolorOrange");
         rootPane.setAlignment(canvasGroup, Pos.CENTER);
         update();
     }

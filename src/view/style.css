@@ -43,8 +43,7 @@
 
 }
 
-.backgroundcolorOrange{ -fx-background-color:#f7c679;
-}
+
 
 .clickedbutton{
    -fx-background-color:#ffab32;
@@ -56,6 +55,9 @@
 .backgroundcolorBlue{
 -fx-background-color: #020d1e;
 
+}
+
+.backgroundcolorOrange{ -fx-background-color:#f7c679;
 }
 
 .levelbox{ -fx-background-color:Transparent;
@@ -90,22 +92,25 @@
     -fx-block-increment: 50 ;
 }
 
+.tree-view {
+    -fx-background-color:#f7c679;
+}
 
-.tree-view .scroll-bar:vertical{ -fx-background-color: transparent;
-                                -fx-background-color: #ffab32;
-                                                                }
+.tree-cell {
+    -fx-background-color:#f7c679;; // Default color
+}
 
- .tree-view:focused {
-        -fx-background-color: #ffab32;
-        -fx-focus-color :#ffab32;
-        -fx-control-inner-background:#020d1e;
-         -fx-text-fill:  #ffab32;
-        -fx-background-insets: -1.4, 0, 1;
-        -fx-background-radius: 1.4, 0, 0;
+.tree-view:focused .tree-cell:filled:selected {
+    -fx-background-color: #ffab32; // Focused color
+}
 
-        }
-.tree-view .tree-cell{-fx-background-color: #ffab32; }
-.text-field{  -fx-background-color:#2e353f;
+.tree-cell:filled:selected{
+    -fx-background-color: #ffab32; // Unfocused color
+}
+
+
+
+.text-field{  -fx-background-color:#d9e2f9;
 
 }
 
@@ -119,6 +124,7 @@
 
 
 }
+
 
 .text-field.error {
  -fx-border-color: red ;
