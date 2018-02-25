@@ -21,7 +21,6 @@ import java.util.Map;
 public class Controller {
     private View view;
     private View.Mode currentMode;
-
     private MenuController menuController;
     private ThemeEditorController themeEditorController;
     private GameController gameController;

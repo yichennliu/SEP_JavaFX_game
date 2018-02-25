@@ -1,9 +1,6 @@
 package model.themeEditor;
 
 import model.enums.Token;
-import model.themeEditor.HashMap2D;
-import model.themeEditor.SpriteSheet;
-import model.themeEditor.SpriteSheetHolder;
 
 public class Theme {
 

@@ -198,7 +198,7 @@
     "values": {},
     "name": "friedhof",
     "width": 15,
-    "jsonPath": "src/json/levelfriedhof.json",
+    "jsonPath": "src/json/level/friedhof.json",
     "map": [
         [
             "wall",

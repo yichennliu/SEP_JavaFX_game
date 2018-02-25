@@ -3,13 +3,11 @@ package controller;
 
 import javafx.application.Platform;
 import javafx.scene.input.MouseEvent;
-import model.game.Level;
 import model.game.MedalStatus;
 import view.menuview.LevelItem;
 import view.MenuView;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class MenuController {

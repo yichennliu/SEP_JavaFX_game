@@ -3,11 +3,9 @@ package view.menuview;
  * Created by aidabakhtiari on 09.02.18.
  */
 import controller.GameController;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,10 +15,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import main.LevelFactory;
 import model.enums.Medal;
-import model.enums.Property;
 import model.game.Level;
 import model.game.MedalStatus;
 import model.misc.LevelSnapshot;
@@ -29,13 +25,12 @@ import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 import view.GamePreview;
 import view.MenuView;
-import view.menuview.LevelItem;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 public class ContentFrame extends StackPane {
-    private Button themeEditorButton, loadtheme, chooseLevelButton, savedGameButton, gameButton,helpbutton,close,levelEditorButton;
+    private Button themeEditorButton, chooseLevelButton, savedGameButton, gameButton,helpbutton,close,levelEditorButton;
     private VBox levelVbox, helpVbox, welcomeVbox, menuVboxlinks, savedGameVbox;
     private ArrayList<LevelItem> listLevelButtons;
     private ArrayList<LevelItem> listSavedGameButtons;
@@ -43,10 +38,7 @@ public class ContentFrame extends StackPane {
     private ScrollPane levelItemScrollPane, helpVboxScrollPane, savedGameScrollPane;
     private double widthLinks, heightLinks;
     private int buttonfactor = 4;
-    private Group root;
     private final Font FONT = Font.font("", FontWeight.BOLD, 18);
-    private final Font header = Font.font("", FontWeight.BOLD, 28);
-    private Text gemInfo;
     private GamePreview previewNode;
 
 
@@ -247,10 +239,6 @@ public class ContentFrame extends StackPane {
                 }
         }
         return medalsList;
-    }
-
-    private Text createGemInfo(){
-        return gemInfo;
     }
 
     private VBox createHelpMenuItem() {

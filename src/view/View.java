@@ -58,12 +58,12 @@ public class View {
         stage.setScene(menuView.getSceneMenu());
     }
 
-    public void showLevelEditor(){
+    private void showLevelEditor(){
         LevelEditorView levelEditorView = (LevelEditorView) currentScene;
         stage.setScene(levelEditorView.getScene());
     }
 
-    public void showGame(){
+    private void showGame(){
         GameView gameView = (GameView) currentScene;
         stage.setScene(gameView.getScene());
     }
@@ -111,7 +111,7 @@ public class View {
 
 
     /*Draws 2D Feld-Array and fills Lists (if provided) of Animatable Items*/
-    public static void drawMap(Feld[][] map, double fieldSize, Theme theme, TokenTransition animator, List<StaticViewToken> staticTokenList, GraphicsContext gc){
+    private static void drawMap(Feld[][] map, double fieldSize, Theme theme, TokenTransition animator, List<StaticViewToken> staticTokenList, GraphicsContext gc){
         int mapWidth = map[0].length;
         int mapHeight = map.length;
 
@@ -151,7 +151,7 @@ public class View {
         gc.setFill(Color.BLACK);
     }
 
-    public static void drawTextFeld(Feld feld, GraphicsContext gc, double xPos, double yPos, double fieldSize){
+    private static void drawTextFeld(Feld feld, GraphicsContext gc, double xPos, double yPos, double fieldSize){
         String text = feld.toString();
         drawTextFeld(text, gc, xPos, yPos,fieldSize);
     }
@@ -200,7 +200,7 @@ public class View {
         return true;
     }
 
-    public static void drawImage(double x, double y, double size, GraphicsContext gc, Image image){
+    private static void drawImage(double x, double y, double size, GraphicsContext gc, Image image){
         gc.drawImage(image,x,y,size,size);
     }
 

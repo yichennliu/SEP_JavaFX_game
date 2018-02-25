@@ -39,8 +39,8 @@ public class GameView {
     private ImageView timerIcons;
     private Label timer;
     private HBox timeRewardInfo;
-    public Label restGem;
-    public Label restTicks;
+    private Label restGem;
+    private Label restTicks;
     private Label currentGems;
     private ImageView gemIcon;
     private ImageView currentMedal;
