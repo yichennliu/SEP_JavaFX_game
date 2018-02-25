@@ -45,6 +45,7 @@ public class LevelEditorView {
     private ToggleGroup headerButtons;
     private Canvas staticCanvas, animationCanvas, selectionCanvas;
     private Group canvasGroup;
+    private TextField difficultInput;
     private TextField[] gemInputs;
     private TextField[] timeInputs;
     private double fieldSize = 20.0;
@@ -62,6 +63,7 @@ public class LevelEditorView {
     private Button cropButton;
     private MenuView menuView;
     private  String stylesheet;
+    private TextField diffField;
 
     public LevelEditorView(Stage stage, LevelEditor editor){
         this.editor = editor;
@@ -145,6 +147,7 @@ public class LevelEditorView {
         reloadMap();
         View.drawBoard(board,editor.getMap(),board.getTheme(),false);
     }
+
     public Scene getScene() {
         return scene;
     }
@@ -164,16 +167,23 @@ public class LevelEditorView {
         nameInput = new TextField();
         nameInput.setPromptText("Levelname");
         HBox cropInputs = createAndGetCropInputs();
+        Label difficultLabel = new Label("Schwierigkeit");
         Label goalLabel = new Label("Ziele");
         Label nameLabel = new Label("Levelname");
         Label sizeLabel = new Label("Levelgröße");
-        Group labels = new Group(goalLabel,nameLabel,sizeLabel);
+        Group labels = new Group(difficultLabel,goalLabel,nameLabel,sizeLabel);
         for(Node node : labels.getChildren()) node.setStyle("-fx-font-weight:bold");
+        VBox difficultBox = new VBox();
+        difficultBox.setSpacing(5);
         HBox gemBox = new HBox();
         gemBox.setSpacing(5);
         HBox timeBox = new HBox();
         timeBox.setSpacing(5);
         initGoalsInput();
+        difficultInput = new TextField();
+        difficultInput.setMaxWidth(40);
+        difficultInput.setPromptText(">=0");
+        difficultBox.getChildren().add(difficultInput);
         gemBox.getChildren().add( new Label("Gems"));
         timeBox.getChildren().add(new Label("Zeit"));
 
@@ -190,7 +200,7 @@ public class LevelEditorView {
         saveButton = new Button("Speichern");
         exitButton = new Button("Zurück zum Menü");
         informationRoot.getChildren().addAll(nameLabel,nameInput, sizeLabel,cropInputs,
-                goalLabel, gemBox, timeBox,loadBox, saveButton,exitButton);
+                difficultLabel, difficultBox, goalLabel, gemBox, timeBox,loadBox, saveButton,exitButton);
         rootPane.setLeft(informationRoot);
 
     }
@@ -273,7 +283,9 @@ public class LevelEditorView {
 
     }
 
+
     private void initGoalsInput(){
+        difficultInput = new TextField();
         gemInputs = new TextField[3];
         timeInputs = new TextField[3];
         for (int i = 0; i<gemInputs.length;i++){
@@ -300,6 +312,11 @@ public class LevelEditorView {
 
     public Button getExitButton(){
         return this.exitButton;
+    }
+
+
+    public TextField getDifficultInputField() {
+        return difficultInput;
     }
 
     private TextField getGemTimeInput(double size){
