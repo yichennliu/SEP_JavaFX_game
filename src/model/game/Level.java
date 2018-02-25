@@ -9,53 +9,31 @@ import java.util.List;
 
 public class Level {
     private String name;
-    /**
-     * Aufbau von oben links: map[rowNum][colNum]
-     */
+    /** Aufbau von oben links: map[rowNum][colNum] */
     private Feld[][] map;
-    /**
-     * laut Doku genau 3 Einträge
-     */
-
+    /** laut Doku genau 3 Einträge */
     private int[] difficult;
-
     /** laut Doku genau 3 Einträge */
     private int[] gemGoals;
-    /**
-     * laut Doku genau 3 Einträge
-     */
+    /** aut Doku genau 3 Einträge */
     private int[] tickGoals;
     private List<Rule> pre;
     private List<Rule> post;
     /** optional */
     private Integer maxslime;
-    /**
-     * globale properties: GEMS, TICKS, X, Y, Z
-     */
+    /** globale properties: GEMS, TICKS, X, Y, Z */
     private Map<Property, Integer> properties;
-    /**
-     * Path to this level
-     */
+    /** Path to this level */
     private String jsonPath;
-    /**
-     * Derzeitige Anzahl der Felder mit Schleim
-     */
+    /** Derzeitige Anzahl der Felder mit Schleim */
     public int slimeCount;
-    /**
-     * vorbereitete Änderungen
-     */
+    /** vorbereitete Änderungen */
     private Map<Feld, Token> tokensToChange = new HashMap<>();
-    /**
-     * vorbereitete Änderungen
-     */
+    /** vorbereitete Änderungen */
     private Map<Feld, Map<Property, Integer>> propertiesToChange = new HashMap<>();
-    /**
-     * buffer for control keys
-     */
+    /** buffer for control keys */
     private InputDirection inputDirection = null;
-    /**
-     * whether the game is ongoing, lost, or won
-     */
+    /** whether the game is ongoing, lost, or won */
     private WinningStatus winningStatus = WinningStatus.PLAYING;
     private int difficulty;
 
@@ -125,20 +103,19 @@ public class Level {
     /**
      * @return current medal, or null
      */
-
     public Medal getCurrentMedal() {
-            if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[2]
-                    && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[2]) {
-                return Medal.GOLD;
-            } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[1]
-                    && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[1]) {
-                return Medal.SILVER;
-            } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[0]
-                    && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[0]) {
-                return Medal.BRONZE;
-            } else {
-                return null;
-            }
+        if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[2]
+                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[2]) {
+            return Medal.GOLD;
+        } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[1]
+                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[1]) {
+            return Medal.SILVER;
+        } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[0]
+                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[0]) {
+            return Medal.BRONZE;
+        } else {
+            return null;
+        }
     }
 
 
@@ -642,14 +619,15 @@ public class Level {
     /**
      * ATTENTION: returns a fake-clone (only map and properties are really cloned, rules,goals, jsonPath and other unchangable vars are the same)
      */
-
     public Level clone() {
         Feld[][] copyOfMap = copyMap();
         Map<Property, Integer> globalPropsClone = copyProps(this.properties);
         return new Level(new String(name),copyOfMap,gemGoals,tickGoals,pre,post,maxslime, globalPropsClone, difficulty, jsonPath);
     }
 
-    /*copies property Maps*/
+    /**
+     * copies property Maps
+     */
     private Map<Property, Integer> copyProps(Map<Property, Integer> mapToCopy) {
         Map<Property, Integer> propertyClone = new HashMap<>();
         for (Map.Entry<Property, Integer> entry : mapToCopy.entrySet()) {
@@ -658,7 +636,9 @@ public class Level {
         return propertyClone;
     }
 
-    /*copies map by copying every Feld*/
+    /**
+     * copies map by copying every Feld
+     */
     public Feld[][] copyMap() {
         Feld[][] copy = new Feld[map.length][map[0].length];
         for (int y = 0; y < copy.length; y++) {
