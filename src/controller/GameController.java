@@ -21,6 +21,7 @@ import model.ai.Robot;
 import model.enums.*;
 import model.game.Level;
 import model.game.MedalStatus;
+import model.themeEditor.Theme;
 import org.json.JSONObject;
 import view.EndGameAlert;
 import view.GamePausedAlert;
@@ -45,6 +46,8 @@ public class GameController {
     private AI robot;
     private boolean robotActive;
     private List<Media> audios;
+    private List<Theme> themes;
+    private int themeIndex = 0;
     private int audioIndex =-1;
     private MediaPlayer player;
 
@@ -59,9 +62,16 @@ public class GameController {
         this.addDragEvent();
         this.addPauseResumeGameEvents();
         this.addStopAudioEvent();
+        this.addThemeChangeEvent();
         this.initAudios();
         this.startAudio();
+        themes = this.controller.getThemes();
+        setNextTheme();
+    }
 
+    private void setNextTheme() {
+        Theme theme = getNextTheme();
+        this.gameView.setNewTheme(theme);
     }
 
     private void robotize(boolean activate) {
@@ -79,6 +89,16 @@ public class GameController {
             }
 
         }
+    }
+
+    private Theme getNextTheme(){
+        if(themes!=null){
+            Theme returnTheme = themes.get(themeIndex);
+            themeIndex = (themeIndex==themes.size()-1) ? 0 : themeIndex+1;
+            return returnTheme;
+        }
+        return null;
+
     }
 
     private Media getNextClip(){
@@ -269,6 +289,15 @@ public class GameController {
             } else if(player==null && event.getCode().equals(KeyCode.M)) {
                 System.out.println("Audio an!");
                 startAudio();
+            }
+        });
+    }
+
+    private void addThemeChangeEvent(){
+        Stage gameStage = this.gameView.getStage();
+        gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if(event.getCode().equals(KeyCode.T)){
+                setNextTheme();
             }
         });
     }

@@ -43,6 +43,7 @@ public class ContentFrame extends StackPane {
     private final Font FONT = Font.font("", FontWeight.BOLD, 18);
     private final Font header = Font.font("", FontWeight.BOLD, 28);
     private Text gemInfo;
+    private GamePreview previewNode;
 
 
     public ContentFrame(double widthLinks, double heightLinks, MenuView menuView) {
@@ -130,10 +131,18 @@ public class ContentFrame extends StackPane {
        boolean visible = pane.isVisible();
        for(Node children:this.getChildren()){
            if(children==pane){
-               if(visible) children.setVisible(false);
-               else children.setVisible(true);
+               if(visible) {
+                   children.setVisible(false);
+                   previewNode.resumeGame();
+               }
+               else {
+                   children.setVisible(true);
+                   previewNode.pauseGame();
+               }
            }
-           else if(children!=menuVboxlinks && children!=welcomeVbox) children.setVisible(false);
+           else if(children!=menuVboxlinks && children!=welcomeVbox) {
+               children.setVisible(false);
+           }
        }
     }
 
@@ -202,7 +211,7 @@ public class ContentFrame extends StackPane {
         double size = widthLinks/2.5;
         double fieldSize = size/previewLevel.getWidth();
 
-        GamePreview previewNode = new GamePreview(size,size,fieldSize);
+        previewNode = new GamePreview(size,size,fieldSize);
         previewNode.playLevel(previewLevel);
 
         welcomeVbox= new VBox();
