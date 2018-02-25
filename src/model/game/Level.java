@@ -647,7 +647,6 @@ public class Level {
         Feld[][] copyOfMap = copyMap();
         Map<Property, Integer> globalPropsClone = copyProps(this.properties);
         return new Level(new String(name),copyOfMap,gemGoals,tickGoals,pre,post,maxslime, globalPropsClone, difficulty, jsonPath);
-        return new Level(new String(name), copyOfMap, gemGoals, tickGoals, pre, post, maxslime, globalPropsClone, jsonPath);
     }
 
     /*copies property Maps*/
