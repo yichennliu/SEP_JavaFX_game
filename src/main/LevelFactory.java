@@ -106,13 +106,17 @@ public class LevelFactory {
             }
         }
 
+        // import difficulty, or 0
+        int difficulty = jsonLevel.optInt("difficulty");
+
         // preserve original level path if available
         if (jsonLevel.has("jsonPath")) {
             jsonPath = jsonLevel.getString("jsonPath");
         }
 
+
         // create level
-        return new Level(name, map, gems, ticks, pre, post, maxslime, globalProperties, jsonPath);
+        return new Level(name, map, gems, ticks, pre, post, maxslime, globalProperties, difficulty, jsonPath);
     }
 
     /**
@@ -298,6 +302,11 @@ public class LevelFactory {
             jsonValues.put(entry.getKey().toString().toLowerCase(), entry.getValue());
         }
         jsonLevel.put("values", jsonValues);
+
+        // save difficulty
+        if (level.getDifficulty() != 0) {
+            jsonLevel.put("difficulty", level.getDifficulty());
+        }
 
         // save original path
         if (level.getJsonPath() != null) {
