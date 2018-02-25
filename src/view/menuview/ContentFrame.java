@@ -17,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import main.LevelFactory;
 import model.enums.Medal;
+import model.enums.Property;
 import model.game.Level;
 import model.game.MedalStatus;
 import model.misc.LevelSnapshot;
@@ -194,12 +195,11 @@ public class ContentFrame extends StackPane {
             Level level = LevelFactory.importLevel("src/json/savegame/" + path);
             Image snapshot = LevelSnapshot.snap(theme, level);
             ImageView snapshotview = new ImageView(snapshot);
-            String description ="benötigte      Edelsteine / Zeit(Sekunden)\n" +
-                    "Bronze:         "+level.getGemGoals()[0]+" / "+level.getTickGoals()[0]/5 +
-                    "\nSilber:           "+level.getGemGoals()[1]+" / "+level.getTickGoals()[1]/5
-                    +"\nGold:              "+level.getGemGoals()[2]+" /"+level.getTickGoals()[2]/5;
+            String description ="Fortschritt:\n" +
+                    "Edelsteine: " + level.getPropertyValue(Property.GEMS) +
+                    "\nZeit: "+(int)(level.getPropertyValue(Property.TICKS)*GameController.tickDuration) + " Sekunden";
             LevelItem savedLevelItem = new LevelItem(level.getName(),"",description, snapshotview, path,
-                    widthLinks/2-100, heightLinks/5, this.getMedalImage(level.getJsonPath()));
+                    widthLinks/2-100, heightLinks/5, new ArrayList<>());
             listSavedGameButtons.add(savedLevelItem);
             savedGameVbox.getChildren().add(savedLevelItem);
         }
