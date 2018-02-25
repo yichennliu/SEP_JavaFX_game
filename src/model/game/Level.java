@@ -10,6 +10,9 @@ public class Level {
     private String name;
     /** Aufbau von oben links: map[rowNum][colNum] */
     private Feld[][] map;
+
+    private int[] difficult;
+
     /** laut Doku genau 3 Einträge */
     private int[] gemGoals;
     /** laut Doku genau 3 Einträge */
@@ -128,6 +131,8 @@ public class Level {
     public int getHeight() {
         return this.map.length;
     }
+
+    public int[] getDifficult(){return difficult;}
 
     public int[] getGemGoals() {
         return gemGoals;
