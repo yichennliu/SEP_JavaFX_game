@@ -1,5 +1,6 @@
 package view;
 
+import controller.GameController;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -48,7 +49,6 @@ public class GameView {
 
     public GameView(Stage stage, Level level) {
         root = new Group();
-
         this.sceneGame = new Scene(this.root);
         this.stage = stage;
         this.width = stage.getWidth();
@@ -110,6 +110,12 @@ public class GameView {
         board.stopAnimation();
         View.drawBoard(this.board, level.getMap(), this.theme, true);
     }
+
+    public void setNewTheme(Theme theme){
+        this.theme = theme;
+        this.board.setTheme(theme);
+    }
+
 
     /*if ME is at the edge of the viewport, a new translation will be set (starts indirectly tranlsation transition)*/
     private void scrollToMe() {
@@ -192,7 +198,7 @@ public class GameView {
     }
 
     public void setCountToGoldInfo() {
-        int showRemainingTicksGoldInfo = this.level.getRemainingGoldTicksGems().getKey()/5;
+        int showRemainingTicksGoldInfo = (int) (this.level.getRemainingGoldTicksGems().getKey()*GameController.tickDuration);
         int showRemainingGemsGoldInfo = this.level.getRemainingGoldTicksGems().getValue();
         restGem.setText("Needed Gems to Gold Medal: " + showRemainingGemsGoldInfo);
         restTicks.setText("Time Left to Gold Medal: "+ showRemainingTicksGoldInfo);
@@ -201,7 +207,7 @@ public class GameView {
     }
 
     public void setCountToSilverInfo() {
-        int showRemainingTicksSilverInfo = this.level.getRemainingSilverTicksGems().getKey()/5;
+        int showRemainingTicksSilverInfo = (int) (this.level.getRemainingSilverTicksGems().getKey()*GameController.tickDuration);
         int showRemainingGemsSilverInfo = this.level.getRemainingSilverTicksGems().getValue();
         restGem.setText("Needed Gems to Silver Medal: " + showRemainingGemsSilverInfo);
         restTicks.setText("Time left to Silver Medal: "+ showRemainingTicksSilverInfo);
@@ -211,7 +217,7 @@ public class GameView {
     }
 
     public void setCountToBronzeInfo(){
-        int showRemainingTicksBronzeInfo = this.level.getRemainingBronzeTicksGems().getKey()/5;
+        int showRemainingTicksBronzeInfo = (int) (this.level.getRemainingBronzeTicksGems().getKey()*GameController.tickDuration);
         int showRemainingGemsBronzeInfo = this.level.getRemainingBronzeTicksGems().getValue();
         restGem.setText("Needed Gems to Bronze Medal: " + showRemainingGemsBronzeInfo);
         restTicks.setText("Time left to Bronze Medal: "+ showRemainingTicksBronzeInfo);
@@ -236,7 +242,6 @@ public class GameView {
     }
 
     public void setCurrentSandUhr(SandUhr sandUhrType) {
-
         switch (sandUhrType) {
             case RED:
                 this.timerIcons.setImage(SandUhr.RED.getSandUhrImage());
@@ -248,22 +253,18 @@ public class GameView {
                 this.timerIcons.setImage(SandUhr.YELLOW.getSandUhrImage());
                 break;
         }
-
     }
 
     public void createPauseGameIcon() {
-
         final Image pauseIcon = new Image(GameView.class.getResourceAsStream("images/Paused.png"));
         this.gamePauseIcon.setImage(pauseIcon);
         this.gamePauseIcon.setFitHeight(30);
         this.gamePauseIcon.setFitWidth(30);
         this.timeRewardInfo.getChildren().addAll(gamePauseIcon);
-
     }
 
     public void removePauseGameIcon(){
         this.timeRewardInfo.getChildren().remove(this.gamePauseIcon);
-
     }
 
     public Label getRestGem(){
@@ -281,14 +282,3 @@ public class GameView {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-

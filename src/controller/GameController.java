@@ -21,6 +21,7 @@ import model.ai.Robot;
 import model.enums.*;
 import model.game.Level;
 import model.game.MedalStatus;
+import model.themeEditor.Theme;
 import org.json.JSONObject;
 import view.EndGameAlert;
 import view.GamePausedAlert;
@@ -40,11 +41,15 @@ public class GameController {
     private Controller controller;
     private GameView gameView;
     private Level level;
+    /** tick duration in seconds */
+    public static double tickDuration = 0.2;
     private Timeline timeline;
     private EscapeButtonHandler handler;
     private AI robot;
     private boolean robotActive;
     private List<Media> audios;
+    private List<Theme> themes;
+    private int themeIndex = 0;
     private int audioIndex =-1;
     private MediaPlayer player;
 
@@ -59,9 +64,16 @@ public class GameController {
         this.addDragEvent();
         this.addPauseResumeGameEvents();
         this.addStopAudioEvent();
+        this.addThemeChangeEvent();
         this.initAudios();
         this.startAudio();
+        themes = this.controller.getThemes();
+        setNextTheme();
+    }
 
+    private void setNextTheme() {
+        Theme theme = getNextTheme();
+        this.gameView.setNewTheme(theme);
     }
 
     private void robotize(boolean activate) {
@@ -79,6 +91,16 @@ public class GameController {
             }
 
         }
+    }
+
+    private Theme getNextTheme(){
+        if(themes!=null){
+            Theme returnTheme = themes.get(themeIndex);
+            themeIndex = (themeIndex==themes.size()-1) ? 0 : themeIndex+1;
+            return returnTheme;
+        }
+        return null;
+
     }
 
     private Media getNextClip(){
@@ -119,7 +141,6 @@ public class GameController {
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
-            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
             this.updateTimerLabel(this.level.getPropertyValue(Property.TICKS));
             this.updateSandUhr(this.level.getPropertyValue(Property.TICKS));
             this.updateMedalInfo();
@@ -134,7 +155,9 @@ public class GameController {
             this.level.execPreRules();
             this.level.executeMainRules();
             this.level.execPostRules();
-            this.level.checkLosing();
+            if (this.level.getWinningStatus() == WinningStatus.PLAYING) {
+                this.level.checkLosing();
+            }
 
             this.level.setInputDirection(null);
             this.gameView.update();
@@ -152,7 +175,7 @@ public class GameController {
             }
         };
 
-        KeyFrame frame = new KeyFrame(Duration.seconds(1.0 / 5.0), loop);
+        KeyFrame frame = new KeyFrame(Duration.seconds(GameController.tickDuration), loop);
         this.timeline = new Timeline(frame);
         this.timeline.setCycleCount(Timeline.INDEFINITE);
         this.timeline.play();
@@ -161,8 +184,8 @@ public class GameController {
 
     private void updateTimerLabel(Integer currentTick){
         Label timer = this.gameView.getTimerLabel();
-        Integer maxSecs = this.level.getTickGoals()[0]/5;
-        int currentSec = (currentTick/5);
+        Integer maxSecs = (int) (this.level.getTickGoals()[0]*GameController.tickDuration);
+        int currentSec = (int) (currentTick*GameController.tickDuration);
         int timeLeft = maxSecs - currentSec;
         timer.setText("Time Left: "+timeLeft);
 
@@ -208,8 +231,8 @@ public class GameController {
     }
 
     private void updateSandUhr(Integer currentTick){
-        double maxSec = (double) this.level.getTickGoals()[0]/5;
-        double currentSec = (double) currentTick/5;
+        double maxSec = this.level.getTickGoals()[0]*GameController.tickDuration;
+        double currentSec = currentTick*GameController.tickDuration;
         double timePast = currentSec/maxSec;
 
         if(timePast >=0.3){
@@ -271,6 +294,15 @@ public class GameController {
         });
     }
 
+    private void addThemeChangeEvent(){
+        Stage gameStage = this.gameView.getStage();
+        gameStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if(event.getCode().equals(KeyCode.T)){
+                setNextTheme();
+            }
+        });
+    }
+
 
     private void addPauseResumeGameEvents() {
         Stage gameStage = this.gameView.getStage();
@@ -312,7 +344,7 @@ public class GameController {
 
         if (this.level.getWinningStatus() == WinningStatus.WON) {
             endGameAlert.setHeaderText("You successfully completed the level \"" + this.level.getName() + "\". Hooray!");
-            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton());
+            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton(),endGameAlert.getCancelExitButton());
 
         } else if(this.level.getWinningStatus() == WinningStatus.LOST) {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");

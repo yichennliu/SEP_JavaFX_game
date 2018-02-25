@@ -40,7 +40,7 @@ public class EndGameAlert extends Alert {
         dialogPane.setGraphic(stackPane);
 
         retryButton = new ButtonType("Restart level", ButtonBar.ButtonData.OTHER);
-        cancelExitButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        cancelExitButton = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
         nextLevelButton = new ButtonType("Next Level", ButtonBar.ButtonData.OTHER);
 
         this.getButtonTypes().setAll(
