@@ -1,7 +1,11 @@
 package model.misc;
 
+import model.themeEditor.Theme;
+import model.themeEditor.ThemeIO;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,13 +29,18 @@ public class UsefulMethods {
 
     public static List<String> scanSavegameDirectory(){
         List<String> savegameDir = scanDir("src/json/savegame");
-        Iterator<String> it = savegameDir.iterator();
+        removeFromListByExtension(".json",savegameDir);
+        return savegameDir;
+    }
+
+    /*Removes all Elemnts from list that do not match provided extension*/
+    private static void removeFromListByExtension(String extension, List<String> list){
+        Iterator<String> it = list.iterator();
         while(it.hasNext()){
             String path = it.next();
-            String extension = path.substring(path.lastIndexOf("."));
-            if(!extension.equals(".json")) it.remove();
+            String currentExt = path.substring(path.lastIndexOf("."));
+            if(!currentExt.equals(extension)) it.remove();
         }
-        return savegameDir;
     }
 
     private static List<String> scanDir(String path){
@@ -40,5 +49,23 @@ public class UsefulMethods {
             returnList.add(filename);
         }
         return returnList;
+    }
+
+    public static List<Theme> scanThemeDirectory() {
+        List<String> paths = scanDir("src/json/theme");
+        List<Theme> resultList = new ArrayList<>();
+        if(paths!=null){
+            removeFromListByExtension(".zip",paths);
+        }
+        for(String path: paths){
+            try {
+                Theme theme = ThemeIO.importTheme("src/json/theme/"+path);
+                resultList.add(theme);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return resultList;
+
     }
 }

@@ -144,4 +144,8 @@ public class Board {
     public double getFieldSize() {
         return fieldSize;
     }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
 }

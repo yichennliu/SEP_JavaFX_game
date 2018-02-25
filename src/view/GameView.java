@@ -48,7 +48,6 @@ public class GameView {
 
     public GameView(Stage stage, Level level) {
         root = new Group();
-
         this.sceneGame = new Scene(this.root);
         this.stage = stage;
         this.width = stage.getWidth();
@@ -111,8 +110,13 @@ public class GameView {
         board.stopAnimation();
         View.drawBoard(this.board, level.getMap(), this.theme, true);
         this.showCollectedGems();
-
     }
+
+    public void setNewTheme(Theme theme){
+        this.theme = theme;
+        this.board.setTheme(theme);
+    }
+
 
     /*if ME is at the edge of the viewport, a new translation will be set (starts indirectly tranlsation transition)*/
     private void scrollToMe() {
@@ -245,7 +249,6 @@ public class GameView {
     }
 
     public void setCurrentSandUhr(SandUhr sandUhrType) {
-
         switch (sandUhrType) {
             case RED:
                 this.timerIcons.setImage(SandUhr.RED.getSandUhrImage());
@@ -257,22 +260,18 @@ public class GameView {
                 this.timerIcons.setImage(SandUhr.YELLOW.getSandUhrImage());
                 break;
         }
-
     }
 
     public void createPauseGameIcon() {
-
         final Image pauseIcon = new Image(GameView.class.getResourceAsStream("images/Paused.png"));
         this.gamePauseIcon.setImage(pauseIcon);
         this.gamePauseIcon.setFitHeight(30);
         this.gamePauseIcon.setFitWidth(30);
         this.timeRewardInfo.getChildren().addAll(gamePauseIcon);
-
     }
 
     public void removePauseGameIcon(){
         this.timeRewardInfo.getChildren().remove(this.gamePauseIcon);
-
     }
 
     public Label getRestGem(){
@@ -282,18 +281,4 @@ public class GameView {
     public Label getRestTicks(){
         return this.restTicks;
     }
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
