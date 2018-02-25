@@ -1,13 +1,11 @@
 package model.misc;
 
+import model.game.MedalStatus;
 import model.themeEditor.Theme;
 import model.themeEditor.ThemeIO;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class UsefulMethods {
 
@@ -67,5 +65,13 @@ public class UsefulMethods {
         }
         return resultList;
 
+    }
+
+    public static int getPoints(Map<String, MedalStatus> medalStatuses) {
+        int result =  0;
+        for(Map.Entry<String,MedalStatus> entry: medalStatuses.entrySet()){
+            result = result + entry.getValue().getPoints();
+        }
+        return result;
     }
 }

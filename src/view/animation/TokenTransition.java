@@ -111,7 +111,6 @@ public class TokenTransition extends javafx.animation.Transition {
                     gc.drawImage(image,posX,posY,fieldSize,fieldSize);
                 }
                 else{
-                    System.out.println("No Image!!!!");
                     gc.setFill(Color.WHITE);
                     gc.fillText('■'+"",posX+fieldSize/2,posY+fieldSize/2);
                     gc.setFill(Color.BLACK);

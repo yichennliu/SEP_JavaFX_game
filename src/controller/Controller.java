@@ -65,9 +65,7 @@ public class Controller {
             menuView = new MenuView(this.view.getStage(),menuController.getMedalStatuses());
             menuController.setMenuView(menuView);
             menuController.update();
-
         }
-
         this.view.update(View.Mode.MENU,menuView);
     }
 
@@ -87,10 +85,11 @@ public class Controller {
     }
 
 
-    public void startLevel(String levelPath){
+    public boolean startLevel(String levelPath){
         this.currentMode = View.Mode.GAME;
 
         Level level = LevelFactory.importLevel(levelPath);
+        if(level.getDifficulty()>UsefulMethods.getPoints(this.menuController.getMedalStatuses())) return false;
         GameView gameView = new GameView(this.view.getStage(),level);
 
         if(gameController == null){
@@ -106,13 +105,15 @@ public class Controller {
 
         this.view.update(View.Mode.GAME, gameController.getGameView());
         gameController.tick();
-
+        return true;
     }
 
 
     public void startNextLevel(){
+        levelList = UsefulMethods.scanLevelDirectory();
         currentLevelIndex = (currentLevelIndex==levelList.size()-1) ? 0 : currentLevelIndex+1;
-        this.startLevel("src/json/level/"+levelList.get(currentLevelIndex));
+        if(!this.startLevel("src/json/level/"+levelList.get(currentLevelIndex)))
+            this.startMenu();
 
     }
 

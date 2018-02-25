@@ -1,39 +1,335 @@
 {
-  "gems":[4,6,8],
-  "height":13,
-  "name":"Labyrinth",
-  "ticks":[1400,600,300],
-  "width":15,
-  "post":[
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"*", "values":{"A":1, "GEMS":4}}],
-      "result":[{"token":"wall"}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"*", "values":{"B":1, "GEMS":6}}],
-      "result":[{"token":"mud", "values":{"B":0}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"*", "values":{"C":1, "GEMS":8}}],
-      "result":[{"token":"wall"}]
-    }
+    "gems": [
+        4,
+        6,
+        8
     ],
-  "map":[
-    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"],
-    ["wall", "mud", {"token":"mud", "values":{"A":1}}, "mud", "mud", "mud", "wall", "mud", {"token":"mud", "values":{"C":1}}, "mud", "mud", "mud", "wall", "gem", "wall"],
-    ["wall", "wall", "wall", "wall", "wall", "mud", "wall", "mud", "wall", "wall", {"token":"mud", "values":{"B":1}}, "wall", "wall", {"token":"mud", "values":{"A":1}}, "wall"],
-    ["wall", "mud", {"token":"mud", "values":{"A":1}}, "mud", "wall", "mud", "wall", "mud", "wall", "mud", "mud", "mud", "wall", "mud", "wall"],
-    ["wall", "mud", "wall", "mud", "wall", "mud", "wall", "mud", {"token":"mud", "values":{"A":1}}, "mud", "wall", "mud", "wall", "mud", "wall"],
-    ["wall", "gem", "wall", "mud", "me", "mud", "mud", "mud", {"token":"mud", "values":{"A":1}}, "mud", "wall", "mud", "wall", "mud", "wall"],
-    ["wall", "mud", "wall", "mud", "wall", "wall", "wall", "wall", "wall", "mud", "wall", "gem", "gem", "gem", "wall"],
-    ["wall", "mud", {"token":"mud", "values":{"C":1}}, "mud", "wall", {"token":"mud", "values":{"C":1}}, {"token":"mud", "values":{"C":1}}, {"token":"mud", "values":{"C":1}}, "wall", "mud", "wall", "wall", "wall", "wall", "wall"],
-    ["wall", "wall", "wall", "wall", "wall", "mud", {"token":"mud", "values":{"B":1}}, "mud", "wall", "mud", "mud", "mud", "mud", "mud", "wall"],
-    ["wall", "mud", "mud", "mud", "wall", "mud", {"token":"mud", "values":{"B":1}}, "mud", "wall", "wall", "wall", "wall", {"token":"wall", "values":{"A":1, "B":1}}, "mud", "wall"],
-    ["wall", "mud", {"token":"gem", "values":{"A":1}}, "mud", "wall", "mud", "wall", "mud", "mud", "mud", {"token":"gem", "values":{"A":1}}, "gem", "mud", "mud", "wall"],
-    ["wall", "mud", "mud", "mud", "mud", "mud", "wall", "mud", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
-    ["wall", "wall", "wall", "wall", "wall", "exit", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"]
-    ]
+    "post": [
+        {
+            "result": [{"token": "wall"}],
+            "original": [{
+                "values": {
+                    "A": 1,
+                    "GEMS": 4
+                },
+                "token": "*"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {"B": 0},
+                "token": "mud"
+            }],
+            "original": [{
+                "values": {
+                    "GEMS": 6,
+                    "B": 1
+                },
+                "token": "*"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{"token": "wall"}],
+            "original": [{
+                "values": {
+                    "GEMS": 8,
+                    "C": 1
+                },
+                "token": "*"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        }
+    ],
+    "ticks": [
+        1400,
+        600,
+        300
+    ],
+    "values": {},
+    "name": "Labyrinth",
+    "width": 15,
+    "jsonPath": "src/json/level/labyrinth.json",
+    "map": [
+        [
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall"
+        ],
+        [
+            "wall",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            "mud",
+            "mud",
+            "mud",
+            "wall",
+            "mud",
+            {
+                "values": {"c": 1},
+                "token": "mud"
+            },
+            "mud",
+            "mud",
+            "mud",
+            "wall",
+            "gem",
+            "wall"
+        ],
+        [
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "mud",
+            "wall",
+            "mud",
+            "wall",
+            "wall",
+            {
+                "values": {"b": 1},
+                "token": "mud"
+            },
+            "wall",
+            "wall",
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            "wall"
+        ],
+        [
+            "wall",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            "mud",
+            "wall",
+            "mud",
+            "wall",
+            "mud",
+            "wall",
+            "mud",
+            "mud",
+            "mud",
+            "wall",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "mud",
+            "wall",
+            "mud",
+            "wall",
+            "mud",
+            "wall",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            "mud",
+            "wall",
+            "mud",
+            "wall",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "gem",
+            "wall",
+            "mud",
+            "me",
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            "mud",
+            "wall",
+            "mud",
+            "wall",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "mud",
+            "wall",
+            "mud",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "mud",
+            "wall",
+            "gem",
+            "gem",
+            "gem",
+            "wall"
+        ],
+        [
+            "wall",
+            "mud",
+            {
+                "values": {"c": 1},
+                "token": "mud"
+            },
+            "mud",
+            "wall",
+            {
+                "values": {"c": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"c": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"c": 1},
+                "token": "mud"
+            },
+            "wall",
+            "mud",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall"
+        ],
+        [
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "mud"
+            },
+            "mud",
+            "wall",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "mud",
+            "mud",
+            "mud",
+            "wall",
+            "mud",
+            {
+                "values": {"b": 1},
+                "token": "mud"
+            },
+            "mud",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            {
+                "values": {
+                    "a": 1,
+                    "b": 1
+                },
+                "token": "wall"
+            },
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "gem"
+            },
+            "mud",
+            "wall",
+            "mud",
+            "wall",
+            "mud",
+            "mud",
+            "mud",
+            {
+                "values": {"a": 1},
+                "token": "gem"
+            },
+            "gem",
+            "mud",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "wall",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "exit",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall"
+        ]
+    ],
+    "height": 13
 }

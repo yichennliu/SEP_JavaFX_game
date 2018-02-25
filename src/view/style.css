@@ -1,28 +1,26 @@
  #menuLeftButtons  {
 
-            -fx-padding: 15 30 15 30;
-            -fx-spacing: 150;
-            -fx-font-size: 17px;
-            -fx-font-weight: bold;
-            -fx-background-insets: 0,1,4,5,6;
-             -fx-background-radius: 9,8,5,4,3;
-
+    -fx-padding: 15 30 15 30;
+    -fx-spacing: 150;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-background-insets: 0,1,4,5,6;
+     -fx-background-radius: 9,8,5,4,3;
         }
-
 
 .button , .toggle-button{
 
   -fx-background-color:
-               linear-gradient(#000000 0%, #232723 25%, #373837 75%, #262d38 100%),
-               linear-gradient(#9d9e9d 0%, #6b6a6b 20%, #343534 80%, #00102b 100%), //in der mitte
-              linear-gradient(#000000 0%, #606060 0%, #505250 3%,#010711 100%);
-              -fx-text-fill: #f7d7aa;
-               -fx-font-family: "Helvetica";
-                -fx-font-size: 12px;
-               -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);
-
-
+       linear-gradient(#000000 0%, #232723 25%, #373837 75%, #262d38 100%),
+       linear-gradient(#9d9e9d 0%, #6b6a6b 20%, #343534 80%, #00102b 100%), //in der mitte
+      linear-gradient(#000000 0%, #606060 0%, #505250 3%,#010711 100%);
+      -fx-text-fill: #f7d7aa;
+       -fx-font-family: "Helvetica";
+        -fx-font-size: 12px;
+       -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);
 }
+
+
  .button:hover ,.toggle-button:hover {
         -fx-background-color:#ffab32;
         -fx-scale-x: 1.1;
@@ -91,21 +89,13 @@
 }
 
 
-.tree-view .scroll-bar:vertical{ -fx-background-color: transparent;
+.tree-view .scroll-bar:vertical{
                                 -fx-background-color: #ffab32;
                                                                 }
 
- .tree-view:focused {
-        -fx-background-color: #ffab32;
-        -fx-focus-color :#ffab32;
-        -fx-control-inner-background:#020d1e;
-         -fx-text-fill:  #ffab32;
-        -fx-background-insets: -1.4, 0, 1;
-        -fx-background-radius: 1.4, 0, 0;
 
-        }
 .tree-view .tree-cell{-fx-background-color: #ffab32; }
-.text-field{  -fx-background-color:#2e353f;
+.text-field{  -fx-background-color:#2e353f; -fx-text-fill:white;
 
 }
 
@@ -124,9 +114,6 @@
  -fx-border-color: red ;
  -fx-border-width: 2px ;
 }
-
-
-
 
 .table-view{
    -fx-background-color: #ffab32;

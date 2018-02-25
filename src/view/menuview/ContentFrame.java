@@ -1,4 +1,4 @@
-package view;
+package view.menuview;
 /**
  * Created by aidabakhtiari on 09.02.18.
  */
@@ -56,14 +56,13 @@ public class ContentFrame extends StackPane {
         this.heightLinks=menuView.getHeight();
         this.gameButton = createButton("S T A R T");
         this.chooseLevelButton = createButton("L E V E L S");
-        this.loadtheme = createButton(" L O A D - T H E M E");
         this.themeEditorButton = createButton(" T H E M E - E D I T O R");
         this.helpbutton = createButton("H E L P");
         this.close = createButton("C L O S E ");
         this.levelEditorButton = createButton("L E V E L - E D I T O R");
         this.savedGameButton = createButton("L O A D  G A M E ");
 
-        menuVboxlinks = new VBox(15, gameButton, chooseLevelButton, savedGameButton, loadtheme, themeEditorButton, levelEditorButton, helpbutton, close);
+        menuVboxlinks = new VBox(15, gameButton, chooseLevelButton, savedGameButton,themeEditorButton, levelEditorButton, helpbutton, close);
         menuVboxlinks.setMinSize((widthLinks / 2), heightLinks);
         menuVboxlinks.setMaxSize((widthLinks / 2), heightLinks);
         menuVboxlinks.setAlignment(Pos.CENTER);
@@ -168,9 +167,14 @@ public class ContentFrame extends StackPane {
         } catch (Exception e) {
             System.out.println("Theme not found / corrupt file");
         }
+        int points = UsefulMethods.getPoints(menuView.getMedalStatuses());
+
         for (String path : UsefulMethods.scanLevelDirectory()) {
-            Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/level/" + path));
             Level level = LevelFactory.importLevel("src/json/level/" + path);
+            if(points<level.getDifficulty()) continue;
+
+            Image snapshot = LevelSnapshot.snap(theme, level);
+
             ImageView snapshotview = new ImageView(snapshot);
             String description ="benötigte      Edelsteine / Zeit (Sekunden)\n" +
                         "Bronze:         "+level.getGemGoals()[0]+" / "+(int) (level.getTickGoals()[0]* GameController.tickDuration) +

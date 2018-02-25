@@ -129,6 +129,20 @@ public class LevelEditorController {
             this.exit();
         });
 
+        levelEditorView.getDifficultInputField().textProperty().addListener((a,b,c) -> {
+            if(c!=null){
+                Integer difficulty =stringToInteger(c);
+                if(difficulty!=null){
+                    if(difficulty>=0){
+                        this.editor.setDifficulty(difficulty);
+                        levelEditorView.getDifficultInputField().setStyle("-fx-text-fill:black");
+                        return;
+                    }
+                }
+                levelEditorView.getDifficultInputField().setStyle("-fx-text-fill:red");
+            }
+        });
+
         levelEditorView.getCropButton().setOnAction(e -> {
             TextField rowInput =levelEditorView.getColInput();
             TextField colInput = levelEditorView.getRowInput();

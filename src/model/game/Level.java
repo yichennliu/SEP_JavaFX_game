@@ -657,4 +657,9 @@ public class Level {
         this.map = map;
         setNeighbours();
     }
+
+    public void setDifficulty(int difficulty) {
+        if(difficulty<0) difficulty=0;
+        this.difficulty = difficulty;
+    }
 }

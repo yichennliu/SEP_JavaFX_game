@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import model.game.MedalStatus;
+import view.menuview.ContentFrame;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -20,7 +21,7 @@ public class MenuView {
     private String stylesheet;
     private List<ToggleButton> levelButtons;
     private BorderPane root;
-    private view.ContentFrame contentFrame;
+    private ContentFrame contentFrame;
     private double width;
     private double height;
 
@@ -31,13 +32,14 @@ public class MenuView {
         this.width= stage.getWidth();
         this.height= stage.getHeight();
         this.medalStatuses = medalStatuses;
-        contentFrame = new view.ContentFrame(width,height,this);
+        contentFrame = new ContentFrame(width,height,this);
         VBox vMenu= new VBox(contentFrame);
         this.levelButtons = new ArrayList<>();
         root.getChildren().addAll(vMenu);
         if (!stage.isShowing()) stage.show();
         this.stylesheet = fileToStylesheetString(new File("src/view/style.css"));
         sceneMenu.getStylesheets().add(stylesheet);
+        System.out.println("Neue MEnuView, Größe der Map: " + medalStatuses.size() + " " + medalStatuses);
         root.getStyleClass().add("borderPane");
     }
 
@@ -45,7 +47,7 @@ public class MenuView {
         return this.sceneMenu;
     }
 
-    public view.ContentFrame getContentFrame() {
+    public ContentFrame getContentFrame() {
         return contentFrame;
     }
 
