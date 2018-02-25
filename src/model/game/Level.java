@@ -123,19 +123,18 @@ public class Level {
      */
 
     public Medal getCurrentMedal() {
-        if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[2]
-                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[2]) {
-            return Medal.GOLD;
-        } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[1]
-                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[1]) {
-            return Medal.SILVER;
-        } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[0]
-                && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[0]) {
-            return Medal.BRONZE;
-        } else {
-            return null;
-        }
-
+            if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[2]
+                    && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[2]) {
+                return Medal.GOLD;
+            } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[1]
+                    && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[1]) {
+                return Medal.SILVER;
+            } else if (this.getPropertyValue(Property.GEMS) >= this.getGemGoals()[0]
+                    && this.getPropertyValue(Property.TICKS) <= this.getTickGoals()[0]) {
+                return Medal.BRONZE;
+            } else {
+                return null;
+            }
     }
 
 
