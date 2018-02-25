@@ -13,11 +13,7 @@ import org.json.JSONTokener;
 import view.*;
 import view.levelEditor.LevelEditorView;
 import view.themeEditor.ThemeEditorView;
-
-import javax.jws.soap.SOAPBinding;
-import java.io.File;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +30,7 @@ public class Controller {
     private int currentLevelIndex =0;
 
 
-    public Controller(View view, Object model) { // Todo: ControllerModel
+    public Controller(View view, Object model) {
         Image icon = null;
         view.getStage().getIcons().add(new Image("main/icon.png"));
         this.view = view;
@@ -59,18 +55,17 @@ public class Controller {
 
     public void startMenu(){
         this.currentMode = View.Mode.MENU;
-        Map<String, MedalStatus> medalStatusMap = this.importMedalStatuses();
-        MenuView menuView = new MenuView(this.view.getStage(),medalStatusMap);
         view.getStage().setTitle("Boulderdash");
-
+        MenuView menuView = null;
         if (menuController == null) {
+            Map<String, MedalStatus> medalStatusMap = this.importMedalStatuses();
+            menuView = new MenuView(this.view.getStage(),medalStatusMap);
             menuController = new MenuController(menuView, medalStatusMap,this);
         } else {
+            menuView = new MenuView(this.view.getStage(),menuController.getMedalStatuses());
             menuController.setMenuView(menuView);
             menuController.update();
-
         }
-
         this.view.update(View.Mode.MENU,menuView);
     }
 
@@ -90,10 +85,11 @@ public class Controller {
     }
 
 
-    public void startLevel(String levelPath){
+    public boolean startLevel(String levelPath){
         this.currentMode = View.Mode.GAME;
 
         Level level = LevelFactory.importLevel(levelPath);
+        if(level.getDifficulty()>UsefulMethods.getPoints(this.menuController.getMedalStatuses())) return false;
         GameView gameView = new GameView(this.view.getStage(),level);
 
         if(gameController == null){
@@ -109,18 +105,19 @@ public class Controller {
 
         this.view.update(View.Mode.GAME, gameController.getGameView());
         gameController.tick();
-
+        return true;
     }
 
 
     public void startNextLevel(){
+        levelList = UsefulMethods.scanLevelDirectory();
         currentLevelIndex = (currentLevelIndex==levelList.size()-1) ? 0 : currentLevelIndex+1;
-        this.startLevel("src/json/level/"+levelList.get(currentLevelIndex));
+        if(!this.startLevel("src/json/level/"+levelList.get(currentLevelIndex)))
+            this.startMenu();
 
     }
 
-    /**
-     * @return saved Medal statuses, an empty map otherwise
+    /**     * @return saved Medal statuses, an empty map otherwise
      */
     private Map<String, MedalStatus> importMedalStatuses() {
         Map<String, MedalStatus> medalStatuses = new HashMap<>();

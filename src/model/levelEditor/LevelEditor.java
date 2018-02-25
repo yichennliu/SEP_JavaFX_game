@@ -26,6 +26,7 @@ public class LevelEditor {
     private Token currentToken;
     private Map<Property,Integer> props;
     private List<Rule> pre,post;
+
     public enum Mode {BRUSH,SELECT};
     private Mode mode = BRUSH;
 
@@ -33,7 +34,7 @@ public class LevelEditor {
         this.map = new Feld[height][width];
 
         try {
-            this.theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+            this.theme = ThemeIO.importTheme("src/json/theme/BoulderdashDefault.zip");
         }
         catch(Exception e){
             this.theme = null;
@@ -45,7 +46,7 @@ public class LevelEditor {
         this.pre = new ArrayList<>();
         this.post = new ArrayList<>();
         this.props = new HashMap<>();
-        this.level = new Level(null,map,gemGoals,timeGoals,pre,post,null,props,null);
+        this.level = new Level(null,map,gemGoals,timeGoals,pre,post,null,props, 0,null);
     }
 
     public void resetLevel(Level level){
@@ -89,6 +90,10 @@ public class LevelEditor {
         }
     }
 
+    public void setDifficulty(int difficulty) {
+        this.level.setDifficulty(difficulty);
+    }
+
     public void setMode(Mode mode){
         this.mode = mode;
     }
@@ -122,5 +127,6 @@ public class LevelEditor {
 
     public void setName(String name) {
         this.level.setName(name);
+        this.level.setJSONPath("src/json/level"+level.getName()+".json");
     }
 }

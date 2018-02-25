@@ -1,76 +1,651 @@
 {
-  "gems":[7,14,21],
-  "height":15,
-  "name":"Spiegelgeist",
-  "ticks":[750,300,160],
-  "width":15,
-  "pre":[
-    { "situation":"right",
-      "direction":"west",
-      "original":[{"token":"ghostling"},{"token":["mud", "path"]}],
-      "result":[{"token":"mud"},{"token":"ghostling", "values":{"moved":1}}]
-    },
-    { "situation":"left",
-      "direction":"east",
-      "original":[{"token":"ghostling"},{"token":["mud", "path"]}],
-      "result":[{"token":"mud"},{"token":"ghostling", "values":{"moved":1}}]
-    },
-    { "situation":"up",
-      "direction":"north",
-      "original":[{"token":"ghostling"},{"token":["mud", "path"]}],
-      "result":[{"token":"mud"},{"token":"ghostling", "values":{"moved":1}}]
-    },
-    { "situation":"down",
-      "direction":"south",
-      "original":[{"token":"ghostling"},{"token":["mud", "path"]}],
-      "result":[{"token":"mud"},{"token":"ghostling", "values":{"moved":1}}]
-    },
-    { "situation":"right",
-      "direction":"west",
-      "original":[{"token":"ghostling", "values":{"moved":0}},{"token":"sand"},{"token":"mud"}],
-      "result":[{"token":"mud"},{"token":"ghostling", "values":{"moved":1}},{"token":"sand"}]
-    },
-    { "situation":"left",
-      "direction":"east",
-      "original":[{"token":"ghostling", "values":{"moved":0}},{"token":"sand"},{"token":"mud"}],
-      "result":[{"token":"mud"},{"token":"ghostling", "values":{"moved":1}},{"token":"sand"}]
-    },
-    { "situation":"any",
-      "direction":"south",
-      "original":[{"token":["me", "ghostling"]},{"token":"norththing"}],
-      "result":[{"token":"0"},{"token":"1", "values":{"X":1}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"*", "values":{"A":1, "X":1}}],
-      "result":[{"token":"gem", "values":{"Y":1}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"*", "values":{"Y":1}}],
-      "result":[{"token":"0", "values":{"X":0, "Y":0}}]
-    },
-    { "situation":"any",
-      "direction":"east",
-      "original":[{"token":"*", "values":{"gems":30}}],
-      "result":[{"token":"ghostling"}]
-    }
+    "difficulty": 3,
+    "pre": [
+        {
+            "result": [
+                {"token": "mud"},
+                {
+                    "values": {"MOVED": 1},
+                    "token": "ghostling"
+                }
+            ],
+            "original": [
+                {"token": "ghostling"},
+                {"token": [
+                    "mud",
+                    "path"
+                ]}
+            ],
+            "sparsity": 0,
+            "situation": "right",
+            "direction": "west"
+        },
+        {
+            "result": [
+                {"token": "mud"},
+                {
+                    "values": {"MOVED": 1},
+                    "token": "ghostling"
+                }
+            ],
+            "original": [
+                {"token": "ghostling"},
+                {"token": [
+                    "mud",
+                    "path"
+                ]}
+            ],
+            "sparsity": 0,
+            "situation": "left",
+            "direction": "east"
+        },
+        {
+            "result": [
+                {"token": "mud"},
+                {
+                    "values": {"MOVED": 1},
+                    "token": "ghostling"
+                }
+            ],
+            "original": [
+                {"token": "ghostling"},
+                {"token": [
+                    "mud",
+                    "path"
+                ]}
+            ],
+            "sparsity": 0,
+            "situation": "up",
+            "direction": "north"
+        },
+        {
+            "result": [
+                {"token": "mud"},
+                {
+                    "values": {"MOVED": 1},
+                    "token": "ghostling"
+                }
+            ],
+            "original": [
+                {"token": "ghostling"},
+                {"token": [
+                    "mud",
+                    "path"
+                ]}
+            ],
+            "sparsity": 0,
+            "situation": "down",
+            "direction": "south"
+        },
+        {
+            "result": [
+                {"token": "mud"},
+                {
+                    "values": {"MOVED": 1},
+                    "token": "ghostling"
+                },
+                {"token": "sand"}
+            ],
+            "original": [
+                {
+                    "values": {"MOVED": 0},
+                    "token": "ghostling"
+                },
+                {"token": "sand"},
+                {"token": "mud"}
+            ],
+            "sparsity": 0,
+            "situation": "right",
+            "direction": "west"
+        },
+        {
+            "result": [
+                {"token": "mud"},
+                {
+                    "values": {"MOVED": 1},
+                    "token": "ghostling"
+                },
+                {"token": "sand"}
+            ],
+            "original": [
+                {
+                    "values": {"MOVED": 0},
+                    "token": "ghostling"
+                },
+                {"token": "sand"},
+                {"token": "mud"}
+            ],
+            "sparsity": 0,
+            "situation": "left",
+            "direction": "east"
+        },
+        {
+            "result": [
+                {"token": "0"},
+                {
+                    "values": {"X": 1},
+                    "token": "1"
+                }
+            ],
+            "original": [
+                {"token": [
+                    "me",
+                    "ghostling"
+                ]},
+                {"token": "norththing"}
+            ],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "south"
+        },
+        {
+            "result": [{
+                "values": {"Y": 1},
+                "token": "gem"
+            }],
+            "original": [{
+                "values": {
+                    "X": 1,
+                    "A": 1
+                },
+                "token": "*"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{
+                "values": {
+                    "X": 0,
+                    "Y": 0
+                },
+                "token": "0"
+            }],
+            "original": [{
+                "values": {"Y": 1},
+                "token": "*"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        },
+        {
+            "result": [{"token": "ghostling"}],
+            "original": [{
+                "values": {"GEMS": 30},
+                "token": "*"
+            }],
+            "sparsity": 0,
+            "situation": "any",
+            "direction": "east"
+        }
     ],
-  "map":[
-    ["wall", "wall", "wall", "wall", "exit", "wall", "wall", "wall", "wall", "wall", "exit", "wall", "wall", "wall", "wall"],
-    ["wall", "path", "path", "path", "path", "path", "path", "wall", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
-    ["wall", "path", "path", "path", "path", "path", "path", "wall", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
-    ["wall", "path", "path", "path", "path", "path", "path", "wall", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
-    ["wall", "path", "path", "path", "ghostling", "path", "path", "wall", "mud", "mud", "me", "mud", "mud", "mud", "wall"],
-    ["wall", "path", "path", "path", "path", "path", "path", "wall", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
-    ["wall", "path", "path", "path", "path", "sand", "path", "wall", "mud", "stone", "mud", "mud", "mud", "mud", "wall"],
-    ["wall", "path", "path", "path", "path", "path", "path", "wall", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
-    ["wall", "path", "path", "path", "path", "path", "path", "wall", "mud", "mud", "mud", "mud", "mud", "mud", "wall"],
-    ["wall", {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, "wall"],
-    ["wall", {"token":"path", "values":{"A":1}}, {"token":"sand", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"stone", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, "wall"],
-    ["wall", {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, "wall"],
-    ["wall", {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"path", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, {"token":"mud", "values":{"A":1}}, "wall"],
-    ["wall", {"token":"wall", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"norththing", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"norththing", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, {"token":"wall", "values":{"A":1}}, "wall"],
-    ["wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall", "wall"]
-    ]
+    "gems": [
+        7,
+        14,
+        21
+    ],
+    "ticks": [
+        750,
+        300,
+        160
+    ],
+    "values": {},
+    "name": "Spiegelgeist",
+    "width": 15,
+    "jsonPath": "src/json/level/spiegelgeist.json",
+    "map": [
+        [
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "exit",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "exit",
+            "wall",
+            "wall",
+            "wall",
+            "wall"
+        ],
+        [
+            "wall",
+            "path",
+            "path",
+            "path",
+            "path",
+            "path",
+            "path",
+            "wall",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "path",
+            "path",
+            "path",
+            "path",
+            "path",
+            "path",
+            "wall",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "path",
+            "path",
+            "path",
+            "path",
+            "path",
+            "path",
+            "wall",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "path",
+            "path",
+            "path",
+            "ghostling",
+            "path",
+            "path",
+            "wall",
+            "mud",
+            "mud",
+            "me",
+            "mud",
+            "mud",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "path",
+            "path",
+            "path",
+            "path",
+            "path",
+            "path",
+            "wall",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "path",
+            "path",
+            "path",
+            "path",
+            "sand",
+            "path",
+            "wall",
+            "mud",
+            "stone",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "path",
+            "path",
+            "path",
+            "path",
+            "path",
+            "path",
+            "wall",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            "path",
+            "path",
+            "path",
+            "path",
+            "path",
+            "path",
+            "wall",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "mud",
+            "wall"
+        ],
+        [
+            "wall",
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            "wall"
+        ],
+        [
+            "wall",
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "sand"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "stone"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            "wall"
+        ],
+        [
+            "wall",
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            "wall"
+        ],
+        [
+            "wall",
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "path"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            {
+                "values": {"a": 1},
+                "token": "mud"
+            },
+            "wall"
+        ],
+        [
+            "wall",
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "norththing"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "norththing"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            {
+                "values": {"a": 1},
+                "token": "wall"
+            },
+            "wall"
+        ],
+        [
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall",
+            "wall"
+        ]
+    ],
+    "height": 15
 }

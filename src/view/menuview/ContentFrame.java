@@ -2,6 +2,8 @@ package view.menuview;
 /**
  * Created by aidabakhtiari on 09.02.18.
  */
+import controller.GameController;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -161,18 +163,23 @@ public class ContentFrame extends StackPane {
         levelVbox.setAlignment(Pos.TOP_CENTER);
         Theme theme = null;
         try {
-            theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+            theme = ThemeIO.importTheme("src/json/theme/BoulderdashDefault.zip");
         } catch (Exception e) {
             System.out.println("Theme not found / corrupt file");
         }
+        int points = UsefulMethods.getPoints(menuView.getMedalStatuses());
+
         for (String path : UsefulMethods.scanLevelDirectory()) {
-            Image snapshot = LevelSnapshot.snap(theme, LevelFactory.importLevel("src/json/level/" + path));
             Level level = LevelFactory.importLevel("src/json/level/" + path);
+            if(points<level.getDifficulty()) continue;
+
+            Image snapshot = LevelSnapshot.snap(theme, level);
+
             ImageView snapshotview = new ImageView(snapshot);
             String description ="benötigte      Edelsteine / Zeit (Sekunden)\n" +
-                        "Bronze:         "+level.getGemGoals()[0]+" / "+level.getTickGoals()[0]/5 +
-                          "\nSilber:           "+level.getGemGoals()[1]+" / "+level.getTickGoals()[1]/5
-                    +"\nGold:             "+level.getGemGoals()[2]+" / "+level.getTickGoals()[2]/5;
+                        "Bronze:         "+level.getGemGoals()[0]+" / "+(int) (level.getTickGoals()[0]* GameController.tickDuration) +
+                          "\nSilber:           "+level.getGemGoals()[1]+" / "+(int) (level.getTickGoals()[1]*GameController.tickDuration)
+                    +"\nGold:             "+level.getGemGoals()[2]+" / "+(int) (level.getTickGoals()[2]*GameController.tickDuration);
 
             LevelItem levelItem = new LevelItem(level.getName(), "",description, snapshotview, path, widthLinks/2-100,
                     heightLinks/5, this.getMedalImage(level.getJsonPath()));
@@ -187,7 +194,7 @@ public class ContentFrame extends StackPane {
         savedGameVbox.setAlignment(Pos.TOP_CENTER);
         Theme theme = null;
         try {
-            theme = ThemeIO.importTheme("src/json/theme/testTheme.zip");
+            theme = ThemeIO.importTheme("src/json/theme/BoulderdashDefault.zip");
         } catch (Exception e) {
             System.out.println("Theme not found / corrupt file");
         }
@@ -195,11 +202,12 @@ public class ContentFrame extends StackPane {
             Level level = LevelFactory.importLevel("src/json/savegame/" + path);
             Image snapshot = LevelSnapshot.snap(theme, level);
             ImageView snapshotview = new ImageView(snapshot);
-            String description ="Fortschritt:\n" +
-                    "Edelsteine: "+level.getPropertyValue(Property.GEMS) +
-                    "\nZeit: "+(level.getPropertyValue(Property.TICKS)/5) + " Sekunden";
+            String description ="benötigte      Edelsteine / Zeit(Sekunden)\n" +
+                    "Bronze:         "+level.getGemGoals()[0]+" / "+level.getTickGoals()[0]/5 +
+                    "\nSilber:           "+level.getGemGoals()[1]+" / "+level.getTickGoals()[1]/5
+                    +"\nGold:              "+level.getGemGoals()[2]+" /"+level.getTickGoals()[2]/5;
             LevelItem savedLevelItem = new LevelItem(level.getName(),"",description, snapshotview, path,
-                    widthLinks/2-100, heightLinks/5, new ArrayList<>());
+                    widthLinks/2-100, heightLinks/5, this.getMedalImage(level.getJsonPath()));
             listSavedGameButtons.add(savedLevelItem);
             savedGameVbox.getChildren().add(savedLevelItem);
         }

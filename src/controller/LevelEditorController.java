@@ -53,6 +53,7 @@ public class LevelEditorController {
             if(level!=null){
                 this.editor.resetLevel(level);
                 this.levelEditorView.reloadMap();
+                this.levelEditorView.getDifficultInputField().setText(Integer.toString(level.getDifficulty()));
                 this.levelEditorView.getNameInput().textProperty().setValue(level.getName());
                 if(level.whereAmI()!=null) this.meSet = true;
                 TextField[] gemInputs = this.levelEditorView.getGemInputs();
@@ -127,6 +128,20 @@ public class LevelEditorController {
 
         levelEditorView.getExitButton().setOnAction(e -> {
             this.exit();
+        });
+
+        levelEditorView.getDifficultInputField().textProperty().addListener((a,b,c) -> {
+            if(c!=null){
+                Integer difficulty =stringToInteger(c);
+                if(difficulty!=null){
+                    if(difficulty>=0){
+                        this.editor.setDifficulty(difficulty);
+                        levelEditorView.getDifficultInputField().setStyle("-fx-text-fill:black");
+                        return;
+                    }
+                }
+                levelEditorView.getDifficultInputField().setStyle("-fx-text-fill:red");
+            }
         });
 
         levelEditorView.getCropButton().setOnAction(e -> {
@@ -249,7 +264,6 @@ public class LevelEditorController {
             gemInput.textProperty().addListener( (a,b,c) -> {
                 Integer value = stringToInteger(c);
                 if(value!=null) {
-                    System.out.println(value + " " + x);
                     this.editor.setGemGoal(x,value);
                     gemInput.setStyle("-fx-text-fill:black");
                 }

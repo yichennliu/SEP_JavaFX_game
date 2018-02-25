@@ -35,9 +35,9 @@ public class MedalStatus {
     }
 
     public int getPoints(){
-        if(bronze) return 1;
-        if(silver) return 2;
         if(gold) return 3;
+        if(silver) return 2;
+        if(bronze) return 1;
         return 0;
     }
 }
