@@ -18,6 +18,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import main.LevelFactory;
 import model.enums.Medal;
+import model.enums.Property;
 import model.game.Level;
 import model.game.MedalStatus;
 import model.misc.LevelSnapshot;
@@ -43,6 +44,7 @@ public class ContentFrame extends StackPane {
     private final Font FONT = Font.font("", FontWeight.BOLD, 18);
     private final Font header = Font.font("", FontWeight.BOLD, 28);
     private Text gemInfo;
+    private GamePreview previewNode;
 
 
     public ContentFrame(double widthLinks, double heightLinks, MenuView menuView) {
@@ -130,10 +132,18 @@ public class ContentFrame extends StackPane {
        boolean visible = pane.isVisible();
        for(Node children:this.getChildren()){
            if(children==pane){
-               if(visible) children.setVisible(false);
-               else children.setVisible(true);
+               if(visible) {
+                   children.setVisible(false);
+                   previewNode.resumeGame();
+               }
+               else {
+                   children.setVisible(true);
+                   previewNode.pauseGame();
+               }
            }
-           else if(children!=menuVboxlinks && children!=welcomeVbox) children.setVisible(false);
+           else if(children!=menuVboxlinks && children!=welcomeVbox) {
+               children.setVisible(false);
+           }
        }
     }
 
@@ -185,12 +195,10 @@ public class ContentFrame extends StackPane {
             Level level = LevelFactory.importLevel("src/json/savegame/" + path);
             Image snapshot = LevelSnapshot.snap(theme, level);
             ImageView snapshotview = new ImageView(snapshot);
-            String levelText = "Medaillen: " + this.getMedalImage(level.getJsonPath());
-            String description ="benötigte      Edelsteine / Zeit(Sekunden)\n" +
-                    "Bronze:         "+level.getGemGoals()[0]+" / "+level.getTickGoals()[0]/5 +
-                    "\nSilber:           "+level.getGemGoals()[1]+" / "+level.getTickGoals()[1]/5
-                    +"\nGold:              "+level.getGemGoals()[2]+" /"+level.getTickGoals()[2]/5;
-            LevelItem savedLevelItem = new LevelItem(level.getName(),levelText,description, snapshotview, path,
+            String description ="Fortschritt:\n" +
+                    "Edelsteine: "+level.getPropertyValue(Property.GEMS) +
+                    "\nZeit: "+(level.getPropertyValue(Property.TICKS)/5) + " Sekunden";
+            LevelItem savedLevelItem = new LevelItem(level.getName(),"",description, snapshotview, path,
                     widthLinks/2-100, heightLinks/5, new ArrayList<>());
             listSavedGameButtons.add(savedLevelItem);
             savedGameVbox.getChildren().add(savedLevelItem);
@@ -204,7 +212,7 @@ public class ContentFrame extends StackPane {
         double size = widthLinks/2.5;
         double fieldSize = size/previewLevel.getWidth();
 
-        GamePreview previewNode = new GamePreview(size,size,fieldSize);
+        previewNode = new GamePreview(size,size,fieldSize);
         previewNode.playLevel(previewLevel);
 
         welcomeVbox= new VBox();

@@ -40,7 +40,7 @@ public class GamePausedAlert extends Alert {
         dialogPane.setGraphic(stackPane);
 
         saveButton = new ButtonType("Save", ButtonBar.ButtonData.OTHER);
-        exitButton = new ButtonType("Menu", ButtonBar.ButtonData.OTHER);
+        exitButton = new ButtonType("Exit", ButtonBar.ButtonData.OTHER);
         retryButton = new ButtonType("Restart", ButtonBar.ButtonData.OTHER);
         cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
