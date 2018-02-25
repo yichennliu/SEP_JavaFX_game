@@ -41,6 +41,8 @@ public class GameController {
     private Controller controller;
     private GameView gameView;
     private Level level;
+    /** tick duration in seconds */
+    public static double tickDuration = 0.2;
     private Timeline timeline;
     private EscapeButtonHandler handler;
     private AI robot;
@@ -151,7 +153,6 @@ public class GameController {
 
     public void tick() {
         EventHandler<ActionEvent> loop = e -> {
-            System.out.println("tick " + this.level.getPropertyValue(Property.TICKS));
             this.updateTimerLabel(this.level.getPropertyValue(Property.TICKS));
             this.updateSandUhr(this.level.getPropertyValue(Property.TICKS));
             this.updateMedalInfo();
@@ -186,7 +187,7 @@ public class GameController {
             }
         };
 
-        KeyFrame frame = new KeyFrame(Duration.seconds(1.0 / 5.0), loop);
+        KeyFrame frame = new KeyFrame(Duration.seconds(GameController.tickDuration), loop);
         this.timeline = new Timeline(frame);
         this.timeline.setCycleCount(Timeline.INDEFINITE);
         this.timeline.play();
@@ -195,8 +196,8 @@ public class GameController {
 
     private void updateTimerLabel(Integer currentTick){
         Label timer = this.gameView.getTimerLabel();
-        Integer maxSecs = this.level.getTickGoals()[0]/5;
-        int currentSec = (currentTick/5);
+        Integer maxSecs = (int) (this.level.getTickGoals()[0]*GameController.tickDuration);
+        int currentSec = (int) (currentTick*GameController.tickDuration);
         int timeLeft = maxSecs - currentSec;
         timer.setText("Time Left: "+timeLeft);
 
@@ -242,8 +243,8 @@ public class GameController {
     }
 
     private void updateSandUhr(Integer currentTick){
-        double maxSec = (double) this.level.getTickGoals()[0]/5;
-        double currentSec = (double) currentTick/5;
+        double maxSec = this.level.getTickGoals()[0]*GameController.tickDuration;
+        double currentSec = currentTick*GameController.tickDuration;
         double timePast = currentSec/maxSec;
 
         if(timePast >=0.3){
@@ -354,7 +355,7 @@ public class GameController {
 
         if (this.level.getWinningStatus() == WinningStatus.WON) {
             endGameAlert.setHeaderText("You successfully completed the level \"" + this.level.getName() + "\". Hooray!");
-            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton());
+            endGameAlert.getButtonTypes().setAll(endGameAlert.getNextLevelButton(),endGameAlert.getCancelExitButton());
 
         } else if(this.level.getWinningStatus() == WinningStatus.LOST) {
             endGameAlert.setHeaderText("You lost. Dont't worry, try again!");

@@ -59,13 +59,14 @@ public class Controller {
 
     public void startMenu(){
         this.currentMode = View.Mode.MENU;
-        Map<String, MedalStatus> medalStatusMap = this.importMedalStatuses();
-        MenuView menuView = new MenuView(this.view.getStage(),medalStatusMap);
         view.getStage().setTitle("Boulderdash");
-
+        MenuView menuView = null;
         if (menuController == null) {
+            Map<String, MedalStatus> medalStatusMap = this.importMedalStatuses();
+            menuView = new MenuView(this.view.getStage(),medalStatusMap);
             menuController = new MenuController(menuView, medalStatusMap,this);
         } else {
+            menuView = new MenuView(this.view.getStage(),menuController.getMedalStatuses());
             menuController.setMenuView(menuView);
             menuController.update();
         }
