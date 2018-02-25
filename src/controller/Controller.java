@@ -29,7 +29,7 @@ public class Controller {
     private int currentLevelIndex =0;
 
 
-    public Controller(View view, Object model) {
+    public Controller(View view) {
         Image icon = null;
         view.getStage().getIcons().add(new Image("main/icon.png"));
         this.view = view;
