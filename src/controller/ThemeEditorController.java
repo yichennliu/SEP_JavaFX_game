@@ -356,12 +356,13 @@ public class ThemeEditorController {
         });
     }
 
-    /*exports file only if theme has a name*/
+    /**
+     * exports file only if theme has a name
+     */
     private void manageFileExport(){
         String name = this.theme.getName();
         if(name.equals("")) return;
         File file = new File("src/json/theme/"+name+".zip");
-        System.out.println(theme.getName());
         if(file.exists()){
             if(!overwrite(name)){
                 return;

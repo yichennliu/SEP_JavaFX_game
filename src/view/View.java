@@ -60,7 +60,6 @@ public class View {
 
     public void showLevelEditor(){
         LevelEditorView levelEditorView = (LevelEditorView) currentScene;
-        System.out.println("SHOW IT");
         stage.setScene(levelEditorView.getScene());
     }
 

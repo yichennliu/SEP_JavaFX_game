@@ -137,7 +137,6 @@ public class Robot implements AI {
     }
 
     private void printPath(List<Breadcrumb> path) {
-        System.out.println();
         for(Breadcrumb b : path) {
         }
     }

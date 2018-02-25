@@ -263,7 +263,6 @@ public class LevelEditorController {
             gemInput.textProperty().addListener( (a,b,c) -> {
                 Integer value = stringToInteger(c);
                 if(value!=null) {
-                    System.out.println(value + " " + x);
                     this.editor.setGemGoal(x,value);
                     gemInput.setStyle("-fx-text-fill:black");
                 }
