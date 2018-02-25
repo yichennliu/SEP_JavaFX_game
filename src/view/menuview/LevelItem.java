@@ -51,6 +51,7 @@ public class LevelItem extends HBox {
         image.setFitHeight(150);
         rootBox.setRight(image);
         rootBox.setMinSize(width, height);
+        rootBox.setBottom(new Label(" "));
         rootBox.getStyleClass().add("backgroundcolorBlue");
         levelInformation.getStyleClass().add("vboxlevel");
         information.getStyleClass().add("infoOnLevelItem");
